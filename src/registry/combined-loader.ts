@@ -67,11 +67,11 @@ function loadCombinedDataset(): CombinedDataset {
   }
 
   // Path to combined.json
-  // In development: src/registry/combined-loader.ts -> ../../data/combined.json
-  // In production (built): dist/index.js -> data/combined.json (copied to dist/data/)
-  const dataPath = process.env.NODE_ENV === 'production'
+  // When running from built dist/index.js: dist -> data/combined.json
+  // When running from source (unlikely): use relative path
+  const dataPath = existsSync(join(__dirname, 'data/combined.json'))
     ? join(__dirname, 'data/combined.json')
-    : join(__dirname, '../../data/combined.json');
+    : join(__dirname, '../data/combined.json');
 
   if (!existsSync(dataPath)) {
     console.error(`❌ Combined dataset not found at: ${dataPath}`);
