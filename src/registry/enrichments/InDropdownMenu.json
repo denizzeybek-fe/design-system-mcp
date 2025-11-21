@@ -1,0 +1,301 @@
+{
+  "component": "InDropdownMenu",
+  "propEnrichments": {
+    "options": {
+      "valueFormat": {
+        "structure": "Array<Object>",
+        "objectShape": "{ text: string, value: any, icon?: string, description?: string, disabled?: boolean, secondaryButton?: Object }",
+        "examples": [
+          "[{ text: 'Edit', value: 'edit', icon: 'pencil' }]",
+          "[{ text: 'Delete', value: 'delete', icon: 'trash', description: 'Remove permanently' }]",
+          "[{ text: 'Export', value: 'export', secondaryButton: { icon: 'download', action: 'download-csv' } }]"
+        ],
+        "requiredKeys": ["text", "value"],
+        "optionalKeys": ["icon", "description", "disabled", "secondaryButton"],
+        "notes": "CRITICAL: Property is 'text' not 'label'! secondaryButton adds extra action button to menu item.",
+        "typescript": "Array<{ text: string; value: any; icon?: string; description?: string; disabled?: boolean; secondaryButton?: { icon: string; action: string } }>"
+      },
+      "relatedProps": ["selectionType", "preSelectedValues", "searchStatus"],
+      "commonMistakes": [
+        {
+          "mistake": "Using 'label' instead of 'text' property",
+          "impact": "Menu items won't display, shows empty dropdown menu",
+          "fix": "Change { label: 'X' } to { text: 'X' }",
+          "severity": "critical",
+          "detectPattern": "options.*label:"
+        },
+        {
+          "mistake": "Passing array of strings instead of objects",
+          "impact": "Component expects objects with text/value",
+          "fix": "Transform ['item1', 'item2'] to [{ text: 'item1', value: 'item1' }]",
+          "severity": "critical"
+        },
+        {
+          "mistake": "Not providing unique values",
+          "impact": "Menu item click tracking fails",
+          "fix": "Ensure each option has unique value property",
+          "severity": "high"
+        },
+        {
+          "mistake": "Wrong secondaryButton structure",
+          "impact": "Secondary action button won't work",
+          "fix": "Use { icon: 'icon-name', action: 'action-key' }",
+          "severity": "medium"
+        }
+      ]
+    },
+    "preSelectedValues": {
+      "valueFormat": {
+        "structure": "Array<any>",
+        "examples": [
+          "[]",
+          "['edit']",
+          "['edit', 'delete']",
+          "[1, 2, 3]"
+        ],
+        "notes": "Array of option values (not objects!) to pre-select. Used when selectionType='multiple' to show checkmarks.",
+        "typescript": "Array<any>"
+      },
+      "relatedProps": ["selectionType", "options"],
+      "commonMistakes": [
+        {
+          "mistake": "Passing array of objects instead of values",
+          "impact": "Pre-selection won't work, no checkmarks shown",
+          "fix": "Use [option.value, option.value] not [option, option]",
+          "severity": "high"
+        },
+        {
+          "mistake": "Using preSelectedValues with selectionType='single'",
+          "impact": "Only shows checkmark, doesn't prevent multiple selections",
+          "fix": "Set selectionType='multiple' for multi-select behavior",
+          "severity": "medium"
+        }
+      ]
+    },
+    "selectionType": {
+      "valueFormat": {
+        "structure": "string (enum)",
+        "validValues": ["single", "multiple"],
+        "default": "single",
+        "notes": "Controls selection behavior. 'single' closes menu on click, 'multiple' keeps open with checkboxes.",
+        "typescript": "'single' | 'multiple'"
+      },
+      "relatedProps": ["preSelectedValues", "selectAllOptionStatus"],
+      "commonMistakes": [
+        {
+          "mistake": "Using 'multi' or 'checkbox' instead of 'multiple'",
+          "impact": "Validation fails, defaults to 'single'",
+          "fix": "Use exact string: 'multiple'",
+          "severity": "high"
+        },
+        {
+          "mistake": "Not handling multiple selections properly",
+          "impact": "Can't track all selected items",
+          "fix": "Listen to @optionClick and maintain selection array",
+          "severity": "medium"
+        }
+      ]
+    },
+    "searchStatus": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "default": "false",
+        "notes": "Enable search/filter functionality within dropdown menu",
+        "typescript": "boolean"
+      },
+      "relatedEvents": ["search"],
+      "relatedProps": ["lazyLoadSearch", "externalSearch"]
+    },
+    "selectAllOptionStatus": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "default": "false",
+        "notes": "Show 'Select All' option at top when selectionType='multiple'",
+        "typescript": "boolean"
+      },
+      "relatedProps": ["selectionType"],
+      "relatedEvents": ["selectAllOptions", "resetAllOptions"]
+    },
+    "createOptionStatus": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "default": "false",
+        "notes": "Allow creating new menu items on the fly",
+        "typescript": "boolean"
+      },
+      "relatedProps": ["optionValidationType", "optionValidationText"],
+      "relatedEvents": ["addOption"]
+    },
+    "staticPosition": {
+      "valueFormat": {
+        "structure": "string (enum)",
+        "validValues": ["bottom left", "bottom right", "top left", "top right"],
+        "default": "bottom left",
+        "notes": "Dropdown menu position relative to trigger button",
+        "typescript": "'bottom left' | 'bottom right' | 'top left' | 'top right'"
+      },
+      "relatedProps": ["dynamicPosition"]
+    },
+    "state": {
+      "valueFormat": {
+        "structure": "string (enum)",
+        "validValues": ["default", "success", "warning", "error"],
+        "default": "default",
+        "notes": "Visual state for validation feedback",
+        "typescript": "'default' | 'success' | 'warning' | 'error'"
+      },
+      "relatedProps": ["stateMessage"]
+    }
+  },
+  "eventEnrichments": {
+    "optionClick": {
+      "payloadTypes": [
+        {
+          "condition": "When user clicks a menu item",
+          "type": "Object",
+          "format": "{ text: string, value: any, icon?: string }",
+          "example": "{ text: 'Edit', value: 'edit', icon: 'pencil' }"
+        }
+      ],
+      "useCase": "Main click event for menu items. Handle action based on value property",
+      "handlingPattern": "@optionClick=\"handleMenuClick\"\n\nhandleMenuClick(option) {\n  switch(option.value) {\n    case 'edit':\n      this.editItem();\n      break;\n    case 'delete':\n      this.deleteItem();\n      break;\n  }\n}",
+      "commonMistakes": [
+        {
+          "mistake": "Not handling all menu option values",
+          "impact": "Some menu items do nothing when clicked",
+          "fix": "Add switch/if cases for all option.value values",
+          "severity": "high"
+        }
+      ]
+    },
+    "secondaryButtonClick": {
+      "payloadTypes": [
+        {
+          "condition": "When secondaryButton clicked on menu item",
+          "type": "Object",
+          "format": "{ option: Object, action: string }",
+          "example": "{ option: { text: 'Export', value: 'export' }, action: 'download-csv' }"
+        }
+      ],
+      "useCase": "Emitted when secondary action button clicked. Different from main optionClick",
+      "handlingPattern": "@secondaryButtonClick=\"handleSecondary\"\n\nhandleSecondary({ option, action }) {\n  if (action === 'download-csv') {\n    this.downloadCSV(option.value);\n  }\n}",
+      "relatedProps": ["options.secondaryButton"]
+    },
+    "selectAllOptions": {
+      "payloadTypes": [
+        {
+          "condition": "When 'Select All' clicked (selectionType='multiple')",
+          "type": "Array",
+          "format": "Array<Object>",
+          "example": "[{ text: 'Opt1', value: 1 }, { text: 'Opt2', value: 2 }]"
+        }
+      ],
+      "useCase": "Emitted when user clicks 'Select All'. Payload contains all available options",
+      "relatedProps": ["selectAllOptionStatus", "selectionType"]
+    },
+    "resetAllOptions": {
+      "payloadTypes": [
+        {
+          "condition": "When 'Reset All' clicked",
+          "type": "Array",
+          "format": "[]",
+          "example": "[]"
+        }
+      ],
+      "useCase": "Emitted when user clears all selections. Payload is empty array",
+      "relatedProps": ["selectAllOptionStatus"]
+    },
+    "search": {
+      "payloadTypes": [
+        {
+          "condition": "When searchStatus=true and user types",
+          "type": "string",
+          "example": "\"search query\""
+        }
+      ],
+      "useCase": "Emitted when user types in search box. Use to filter options",
+      "relatedProps": ["searchStatus", "lazyLoadSearch"]
+    },
+    "addOption": {
+      "payloadTypes": [
+        {
+          "condition": "When createOptionStatus=true and new item created",
+          "type": "string",
+          "example": "\"New Item\""
+        }
+      ],
+      "useCase": "Emitted when user creates a new option. Add to options array",
+      "relatedProps": ["createOptionStatus"]
+    }
+  },
+  "examples": [
+    {
+      "title": "Basic Dropdown Menu (Actions)",
+      "description": "Simple action menu with icons",
+      "code": "<InDropdownMenu\n  id=\"action-menu\"\n  button-label=\"Actions\"\n  :options=\"[\n    { text: 'Edit', value: 'edit', icon: 'pencil' },\n    { text: 'Delete', value: 'delete', icon: 'trash' },\n    { text: 'Share', value: 'share', icon: 'share' }\n  ]\"\n  @optionClick=\"handleAction\"\n/>",
+      "language": "vue"
+    },
+    {
+      "title": "Multi-Select Dropdown Menu",
+      "description": "Multiple selection with checkboxes",
+      "code": "<InDropdownMenu\n  id=\"filter-menu\"\n  button-label=\"Filter Columns\"\n  selection-type=\"multiple\"\n  :options=\"[\n    { text: 'Name', value: 'name' },\n    { text: 'Email', value: 'email' },\n    { text: 'Status', value: 'status' }\n  ]\"\n  :pre-selected-values=\"['name', 'email']\"\n  select-all-option-status\n  @optionClick=\"toggleColumn\"\n/>",
+      "language": "vue"
+    },
+    {
+      "title": "Dropdown Menu with Secondary Actions",
+      "description": "Menu items with additional action buttons",
+      "code": "<InDropdownMenu\n  id=\"export-menu\"\n  button-label=\"Export\"\n  :options=\"[\n    {\n      text: 'Export as CSV',\n      value: 'csv',\n      icon: 'file',\n      secondaryButton: { icon: 'download', action: 'quick-download' }\n    },\n    {\n      text: 'Export as PDF',\n      value: 'pdf',\n      icon: 'file-pdf',\n      secondaryButton: { icon: 'settings', action: 'configure' }\n    }\n  ]\"\n  @optionClick=\"handleExport\"\n  @secondaryButtonClick=\"handleSecondaryAction\"\n/>",
+      "language": "vue"
+    },
+    {
+      "title": "Searchable Dropdown Menu",
+      "description": "Large menu with search functionality",
+      "code": "<InDropdownMenu\n  id=\"country-menu\"\n  button-label=\"Select Country\"\n  :options=\"countries\"\n  search-status\n  @search=\"filterCountries\"\n  @optionClick=\"selectCountry\"\n/>",
+      "language": "vue"
+    }
+  ],
+  "helperFunctions": [
+    {
+      "name": "transformArrayToOptions",
+      "description": "Transform simple array to dropdown menu options",
+      "usage": "transformArrayToOptions(['Edit', 'Delete', 'Share'])",
+      "code": "const transformArrayToOptions = (items) => {\n  return items.map(item => ({\n    text: item,\n    value: item.toLowerCase(),\n    icon: getIconForAction(item) // optional\n  }));\n};"
+    },
+    {
+      "name": "getSelectedOptions",
+      "description": "Get full option objects from selected values (for multiple selection)",
+      "usage": "getSelectedOptions(options, ['edit', 'delete'])",
+      "code": "const getSelectedOptions = (allOptions, selectedValues) => {\n  return allOptions.filter(opt => selectedValues.includes(opt.value));\n};"
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Using InDropdownMenu for data selection instead of InSelect/InMultiSelect",
+      "impact": "Wrong component for the use case",
+      "fix": "Use InSelect for form inputs, InDropdownMenu for action menus",
+      "severity": "medium"
+    },
+    {
+      "mistake": "Not closing menu after action in selectionType='single'",
+      "impact": "Menu stays open unnecessarily",
+      "fix": "Menu auto-closes on click in single mode, no action needed",
+      "severity": "low"
+    }
+  ],
+  "performanceNotes": [
+    {
+      "note": "Large menus (50+ items) can cause rendering issues",
+      "recommendation": "Use lazyLoad or group related items into sub-menus"
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "note": "Dropdown menus must be keyboard accessible",
+      "recommendation": "Use Arrow keys to navigate, Enter to select, Escape to close"
+    },
+    {
+      "note": "Icon-only menu items need text labels",
+      "recommendation": "Always provide text property, even if only icon is shown visually"
+    }
+  ]
+}

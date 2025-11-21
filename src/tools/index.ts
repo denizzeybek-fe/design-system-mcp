@@ -7,7 +7,10 @@ import {
   getComponentsByCategory,
   getCategories,
   mapFigmaComponent,
-} from '../registry/loader.js';
+  getMigration,
+  getComponentUsageStats,
+  getMetadata,
+} from '../registry/combined-loader.js';
 import { Component } from '../types/index.js';
 
 /**

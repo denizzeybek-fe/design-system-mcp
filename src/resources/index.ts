@@ -3,8 +3,8 @@ import {
   getAllComponents,
   getComponentByName,
   getCategories,
-  loadRegistry,
-} from '../registry/loader.js';
+  getMetadata,
+} from '../registry/combined-loader.js';
 
 /**
  * Register all resources with the MCP server
@@ -55,7 +55,7 @@ export function registerResources(server: McpServer): void {
       mimeType: 'application/json',
     },
     async () => {
-      const registry = loadRegistry();
+      const metadata = getMetadata();
 
       return {
         contents: [
@@ -64,9 +64,11 @@ export function registerResources(server: McpServer): void {
             mimeType: 'application/json',
             text: JSON.stringify(
               {
-                version: registry.version,
-                lastUpdated: registry.lastUpdated,
-                totalComponents: registry.components.length,
+                version: metadata.version,
+                generatedAt: metadata.generatedAt,
+                totalComponents: metadata.totalComponents,
+                enrichedComponents: metadata.enrichedComponents,
+                sources: metadata.sources,
               },
               null,
               2

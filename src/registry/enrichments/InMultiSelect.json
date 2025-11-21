@@ -1,0 +1,300 @@
+{
+  "component": "InMultiSelect",
+  "propEnrichments": {
+    "options": {
+      "valueFormat": {
+        "structure": "Array<Object>",
+        "objectShape": "{ text: string, value: any, disabled?: boolean, description?: string, icon?: string }",
+        "examples": [
+          "[{ text: 'Option 1', value: 1 }]",
+          "[{ text: 'Active', value: 'active', icon: 'check' }, { text: 'Pending', value: 'pending', disabled: true }]",
+          "[{ text: 'Turkey', value: 'TR', description: 'Turkey region' }, { text: 'USA', value: 'US' }]"
+        ],
+        "requiredKeys": ["text", "value"],
+        "optionalKeys": ["disabled", "description", "icon"],
+        "notes": "CRITICAL: Property is 'text' not 'label'! Each option must have unique value for proper multi-selection tracking.",
+        "typescript": "Array<{ text: string; value: any; disabled?: boolean; description?: string; icon?: string }>"
+      },
+      "relatedProps": ["value", "searchStatus", "lazyLoad", "selectAllOptionStatus"],
+      "commonMistakes": [
+        {
+          "mistake": "Using 'label' instead of 'text' property",
+          "impact": "Options won't display, shows empty dropdown",
+          "fix": "Change { label: 'X' } to { text: 'X' }",
+          "severity": "critical",
+          "detectPattern": "options.*label:"
+        },
+        {
+          "mistake": "Passing array of strings instead of objects",
+          "impact": "Component expects objects with text/value",
+          "fix": "Transform ['opt1', 'opt2'] to [{ text: 'opt1', value: 'opt1' }]",
+          "severity": "critical"
+        },
+        {
+          "mistake": "Not providing unique values for multi-select",
+          "impact": "Selection tracking fails, can't distinguish between selected items",
+          "fix": "Ensure each option has unique value property",
+          "severity": "critical"
+        },
+        {
+          "mistake": "Not handling disabled options",
+          "impact": "Disabled items can still be selected",
+          "fix": "Add disabled: true to option object",
+          "severity": "medium"
+        }
+      ]
+    },
+    "value": {
+      "valueFormat": {
+        "structure": "Array<Object>",
+        "objectShape": "{ text: string, value: any }",
+        "examples": [
+          "[]",
+          "[{ text: 'Option 1', value: 1 }]",
+          "[{ text: 'Active', value: 'active' }, { text: 'Pending', value: 'pending' }, { text: 'Done', value: 'done' }]"
+        ],
+        "notes": "CRITICAL: Always array for multi-selection. Empty array = no selection. Can contain MULTIPLE selected option objects.",
+        "typescript": "Array<{ text: string; value: any }>"
+      },
+      "relatedEvents": ["change", "select"],
+      "relatedProps": ["maxSelectableItem"],
+      "commonMistakes": [
+        {
+          "mistake": "Passing single object instead of array",
+          "impact": "Type error, multi-selection won't work",
+          "fix": "Always wrap in array: [selectedOption] even for single selection",
+          "severity": "critical"
+        },
+        {
+          "mistake": "Passing array of values only (without text)",
+          "impact": "Selected items won't display properly",
+          "fix": "Use array of objects: [{ text: 'Display', value: actualValue }]",
+          "severity": "critical"
+        },
+        {
+          "mistake": "Not limiting selection count",
+          "impact": "Users can select unlimited items",
+          "fix": "Use maxSelectableItem prop to limit selections",
+          "severity": "low"
+        },
+        {
+          "mistake": "Not handling de-selection",
+          "impact": "Can't remove selected items",
+          "fix": "Update value array by filtering out de-selected item",
+          "severity": "high"
+        }
+      ]
+    },
+    "maxSelectableItem": {
+      "valueFormat": {
+        "structure": "Number",
+        "examples": ["3", "5", "10"],
+        "notes": "Maximum number of items user can select. Unlimited if not set.",
+        "typescript": "number"
+      },
+      "relatedProps": ["value"],
+      "commonMistakes": [
+        {
+          "mistake": "Setting to 0 or negative number",
+          "impact": "No items can be selected",
+          "fix": "Use positive number (1, 2, 3...) or don't set for unlimited",
+          "severity": "medium"
+        }
+      ]
+    },
+    "searchStatus": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "default": "false",
+        "notes": "Enable search/filter functionality within dropdown",
+        "typescript": "boolean"
+      },
+      "relatedEvents": ["search"],
+      "relatedProps": ["lazyLoadSearch"]
+    },
+    "selectAllOptionStatus": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "default": "false",
+        "notes": "Show 'Select All' option at top of dropdown for multi-select",
+        "typescript": "boolean"
+      },
+      "relatedEvents": ["selectAllOptions", "resetAllOptions"]
+    },
+    "createOptionStatus": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "default": "false",
+        "notes": "Allow creating new options on the fly",
+        "typescript": "boolean"
+      },
+      "relatedProps": ["optionValidationType", "optionValidationText"],
+      "commonMistakes": [
+        {
+          "mistake": "Enabling without optionValidationType",
+          "impact": "All text allowed, might break validation",
+          "fix": "Set optionValidationType: 'text' or 'number' or custom RegExp",
+          "severity": "medium"
+        }
+      ]
+    },
+    "state": {
+      "valueFormat": {
+        "structure": "string (enum)",
+        "validValues": ["default", "success", "warning", "error"],
+        "default": "default",
+        "notes": "Visual state for validation feedback",
+        "typescript": "'default' | 'success' | 'warning' | 'error'"
+      },
+      "relatedProps": ["stateMessage"]
+    }
+  },
+  "eventEnrichments": {
+    "select": {
+      "payloadTypes": [
+        {
+          "condition": "When user selects/deselects an option",
+          "type": "Object",
+          "format": "{ text: string, value: any }",
+          "example": "{ text: 'Option 1', value: 1 }"
+        }
+      ],
+      "useCase": "Emitted for each selection/deselection. Update value array by adding or removing this option",
+      "handlingPattern": "@select=\"handleSelect\"\n\nhandleSelect(option) {\n  const isSelected = this.value.some(v => v.value === option.value);\n  if (isSelected) {\n    // Remove from selection\n    this.value = this.value.filter(v => v.value !== option.value);\n  } else {\n    // Add to selection\n    this.value = [...this.value, option];\n  }\n}",
+      "commonMistakes": [
+        {
+          "mistake": "Replacing entire value array instead of adding/removing",
+          "impact": "Multi-selection breaks, only keeps last selected item",
+          "fix": "Use array spread and filter: [...value, newOption] or value.filter()",
+          "severity": "critical"
+        },
+        {
+          "mistake": "Not checking if item already selected",
+          "impact": "Duplicate selections, can't de-select",
+          "fix": "Check with .some() before adding, use .filter() to remove",
+          "severity": "high"
+        }
+      ]
+    },
+    "change": {
+      "payloadTypes": [
+        {
+          "condition": "When selection changes",
+          "type": "Array",
+          "format": "Array<{ text: string, value: any }>",
+          "example": "[{ text: 'Opt1', value: 1 }, { text: 'Opt2', value: 2 }]"
+        }
+      ],
+      "useCase": "Emitted with full array of selected options. Easier than 'select' event for simple cases",
+      "handlingPattern": "@change=\"handleChange\"\n\nhandleChange(selectedArray) {\n  this.value = selectedArray;\n}",
+      "notes": "Prefer this over 'select' event if you don't need fine-grained control"
+    },
+    "selectAllOptions": {
+      "payloadTypes": [
+        {
+          "condition": "When 'Select All' clicked",
+          "type": "Array",
+          "format": "Array<{ text: string, value: any }>",
+          "example": "[...all options...]"
+        }
+      ],
+      "useCase": "Emitted when user clicks 'Select All'. Payload contains all available options",
+      "relatedProps": ["selectAllOptionStatus"]
+    },
+    "resetAllOptions": {
+      "payloadTypes": [
+        {
+          "condition": "When 'Reset All' clicked",
+          "type": "Array",
+          "format": "[]",
+          "example": "[]"
+        }
+      ],
+      "useCase": "Emitted when user clears all selections. Payload is empty array",
+      "relatedProps": ["selectAllOptionStatus"]
+    },
+    "search": {
+      "payloadTypes": [
+        {
+          "condition": "When searchStatus=true and user types",
+          "type": "string",
+          "example": "\"search query\""
+        }
+      ],
+      "useCase": "Emitted when user types in search box. Use to filter options or lazy load",
+      "relatedProps": ["searchStatus", "lazyLoadSearch"]
+    },
+    "onRemoveTag": {
+      "payloadTypes": [
+        {
+          "condition": "When user clicks X on selected tag",
+          "type": "Object",
+          "format": "{ text: string, value: any }",
+          "example": "{ text: 'Option 1', value: 1 }"
+        }
+      ],
+      "useCase": "Emitted when user removes a selected item via tag. Remove this item from value array",
+      "handlingPattern": "@onRemoveTag=\"handleRemove\"\n\nhandleRemove(removedOption) {\n  this.value = this.value.filter(v => v.value !== removedOption.value);\n}"
+    }
+  },
+  "examples": [
+    {
+      "title": "Basic Multi-Select",
+      "description": "Simple multi-select with predefined options",
+      "code": "<InMultiSelect\n  id=\"multi-select-1\"\n  label-text=\"Select Countries\"\n  :options=\"[\n    { text: 'Turkey', value: 'TR' },\n    { text: 'USA', value: 'US' },\n    { text: 'UK', value: 'GB' }\n  ]\"\n  :value=\"selectedCountries\"\n  @change=\"selectedCountries = $event\"\n/>",
+      "language": "vue"
+    },
+    {
+      "title": "Multi-Select with Search",
+      "description": "Multi-select with search functionality",
+      "code": "<InMultiSelect\n  id=\"multi-select-2\"\n  label-text=\"Select Tags\"\n  :options=\"tags\"\n  :value=\"selectedTags\"\n  search-status\n  @search=\"filterTags\"\n  @change=\"selectedTags = $event\"\n/>",
+      "language": "vue"
+    },
+    {
+      "title": "Multi-Select with Limit and Select All",
+      "description": "Limited selection with select all feature",
+      "code": "<InMultiSelect\n  id=\"multi-select-3\"\n  label-text=\"Select up to 3 Categories\"\n  :options=\"categories\"\n  :value=\"selectedCategories\"\n  :max-selectable-item=\"3\"\n  select-all-option-status\n  @change=\"selectedCategories = $event\"\n  @selectAllOptions=\"handleSelectAll\"\n  @resetAllOptions=\"selectedCategories = []\"\n/>",
+      "language": "vue"
+    },
+    {
+      "title": "Multi-Select with Create Option",
+      "description": "Allow creating new options on the fly",
+      "code": "<InMultiSelect\n  id=\"multi-select-4\"\n  label-text=\"Add Custom Tags\"\n  :options=\"existingTags\"\n  :value=\"selectedTags\"\n  create-option-status\n  option-validation-type=\"text\"\n  create-button-label=\"Add Tag\"\n  @change=\"selectedTags = $event\"\n/>",
+      "language": "vue"
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Using InMultiSelect like InSelect (single selection)",
+      "impact": "Not utilizing multi-selection capability",
+      "fix": "value prop should be array with MULTIPLE items, handle selection/deselection properly",
+      "severity": "medium"
+    },
+    {
+      "mistake": "Not providing feedback on selection limit",
+      "impact": "Users confused when can't select more items",
+      "fix": "Show validation message when maxSelectableItem reached using state prop",
+      "severity": "low"
+    }
+  ],
+  "performanceNotes": [
+    {
+      "note": "Large option lists (100+) can cause performance issues",
+      "recommendation": "Use lazyLoad prop with pagination for large datasets"
+    },
+    {
+      "note": "Search filtering done client-side by default",
+      "recommendation": "Use lazyLoadSearch for server-side filtering with large datasets"
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "note": "Multi-select requires clear indication of selected items",
+      "recommendation": "Selected items shown as tags above dropdown - ensure adequate color contrast"
+    },
+    {
+      "note": "Keyboard navigation for multi-select",
+      "recommendation": "Use Space to select/deselect, Enter to close, Backspace to remove last tag"
+    }
+  ]
+}

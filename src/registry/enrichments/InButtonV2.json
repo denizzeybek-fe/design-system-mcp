@@ -1,0 +1,190 @@
+{
+  "component": "InButtonV2",
+  "propEnrichments": {
+    "styling": {
+      "valueFormat": {
+        "structure": "string (enum)",
+        "validValues": ["solid", "ghost", "text"],
+        "enumReference": "STYLES.SOLID | STYLES.GHOST | STYLES.TEXT",
+        "notes": "Button visual style variant. Use enum constants STYLES.* from component",
+        "typescript": "'solid' | 'ghost' | 'text'"
+      },
+      "relatedProps": ["type"],
+      "commonMistakes": [
+        {
+          "mistake": "Using string literal 'SOLID' instead of constant value 'solid'",
+          "impact": "Validator fails, falls back to default",
+          "fix": "Use STYLES.SOLID or literal 'solid'",
+          "severity": "medium"
+        }
+      ]
+    },
+    "type": {
+      "valueFormat": {
+        "structure": "string (enum)",
+        "validValues": ["primary", "subtle-primary", "secondary", "danger", "warning", "smart", "subtle-smart", "inverse"],
+        "enumReference": "TYPES.PRIMARY | TYPES.SUBTLE_PRIMARY | TYPES.SECONDARY | TYPES.DANGER | TYPES.WARNING | TYPES.SMART | TYPES.SUBTLE_SMART | TYPES.INVERSE",
+        "notes": "Button color theme. Determines background/text colors based on styling",
+        "typescript": "'primary' | 'subtle-primary' | 'secondary' | 'danger' | 'warning' | 'smart' | 'subtle-smart' | 'inverse'"
+      },
+      "relatedProps": ["styling"],
+      "commonMistakes": [
+        {
+          "mistake": "Using camelCase 'subtlePrimary' instead of kebab-case 'subtle-primary'",
+          "impact": "Validator fails, button shows as primary",
+          "fix": "Use TYPES.SUBTLE_PRIMARY or 'subtle-primary'",
+          "severity": "high"
+        }
+      ]
+    },
+    "size": {
+      "valueFormat": {
+        "structure": "string (enum)",
+        "validValues": ["default", "small"],
+        "enumReference": "SIZES.DEFAULT | SIZES.SMALL",
+        "notes": "Button size variant",
+        "typescript": "'default' | 'small'"
+      }
+    },
+    "iconSize": {
+      "valueFormat": {
+        "structure": "string (enum) - NOT NUMBER!",
+        "validValues": ["40", "24", "20"],
+        "notes": "CRITICAL: iconSize is STRING not number. '24' not 24",
+        "typescript": "'40' | '24' | '20'"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Passing number instead of string: :icon-size=\"24\"",
+          "impact": "Type mismatch, validator fails",
+          "fix": "Use string: icon-size=\"24\" or :icon-size=\"'24'\"",
+          "severity": "critical"
+        }
+      ]
+    },
+    "labelText": {
+      "valueFormat": {
+        "structure": "string | number",
+        "notes": "Button text content. Shown when labelTextStatus=true",
+        "typescript": "string | number"
+      },
+      "relatedProps": ["labelTextStatus"],
+      "commonMistakes": [
+        {
+          "mistake": "Not providing labelText when labelTextStatus=true",
+          "impact": "Shows default 'Label' text",
+          "fix": "Always set labelText when using the button",
+          "severity": "medium"
+        }
+      ]
+    },
+    "buttonGroupOptions": {
+      "valueFormat": {
+        "structure": "Array<Object>",
+        "objectShape": "{ label: string, value: any, disabled?: boolean, icon?: string }",
+        "notes": "Creates dropdown menu when provided. Renders InButtonGroup component",
+        "typescript": "Array<{ label: string; value: any; disabled?: boolean; icon?: string }>"
+      },
+      "relatedEvents": ["click"],
+      "commonMistakes": [
+        {
+          "mistake": "Expecting simple array of strings",
+          "impact": "Won't render dropdown properly",
+          "fix": "Use array of objects with label and value properties",
+          "severity": "high"
+        }
+      ]
+    },
+    "tooltipOptions": {
+      "valueFormat": {
+        "structure": "Object",
+        "objectShape": "{ id: string, dynamicPosition: boolean, staticPosition: string, iconStatus: boolean, offset: { x: number, y: number }, preventXss: boolean }",
+        "default": "{ id: 'tooltip', dynamicPosition: false, staticPosition: 'top center', iconStatus: false, offset: { x: 4, y: 4 }, preventXss: false }",
+        "notes": "Configuration for button tooltip",
+        "typescript": "{ id: string; dynamicPosition: boolean; staticPosition: string; iconStatus: boolean; offset: { x: number; y: number }; preventXss: boolean }"
+      }
+    },
+    "skeletonSizing": {
+      "valueFormat": {
+        "structure": "Object",
+        "objectShape": "{ width: number, height: number }",
+        "default": "{ width: 0, height: 0 }",
+        "notes": "Skeleton loader dimensions in pixels",
+        "typescript": "{ width: number; height: number }"
+      },
+      "relatedProps": ["skeletonStatus"]
+    }
+  },
+  "eventEnrichments": {
+    "click": {
+      "payloadTypes": [
+        {
+          "condition": "Basic button (no buttonGroupOptions)",
+          "type": "Object (empty) or undefined",
+          "example": "{}"
+        },
+        {
+          "condition": "Button group with dropdown",
+          "type": "Object",
+          "example": "{ label: 'Option 1', value: 1 }",
+          "notes": "Returns the clicked option from buttonGroupOptions"
+        }
+      ],
+      "handlingPattern": "@click=\"handleClick\"\n\nhandleClick(payload) {\n  if (payload?.value) {\n    // Dropdown option clicked\n    console.log('Selected:', payload.value);\n  } else {\n    // Basic button clicked\n    console.log('Button clicked');\n  }\n}",
+      "useCase": "Main button click handler. Payload varies based on buttonGroupOptions presence"
+    },
+    "clickIcon": {
+      "payloadTypes": [
+        {
+          "condition": "Always",
+          "type": "void",
+          "example": "undefined"
+        }
+      ],
+      "useCase": "Emitted when icon is clicked (requires iconClick=true)",
+      "relatedProps": ["iconClick", "leftIcon", "rightIcon"]
+    }
+  },
+  "exampleEnrichments": [
+    {
+      "title": "Basic Button",
+      "description": "Simple primary button",
+      "complexity": "beginner",
+      "code": "<template>\n  <InButtonV2\n    id=\"submit-btn\"\n    styling=\"solid\"\n    type=\"primary\"\n    size=\"default\"\n    label-text=\"Submit\"\n    @click=\"handleSubmit\" />\n</template>\n\n<script>\nimport { InButtonV2 } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InButtonV2 },\n  methods: {\n    handleSubmit() {\n      console.log('Form submitted');\n    }\n  }\n};\n</script>"
+    },
+    {
+      "title": "Button with Icon and Loading State",
+      "description": "Button with left icon and loading indicator",
+      "complexity": "intermediate",
+      "code": "<template>\n  <InButtonV2\n    id=\"save-btn\"\n    styling=\"solid\"\n    type=\"primary\"\n    left-icon=\"save\"\n    icon-size=\"24\"\n    label-text=\"Save Changes\"\n    :loading-status=\"isSaving\"\n    :disabled-status=\"isSaving\"\n    @click=\"handleSave\" />\n</template>\n\n<script>\nimport { InButtonV2 } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InButtonV2 },\n  data() {\n    return {\n      isSaving: false\n    };\n  },\n  methods: {\n    async handleSave() {\n      this.isSaving = true;\n      try {\n        await this.saveData();\n        alert('Saved!');\n      } finally {\n        this.isSaving = false;\n      }\n    },\n    async saveData() {\n      return new Promise(resolve => setTimeout(resolve, 2000));\n    }\n  }\n};\n</script>"
+    },
+    {
+      "title": "Button Group with Dropdown",
+      "description": "Button with dropdown menu options",
+      "complexity": "advanced",
+      "code": "<template>\n  <InButtonV2\n    id=\"export-btn\"\n    styling=\"ghost\"\n    type=\"primary\"\n    left-icon=\"export\"\n    label-text=\"Export\"\n    :button-group-options=\"exportOptions\"\n    @click=\"handleExport\" />\n</template>\n\n<script>\nimport { InButtonV2 } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InButtonV2 },\n  data() {\n    return {\n      exportOptions: [\n        { label: 'Export as CSV', value: 'csv', icon: 'file-csv' },\n        { label: 'Export as Excel', value: 'xlsx', icon: 'file-excel' },\n        { label: 'Export as PDF', value: 'pdf', icon: 'file-pdf' }\n      ]\n    };\n  },\n  methods: {\n    handleExport(payload) {\n      if (payload?.value) {\n        console.log('Exporting as:', payload.value);\n        this.performExport(payload.value);\n      }\n    },\n    performExport(format) {\n      // Export logic\n    }\n  }\n};\n</script>"
+    }
+  ],
+  "helperFunctions": [],
+  "performanceNotes": [
+    {
+      "issue": "Unnecessary re-renders with buttonGroupOptions",
+      "impact": "Dropdown menu re-creates on every render",
+      "solution": "Move buttonGroupOptions to data() or computed",
+      "example": "computed: { exportOptions() { return [...]; } }",
+      "severity": "low"
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "requirement": "Always provide meaningful labelText",
+      "reason": "Screen readers need descriptive button text",
+      "severity": "high"
+    },
+    {
+      "requirement": "Use disabledStatus instead of removing button",
+      "reason": "Disabled state maintains button in tab order with aria-disabled",
+      "severity": "medium"
+    }
+  ]
+}

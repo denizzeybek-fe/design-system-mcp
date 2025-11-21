@@ -166,3 +166,78 @@ Ensure CSS is imported:
 ```javascript
 import '@useinsider/design-system-vue/dist/design-system-vue.css';
 ```
+
+## Development Tools
+
+### Available Agents
+
+This project includes specialized agents for specific tasks:
+
+#### 1. enrichment-maker Agent
+**Purpose**: Generate enrichment files for complex components
+
+**When to use**:
+- Adding detailed metadata for a new critical component
+- Documenting complex prop structures (Object/Array types)
+- Creating common mistakes documentation
+- Need valueFormat examples
+
+**How to invoke**:
+```
+User: "Use enrichment-maker agent to create enrichment for InTooltipV2"
+```
+
+**What it does**:
+1. Analyzes component metadata from combined.json via MCP
+2. Identifies critical props needing enrichment (complex types)
+3. Learns patterns from existing enrichments (InButtonV2, InDatePickerV2, InSelect)
+4. Generates `src/registry/enrichments/InTooltipV2.json` with:
+   - valueFormat for complex props (structure, examples, typescript)
+   - commonMistakes with severity levels
+   - Real-world usage examples
+   - Helper functions (if needed)
+
+**After agent completes**:
+```bash
+npm run extract:merge  # Merge enrichment into combined.json
+npm run build           # Rebuild MCP server
+```
+
+#### 2. migrate-ds-components-v1-v2 Agent
+**Purpose**: Migrate Vue components from V1 to V2 Design System components
+
+**When to use**:
+- Upgrading V1 components to V2 equivalents
+- Need transformation guides (e.g., InDatePicker → InDatePickerV2)
+- Understanding breaking changes
+
+**How to invoke**:
+```
+User: "Migrate this component from InDatePicker V1 to V2"
+```
+
+**What it does**:
+1. Uses MCP to get V2 component metadata
+2. Checks for migration guides (e.g., InDatePicker-to-V2)
+3. Reviews enrichment data for common mistakes
+4. Provides mapped V2 code with proper props/events
+
+### When to Use Agents
+
+| Task | Agent | Use Case |
+|------|-------|----------|
+| Create enrichment | enrichment-maker | Adding metadata for InTooltipV2, InMultiSelect, etc. |
+| V1→V2 migration | migrate-ds-components-v1-v2 | Upgrading InDatePicker to V2 |
+| Implementation | (use MCP tools directly) | Implementing new components |
+| Discovery | (use MCP tools directly) | Finding components |
+
+### Enrichment Priority
+
+Focus enrichments on components with:
+- ✅ Complex Object/Array props
+- ✅ Validators with enum references
+- ✅ Common developer mistakes
+- ✅ Non-obvious value formats
+- ❌ Skip simple String/Boolean/Number props
+
+**Recommended enrichments**: InTooltipV2, InMultiSelect, InCheckBoxV2, InModalV2, InDropdownMenu

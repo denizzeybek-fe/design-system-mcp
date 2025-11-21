@@ -1,0 +1,295 @@
+{
+  "component": "InDatePickerV2",
+  "propEnrichments": {
+    "value": {
+      "valueFormat": {
+        "structure": "Array<{ startDate: string, endDate: string }>",
+        "examples": [
+          "[{ startDate: '01.12.2024', endDate: '20.12.2024' }]",
+          "[{ startDate: '01.12.2024', endDate: '20.12.2024' }, { startDate: '01.11.2024', endDate: '20.11.2024' }]"
+        ],
+        "notes": "CRITICAL: Always pass an array of objects, even for single range. Second object is optional and used for comparison mode. Date format depends on locale (dd.mm.yyyy or mm/dd/yyyy).",
+        "typescript": "Array<{ startDate: string; endDate: string }>"
+      },
+      "relatedProps": ["comparisonStatus", "singleDatePickerStatus", "locale", "formatMapping"],
+      "commonMistakes": [
+        {
+          "mistake": "Passing value as array of strings: [startDate, endDate]",
+          "impact": "Component won't display selected dates, renders empty",
+          "fix": "Wrap in object: [{ startDate, endDate }]",
+          "severity": "critical"
+        },
+        {
+          "mistake": "Not wrapping single range in array",
+          "impact": "Type error, component may crash",
+          "fix": "Always use array: [{ startDate, endDate }]",
+          "severity": "critical"
+        }
+      ]
+    },
+    "customRanges": {
+      "valueFormat": {
+        "structure": "Array<{ name: string, title: string, startDate: string, endDate: string }>",
+        "examples": [
+          "[{ name: 'custom1', title: 'Q4 2024', startDate: '10/01/2024', endDate: '12/31/2024' }]",
+          "[{ name: 'custom1', title: 'Last Quarter', startDate: '09/01/2024', endDate: '11/30/2024' }, { name: 'custom2', title: 'This Year', startDate: '01/01/2024', endDate: '12/31/2024' }]"
+        ],
+        "notes": "CRITICAL: Date format MUST be mm/dd/yyyy with SLASH delimiter, regardless of locale. 'name' must be unique identifier, 'title' is display text.",
+        "typescript": "Array<{ name: string; title: string; startDate: string; endDate: string }>"
+      },
+      "relatedProps": ["comparedCustomRanges", "quickRangeSelectionStatus", "defaultRanges"],
+      "commonMistakes": [
+        {
+          "mistake": "Using 'label' property instead of 'title'",
+          "impact": "Range buttons won't show text labels",
+          "fix": "Change { label: 'Q4' } to { title: 'Q4' }",
+          "severity": "high",
+          "detectPattern": "customRanges.*label:"
+        },
+        {
+          "mistake": "Using dd.mm.yyyy or dd/mm/yyyy format",
+          "impact": "Date parsing fails, shows 'Invalid Date'",
+          "fix": "Use mm/dd/yyyy format: '12/31/2024' not '31.12.2024'",
+          "severity": "critical",
+          "helperFunction": "formatDateToSlash"
+        },
+        {
+          "mistake": "Passing Date objects instead of strings",
+          "impact": "Type error, component won't render",
+          "fix": "Convert to string: formatDateToSlash(new Date())",
+          "severity": "critical",
+          "helperFunction": "formatDateToSlash"
+        },
+        {
+          "mistake": "Not providing unique 'name' property",
+          "impact": "Range selection tracking fails",
+          "fix": "Add unique name: { name: 'custom1', ... }",
+          "severity": "medium"
+        }
+      ]
+    },
+    "comparedCustomRanges": {
+      "valueFormat": {
+        "structure": "Array<{ name: string, title: string, startDate: string, endDate: string }>",
+        "examples": [
+          "[{ name: 'lastYear', title: 'Previous Period Last Year', startDate: '09/18/2024', endDate: '10/19/2024' }]"
+        ],
+        "notes": "CRITICAL: Same format as customRanges. Often calculated dynamically based on main period selection using @periodSelected event.",
+        "typescript": "Array<{ name: string; title: string; startDate: string; endDate: string }>"
+      },
+      "relatedProps": ["customRanges", "comparisonStatus"],
+      "commonMistakes": [
+        {
+          "mistake": "Not recalculating when main period changes",
+          "impact": "Stale comparison ranges, confusing UX",
+          "fix": "Watch @periodSelected event and recalculate",
+          "severity": "medium",
+          "pattern": "Dynamic calculation based on selected period"
+        }
+      ]
+    },
+    "comparisonStatus": {
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "CRITICAL: Controls visibility of comparison toggle button, NOT the comparison state itself. Keep this TRUE if you want comparison feature available.",
+        "typescript": "boolean"
+      },
+      "relatedProps": ["disabledComparisonStatus", "disabledComparisonTooltipText"],
+      "relatedEvents": ["openComparison", "closeComparison"],
+      "commonMistakes": [
+        {
+          "mistake": "Binding to reactive state: :comparison-status=\"isComparisonOpen\"",
+          "impact": "Toggle button disappears when comparison is closed",
+          "fix": "Use static :comparison-status=\"true\" and handle state with @openComparison/@closeComparison events",
+          "severity": "critical",
+          "correctPattern": ":comparison-status=\"true\" @openComparison=\"handleOpen\" @closeComparison=\"handleClose\""
+        }
+      ]
+    },
+    "quickRangeSelectionStatus": {
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "Shows quick range buttons (Today, Yesterday, Last 7 Days, etc.). Often forgotten but crucial for UX.",
+        "typescript": "boolean"
+      },
+      "relatedProps": ["defaultRanges", "customRanges"],
+      "commonMistakes": [
+        {
+          "mistake": "Forgetting to set this to true",
+          "impact": "No quick range buttons shown, poor UX",
+          "fix": "Add :quick-range-selection-status=\"true\"",
+          "severity": "medium"
+        }
+      ]
+    },
+    "disabledRange": {
+      "valueFormat": {
+        "structure": "{ startDate: string, endDate: string }",
+        "examples": [
+          "{ startDate: '01.12.2024', endDate: '31.12.2024' }"
+        ],
+        "notes": "V1 used array of unix timestamps [start, end]. V2 uses object with date strings.",
+        "typescript": "{ startDate: string; endDate: string }"
+      },
+      "migrationFromV1": {
+        "v1Format": "Array [unixTimestampStart, unixTimestampEnd]",
+        "v2Format": "Object { startDate: string, endDate: string }",
+        "transformation": "{ startDate: formatDate(new Date(v1[0] * 1000)), endDate: formatDate(new Date(v1[1] * 1000)) }"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Using V1 array format",
+          "impact": "Disabled range won't work",
+          "fix": "Convert to object format",
+          "severity": "high"
+        }
+      ]
+    },
+    "formatMapping": {
+      "valueFormat": {
+        "structure": "{ [locale: string]: string }",
+        "examples": [
+          "{ 'en-US': 'mm/dd/yyyy', 'en-GB': 'dd/mm/yyyy', 'tr-TR': 'dd.mm.yyyy', 'default': 'dd.mm.yyyy' }"
+        ],
+        "notes": "Maps locale codes to date format strings. Used for display formatting.",
+        "typescript": "Record<string, string>"
+      },
+      "relatedProps": ["locale"],
+      "commonMistakes": []
+    }
+  },
+  "eventEnrichments": {
+    "apply": {
+      "payloadTypes": [
+        {
+          "condition": "Single range (no comparison)",
+          "type": "string",
+          "format": "\"mm/dd/yyyy-mm/dd/yyyy\"",
+          "example": "\"12/01/2024-12/20/2024\""
+        },
+        {
+          "condition": "With comparison",
+          "type": "Array<string>",
+          "format": "[\"mm/dd/yyyy-mm/dd/yyyy\", \"mm/dd/yyyy-mm/dd/yyyy\"]",
+          "example": "[\"12/01/2024-12/20/2024\", \"11/01/2024-11/20/2024\"]"
+        }
+      ],
+      "handlingPattern": "if (Array.isArray(payload)) {\n  const [mainRange, comparisonRange] = payload;\n  this.$emit('apply-date-selection', mainRange);\n  this.$emit('apply-comparison-date-selection', comparisonRange);\n} else {\n  this.$emit('apply-date-selection', payload);\n}",
+      "commonMistakes": [
+        {
+          "mistake": "Not handling both string and array formats",
+          "impact": "Crashes when comparison is active",
+          "fix": "Always check Array.isArray(payload) first",
+          "severity": "critical"
+        }
+      ]
+    },
+    "periodSelected": {
+      "payloadTypes": [
+        {
+          "condition": "Always",
+          "type": "{ start: string, end: string }",
+          "format": "{ start: 'dd.mm.yyyy', end: 'dd.mm.yyyy' }",
+          "example": "{ start: '01.12.2024', end: '20.12.2024' }"
+        }
+      ],
+      "useCase": "Triggered when user selects a main period. Use this to recalculate dynamic comparison ranges (e.g., Previous Period Last Year)",
+      "handlingPattern": "handlePeriodSelected(range) {\n  const start = this.parseDate(range.start);\n  const end = this.parseDate(range.end);\n  const periodLength = Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1;\n  \n  // Calculate Previous Period\n  const prevEnd = new Date(start);\n  prevEnd.setDate(start.getDate() - 1);\n  const prevStart = new Date(prevEnd);\n  prevStart.setDate(prevEnd.getDate() - periodLength + 1);\n  \n  // Previous Period Last Year\n  const lastYearStart = new Date(prevStart);\n  lastYearStart.setFullYear(prevStart.getFullYear() - 1);\n  const lastYearEnd = new Date(prevEnd);\n  lastYearEnd.setFullYear(prevEnd.getFullYear() - 1);\n  \n  this.comparedCustomRangesForV2 = [{\n    name: 'lastYear',\n    title: 'Previous Period Last Year',\n    startDate: this.formatDateToSlash(lastYearStart),\n    endDate: this.formatDateToSlash(lastYearEnd)\n  }];\n}"
+    },
+    "comparisonPeriodSelected": {
+      "payloadTypes": [
+        {
+          "condition": "Always",
+          "type": "{ start: string, end: string }",
+          "format": "{ start: 'dd.mm.yyyy', end: 'dd.mm.yyyy' }",
+          "example": "{ start: '01.11.2024', end: '20.11.2024' }"
+        }
+      ],
+      "useCase": "Triggered when user selects a comparison period"
+    },
+    "openComparison": {
+      "payloadTypes": [
+        {
+          "condition": "Always",
+          "type": "{ predefinedRange: object, comparedRange: object }",
+          "format": "{ predefinedRange: { start, end }, comparedRange: { start, end } }",
+          "example": "{ predefinedRange: { start: '01.12.2024', end: '20.12.2024' }, comparedRange: { start: '', end: '' } }"
+        }
+      ],
+      "useCase": "Triggered when comparison toggle is activated",
+      "handlingPattern": "handleOpenComparison() {\n  this.isComparisonActive = true;\n}"
+    },
+    "closeComparison": {
+      "payloadTypes": [
+        {
+          "condition": "Always",
+          "type": "{ predefinedRange: object, comparedRange: object }",
+          "format": "{ predefinedRange: { start, end }, comparedRange: { start, end } }",
+          "example": "{ predefinedRange: { start: '01.12.2024', end: '20.12.2024' }, comparedRange: { start: '', end: '' } }"
+        }
+      ],
+      "useCase": "Triggered when comparison toggle is deactivated",
+      "handlingPattern": "handleCloseComparison() {\n  this.isComparisonActive = false;\n  this.comparisonStartDate = '';\n  this.comparisonEndDate = '';\n}"
+    }
+  },
+  "exampleEnrichments": [
+    {
+      "title": "Basic Date Range Picker",
+      "description": "Simple date range picker without comparison",
+      "complexity": "beginner",
+      "code": "<template>\n  <InDatePickerV2\n    id=\"date-picker\"\n    name=\"date-picker\"\n    theme=\"white\"\n    label-text=\"Select Period\"\n    :value=\"dateValue\"\n    :min-date=\"minDate\"\n    :max-date=\"maxDate\"\n    :locale=\"locale\"\n    :format-mapping=\"formatMapping\"\n    :quick-range-selection-status=\"true\"\n    @apply=\"handleApply\" />\n</template>\n\n<script>\nimport { InDatePickerV2 } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InDatePickerV2 },\n  \n  data() {\n    return {\n      startDate: '01.12.2024',\n      endDate: '20.12.2024',\n      minDate: '01.01.2023',\n      maxDate: new Date(),\n      locale: 'tr-TR',\n      formatMapping: {\n        'tr-TR': 'dd.mm.yyyy',\n        'en-US': 'mm/dd/yyyy',\n        'default': 'dd.mm.yyyy'\n      }\n    };\n  },\n  \n  computed: {\n    dateValue() {\n      return [{\n        startDate: this.startDate,\n        endDate: this.endDate\n      }];\n    }\n  },\n  \n  methods: {\n    handleApply(payload) {\n      // payload is string: \"mm/dd/yyyy-mm/dd/yyyy\"\n      const [start, end] = payload.split('-');\n      this.startDate = this.convertToLocalFormat(start);\n      this.endDate = this.convertToLocalFormat(end);\n    },\n    \n    convertToLocalFormat(dateStr) {\n      // Convert mm/dd/yyyy to dd.mm.yyyy for Turkish locale\n      const [month, day, year] = dateStr.split('/');\n      return `${day}.${month}.${year}`;\n    }\n  }\n};\n</script>"
+    },
+    {
+      "title": "With Comparison & Dynamic Ranges",
+      "description": "Full-featured date picker with comparison mode and dynamically calculated comparison ranges",
+      "complexity": "advanced",
+      "code": "<template>\n  <InDatePickerV2\n    :key=\"`${datePickerKey}-${startDate}-${endDate}`\"\n    id=\"date-picker-compare\"\n    name=\"date-picker-compare\"\n    theme=\"white\"\n    label-text=\"Select Period\"\n    :value=\"datePickerValue\"\n    :min-date=\"minDate\"\n    :max-date=\"maxDate\"\n    :locale=\"locale\"\n    :format-mapping=\"formatMapping\"\n    :comparison-status=\"true\"\n    :disabled-comparison-status=\"compareDisabled\"\n    :quick-range-selection-status=\"true\"\n    :custom-ranges=\"customRangesForV2\"\n    :compared-custom-ranges=\"comparedCustomRangesForV2\"\n    @apply=\"handleApply\"\n    @periodSelected=\"handlePeriodSelected\"\n    @openComparison=\"handleOpenComparison\"\n    @closeComparison=\"handleCloseComparison\" />\n</template>\n\n<script>\nimport { InDatePickerV2 } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InDatePickerV2 },\n  \n  data() {\n    return {\n      datePickerKey: 0,\n      startDate: '01.12.2024',\n      endDate: '20.12.2024',\n      comparisonStartDate: '',\n      comparisonEndDate: '',\n      isComparisonActive: false,\n      compareDisabled: false,\n      comparedCustomRangesForV2: [],\n      minDate: '01.01.2023',\n      maxDate: new Date(),\n      locale: 'tr-TR',\n      formatMapping: {\n        'tr-TR': 'dd.mm.yyyy',\n        'en-US': 'mm/dd/yyyy',\n        'default': 'dd.mm.yyyy'\n      },\n      customDateRanges: {\n        'Q4 2024': [new Date('2024-10-01'), new Date('2024-12-31')],\n        'Last Quarter': [new Date('2024-07-01'), new Date('2024-09-30')]\n      }\n    };\n  },\n  \n  computed: {\n    datePickerValue() {\n      const main = {\n        startDate: this.startDate,\n        endDate: this.endDate\n      };\n      \n      if (this.isComparisonActive && this.comparisonStartDate && this.comparisonEndDate) {\n        return [\n          main,\n          {\n            startDate: this.comparisonStartDate,\n            endDate: this.comparisonEndDate\n          }\n        ];\n      }\n      \n      return [main];\n    },\n    \n    customRangesForV2() {\n      return Object.entries(this.customDateRanges).map(([title, dates], index) => ({\n        name: `custom${index + 1}`,\n        title,\n        startDate: this.formatDateToSlash(dates[0]),\n        endDate: this.formatDateToSlash(dates[1])\n      }));\n    }\n  },\n  \n  methods: {\n    handlePeriodSelected(range) {\n      // Recalculate dynamic comparison ranges\n      const start = this.parseDate(range.start);\n      const end = this.parseDate(range.end);\n      const periodLength = Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1;\n      \n      // Previous Period\n      const prevEnd = new Date(start);\n      prevEnd.setDate(start.getDate() - 1);\n      const prevStart = new Date(prevEnd);\n      prevStart.setDate(prevEnd.getDate() - periodLength + 1);\n      \n      // Previous Period Last Year\n      const lastYearStart = new Date(prevStart);\n      lastYearStart.setFullYear(prevStart.getFullYear() - 1);\n      const lastYearEnd = new Date(prevEnd);\n      lastYearEnd.setFullYear(prevEnd.getFullYear() - 1);\n      \n      this.comparedCustomRangesForV2 = [{\n        name: 'lastYear',\n        title: 'Previous Period Last Year',\n        startDate: this.formatDateToSlash(lastYearStart),\n        endDate: this.formatDateToSlash(lastYearEnd)\n      }];\n    },\n    \n    handleApply(payload) {\n      if (Array.isArray(payload)) {\n        // With comparison\n        const [mainRange, comparisonRange] = payload;\n        this.applyDateRange(mainRange);\n        this.applyComparisonRange(comparisonRange);\n      } else {\n        // Single range\n        this.applyDateRange(payload);\n      }\n    },\n    \n    applyDateRange(rangeStr) {\n      const [start, end] = rangeStr.split('-');\n      this.startDate = this.convertToLocalFormat(start);\n      this.endDate = this.convertToLocalFormat(end);\n    },\n    \n    applyComparisonRange(rangeStr) {\n      const [start, end] = rangeStr.split('-');\n      this.comparisonStartDate = this.convertToLocalFormat(start);\n      this.comparisonEndDate = this.convertToLocalFormat(end);\n    },\n    \n    handleOpenComparison() {\n      this.isComparisonActive = true;\n    },\n    \n    handleCloseComparison() {\n      this.isComparisonActive = false;\n      this.comparisonStartDate = '';\n      this.comparisonEndDate = '';\n    },\n    \n    formatDateToSlash(date) {\n      const d = new Date(date);\n      const month = String(d.getMonth() + 1).padStart(2, '0');\n      const day = String(d.getDate()).padStart(2, '0');\n      const year = d.getFullYear();\n      return `${month}/${day}/${year}`;\n    },\n    \n    parseDate(dateStr) {\n      const parts = dateStr.split(/[/.]/); \n      const isSlash = dateStr.includes('/');\n      \n      if (isSlash) {\n        // mm/dd/yyyy\n        const [month, day, year] = parts;\n        return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));\n      } else {\n        // dd.mm.yyyy\n        const [day, month, year] = parts;\n        return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));\n      }\n    },\n    \n    convertToLocalFormat(dateStr) {\n      const [month, day, year] = dateStr.split('/');\n      return `${day}.${month}.${year}`;\n    }\n  }\n};\n</script>"
+    }
+  ],
+  "helperFunctions": [
+    {
+      "name": "formatDateToSlash",
+      "description": "Convert Date object to mm/dd/yyyy format (required for customRanges)",
+      "code": "formatDateToSlash(date) {\n  const d = new Date(date);\n  const month = String(d.getMonth() + 1).padStart(2, '0');\n  const day = String(d.getDate()).padStart(2, '0');\n  const year = d.getFullYear();\n  return `${month}/${day}/${year}`;\n}",
+      "typescript": "formatDateToSlash(date: Date): string"
+    },
+    {
+      "name": "parseDate",
+      "description": "Parse date string from various formats to Date object",
+      "code": "parseDate(dateStr) {\n  const parts = dateStr.split(/[/.]/); \n  const isSlash = dateStr.includes('/');\n  \n  if (isSlash) {\n    // mm/dd/yyyy\n    const [month, day, year] = parts;\n    return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));\n  } else {\n    // dd.mm.yyyy\n    const [day, month, year] = parts;\n    return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));\n  }\n}",
+      "typescript": "parseDate(dateStr: string): Date"
+    },
+    {
+      "name": "convertToLocalFormat",
+      "description": "Convert mm/dd/yyyy to locale format (e.g., dd.mm.yyyy for Turkish)",
+      "code": "convertToLocalFormat(dateStr) {\n  const [month, day, year] = dateStr.split('/');\n  return `${day}.${month}.${year}`;\n}",
+      "typescript": "convertToLocalFormat(dateStr: string): string"
+    }
+  ],
+  "performanceNotes": [
+    {
+      "issue": "Recalculating comparedCustomRanges on every render",
+      "impact": "Unnecessary computations",
+      "solution": "Use watch with immediate: false instead of computed",
+      "example": "watch: { startDate() { this.calculateComparedRanges(); } }"
+    },
+    {
+      "issue": "Missing reactive key",
+      "impact": "Component doesn't re-render on comparison toggle",
+      "solution": "Add :key=\"`${datePickerKey}-${startDate}-${endDate}`\"",
+      "severity": "medium"
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "requirement": "Always provide label-text",
+      "reason": "Screen readers need label identification",
+      "severity": "high"
+    },
+    {
+      "requirement": "Set unique id and name",
+      "reason": "Form accessibility and screen reader navigation",
+      "severity": "high"
+    }
+  ]
+}

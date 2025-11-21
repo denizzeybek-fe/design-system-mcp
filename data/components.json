@@ -1,0 +1,7004 @@
+{
+  "InAccordion": {
+    "name": "InAccordion",
+    "title": "In Accordion",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "title": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "subTextStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "subText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "status": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "preventXss": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "borderStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "toggleTexts": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "accordionType": {
+        "type": "String",
+        "required": false,
+        "default": "default"
+      }
+    },
+    "emits": [
+      {
+        "name": "changeStatus"
+      }
+    ],
+    "enums": [],
+    "slots": [
+      "header",
+      "headerRight",
+      "headerSubText",
+      "default"
+    ],
+    "hasStorybook": false
+  },
+  "InBasicTextInput": {
+    "name": "InBasicTextInput",
+    "title": "In Basic Text Input",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": true
+      },
+      "name": {
+        "type": "String",
+        "required": true
+      },
+      "theme": {
+        "type": "String",
+        "required": false,
+        "default": "grey"
+      },
+      "value": {
+        "type": "String | Number",
+        "required": false,
+        "default": ""
+      },
+      "labelStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "labelText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "tooltipStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "tooltipText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "type": {
+        "type": "String",
+        "required": false,
+        "default": "text"
+      },
+      "states": {
+        "type": "String",
+        "required": false,
+        "default": "default"
+      },
+      "placeholderText": {
+        "type": "String",
+        "required": true
+      },
+      "disabledStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "leftIconStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "leftIconName": {
+        "type": "String",
+        "required": false,
+        "default": "search"
+      },
+      "rightIconStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "rightIconName": {
+        "type": "String",
+        "required": false,
+        "default": "search"
+      },
+      "autoComplete": {
+        "type": "String",
+        "required": false,
+        "default": "off"
+      },
+      "skeletonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonSizing": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "prefixStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "prefixText": {
+        "type": "String",
+        "required": false,
+        "default": "%"
+      },
+      "actionablePrefixStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "prefixDropdownOptions": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "suffixStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "suffixText": {
+        "type": "String",
+        "required": false,
+        "default": "%"
+      },
+      "actionableSuffixStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "suffixDropdownOptions": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "maxCharacterLength": {
+        "type": "Number | String",
+        "required": false,
+        "default": ""
+      },
+      "minValue": {
+        "type": "Number | String",
+        "required": false,
+        "default": 0
+      },
+      "maxValue": {
+        "type": "Number | String",
+        "required": false,
+        "default": ""
+      },
+      "autoFocus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "allowDecimal": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "allowComma": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "preventXss": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "helperMessageStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "helperMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "stateMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "characterCounterStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "characterCounterMaxValue": {
+        "type": "Number",
+        "required": false,
+        "default": 20
+      }
+    },
+    "emits": [
+      {
+        "name": "keyup"
+      },
+      {
+        "name": "enter"
+      },
+      {
+        "name": "focus"
+      },
+      {
+        "name": "blur"
+      },
+      {
+        "name": "click"
+      },
+      {
+        "name": "input"
+      },
+      {
+        "name": "change"
+      },
+      {
+        "name": "leftIconClick"
+      },
+      {
+        "name": "rightIconClick"
+      },
+      {
+        "name": "prefixClick"
+      },
+      {
+        "name": "suffixClick"
+      }
+    ],
+    "enums": [
+      {
+        "name": "DEFAULT_PREFIX_OPTIONS",
+        "values": {
+          "selectionType": "single",
+          "text": "option",
+          "value": "option"
+        },
+        "type": "const"
+      },
+      {
+        "name": "DEFAULT_SUFFIX_OPTIONS",
+        "values": {
+          "selectionType": "single",
+          "text": "option",
+          "value": "option"
+        },
+        "type": "const"
+      },
+      {
+        "name": "KEY_KODE_ENUMS",
+        "values": {},
+        "type": "const"
+      },
+      {
+        "name": "TYPES",
+        "values": {
+          "text": "text",
+          "number": "number"
+        },
+        "type": "const"
+      }
+    ],
+    "slots": [
+      "leftSlot",
+      "rightSlot",
+      "default"
+    ],
+    "hasStorybook": false
+  },
+  "InBox": {
+    "name": "InBox",
+    "title": "In Box",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "type": {
+        "type": "String",
+        "required": false,
+        "default": "default"
+      },
+      "boxSpacing": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "border": {
+        "type": "String",
+        "required": false,
+        "default": "bor-w-1 bor-s-s bor-c-6"
+      },
+      "borderRadius": {
+        "type": "String",
+        "required": false,
+        "default": "bor-r-1"
+      },
+      "borderTriangle": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "borderTrianglePosition": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "borderTriangleAlign": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      }
+    },
+    "emits": [],
+    "enums": [],
+    "slots": [
+      "front",
+      "reverse",
+      "default"
+    ],
+    "hasStorybook": false
+  },
+  "InBreadcrumb": {
+    "name": "InBreadcrumb",
+    "title": "In Breadcrumb",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "routes": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      }
+    },
+    "emits": [],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InBulkActions": {
+    "name": "InBulkActions",
+    "title": "In Bulk Actions",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "selectedInfoText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "selectAllButtonText": {
+        "type": "String",
+        "required": false,
+        "default": "Select All"
+      },
+      "clearAllButtonText": {
+        "type": "String",
+        "required": false,
+        "default": "Clear All"
+      },
+      "bulkActionButtons": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "selectionButtons": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      }
+    },
+    "emits": [],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InButton": {
+    "name": "InButton",
+    "title": "In Button",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": true
+      },
+      "type": {
+        "type": "String",
+        "required": true
+      },
+      "status": {
+        "type": "String",
+        "required": true
+      },
+      "text": {
+        "type": "String | Number",
+        "required": true
+      },
+      "value": {
+        "type": "String | Number | Boolean",
+        "required": false,
+        "default": ""
+      },
+      "icon": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "iconPosition": {
+        "type": "String",
+        "required": false,
+        "default": "left"
+      },
+      "withIcon": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "withoutText": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "disable": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "theme": {
+        "type": "String",
+        "required": false,
+        "default": "grey"
+      },
+      "iconSize": {
+        "type": "String",
+        "required": false,
+        "default": "24"
+      },
+      "withTooltip": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "loadingStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonSizing": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "buttonClass": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      }
+    },
+    "emits": [
+      {
+        "name": "click"
+      },
+      {
+        "name": "mouseover"
+      }
+    ],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InButtonV2": {
+    "name": "InButtonV2",
+    "title": "In Button",
+    "description": "",
+    "version": "v2",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": true
+      },
+      "styling": {
+        "type": "String",
+        "required": false,
+        "default": "STYLES.SOLID",
+        "validator": "validator: (value) => Object.values(STYLES).includes(value) }",
+        "validValues": [
+          "<from STYLES>"
+        ]
+      },
+      "type": {
+        "type": "String",
+        "required": false,
+        "default": "TYPES.PRIMARY",
+        "validator": "validator: (value) => Object.values(TYPES).includes(value) }",
+        "validValues": [
+          "<from TYPES>"
+        ]
+      },
+      "size": {
+        "type": "String",
+        "required": false,
+        "default": "SIZES.DEFAULT",
+        "validator": "validator: (value) => Object.values(SIZES).includes(value) }",
+        "validValues": [
+          "<from SIZES>"
+        ]
+      },
+      "disabledStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "selectedStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "loadingStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "successStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "labelTextStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "labelText": {
+        "type": "String | Number",
+        "required": false,
+        "default": "Label"
+      },
+      "leftIcon": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "rightIcon": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "skeletonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonSizing": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "iconSize": {
+        "type": "String",
+        "required": false,
+        "default": "24",
+        "validator": "validator: (value) => ICON_SIZES.includes(value)}"
+      },
+      "buttonGroupOptions": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "iconClick": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "tooltipText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "tooltipOptions": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      }
+    },
+    "emits": [
+      {
+        "name": "click"
+      },
+      {
+        "name": "clickIcon"
+      }
+    ],
+    "enums": [
+      {
+        "name": "STYLES",
+        "values": {
+          "SOLID": "solid",
+          "GHOST": "ghost",
+          "TEXT": "text"
+        },
+        "type": "const"
+      },
+      {
+        "name": "TYPES",
+        "values": {
+          "PRIMARY": "primary",
+          "SUBTLE_PRIMARY": "subtle-primary",
+          "SECONDARY": "secondary",
+          "DANGER": "danger",
+          "WARNING": "warning",
+          "SMART": "smart",
+          "SUBTLE_SMART": "subtle-smart",
+          "INVERSE": "inverse"
+        },
+        "type": "const"
+      },
+      {
+        "name": "SIZES",
+        "values": {
+          "DEFAULT": "default",
+          "SMALL": "small"
+        },
+        "type": "const"
+      },
+      {
+        "name": "DEFAULT_TOOLTIP_OPTIONS",
+        "values": {
+          "id": "tooltip",
+          "staticPosition": "top center"
+        },
+        "type": "const"
+      }
+    ],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InChart": {
+    "name": "InChart",
+    "title": "In Chart",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "type": {
+        "type": "String",
+        "required": true
+      },
+      "labels": {
+        "type": "Array",
+        "required": true
+      },
+      "data": {
+        "type": "Array",
+        "required": true
+      },
+      "dataText": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "dataTooltips": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "backgroundColor": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "width": {
+        "type": "Number",
+        "required": false,
+        "default": 0
+      },
+      "height": {
+        "type": "Number",
+        "required": false,
+        "default": 0
+      },
+      "theme": {
+        "type": "String",
+        "required": false,
+        "default": "blue"
+      },
+      "labelLimit": {
+        "type": "Number",
+        "required": false,
+        "default": 12
+      },
+      "labelLimitYAxes": {
+        "type": "Number",
+        "required": false,
+        "default": 5
+      },
+      "labelOffsetX": {
+        "type": "Number",
+        "required": false,
+        "default": 0
+      },
+      "drawYLine": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "drawXLine": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "step": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "tooltipsExtraSettings": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "labelXAxesTicksExtraSettings": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "labelYAxesTicksExtraSettings": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "labelYAxeScaleType": {
+        "type": "String",
+        "required": false,
+        "default": "linear"
+      },
+      "labelRotationXAxes": {
+        "type": "Number",
+        "required": false,
+        "default": 0
+      },
+      "noDataIconStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "noDataTitle": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "noDataDescription": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "legendSettings": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "legendNames": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "colorPalette": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "chartAnnotations": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "annotationsExtraSettings": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "datasetSettings": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "iconLocations": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "enableUsDateFormat": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "showDescription": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "hintIcon": {
+        "type": "String",
+        "required": false,
+        "default": "line-tooltip"
+      },
+      "singleInfoIcons": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      }
+    },
+    "emits": [],
+    "enums": [],
+    "slots": [
+      "default"
+    ],
+    "hasStorybook": false
+  },
+  "InCheckBox": {
+    "name": "InCheckBox",
+    "title": "In Check Box",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": true
+      },
+      "name": {
+        "type": "String | Number",
+        "required": true
+      },
+      "checked": {
+        "type": "String | Number | Boolean",
+        "required": true
+      },
+      "label": {
+        "type": "String",
+        "required": true
+      },
+      "boldLabel": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "disable": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "indeterminate": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "preventXss": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonSizing": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      }
+    },
+    "emits": [],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InCheckBoxV2": {
+    "name": "InCheckBoxV2",
+    "title": "In Check Box",
+    "description": "",
+    "version": "v2",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "name": {
+        "type": "String | Number",
+        "required": false,
+        "default": ""
+      },
+      "labelText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "descriptionText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "stateMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "tooltipStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "descriptionStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "labelStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "boldLabel": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "tooltipText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "skeletonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonSizing": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "indeterminate": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "checked": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "disabledStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "options": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "state": {
+        "type": "any",
+        "required": false,
+        "default": "default"
+      }
+    },
+    "emits": [
+      {
+        "name": "click"
+      }
+    ],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InChips": {
+    "name": "InChips",
+    "title": "In Chips",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "type": {
+        "type": "any",
+        "required": false,
+        "default": "default"
+      },
+      "styles": {
+        "type": "any",
+        "required": false,
+        "default": "stroke"
+      },
+      "text": {
+        "type": "String",
+        "required": true
+      },
+      "value": {
+        "type": "String|Number",
+        "required": true
+      },
+      "disabledStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "interactive": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "closeButton": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "selectedStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "actionableLabel": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "maxWidth": {
+        "type": "Number",
+        "required": false,
+        "default": "null"
+      }
+    },
+    "emits": [
+      {
+        "name": "tagClick"
+      },
+      {
+        "name": "click"
+      }
+    ],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InCodeSnippet": {
+    "name": "InCodeSnippet",
+    "title": "In Code Snippet",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "code": {
+        "type": "String",
+        "required": true
+      },
+      "options": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "size": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "syntaxCheck": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "disable": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "invalid": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "invalidMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "warning": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "warningMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "focusEditor": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "usePercentageSize": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "replaceDynamicContentMap": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "fallbackSaveButtonText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "fallbackCloseButtonText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "fallbackOptions": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "fallBackDisabledCharacters": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "fallBackDisabledCharactersMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "preventXss": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "canAddDynamicContent": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "canEdit": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "dynamicContentBoxProps": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "replaceDynamicContentText": {
+        "type": "String",
+        "required": false,
+        "default": "Replace Dynamic Content"
+      },
+      "dynamicContentButtonText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "fallBackStatusMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "groupingEventInfoText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "saveButtonCallback": {
+        "type": "Function",
+        "required": false,
+        "default": "null"
+      },
+      "position": {
+        "type": "String",
+        "required": false,
+        "default": "bottom"
+      },
+      "warningTags": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "errorTags": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "validateTagsWithFallback": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "markNotExistDynamicContent": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "notExistingAttributeHasErrorState": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "notExistingAttributeWhiteListRegExp": {
+        "type": "RegExp",
+        "required": false,
+        "default": "[Function]"
+      },
+      "uploadTriggerWords": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      }
+    },
+    "emits": [
+      {
+        "name": "markedTags"
+      },
+      {
+        "name": "cursorActivity"
+      },
+      {
+        "name": "input"
+      },
+      {
+        "name": "ready"
+      },
+      {
+        "name": "checkSyntaxError"
+      },
+      {
+        "name": "updateEventPersistent"
+      },
+      {
+        "name": "updateProductAttributePersistent"
+      },
+      {
+        "name": "addDynamicAttribute"
+      }
+    ],
+    "enums": [],
+    "slots": [
+      "menu",
+      "default"
+    ],
+    "hasStorybook": false
+  },
+  "InColorPicker": {
+    "name": "InColorPicker",
+    "title": "In Color Picker",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "value": {
+        "type": "String",
+        "required": true
+      },
+      "label": {
+        "type": "String",
+        "required": true
+      },
+      "placeholder": {
+        "type": "String",
+        "required": true
+      },
+      "invalid": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "invalidMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "skeletonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonSizing": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "disabled": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      }
+    },
+    "emits": [
+      {
+        "name": "change"
+      }
+    ],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InContainer": {
+    "name": "InContainer",
+    "title": "In Container",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "border": {
+        "type": "String",
+        "required": false,
+        "default": "bor-w-1 bor-s-s bor-c-6"
+      },
+      "borderRadius": {
+        "type": "String",
+        "required": false,
+        "default": "bor-r-1"
+      },
+      "borderTriangle": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "borderTrianglePosition": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "borderTriangleAlign": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "headerStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "footerStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "fullWidthContentStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "containerType": {
+        "type": "String",
+        "required": false,
+        "default": "default"
+      },
+      "colorIndicatorStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "colorIndicatorColor": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      }
+    },
+    "emits": [],
+    "enums": [],
+    "slots": [
+      "headerTitle",
+      "headerTag",
+      "headerDescription",
+      "headerLeftSlot",
+      "headerRightSlot",
+      "headerBottomSlot",
+      "contentArea",
+      "footerTitle",
+      "footerTag",
+      "footerDescription",
+      "footerLeftSlot",
+      "footerRightSlot",
+      "default"
+    ],
+    "hasStorybook": false
+  },
+  "InCreateButton": {
+    "name": "InCreateButton",
+    "title": "In Create Button",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": true
+      },
+      "skeletonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonSizing": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]",
+        "validator": "validator: (value) => Object.keys(value).includes('width') && Object.keys(value).includes('height') }"
+      },
+      "label": {
+        "type": "String",
+        "required": false,
+        "default": "Create"
+      },
+      "disabledStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      }
+    },
+    "emits": [
+      {
+        "name": "click"
+      }
+    ],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InCustomDropDown": {
+    "name": "InCustomDropDown",
+    "title": "In Custom Drop Down",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": false,
+        "default": "qa-custom-dropdown"
+      },
+      "text": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "status": {
+        "type": "String",
+        "required": false,
+        "default": "default"
+      },
+      "type": {
+        "type": "String",
+        "required": false,
+        "default": "link"
+      },
+      "target": {
+        "type": "String",
+        "required": false,
+        "default": "_self"
+      },
+      "options": {
+        "type": "Array",
+        "required": true
+      },
+      "searchStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "createNewOptionStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "createNewOptionText": {
+        "type": "String",
+        "required": false,
+        "default": "Label"
+      },
+      "openPosition": {
+        "type": "String",
+        "required": false,
+        "default": "left"
+      },
+      "buttonType": {
+        "type": "String",
+        "required": false,
+        "default": "secondary"
+      },
+      "icon": {
+        "type": "String",
+        "required": false,
+        "default": "filled-dropdown-down"
+      },
+      "iconPosition": {
+        "type": "String",
+        "required": false,
+        "default": "right"
+      },
+      "iconName": {
+        "type": "String",
+        "required": false,
+        "default": "line-plus-netural"
+      },
+      "disable": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "title": {
+        "type": "String",
+        "required": false,
+        "default": "Select Condition"
+      },
+      "extraOption": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "noDataText": {
+        "type": "String",
+        "required": false,
+        "default": "No Data to Show"
+      },
+      "noSearchResultText": {
+        "type": "String",
+        "required": false,
+        "default": "No Search Result"
+      },
+      "skeletonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonSizing": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "visibleButton": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "visibleBorder": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "avoidClosingSelectors": {
+        "type": "any",
+        "required": false,
+        "default": false
+      },
+      "isFullWidth": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "isHoverEffectDisabled": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "dropdownMenuPosition": {
+        "type": "String",
+        "required": false,
+        "default": "DROPDOWN_MENU_POSITION_AUTO"
+      },
+      "withTitle": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "withTooltip": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "tooltipText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      }
+    },
+    "emits": [
+      {
+        "name": "hoverItem"
+      },
+      {
+        "name": "clickExtraOption"
+      },
+      {
+        "name": "openList"
+      },
+      {
+        "name": "click"
+      },
+      {
+        "name": "closeList"
+      },
+      {
+        "name": "selectedInActiveOption"
+      },
+      {
+        "name": "select"
+      }
+    ],
+    "enums": [
+      {
+        "name": "DROPDOWN_MENU_REVERT_POSITION",
+        "values": {},
+        "type": "const"
+      }
+    ],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InDataTable": {
+    "name": "InDataTable",
+    "title": "In Data Table",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "name": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "placeholder": {
+        "type": "String",
+        "required": false,
+        "default": "Search"
+      },
+      "fetchUrl": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "tableFields": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "tableSearchParams": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "actions": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "paginationPath": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "sortOrder": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "apiMode": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "data": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "perPage": {
+        "type": "Number",
+        "required": false,
+        "default": 10
+      },
+      "isCollapsed": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "noDataTitle": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "noDataDescription": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "noDataIcon": {
+        "type": "String",
+        "required": false,
+        "default": "no-search-result"
+      },
+      "visiblePaginationOption": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "statusList": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "withSearchFilter": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "withStatusFilter": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "isWrapperBox": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "loadingType": {
+        "type": "String",
+        "required": false,
+        "default": "skeleton"
+      },
+      "loadingTitle": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "loadingDescription": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "loadingIcon": {
+        "type": "String",
+        "required": false,
+        "default": "email"
+      },
+      "paginationStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "apiModePaginationStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "loadingStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "httpFetch": {
+        "type": "Function",
+        "required": false,
+        "default": "null"
+      },
+      "horizontalScroll": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "fixFirstColumn": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "fixSecondColumn": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "fixLastColumn": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "showTableFilters": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "rowClass": {
+        "type": "String | Function",
+        "required": false,
+        "default": ""
+      },
+      "pinnedRows": {
+        "type": "Function",
+        "required": false,
+        "default": "[Function]"
+      },
+      "isSearchWithEnter": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "trackBy": {
+        "type": "String",
+        "required": false,
+        "default": "id"
+      },
+      "detailRow": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "httpOptions": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "searchInputTheme": {
+        "type": "String",
+        "required": false,
+        "default": "white"
+      },
+      "preventXss": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "locale": {
+        "type": "String",
+        "required": false,
+        "default": "default"
+      },
+      "formatMapping": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      }
+    },
+    "emits": [
+      {
+        "name": "setPaginationObject"
+      },
+      {
+        "name": "onLoad"
+      },
+      {
+        "name": "paginationCount"
+      },
+      {
+        "name": "perPage"
+      },
+      {
+        "name": "selectStatus"
+      }
+    ],
+    "enums": [],
+    "slots": [
+      "secondDropdown",
+      "left-side-filters",
+      "secondRowHeader",
+      "default"
+    ],
+    "hasStorybook": false
+  },
+  "InDatePicker": {
+    "name": "InDatePicker",
+    "title": "In Date Picker",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": true
+      },
+      "label": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "visibleLabel": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "value": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "openPosition": {
+        "type": "String",
+        "required": false,
+        "default": "right"
+      },
+      "minDate": {
+        "type": "String",
+        "required": false,
+        "default": "null"
+      },
+      "maxDate": {
+        "type": "String",
+        "required": false,
+        "default": "null"
+      },
+      "singleDatePicker": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonSizing": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "theme": {
+        "type": "String",
+        "required": false,
+        "default": "grey"
+      },
+      "timeZone": {
+        "type": "Number",
+        "required": false,
+        "default": 0
+      },
+      "customDateRange": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "additionalRanges": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "customRanges": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "disabledRange": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "locale": {
+        "type": "String",
+        "required": false,
+        "default": "default"
+      },
+      "separator": {
+        "type": "String",
+        "required": false,
+        "default": " - "
+      },
+      "weekLabel": {
+        "type": "String",
+        "required": false,
+        "default": "W"
+      },
+      "customRangeLabel": {
+        "type": "String",
+        "required": false,
+        "default": "Custom Range"
+      },
+      "daysOfWeek": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "monthNames": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "formatMapping": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "firstDay": {
+        "type": "Number",
+        "required": false,
+        "default": 0
+      }
+    },
+    "emits": [
+      {
+        "name": "update"
+      }
+    ],
+    "enums": [],
+    "slots": [
+      "default"
+    ],
+    "hasStorybook": false
+  },
+  "InDatePickerV2": {
+    "name": "InDatePickerV2",
+    "title": "In Date Picker",
+    "description": "",
+    "version": "v2",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": true
+      },
+      "name": {
+        "type": "String",
+        "required": true
+      },
+      "theme": {
+        "type": "String",
+        "required": false,
+        "default": "grey"
+      },
+      "state": {
+        "type": "String",
+        "required": false,
+        "default": "default"
+      },
+      "stateMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "disabledApplyButton": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "applyButtonTooltip": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "helperMessageStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "helperMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "labelStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "labelText": {
+        "type": "String",
+        "required": false,
+        "default": "Label"
+      },
+      "placeholderText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "value": {
+        "type": "any",
+        "required": false,
+        "default": ""
+      },
+      "minDate": {
+        "type": "any",
+        "required": false,
+        "default": ""
+      },
+      "maxDate": {
+        "type": "any",
+        "required": false,
+        "default": ""
+      },
+      "singleDatePickerStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "comparisonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "disabledComparisonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "disabledComparisonTooltipText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "calendarPopoverAlign": {
+        "type": "String",
+        "required": false,
+        "default": "left"
+      },
+      "disabledRange": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "calendarPopoverMessage": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "specificDates": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "customRanges": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "comparedCustomRanges": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "tooltipStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "tooltipText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "clearSelectionButton": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "dayToMonth": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "timeZone": {
+        "type": "Number",
+        "required": false,
+        "default": 0
+      },
+      "disabledStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonSizing": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "weekStartDay": {
+        "type": "String",
+        "required": false,
+        "default": "Sunday",
+        "validator": "validator: (value) => Object.keys(WEEK_STARTS).includes(value) }"
+      },
+      "preventXss": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "defaultRanges": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]",
+        "validator": "validator: (value) => value.every(item => DEFAULT_RANGES.includes(item)) }"
+      },
+      "invalidDateMessage": {
+        "type": "String",
+        "required": false,
+        "default": "Invalid Date"
+      },
+      "minMaxDateMessageStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "periodTooltipPosition": {
+        "type": "String",
+        "required": false,
+        "default": "bottom center"
+      },
+      "locale": {
+        "type": "String",
+        "required": false,
+        "default": "default"
+      },
+      "formatMapping": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      }
+    },
+    "emits": [
+      {
+        "name": "periodSelected"
+      },
+      {
+        "name": "comparisonPeriodSelected"
+      },
+      {
+        "name": "dateRangeUpdated"
+      },
+      {
+        "name": "dateComparedRangeUpdated"
+      },
+      {
+        "name": "close"
+      },
+      {
+        "name": "apply"
+      },
+      {
+        "name": "rangeSelected"
+      }
+    ],
+    "enums": [
+      {
+        "name": "INPUT_SELECTORS",
+        "values": {
+          "FIRST_START": "#firstStart",
+          "FIRST_END": "#firstEnd",
+          "SECOND_START": "#secondStart",
+          "SECOND_END": "#secondEnd"
+        },
+        "type": "const"
+      },
+      {
+        "name": "WEEK_STARTS",
+        "values": {},
+        "type": "const"
+      }
+    ],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InDeviceTemplate": {
+    "name": "InDeviceTemplate",
+    "title": "In Device Template",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "type": {
+        "type": "String",
+        "required": true
+      },
+      "size": {
+        "type": "String",
+        "required": false,
+        "default": "600"
+      },
+      "slotXPosition": {
+        "type": "String",
+        "required": false,
+        "default": "0"
+      },
+      "slotYPosition": {
+        "type": "String",
+        "required": false,
+        "default": "0"
+      }
+    },
+    "emits": [],
+    "enums": [],
+    "slots": [
+      "default"
+    ],
+    "hasStorybook": false
+  },
+  "InDrawer": {
+    "name": "InDrawer",
+    "title": "In Drawer",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "closeButtonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "closeOnOutsideClick": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "fullWidthContentStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "descriptionStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "descriptionText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "footerStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "id": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "overlayStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "size": {
+        "type": "String",
+        "required": true
+      },
+      "state": {
+        "type": "String",
+        "required": false,
+        "default": "default"
+      },
+      "status": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "titleText": {
+        "type": "String",
+        "required": true
+      },
+      "footerButtonGroupOptions": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      }
+    },
+    "emits": [
+      {
+        "name": "onCloseEvent"
+      }
+    ],
+    "enums": [
+      {
+        "name": "STATES",
+        "values": {
+          "default": "default",
+          "danger": "danger",
+          "warning": "warning"
+        },
+        "type": "const"
+      },
+      {
+        "name": "SIZES",
+        "values": {
+          "small": "small",
+          "medium": "medium",
+          "large": "large"
+        },
+        "type": "const"
+      }
+    ],
+    "slots": [
+      "headerTitleSlot",
+      "headerRightSlot",
+      "headerBottomSlot",
+      "contentSlot",
+      "footerSlot",
+      "default"
+    ],
+    "hasStorybook": false
+  },
+  "InDropDown": {
+    "name": "InDropDown",
+    "title": "In Drop Down",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": false,
+        "default": "qa-drop-down"
+      },
+      "options": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "customOptionsKey": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "value": {
+        "type": "String | Number| Boolean",
+        "required": false,
+        "default": ""
+      },
+      "label": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "labelTooltip": {
+        "type": "String | Boolean",
+        "required": false,
+        "default": false
+      },
+      "searchStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "theme": {
+        "type": "String",
+        "required": false,
+        "default": "grey"
+      },
+      "disable": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "fetchUrl": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "autoComplete": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "visibleLabel": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "queryString": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "invalid": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "invalidMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "skeletonSizing": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "overriddenListPosition": {
+        "type": "String",
+        "required": false,
+        "default": "",
+        "validator": "validator: (val) => Object.values({...LIST_POSITION,"
+      },
+      "placeholder": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "placeHolderStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "createOptionStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "responseHasData": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "responseKey": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "warning": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "warningMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "buttonType": {
+        "type": "String",
+        "required": false,
+        "default": "dropdown"
+      },
+      "canRemoveSelectedItem": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "type": {
+        "type": "String",
+        "required": false,
+        "default": "default"
+      },
+      "childOptionsLeftPosition": {
+        "type": "String|Number",
+        "required": false,
+        "default": ""
+      },
+      "noDataText": {
+        "type": "String",
+        "required": false,
+        "default": "No Data to Show"
+      },
+      "noSearchResultText": {
+        "type": "String",
+        "required": false,
+        "default": "No Search Result"
+      },
+      "buttonSize": {
+        "type": "String",
+        "required": false,
+        "default": "default"
+      },
+      "attributeVisible": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      }
+    },
+    "emits": [
+      {
+        "name": "change"
+      },
+      {
+        "name": "openList"
+      },
+      {
+        "name": "closeList"
+      },
+      {
+        "name": "selectedInActiveOption"
+      },
+      {
+        "name": "select"
+      },
+      {
+        "name": "unSelect"
+      },
+      {
+        "name": "addNewOption"
+      },
+      {
+        "name": "loadingDropDownOptions"
+      }
+    ],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InDropdownMenu": {
+    "name": "InDropdownMenu",
+    "title": "In Dropdown Menu",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "status": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "selectAllOptionStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "selectionType": {
+        "type": "String",
+        "required": false,
+        "default": "single"
+      },
+      "searchStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "options": {
+        "type": "Array",
+        "required": true
+      },
+      "preSelectedValues": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "id": {
+        "type": "String",
+        "required": true
+      },
+      "boxWidth": {
+        "type": "String",
+        "required": false,
+        "default": "basedOnField"
+      },
+      "createButtonLabel": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "minCharacterLimit": {
+        "type": "Number | String",
+        "required": false,
+        "default": 1
+      },
+      "maxCharacterLimit": {
+        "type": "Number | String",
+        "required": false,
+        "default": 10
+      },
+      "createOptionStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "buttonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "buttonIcon": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "buttonLabel": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "loadingState": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "dynamicPosition": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "dynamicChildPosition": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "bottomOffsetForDynamicPosition": {
+        "type": "Number",
+        "required": false,
+        "default": 0
+      },
+      "fetchPage": {
+        "type": "Number",
+        "required": false,
+        "default": 1
+      },
+      "staticPosition": {
+        "type": "String",
+        "required": false,
+        "default": "BOTTOM_LEFT"
+      },
+      "staticChildPosition": {
+        "type": "String",
+        "required": false,
+        "default": "BOTTOM_RIGHT"
+      },
+      "maxHeight": {
+        "type": "Number",
+        "required": false,
+        "default": 240
+      },
+      "maxChildHeight": {
+        "type": "Number",
+        "required": false,
+        "default": 480
+      },
+      "optionValidationType": {
+        "type": "any",
+        "required": false,
+        "default": "VALIDATIONS.All"
+      },
+      "optionValidationText": {
+        "type": "String",
+        "required": false,
+        "default": "Enter a valid value to continue."
+      },
+      "characterLimitValidationText": {
+        "type": "String",
+        "required": false,
+        "default": "Enter a value between 1 and 10 characters to continue."
+      },
+      "sameValueExistsValidationText": {
+        "type": "String",
+        "required": false,
+        "default": "Same values exists. Enter a different value."
+      },
+      "canSelectOption": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "lazyLoad": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "lazyLoadSearch": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "hasLimit": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "externalSearch": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "searchTabIndex": {
+        "type": "Number",
+        "required": false,
+        "default": 0
+      },
+      "preventFocus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "isWrappedDescription": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "preventXss": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "allowAddAllCases": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "state": {
+        "type": "String",
+        "required": false,
+        "default": "default"
+      },
+      "stateMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      }
+    },
+    "emits": [
+      {
+        "name": "selectedDisabledValues"
+      },
+      {
+        "name": "endScroll"
+      },
+      {
+        "name": "clickOutside"
+      },
+      {
+        "name": "search"
+      },
+      {
+        "name": "addOption"
+      },
+      {
+        "name": "secondaryButtonClick"
+      },
+      {
+        "name": "selectAllOptions"
+      },
+      {
+        "name": "resetAllOptions"
+      },
+      {
+        "name": "optionClick"
+      }
+    ],
+    "enums": [
+      {
+        "name": "PATTERNS",
+        "values": {},
+        "type": "const"
+      },
+      {
+        "name": "KEY_KODE_ENUMS",
+        "values": {},
+        "type": "const"
+      }
+    ],
+    "slots": [
+      "dropdownMenuInfoBox",
+      "default"
+    ],
+    "hasStorybook": false
+  },
+  "InDynamicContentBox": {
+    "name": "InDynamicContentBox",
+    "title": "In Dynamic Content Box",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": true
+      },
+      "fieldsConfig": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "dynamicContent": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "theme": {
+        "type": "String",
+        "required": false,
+        "default": "light"
+      },
+      "variant": {
+        "type": "String",
+        "required": false,
+        "default": "neutral"
+      },
+      "titleStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "titleText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "descriptionStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "descriptionText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "size": {
+        "type": "String",
+        "required": false,
+        "default": "large"
+      },
+      "fullWidthContentStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "buttonOptions": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "hasGroupLevelPartners": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "groupLevelPartners": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "hasConstantEvent": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "hasConstantAttribute": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "constantEventInfoMessage": {
+        "type": "String",
+        "required": false,
+        "default": "defaultConstantEventInfoMessage"
+      },
+      "constantAttributeInfoMessage": {
+        "type": "String",
+        "required": false,
+        "default": "defaultConstantAttributeInfoMessage"
+      },
+      "constantSelectedAttributeInfoMessage": {
+        "type": "String",
+        "required": false,
+        "default": "defaultConstantSelectedAttributeInfoMessage"
+      },
+      "constantEventWarningMessage": {
+        "type": "String",
+        "required": false,
+        "default": "defaultConstantEventWarningMessage"
+      },
+      "constantAttributeWarningMessage": {
+        "type": "String",
+        "required": false,
+        "default": "defaultConstantAttributeWarningMessage"
+      },
+      "groupingEventWarningText": {
+        "type": "String",
+        "required": false,
+        "default": "defaultGroupEventsWarningMessage"
+      },
+      "groupEventsCheckboxLabel": {
+        "type": "String",
+        "required": false,
+        "default": "defaultGroupEventsCheckboxLabel"
+      },
+      "activateGroupingEvents": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "isGroupingEvents": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "groupEventsTooltip": {
+        "type": "String",
+        "required": false,
+        "default": "defaultGroupEventsTooltip"
+      },
+      "groupEventsDisabledTooltip": {
+        "type": "String",
+        "required": false,
+        "default": "defaultGroupEventsDisabledTooltip"
+      },
+      "groupedEvents": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "maxChildHeight": {
+        "type": "Number",
+        "required": false,
+        "default": 300
+      },
+      "lazyLoadChunkSize": {
+        "type": "Number",
+        "required": false,
+        "default": 100
+      },
+      "preloadBunchSize": {
+        "type": "Number",
+        "required": false,
+        "default": 10
+      }
+    },
+    "emits": [
+      {
+        "name": "setEventAsGrouped"
+      },
+      {
+        "name": "updateGroupingEvents"
+      }
+    ],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InFormStatus": {
+    "name": "InFormStatus",
+    "title": "In Form Status",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "target": {
+        "type": "String",
+        "required": false,
+        "default": "_self"
+      },
+      "skeletonSizing": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "preventXss": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      }
+    },
+    "emits": [
+      {
+        "name": "click"
+      }
+    ],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InHeader": {
+    "name": "InHeader",
+    "title": "In Header",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "routes": {
+        "type": "Array",
+        "required": true
+      },
+      "generateProgressStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "progressValue": {
+        "type": "Number",
+        "required": false,
+        "default": 20
+      },
+      "maxProgressValue": {
+        "type": "Number",
+        "required": false,
+        "default": 100
+      },
+      "generateTooltip": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "preventXss": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      }
+    },
+    "emits": [],
+    "enums": [],
+    "slots": [
+      "beamer",
+      "feedback",
+      "academy",
+      "zendeskAcademy",
+      "partner",
+      "zendesk",
+      "default"
+    ],
+    "hasStorybook": false
+  },
+  "InIcons": {
+    "name": "InIcons",
+    "title": "In Icons",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "name": {
+        "type": "String",
+        "required": true
+      },
+      "size": {
+        "type": "String",
+        "required": false,
+        "default": "24"
+      },
+      "sizeObject": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      }
+    },
+    "emits": [],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InInfoBox": {
+    "name": "InInfoBox",
+    "title": "In Info Box",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": true
+      },
+      "theme": {
+        "type": "String",
+        "required": false,
+        "default": "light"
+      },
+      "variant": {
+        "type": "String",
+        "required": false,
+        "default": "information"
+      },
+      "titleStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "titleText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "descriptionStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "descriptionText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "buttonOptions": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "size": {
+        "type": "String",
+        "required": false,
+        "default": "medium"
+      },
+      "fullWidthContentStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      }
+    },
+    "emits": [],
+    "enums": [],
+    "slots": [
+      "default"
+    ],
+    "hasStorybook": false
+  },
+  "InLinks": {
+    "name": "InLinks",
+    "title": "In Links",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": true
+      },
+      "link": {
+        "type": "String",
+        "required": true
+      },
+      "text": {
+        "type": "String",
+        "required": true
+      },
+      "type": {
+        "type": "String",
+        "required": false,
+        "default": "default"
+      },
+      "target": {
+        "type": "String",
+        "required": false,
+        "default": "_self"
+      },
+      "icon": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "iconSize": {
+        "type": "String",
+        "required": false,
+        "default": "24"
+      },
+      "withIcon": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "disable": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "externalLink": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "download": {
+        "type": "String",
+        "required": false,
+        "default": "null"
+      },
+      "skeletonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonSizing": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      }
+    },
+    "emits": [
+      {
+        "name": "click"
+      }
+    ],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InLoading": {
+    "name": "InLoading",
+    "title": "In Loading",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "size": {
+        "type": "String",
+        "required": false,
+        "default": "24"
+      },
+      "colorClass": {
+        "type": "String",
+        "required": false,
+        "default": "i-c-1"
+      }
+    },
+    "emits": [],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InModalV2": {
+    "name": "InModalV2",
+    "title": "In Modal",
+    "description": "",
+    "version": "v2",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "status": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "state": {
+        "type": "String",
+        "required": false,
+        "default": "default"
+      },
+      "size": {
+        "type": "String",
+        "required": false,
+        "default": "small"
+      },
+      "titleText": {
+        "type": "String",
+        "required": false,
+        "default": "Modal title"
+      },
+      "descriptionStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "descriptionText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "footerStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "closeButtonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "closeOnOutsideClick": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "footerButtonGroupOptions": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "preventXss": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "fullWidthContentStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      }
+    },
+    "emits": [
+      {
+        "name": "onCloseEvent"
+      },
+      {
+        "name": "cancelOrBackButtonEvent"
+      },
+      {
+        "name": "secondaryButtonEvent"
+      },
+      {
+        "name": "primaryButtonEvent"
+      }
+    ],
+    "enums": [
+      {
+        "name": "FOOTER_BUTTON_GROUP_OPTIONS",
+        "values": {
+          "type": "primary",
+          "styling": "solid",
+          "labelText": "Primary"
+        },
+        "type": "const"
+      },
+      {
+        "name": "STATES",
+        "values": {
+          "default": "default",
+          "primary": "primary",
+          "warning": "warning",
+          "danger": "danger"
+        },
+        "type": "const"
+      }
+    ],
+    "slots": [
+      "headerTitleSlot",
+      "headerRightSlot",
+      "headerBottomSlot",
+      "contentSlot",
+      "footerSlot",
+      "default"
+    ],
+    "hasStorybook": false
+  },
+  "InModals": {
+    "name": "InModals",
+    "title": "In Modals",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "status": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "type": {
+        "type": "String",
+        "required": false,
+        "default": "information"
+      },
+      "title": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "size": {
+        "type": "String",
+        "required": false,
+        "default": "small"
+      },
+      "informationModalDescription": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "modalStatus": {
+        "type": "String",
+        "required": false,
+        "default": "default"
+      },
+      "acceptButtonType": {
+        "type": "String",
+        "required": false,
+        "default": "BUTTON_TYPE_PRIMARY"
+      },
+      "acceptButtonText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "acceptButtonDisable": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "cancelButtonText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "visibleButtons": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "withSpacing": {
+        "type": "String",
+        "required": false,
+        "default": "px-5"
+      },
+      "closeButtons": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "modalDescription": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "withPage": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "backButtonText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "closeOnOverlayClick": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "hasOverlay": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "isModalAcceptButtonLoading": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "withBackOption": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "preventXss": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      }
+    },
+    "emits": [
+      {
+        "name": "closeModal"
+      },
+      {
+        "name": "acceptButton"
+      },
+      {
+        "name": "back"
+      }
+    ],
+    "enums": [],
+    "slots": [
+      "secondaryIcon",
+      "secondaryLine",
+      "secondaryButton",
+      "onboard",
+      "default"
+    ],
+    "hasStorybook": false
+  },
+  "InMultiDropDown": {
+    "name": "InMultiDropDown",
+    "title": "In Multi Drop Down",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": false,
+        "default": "qa-drop-down"
+      },
+      "options": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "value": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "label": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "labelTooltip": {
+        "type": "String | Boolean",
+        "required": false,
+        "default": false
+      },
+      "disable": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "placeholder": {
+        "type": "String",
+        "required": true
+      },
+      "searchPlaceholder": {
+        "type": "String",
+        "required": false,
+        "default": "Search"
+      },
+      "searchStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "skeletonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "visibleLabel": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "type": {
+        "type": "String",
+        "required": false,
+        "default": "checkbox"
+      },
+      "addNewTagStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "theme": {
+        "type": "String",
+        "required": false,
+        "default": "grey"
+      },
+      "maxSelectableItem": {
+        "type": "Number",
+        "required": false,
+        "default": 0
+      },
+      "warning": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "warningMessage": {
+        "type": "String",
+        "required": false,
+        "default": "Max number of selection is reached."
+      },
+      "invalid": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "invalidMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "minimumNewTagCharacterLimit": {
+        "type": "Number",
+        "required": false,
+        "default": 2
+      },
+      "skeletonSizing": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "customOptionsKey": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "fetchUrl": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "autoComplete": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "queryString": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "responseHasData": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "responseKey": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "maxNewTagCharacterLimit": {
+        "type": "Number | String",
+        "required": false,
+        "default": ""
+      },
+      "newOptionIcon": {
+        "type": "String",
+        "required": false,
+        "default": "line-plus-netural"
+      },
+      "newOptionText": {
+        "type": "String",
+        "required": false,
+        "default": "Create:"
+      },
+      "noDataText": {
+        "type": "String",
+        "required": false,
+        "default": "No Data to Show"
+      },
+      "noSearchResultText": {
+        "type": "String",
+        "required": false,
+        "default": "No Search Result"
+      },
+      "bottomExtraSpace": {
+        "type": "Number",
+        "required": false,
+        "default": 0
+      },
+      "hasTemporaryOptions": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "searchableContent": {
+        "type": "String",
+        "required": false,
+        "default": "VALIDATIONS.All",
+        "validator": "validator: (val) => Object.values(VALIDATIONS).includes(val) }",
+        "validValues": [
+          "<from VALIDATIONS>"
+        ]
+      }
+    },
+    "emits": [
+      {
+        "name": "closeList"
+      },
+      {
+        "name": "change"
+      },
+      {
+        "name": "search"
+      },
+      {
+        "name": "addNewOption"
+      },
+      {
+        "name": "click"
+      }
+    ],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InMultiSelect": {
+    "name": "InMultiSelect",
+    "title": "In Multi Select",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": false,
+        "default": "qa-select"
+      },
+      "options": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "value": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "loadingState": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "labelStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "labelText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "tooltipStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "tooltipText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "disabledStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "dropdownMenuStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "searchStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "theme": {
+        "type": "String",
+        "required": false,
+        "default": "grey"
+      },
+      "buttonType": {
+        "type": "String",
+        "required": false,
+        "default": "dropdown"
+      },
+      "placeholderText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "staticPosition": {
+        "type": "String",
+        "required": false,
+        "default": "BOTTOM_LEFT"
+      },
+      "dynamicPosition": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "dynamicChildPosition": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "staticChildPosition": {
+        "type": "String",
+        "required": false,
+        "default": "BOTTOM_RIGHT"
+      },
+      "createButtonLabel": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "createOptionStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "buttonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "buttonIcon": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "buttonLabel": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "state": {
+        "type": "String",
+        "required": false,
+        "default": "default"
+      },
+      "stateMessage": {
+        "type": "String",
+        "required": false,
+        "default": "State Message"
+      },
+      "skeletonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonSizing": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "optionValidationType": {
+        "type": "any",
+        "required": false,
+        "default": "VALIDATIONS.All"
+      },
+      "minCharacterLimit": {
+        "type": "Number | String",
+        "required": false,
+        "default": 1
+      },
+      "maxCharacterLimit": {
+        "type": "Number | String",
+        "required": false,
+        "default": 10
+      },
+      "optionValidationText": {
+        "type": "String",
+        "required": false,
+        "default": "Enter a valid value to continue."
+      },
+      "characterLimitValidationText": {
+        "type": "String",
+        "required": false,
+        "default": "Enter a value between 1 and 10 characters to continue."
+      },
+      "bottomOffsetForDynamicPosition": {
+        "type": "Number",
+        "required": false,
+        "default": 0
+      },
+      "maxHeight": {
+        "type": "Number",
+        "required": false,
+        "default": 240
+      },
+      "maxChildHeight": {
+        "type": "Number",
+        "required": false,
+        "default": 480
+      },
+      "fetchPage": {
+        "type": "Number",
+        "required": false,
+        "default": 1
+      },
+      "maxSelectableItem": {
+        "type": "Number",
+        "required": false,
+        "default": 0
+      },
+      "lazyLoad": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "lazyLoadSearch": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "selectAllOptionStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "tooltipMaxHeight": {
+        "type": "Number",
+        "required": false,
+        "default": 320
+      },
+      "helperMessageStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "helperMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "staticTagTooltipPosition": {
+        "type": "String",
+        "required": false,
+        "default": "top center"
+      },
+      "dynamicTagTooltipPosition": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "preventXss": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "allowAddAllCases": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "preventFocus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "sameValueExistsValidationText": {
+        "type": "String",
+        "required": false,
+        "default": "This value already exists."
+      }
+    },
+    "emits": [
+      {
+        "name": "openList"
+      },
+      {
+        "name": "close"
+      },
+      {
+        "name": "change"
+      },
+      {
+        "name": "select"
+      },
+      {
+        "name": "search"
+      },
+      {
+        "name": "endScroll"
+      },
+      {
+        "name": "secondaryButtonClick"
+      },
+      {
+        "name": "selectAllOptions"
+      },
+      {
+        "name": "resetAllOptions"
+      },
+      {
+        "name": "onRemoveTag"
+      }
+    ],
+    "enums": [
+      {
+        "name": "KEY_KODE_ENUMS",
+        "values": {},
+        "type": "const"
+      }
+    ],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InNoData": {
+    "name": "InNoData",
+    "title": "In No Data",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "title": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "description": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "visibleIcon": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "icon": {
+        "type": "String",
+        "required": false,
+        "default": "no-data"
+      },
+      "buttonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "buttonText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "backgroundColorClass": {
+        "type": "String",
+        "required": false,
+        "default": "b-c-4"
+      },
+      "titleColorClass": {
+        "type": "String",
+        "required": false,
+        "default": "t-c-1"
+      },
+      "descriptionColorClass": {
+        "type": "String",
+        "required": false,
+        "default": "t-c-2"
+      },
+      "iconClass": {
+        "type": "String",
+        "required": false,
+        "default": "mb-3"
+      },
+      "parseAsHtml": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "preventXss": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "buttonType": {
+        "type": "String",
+        "required": false,
+        "default": "primary"
+      },
+      "isButtonDisabled": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "buttonTooltip": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "buttonTooltipPosition": {
+        "type": "String",
+        "required": false,
+        "default": "top center"
+      },
+      "buttonProps": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      }
+    },
+    "emits": [],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InOnPageMessage": {
+    "name": "InOnPageMessage",
+    "title": "In On Page Message",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "type": {
+        "type": "String",
+        "required": true
+      },
+      "text": {
+        "type": "String",
+        "required": true
+      },
+      "icon": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "linkStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "linkText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "linkTarget": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "visibleDefaultMessageArea": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "size": {
+        "type": "String",
+        "required": false,
+        "default": "medium",
+        "validator": "validator: (value) => ['small',"
+      },
+      "skeletonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonSizing": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "preventXss": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "titleText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      }
+    },
+    "emits": [],
+    "enums": [],
+    "slots": [
+      "extraMessage",
+      "default"
+    ],
+    "hasStorybook": false
+  },
+  "InOnboard": {
+    "name": "InOnboard",
+    "title": "In Onboard",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": false,
+        "default": "onboard"
+      },
+      "title": {
+        "type": "String",
+        "required": true
+      },
+      "description": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "imageSource": {
+        "type": "String",
+        "required": true
+      },
+      "visible": {
+        "type": "Boolean",
+        "required": true
+      },
+      "leftPosition": {
+        "type": "String",
+        "required": false,
+        "default": "initial"
+      },
+      "topPosition": {
+        "type": "String",
+        "required": false,
+        "default": "initial"
+      },
+      "bottomPosition": {
+        "type": "String",
+        "required": false,
+        "default": "initial"
+      },
+      "rightPosition": {
+        "type": "String",
+        "required": false,
+        "default": "initial"
+      },
+      "withButton": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "buttonType": {
+        "type": "String",
+        "required": false,
+        "default": "text"
+      },
+      "buttonText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "isMultiplePage": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "pagesConfig": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "pointerPosition": {
+        "type": "String",
+        "required": false,
+        "default": "Left Top"
+      },
+      "preventXss": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      }
+    },
+    "emits": [
+      {
+        "name": "close"
+      },
+      {
+        "name": "buttonClick"
+      },
+      {
+        "name": "nextButtonClick"
+      },
+      {
+        "name": "backButtonClick"
+      }
+    ],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InPageHeadings": {
+    "name": "InPageHeadings",
+    "title": "In Page Headings",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "withBorder": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "preventXss": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      }
+    },
+    "emits": [],
+    "enums": [],
+    "slots": [
+      "tag",
+      "default"
+    ],
+    "hasStorybook": false
+  },
+  "InProgress": {
+    "name": "InProgress",
+    "title": "In Progress",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "status": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "id": {
+        "type": "String",
+        "required": true
+      },
+      "value": {
+        "type": "Number",
+        "required": false,
+        "default": 0
+      },
+      "maxValue": {
+        "type": "Number",
+        "required": false,
+        "default": 100
+      },
+      "descriptionStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "description": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "descriptionPosition": {
+        "type": "String",
+        "required": false,
+        "default": "left"
+      },
+      "invalid": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "invalidType": {
+        "type": "String",
+        "required": false,
+        "default": "button"
+      },
+      "invalidMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "invalidIcon": {
+        "type": "String",
+        "required": false,
+        "default": "line-redo"
+      },
+      "success": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "successMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "successIcon": {
+        "type": "String",
+        "required": false,
+        "default": "line-check-netural"
+      },
+      "semiCircle": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "type": {
+        "type": "String",
+        "required": false,
+        "default": "default"
+      },
+      "semiCircleWidth": {
+        "type": "Number",
+        "required": false,
+        "default": 300
+      },
+      "variant": {
+        "type": "String",
+        "required": false,
+        "default": "default",
+        "validator": "validator: (value) => { return Object.values(VARIANTS).includes(value); }",
+        "validValues": [
+          "<from VARIANTS>"
+        ]
+      },
+      "completed": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      }
+    },
+    "emits": [
+      {
+        "name": "click"
+      }
+    ],
+    "enums": [
+      {
+        "name": "VARIANTS",
+        "values": {
+          "DEFAULT": "default",
+          "INDETERMINATE": "indeterminate"
+        },
+        "type": "const"
+      }
+    ],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InRadioButton": {
+    "name": "InRadioButton",
+    "title": "In Radio Button",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": true
+      },
+      "name": {
+        "type": "String",
+        "required": true
+      },
+      "value": {
+        "type": "String | Number | Boolean",
+        "required": true
+      },
+      "selected": {
+        "type": "String | Number | Boolean",
+        "required": true
+      },
+      "label": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "disable": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonSizing": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      }
+    },
+    "emits": [
+      {
+        "name": "click"
+      }
+    ],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InRibbons": {
+    "name": "InRibbons",
+    "title": "In Ribbons",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "text": {
+        "type": "String",
+        "required": true
+      },
+      "type": {
+        "type": "String",
+        "required": false,
+        "default": "default"
+      },
+      "status": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "icon": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "withIcon": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "isClickableText": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "preventXss": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "leftSpace": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      }
+    },
+    "emits": [
+      {
+        "name": "close"
+      }
+    ],
+    "enums": [
+      {
+        "name": "RIBBON_TYPES_ICONS",
+        "values": {
+          "default": "filled-info-circle",
+          "success": "filled-check-circle",
+          "warning": "filled-caution-triangle",
+          "error": "filled-error-box"
+        },
+        "type": "const"
+      }
+    ],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InRichTextInput": {
+    "name": "InRichTextInput",
+    "title": "In Rich Text Input",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": true
+      },
+      "name": {
+        "type": "String",
+        "required": true
+      },
+      "value": {
+        "type": "String",
+        "required": true
+      },
+      "labelStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "labelText": {
+        "type": "String",
+        "required": true
+      },
+      "tooltipStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "tooltipText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "placeholderText": {
+        "type": "String",
+        "required": true
+      },
+      "helperTextValidationConfigStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "helperTextValidationConfig": {
+        "type": "Object",
+        "required": true
+      },
+      "fallBackText": {
+        "type": "String",
+        "required": true
+      },
+      "linkFallBackText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "fallBackLabel": {
+        "type": "String",
+        "required": true
+      },
+      "linkFallBackLabel": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "fallBackPlaceholder": {
+        "type": "String",
+        "required": true
+      },
+      "fallbackImageSrc": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "fallbackImageName": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "fallBackUrlPlaceholder": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "fallBackCloseButtonText": {
+        "type": "String",
+        "required": true
+      },
+      "fallBackSaveButtonText": {
+        "type": "String",
+        "required": true
+      },
+      "states": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "stateMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "dynamicContentList": {
+        "type": "Array | Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "characterCounterStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "disabledStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "isDynamicContentOnly": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "canOnlyReplaceDynamicContent": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonSizing": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "delimiters": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "ignoreParagraphs": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "maxSelectableDynamicContent": {
+        "type": "Number",
+        "required": false,
+        "default": 0
+      },
+      "preventXss": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "toolbarOptions": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "footerOptions": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "tipStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "specialCharacters": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "isHighlightCharactersEnabled": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "isHighlightUrlEnabled": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "isRequiredFooterTags": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "addDynamicContentText": {
+        "type": "String",
+        "required": false,
+        "default": "Add Dynamic Content"
+      },
+      "replaceDynamicContentText": {
+        "type": "String",
+        "required": false,
+        "default": "Replace Dynamic Content"
+      },
+      "customCounter": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "footerLabel": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "urlPatternRegex": {
+        "type": "RegExp",
+        "required": false,
+        "default": "[Function]"
+      },
+      "whatsappStylingSupport": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "customFooter": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "errorTags": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "warningTags": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "hasFooter": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "isExtendedDynamicContent": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "dynamicContentBoxProps": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "usedDynamicContent": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "fallBackStatusMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "disableDuplicateTags": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "fallBackDisabledCharacters": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "fallBackDisabledCharactersMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "maxLimitTooltipMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "fallbackValidationMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "fallbackValidation": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "isUploadFallback": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "isDynamicFallbackPosition": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "fallbackVisibility": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "disabledToolbarOptions": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "dynamicContentStates": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "preventFallbackWithState": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "dynamicContentSpacingStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "emojiButtonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "saveButtonCallback": {
+        "type": "Function",
+        "required": false,
+        "default": "null"
+      },
+      "validateTagsWithFallback": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "notExistingAttributeHasErrorState": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "notExistingAttributeWhiteListRegExp": {
+        "type": "RegExp",
+        "required": false,
+        "default": "[Function]"
+      },
+      "uploadTriggerWords": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      }
+    },
+    "emits": [
+      {
+        "name": "generate"
+      },
+      {
+        "name": "markedTags"
+      },
+      {
+        "name": "purify"
+      },
+      {
+        "name": "purifyObject"
+      },
+      {
+        "name": "updateFallBackOptions"
+      },
+      {
+        "name": "charactersHighlighted"
+      },
+      {
+        "name": "closeAllEmojiPickers"
+      },
+      {
+        "name": "onShortenUrlClick"
+      },
+      {
+        "name": "onAlternativeTextChange"
+      },
+      {
+        "name": "saveUrlOption"
+      },
+      {
+        "name": "saveFallBackOption"
+      },
+      {
+        "name": "saveFallBackOptionObject"
+      },
+      {
+        "name": "onDynamicContentCancel"
+      },
+      {
+        "name": "updateEventPersistent"
+      },
+      {
+        "name": "updateProductAttributePersistent"
+      },
+      {
+        "name": "addDynamicAttribute"
+      },
+      {
+        "name": "selectedInActiveOption"
+      },
+      {
+        "name": "closeFallBackOption"
+      }
+    ],
+    "enums": [
+      {
+        "name": "ACTION_KEYS",
+        "values": {},
+        "type": "const"
+      },
+      {
+        "name": "SUPPORT_KEYS",
+        "values": {},
+        "type": "const"
+      },
+      {
+        "name": "TEXT_STYLE_BUTTONS",
+        "values": {
+          "bold": "bold-button",
+          "italic": "italic-button",
+          "strike": "strikethrough-button",
+          "monospace": "monospace-button"
+        },
+        "type": "const"
+      },
+      {
+        "name": "STATUS_ICONS",
+        "values": {
+          "warning": "filled-caution-triangle-colored",
+          "error": "filled-error-box-colored",
+          "alert": "filled-caution-triangle-colored"
+        },
+        "type": "const"
+      },
+      {
+        "name": "STATUS_COLORS",
+        "values": {
+          "warning": "E7AB29",
+          "error": "DC2A2A",
+          "alert": "DC2A2A"
+        },
+        "type": "const"
+      },
+      {
+        "name": "TEXT_FORMATS",
+        "values": {
+          "tag": "b",
+          "delimiter": "*"
+        },
+        "type": "const"
+      },
+      {
+        "name": "PADDING",
+        "values": {},
+        "type": "const"
+      }
+    ],
+    "slots": [
+      "tipOptions",
+      "default"
+    ],
+    "hasStorybook": false
+  },
+  "InSegments": {
+    "name": "InSegments",
+    "title": "In Segments",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "selected": {
+        "type": "String|Number",
+        "required": false,
+        "default": ""
+      },
+      "withIcon": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "small": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "disable": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "align": {
+        "type": "String",
+        "required": false,
+        "default": "horizontal"
+      },
+      "skeletonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonSizing": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      }
+    },
+    "emits": [
+      {
+        "name": "click"
+      }
+    ],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InSelect": {
+    "name": "InSelect",
+    "title": "In Select",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": false,
+        "default": "qa-select"
+      },
+      "options": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "value": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "loadingState": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "labelStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "labelText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "tooltipStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "tooltipText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "disabledStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "dropdownMenuStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "searchStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "theme": {
+        "type": "String",
+        "required": false,
+        "default": "grey"
+      },
+      "buttonType": {
+        "type": "String",
+        "required": false,
+        "default": "dropdown"
+      },
+      "placeholderText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "clearSelectionButton": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "staticPosition": {
+        "type": "String",
+        "required": false,
+        "default": "BOTTOM_LEFT"
+      },
+      "dynamicPosition": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "dynamicChildPosition": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "staticChildPosition": {
+        "type": "String",
+        "required": false,
+        "default": "BOTTOM_RIGHT"
+      },
+      "createButtonLabel": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "createOptionStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "buttonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "buttonIcon": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "buttonLabel": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "state": {
+        "type": "String",
+        "required": false,
+        "default": "default"
+      },
+      "stateMessage": {
+        "type": "String",
+        "required": false,
+        "default": "State Message"
+      },
+      "skeletonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonSizing": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "optionValidationType": {
+        "type": "any",
+        "required": false,
+        "default": "VALIDATIONS.All"
+      },
+      "minCharacterLimit": {
+        "type": "Number | String",
+        "required": false,
+        "default": 1
+      },
+      "maxCharacterLimit": {
+        "type": "Number | String",
+        "required": false,
+        "default": 10
+      },
+      "optionValidationText": {
+        "type": "String",
+        "required": false,
+        "default": "Enter a valid value to continue."
+      },
+      "characterLimitValidationText": {
+        "type": "String",
+        "required": false,
+        "default": "Enter a value between 1 and 10 characters to continue."
+      },
+      "bottomOffsetForDynamicPosition": {
+        "type": "Number",
+        "required": false,
+        "default": 0
+      },
+      "maxHeight": {
+        "type": "Number",
+        "required": false,
+        "default": 240
+      },
+      "maxChildHeight": {
+        "type": "Number",
+        "required": false,
+        "default": 480
+      },
+      "fetchPage": {
+        "type": "Number",
+        "required": false,
+        "default": 1
+      },
+      "lazyLoad": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "lazyLoadSearch": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "isWrappedDescription": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "helperMessageStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "helperMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "customOptionText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "preventXss": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "preventFocus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "allowAddAllCases": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "sameValueExistsValidationText": {
+        "type": "String",
+        "required": false,
+        "default": "This value already exists."
+      }
+    },
+    "emits": [
+      {
+        "name": "openList"
+      },
+      {
+        "name": "close"
+      },
+      {
+        "name": "selectedInActiveOption"
+      },
+      {
+        "name": "select"
+      },
+      {
+        "name": "search"
+      },
+      {
+        "name": "unSelect"
+      },
+      {
+        "name": "endScroll"
+      },
+      {
+        "name": "secondaryButtonClick"
+      }
+    ],
+    "enums": [
+      {
+        "name": "KEY_KODE_ENUMS",
+        "values": {},
+        "type": "const"
+      }
+    ],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InSidebar": {
+    "name": "InSidebar",
+    "title": "In Sidebar",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "selectedRoute": {
+        "type": "String",
+        "required": true
+      },
+      "routes": {
+        "type": "Array",
+        "required": true
+      },
+      "preventXss": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      }
+    },
+    "emits": [
+      {
+        "name": "click"
+      },
+      {
+        "name": "removedFavoriteMenu"
+      },
+      {
+        "name": "addedFavoriteMenu"
+      }
+    ],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InSidebarV2": {
+    "name": "InSidebarV2",
+    "title": "In Sidebar",
+    "description": "",
+    "version": "v2",
+    "props": {
+      "selectedRoute": {
+        "type": "String",
+        "required": true
+      },
+      "routes": {
+        "type": "Array",
+        "required": true
+      },
+      "preventXss": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "recentSearches": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "searchResults": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "loadingStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "mainPageRoute": {
+        "type": "String",
+        "required": false,
+        "default": "/"
+      }
+    },
+    "emits": [
+      {
+        "name": "search"
+      },
+      {
+        "name": "opened"
+      },
+      {
+        "name": "clearRecentSearch"
+      },
+      {
+        "name": "removeFromFavorite"
+      },
+      {
+        "name": "addToFavorite"
+      }
+    ],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InSkeleton": {
+    "name": "InSkeleton",
+    "title": "In Skeleton",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "name": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "status": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "sizing": {
+        "type": "Object",
+        "required": true
+      }
+    },
+    "emits": [],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InSlider": {
+    "name": "InSlider",
+    "title": "In Slider",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "slides": {
+        "type": "Array",
+        "required": true
+      },
+      "autoplay": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      }
+    },
+    "emits": [],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InStatusText": {
+    "name": "InStatusText",
+    "title": "In Status Text",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "text": {
+        "type": "String",
+        "required": true
+      },
+      "icon": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "iconSize": {
+        "type": "String",
+        "required": false,
+        "default": "16",
+        "validator": "validator: (value) => ['16',"
+      },
+      "status": {
+        "type": "String",
+        "required": true
+      },
+      "size": {
+        "type": "String",
+        "required": false,
+        "default": "medium"
+      }
+    },
+    "emits": [],
+    "enums": [
+      {
+        "name": "STATUS_LIST",
+        "values": {},
+        "type": "const"
+      },
+      {
+        "name": "ICON_STATUS_LIST",
+        "values": {
+          "active": "i-c-9",
+          "passive": "i-c-11",
+          "test": "i-c-12",
+          "dryRun": "i-c-8",
+          "sunset": "i-c-119",
+          "scheduled": "i-c-10",
+          "draft": "i-c-2",
+          "custom": "i-c-7",
+          "beta": "i-c-4",
+          "smart": "i-c-10"
+        },
+        "type": "const"
+      }
+    ],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InSteps": {
+    "name": "InSteps",
+    "title": "In Steps",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": true
+      },
+      "routes": {
+        "type": "Array",
+        "required": true
+      },
+      "activeStep": {
+        "type": "String",
+        "required": true
+      },
+      "backStep": {
+        "type": "Object",
+        "required": true
+      },
+      "externalLink": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "type": {
+        "type": "String",
+        "required": false,
+        "default": "link"
+      },
+      "backStepStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "skeletonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      }
+    },
+    "emits": [],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InSuperInput": {
+    "name": "InSuperInput",
+    "title": "In Super Input",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": true
+      },
+      "name": {
+        "type": "String",
+        "required": true
+      },
+      "value": {
+        "type": "String",
+        "required": true
+      },
+      "label": {
+        "type": "String",
+        "required": true
+      },
+      "placeholderText": {
+        "type": "String",
+        "required": true
+      },
+      "smsText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "fallBackStatusMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "textValidateConfig": {
+        "type": "Object",
+        "required": true
+      },
+      "tagButtonText": {
+        "type": "String",
+        "required": true
+      },
+      "fallBackText": {
+        "type": "String",
+        "required": true
+      },
+      "fallBackLabel": {
+        "type": "String",
+        "required": true
+      },
+      "fallBackDisableInput": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "fallBackPlaceholder": {
+        "type": "String",
+        "required": true
+      },
+      "fallBackCloseButtonText": {
+        "type": "String",
+        "required": true
+      },
+      "fallBackSaveButtonText": {
+        "type": "String",
+        "required": true
+      },
+      "fallBackDisabledCharacters": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "fallBackDisabledCharactersMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "invalid": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "invalidMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "warning": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "warningMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "warningMessageCustomClass": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "hasEmoji": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "attributeList": {
+        "type": "Array | Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "dynamicContentSupport": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "isTagContainer": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "isCounter": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "messageWithoutCounter": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "disable": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "disableAddAttribute": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonSizing": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "delimiters": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "rowLength": {
+        "type": "Number",
+        "required": false,
+        "default": 1
+      },
+      "showLabel": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "dropDownType": {
+        "type": "String",
+        "required": false,
+        "default": "text"
+      },
+      "createNewOptionStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "createNewOptionText": {
+        "type": "String",
+        "required": false,
+        "default": "Label"
+      },
+      "isSearchVisible": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "isMultiSpaces": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "enableAddAttribute": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "tagsLimit": {
+        "type": "Number",
+        "required": false,
+        "default": 0
+      },
+      "applyTagsLimit": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "customTooltipMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "strictAddMode": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "preventXss": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "countDynamicContentForValidation": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "disableDuplicateTags": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "searchCustomDynamicAttributeFirst": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      }
+    },
+    "emits": [
+      {
+        "name": "purify"
+      }
+    ],
+    "enums": [],
+    "slots": [
+      "default"
+    ],
+    "hasStorybook": false
+  },
+  "InTabs": {
+    "name": "InTabs",
+    "title": "In Tabs",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "tabsList": {
+        "type": "Array",
+        "required": true
+      },
+      "useRouter": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "withSpacing": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "dropdownTabs": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "dropdownVariationTabs": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "addNewTabActive": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "addTabDropdownSearchStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "addTabDropdownOptions": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "addNewTabFunctionality": {
+        "type": "String",
+        "required": false,
+        "default": "options"
+      },
+      "useEmitForRemove": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "dynamicDropdownTabs": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "addNewTabTooltipStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "addNewTabTooltipText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "draggable": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "preventTabSelectionOnClick": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "boxStyle": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "renameOption": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "removeOption": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "duplicateOption": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "isDuplicateVisible": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "isMixedMode": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "isRenameDropdown": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "removeButtonText": {
+        "type": "String",
+        "required": false,
+        "default": "Remove"
+      },
+      "disableDragIconClick": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "maxTabDisplayTextLength": {
+        "type": "Number",
+        "required": false,
+        "default": 0
+      },
+      "dropdownOffset": {
+        "type": "Number",
+        "required": false,
+        "default": 0
+      },
+      "localizationOption": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      }
+    },
+    "emits": [
+      {
+        "name": "rename"
+      },
+      {
+        "name": "click"
+      },
+      {
+        "name": "removeTab"
+      },
+      {
+        "name": "addNewTab"
+      },
+      {
+        "name": "tabPercentageInput"
+      },
+      {
+        "name": "duplicate"
+      },
+      {
+        "name": "delete"
+      },
+      {
+        "name": "localization"
+      },
+      {
+        "name": "tabTextInputUpdate"
+      },
+      {
+        "name": "changeOrder"
+      }
+    ],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InTags": {
+    "name": "InTags",
+    "title": "In Tags",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "value": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "label": {
+        "type": "String",
+        "required": true
+      },
+      "placeholder": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "validate": {
+        "type": "String | Function | Object",
+        "required": false,
+        "default": "email"
+      },
+      "allowDuplicates": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "allowInvalidTags": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "allowedEntries": {
+        "type": "String | Object",
+        "required": false,
+        "default": ""
+      },
+      "disable": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "invalid": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "warning": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "invalidMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "warningMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "skeletonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "allowBulkPaste": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonSizing": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      }
+    },
+    "emits": [
+      {
+        "name": "handleValidation"
+      },
+      {
+        "name": "input"
+      }
+    ],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InTagsText": {
+    "name": "InTagsText",
+    "title": "In Tags Text",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "type": {
+        "type": "String",
+        "required": false,
+        "default": "default"
+      },
+      "text": {
+        "type": "String",
+        "required": true
+      },
+      "value": {
+        "type": "String|Number",
+        "required": true
+      },
+      "disable": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "withIcon": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "maxWidth": {
+        "type": "Number",
+        "required": false,
+        "default": "null"
+      },
+      "preventXss": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      }
+    },
+    "emits": [
+      {
+        "name": "click"
+      }
+    ],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InTextArea": {
+    "name": "InTextArea",
+    "title": "In Text Area",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": true
+      },
+      "name": {
+        "type": "String",
+        "required": true
+      },
+      "value": {
+        "type": "String",
+        "required": true
+      },
+      "label": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "withLabel": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "placeholder": {
+        "type": "String",
+        "required": true
+      },
+      "disable": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "invalid": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "invalidMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "theme": {
+        "type": "String",
+        "required": false,
+        "default": "grey"
+      },
+      "skeletonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonSizing": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "rowLength": {
+        "type": "Number",
+        "required": false,
+        "default": 2
+      },
+      "preventXss": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      }
+    },
+    "emits": [
+      {
+        "name": "keyup"
+      },
+      {
+        "name": "keypress"
+      },
+      {
+        "name": "click"
+      },
+      {
+        "name": "input"
+      },
+      {
+        "name": "cut"
+      },
+      {
+        "name": "paste"
+      }
+    ],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InTextInput": {
+    "name": "InTextInput",
+    "title": "In Text Input",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": true
+      },
+      "name": {
+        "type": "String",
+        "required": true
+      },
+      "value": {
+        "type": "String | Number",
+        "required": false,
+        "default": ""
+      },
+      "withLabel": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "label": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "labelTooltip": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "type": {
+        "type": "String",
+        "required": false,
+        "default": "text"
+      },
+      "placeholder": {
+        "type": "String",
+        "required": true
+      },
+      "disable": {
+        "type": "Boolean | Number",
+        "required": false,
+        "default": false
+      },
+      "invalid": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "invalidMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "small": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "withIcon": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "iconName": {
+        "type": "String",
+        "required": false,
+        "default": "search"
+      },
+      "iconPosition": {
+        "type": "String",
+        "required": false,
+        "default": "left"
+      },
+      "theme": {
+        "type": "String",
+        "required": false,
+        "default": "grey"
+      },
+      "autoComplete": {
+        "type": "String",
+        "required": false,
+        "default": "off"
+      },
+      "skeletonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonSizing": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "accept": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "warning": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "warningMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "withSuffix": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "suffix": {
+        "type": "String",
+        "required": false,
+        "default": "%"
+      },
+      "maxLength": {
+        "type": "Number | String",
+        "required": false,
+        "default": ""
+      },
+      "min": {
+        "type": "Number | String",
+        "required": false,
+        "default": 0
+      },
+      "autoFocus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "allowDecimal": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "allowComma": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "prefix": {
+        "type": "Boolean | String",
+        "required": false,
+        "default": false
+      },
+      "preventXss": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      }
+    },
+    "emits": [
+      {
+        "name": "keyup"
+      },
+      {
+        "name": "enter"
+      },
+      {
+        "name": "focus"
+      },
+      {
+        "name": "blur"
+      },
+      {
+        "name": "click"
+      },
+      {
+        "name": "input"
+      },
+      {
+        "name": "change"
+      },
+      {
+        "name": "iconClick"
+      }
+    ],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InTimePicker": {
+    "name": "InTimePicker",
+    "title": "In Time Picker",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "label": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "name": {
+        "type": "String",
+        "required": false,
+        "default": "drop-down-search"
+      },
+      "value": {
+        "type": "String",
+        "required": true
+      },
+      "skeletonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "invalid": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "invalidMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "disable": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "withLabel": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "skeletonSizing": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      }
+    },
+    "emits": [
+      {
+        "name": "change"
+      },
+      {
+        "name": "blur"
+      }
+    ],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InToasts": {
+    "name": "InToasts",
+    "title": "In Toasts",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "text": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "type": {
+        "type": "String",
+        "required": false,
+        "default": "light"
+      },
+      "icon": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "status": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "withIcon": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "withoutLeftMargin": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "actionButtonsConfig": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "preventXss": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      }
+    },
+    "emits": [],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InToggle": {
+    "name": "InToggle",
+    "title": "In Toggle",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": true
+      },
+      "name": {
+        "type": "String",
+        "required": true
+      },
+      "checked": {
+        "type": "Number | Boolean",
+        "required": true,
+        "default": false
+      },
+      "disable": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "skeletonSizing": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      }
+    },
+    "emits": [
+      {
+        "name": "click"
+      }
+    ],
+    "enums": [],
+    "slots": [],
+    "hasStorybook": false
+  },
+  "InTooltip": {
+    "name": "InTooltip",
+    "title": "In Tooltip",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "text": {
+        "type": "any",
+        "required": true
+      },
+      "position": {
+        "type": "String",
+        "required": false,
+        "default": "top"
+      },
+      "align": {
+        "type": "String",
+        "required": false,
+        "default": "end"
+      },
+      "themeDark": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "withIcon": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "disable": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "preventXss": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "renderHtml": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      }
+    },
+    "emits": [],
+    "enums": [],
+    "slots": [
+      "element",
+      "customText",
+      "default"
+    ],
+    "hasStorybook": false
+  },
+  "InTooltipV2": {
+    "name": "InTooltipV2",
+    "title": "In Tooltip",
+    "description": "",
+    "version": "v2",
+    "props": {
+      "id": {
+        "type": "String",
+        "required": true
+      },
+      "text": {
+        "type": "String",
+        "required": true
+      },
+      "dynamicPosition": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "staticPosition": {
+        "type": "String",
+        "required": false,
+        "default": "top center",
+        "validator": "validator: (value) => POSITIONS.includes(value) }"
+      },
+      "iconStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "offset": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "preventXss": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "maxHeight": {
+        "type": "Number",
+        "required": false,
+        "default": 320
+      },
+      "status": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "tooltipAlignment": {
+        "type": "any",
+        "required": false,
+        "default": false,
+        "validator": "validator: (value) => TOOLTIP_ALIGNMENTS.includes(value) }"
+      },
+      "absolutePositionStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "absolutePosition": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "absoluteTriangleAlignment": {
+        "type": "String",
+        "required": false,
+        "default": "center",
+        "validator": "validator: (value) => TRIANGLE_ALIGNMENTS.includes(value) }"
+      },
+      "absoluteTrianglePosition": {
+        "type": "String",
+        "required": false,
+        "default": "top",
+        "validator": "validator: (value) => TRIANGLE_POSITIONS.includes(value) }"
+      }
+    },
+    "emits": [],
+    "enums": [],
+    "slots": [
+      "triggerElement",
+      "contentSlot",
+      "default"
+    ],
+    "hasStorybook": false
+  },
+  "InUpload": {
+    "name": "InUpload",
+    "title": "In Upload",
+    "description": "",
+    "version": "v1",
+    "props": {
+      "fileType": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "fileName": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "iconName": {
+        "type": "String",
+        "required": false,
+        "default": "line-file-type-csv"
+      },
+      "uploadDescription": {
+        "type": "String",
+        "required": true
+      },
+      "deleteText": {
+        "type": "String",
+        "required": true
+      },
+      "changeText": {
+        "type": "String",
+        "required": true
+      },
+      "imageSrc": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "inputName": {
+        "type": "String",
+        "required": false,
+        "default": "import"
+      },
+      "disable": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "progressValue": {
+        "type": "Number",
+        "required": false,
+        "default": 100
+      },
+      "small": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "smallWithButtons": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "failed": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "errorMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "helperMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "dragEnterDescription": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "retryMessage": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "selectable": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "preventFileUpload": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      }
+    },
+    "emits": [
+      {
+        "name": "change"
+      },
+      {
+        "name": "select"
+      },
+      {
+        "name": "changeFile"
+      },
+      {
+        "name": "delete"
+      }
+    ],
+    "enums": [],
+    "slots": [
+      "secondButton",
+      "default"
+    ],
+    "hasStorybook": false
+  }
+}

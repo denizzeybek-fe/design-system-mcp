@@ -1,0 +1,260 @@
+{
+  "migrationId": "InDatePicker-to-V2",
+  "v1Component": "InDatePicker",
+  "v2Component": "InDatePickerV2",
+  "estimatedEffort": "medium",
+  "breakingChanges": 5,
+  "complexity": "high",
+  "description": "Migration from InDatePicker (V1) to InDatePickerV2 involves significant prop structure changes, especially for value format and custom ranges. Comparison feature is new in V2.",
+
+  "propMigrations": {
+    "value": {
+      "v1Type": "{ startDate: string, endDate: string }",
+      "v2Type": "[{ startDate: string, endDate: string }]",
+      "transformCode": "// V1 to V2\nconst v2Value = [v1Value];",
+      "reverseTransformCode": "// V2 to V1\nconst v1Value = v2Value[0];",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V1 used plain object, V2 uses array of objects to support comparison mode"
+    },
+
+    "customRanges": {
+      "v1Type": "{ [label: string]: [Date, Date] }",
+      "v2Type": "[{ name: string, title: string, startDate: string, endDate: string }]",
+      "transformCode": "// V1 to V2\nconst v2CustomRanges = Object.entries(v1CustomRanges).map(([title, dates], index) => ({\n  name: `custom${index + 1}`,\n  title,\n  startDate: formatDateToSlash(dates[0]),\n  endDate: formatDateToSlash(dates[1])\n}));",
+      "reverseTransformCode": "// V2 to V1 (lossy - name is lost)\nconst v1CustomRanges = {};\nv2CustomRanges.forEach(range => {\n  v1CustomRanges[range.title] = [\n    new Date(range.startDate),\n    new Date(range.endDate)\n  ];\n});",
+      "requiresHelper": ["formatDateToSlash"],
+      "autoMigratable": false,
+      "complexity": "high",
+      "breakingChange": true,
+      "notes": "CRITICAL: V1 used object with Date values, V2 uses array with string dates in mm/dd/yyyy format. Property name changed from 'label' to 'title'."
+    },
+
+    "disabledRange": {
+      "v1Type": "[number, number]",
+      "v2Type": "{ startDate: string, endDate: string }",
+      "transformCode": "// V1 to V2 (unix timestamps to date strings)\nconst v2DisabledRange = {\n  startDate: formatDate(new Date(v1DisabledRange[0] * 1000)),\n  endDate: formatDate(new Date(v1DisabledRange[1] * 1000))\n};",
+      "reverseTransformCode": "// V2 to V1\nconst v1DisabledRange = [\n  Math.floor(parseDate(v2DisabledRange.startDate).getTime() / 1000),\n  Math.floor(parseDate(v2DisabledRange.endDate).getTime() / 1000)\n];",
+      "requiresHelper": ["formatDate", "parseDate"],
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "V1 used unix timestamp array, V2 uses date string object"
+    },
+
+    "additionalRanges": {
+      "v1Type": "boolean",
+      "v2Type": "N/A (removed)",
+      "v2Equivalent": "defaultRanges",
+      "transformCode": "// V1 to V2\nconst defaultRanges = v1AdditionalRanges \n  ? ['Today', 'Yesterday', 'Last 7 Days', 'Last 30 Days', 'This Month', 'Last Month']\n  : ['Today', 'Yesterday'];",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": false,
+      "notes": "V1's additionalRanges boolean replaced with V2's defaultRanges array for more control",
+      "replacement": "defaultRanges"
+    },
+
+    "visibleRange": {
+      "v1Type": "boolean",
+      "v2Type": "N/A (removed)",
+      "v2Equivalent": "quickRangeSelectionStatus",
+      "transformCode": "// V1 to V2\nconst quickRangeSelectionStatus = v1VisibleRange;",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": false,
+      "notes": "Renamed for clarity",
+      "replacement": "quickRangeSelectionStatus"
+    },
+
+    "openPosition": {
+      "v1Type": "string ('left' | 'right' | 'center')",
+      "v2Type": "N/A (removed)",
+      "v2Equivalent": "calendarPopoverAlign",
+      "transformCode": "// V1 to V2\nconst calendarPopoverAlign = v1OpenPosition;",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": false,
+      "notes": "Renamed for consistency",
+      "replacement": "calendarPopoverAlign"
+    }
+  },
+
+  "eventMigrations": {
+    "@update": {
+      "v1Event": "@update",
+      "v2Event": "@apply",
+      "v1Payload": "string (\"mm/dd/yyyy-mm/dd/yyyy\")",
+      "v2Payload": "string OR Array<string>",
+      "payloadChange": "V2 can return array when comparison is active: [mainRange, comparisonRange]",
+      "handlingChange": "Must check Array.isArray(payload) in V2",
+      "transformCode": "// V1 handler\nhandleUpdate(rangeStr) {\n  const [start, end] = rangeStr.split('-');\n  this.startDate = start;\n  this.endDate = end;\n}\n\n// V2 handler\nhandleApply(payload) {\n  if (Array.isArray(payload)) {\n    const [mainRange, comparisonRange] = payload;\n    this.applyMainRange(mainRange);\n    this.applyComparisonRange(comparisonRange);\n  } else {\n    this.applyMainRange(payload);\n  }\n}",
+      "breakingChange": true,
+      "complexity": "medium"
+    }
+  },
+
+  "newFeaturesInV2": [
+    {
+      "feature": "Comparison Mode",
+      "props": ["comparisonStatus", "disabledComparisonStatus", "comparedCustomRanges"],
+      "events": ["@openComparison", "@closeComparison", "@periodSelected", "@comparisonPeriodSelected"],
+      "description": "Built-in comparison mode allowing users to select two date ranges for side-by-side comparison",
+      "usage": "Set comparison-status=\"true\" and handle @openComparison/@closeComparison events"
+    },
+    {
+      "feature": "Dynamic Comparison Ranges",
+      "props": ["comparedCustomRanges"],
+      "events": ["@periodSelected"],
+      "description": "Ability to calculate comparison ranges dynamically based on selected main period",
+      "usage": "Listen to @periodSelected and update comparedCustomRanges accordingly"
+    },
+    {
+      "feature": "Enhanced Quick Ranges",
+      "props": ["defaultRanges", "customRanges"],
+      "description": "More flexible quick range system with array-based configuration",
+      "usage": "Use defaultRanges array to control which default ranges appear"
+    },
+    {
+      "feature": "Better Validation",
+      "props": ["invalidDateMessage", "minMaxDateMessageStatus"],
+      "description": "Built-in date validation with customizable error messages",
+      "usage": "Component automatically validates date inputs and shows errors"
+    }
+  ],
+
+  "helperFunctions": [
+    {
+      "name": "formatDateToSlash",
+      "description": "Convert Date object to mm/dd/yyyy format (required for V2 customRanges)",
+      "code": "formatDateToSlash(date) {\n  const d = new Date(date);\n  const month = String(d.getMonth() + 1).padStart(2, '0');\n  const day = String(d.getDate()).padStart(2, '0');\n  const year = d.getFullYear();\n  return `${month}/${day}/${year}`;\n}",
+      "required": true,
+      "usedFor": ["customRanges", "comparedCustomRanges"]
+    },
+    {
+      "name": "formatDate",
+      "description": "Convert Date object to locale format (dd.mm.yyyy or mm/dd/yyyy)",
+      "code": "formatDate(date) {\n  const d = new Date(date);\n  const day = String(d.getDate()).padStart(2, '0');\n  const month = String(d.getMonth() + 1).padStart(2, '0');\n  const year = d.getFullYear();\n  \n  const format = this.formatMapping[this.locale] || 'dd.mm.yyyy';\n  const delimiter = format.includes('/') ? '/' : '.';\n  \n  if (format.startsWith('mm')) {\n    return `${month}${delimiter}${day}${delimiter}${year}`;\n  }\n  return `${day}${delimiter}${month}${delimiter}${year}`;\n}",
+      "required": true,
+      "usedFor": ["value", "disabledRange"]
+    },
+    {
+      "name": "parseDate",
+      "description": "Parse date string to Date object (handles both slash and dot delimiters)",
+      "code": "parseDate(dateStr) {\n  const parts = dateStr.split(/[/.]/); \n  const isSlash = dateStr.includes('/');\n  \n  if (isSlash) {\n    // mm/dd/yyyy\n    const [month, day, year] = parts;\n    return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));\n  } else {\n    // dd.mm.yyyy\n    const [day, month, year] = parts;\n    return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));\n  }\n}",
+      "required": false,
+      "usedFor": ["parsing payload dates"]
+    }
+  ],
+
+  "migrationSteps": [
+    {
+      "step": 1,
+      "title": "Update component import",
+      "before": "import { InDatePicker } from '@useinsider/design-system-vue';",
+      "after": "import { InDatePickerV2 } from '@useinsider/design-system-vue';",
+      "automated": true
+    },
+    {
+      "step": 2,
+      "title": "Update component name in template",
+      "before": "<InDatePicker ... />",
+      "after": "<InDatePickerV2 ... />",
+      "automated": true
+    },
+    {
+      "step": 3,
+      "title": "Transform value prop to array",
+      "before": ":value=\"{ startDate, endDate }\"",
+      "after": ":value=\"[{ startDate, endDate }]\"",
+      "automated": true,
+      "notes": "Can be automated with regex"
+    },
+    {
+      "step": 4,
+      "title": "Convert customRanges to V2 format",
+      "before": ":custom-ranges=\"{ 'Q4': [new Date(), new Date()] }\"",
+      "after": ":custom-ranges=\"customRangesForV2\"",
+      "automated": false,
+      "notes": "Requires creating computed property and formatDateToSlash helper",
+      "codeToAdd": "computed: {\n  customRangesForV2() {\n    return Object.entries(this.customRanges).map(([title, dates], i) => ({\n      name: `custom${i+1}`,\n      title,\n      startDate: this.formatDateToSlash(dates[0]),\n      endDate: this.formatDateToSlash(dates[1])\n    }));\n  }\n}"
+    },
+    {
+      "step": 5,
+      "title": "Update event handler from @update to @apply",
+      "before": "@update=\"handleUpdate\"",
+      "after": "@apply=\"handleApply\"",
+      "automated": true
+    },
+    {
+      "step": 6,
+      "title": "Update event handler logic to handle array payload",
+      "before": "handleUpdate(rangeStr) {\n  const [start, end] = rangeStr.split('-');\n}",
+      "after": "handleApply(payload) {\n  if (Array.isArray(payload)) {\n    const [main, comparison] = payload;\n    this.handleMain(main);\n    this.handleComparison(comparison);\n  } else {\n    this.handleMain(payload);\n  }\n}",
+      "automated": false,
+      "notes": "Requires understanding business logic"
+    },
+    {
+      "step": 7,
+      "title": "Add helper functions",
+      "automated": false,
+      "notes": "Add formatDateToSlash, formatDate, and parseDate methods",
+      "codeToAdd": "methods: {\n  formatDateToSlash(date) { /* ... */ },\n  formatDate(date) { /* ... */ },\n  parseDate(dateStr) { /* ... */ }\n}"
+    },
+    {
+      "step": 8,
+      "title": "(Optional) Add comparison mode",
+      "automated": false,
+      "notes": "If you want to use new comparison feature, add :comparison-status=\"true\" and handle @openComparison/@closeComparison events"
+    }
+  ],
+
+  "fullExampleBefore": "<!-- V1 Implementation -->\n<template>\n  <InDatePicker\n    id=\"date-picker\"\n    :value=\"dateValue\"\n    :custom-ranges=\"customRanges\"\n    :disabled-range=\"disabledRange\"\n    :additional-ranges=\"true\"\n    :visible-range=\"true\"\n    open-position=\"right\"\n    @update=\"handleUpdate\" />\n</template>\n\n<script>\nexport default {\n  data() {\n    return {\n      startDate: '01/12/2024',\n      endDate: '20/12/2024',\n      customRanges: {\n        'Q4 2024': [new Date('2024-10-01'), new Date('2024-12-31')]\n      },\n      disabledRange: [1704067200, 1735689599] // Unix timestamps\n    };\n  },\n  \n  computed: {\n    dateValue() {\n      return {\n        startDate: this.startDate,\n        endDate: this.endDate\n      };\n    }\n  },\n  \n  methods: {\n    handleUpdate(rangeStr) {\n      const [start, end] = rangeStr.split('-');\n      this.startDate = start;\n      this.endDate = end;\n    }\n  }\n};\n</script>",
+
+  "fullExampleAfter": "<!-- V2 Implementation -->\n<template>\n  <InDatePickerV2\n    id=\"date-picker\"\n    :value=\"datePickerValue\"\n    :custom-ranges=\"customRangesForV2\"\n    :disabled-range=\"disabledRangeForV2\"\n    :default-ranges=\"['Today', 'Yesterday', 'Last 7 Days', 'Last 30 Days', 'This Month', 'Last Month']\"\n    :quick-range-selection-status=\"true\"\n    calendar-popover-align=\"right\"\n    @apply=\"handleApply\" />\n</template>\n\n<script>\nexport default {\n  data() {\n    return {\n      startDate: '01/12/2024',\n      endDate: '20/12/2024',\n      customRanges: {\n        'Q4 2024': [new Date('2024-10-01'), new Date('2024-12-31')]\n      },\n      disabledRange: [1704067200, 1735689599]\n    };\n  },\n  \n  computed: {\n    datePickerValue() {\n      return [{\n        startDate: this.startDate,\n        endDate: this.endDate\n      }];\n    },\n    \n    customRangesForV2() {\n      return Object.entries(this.customRanges).map(([title, dates], index) => ({\n        name: `custom${index + 1}`,\n        title,\n        startDate: this.formatDateToSlash(dates[0]),\n        endDate: this.formatDateToSlash(dates[1])\n      }));\n    },\n    \n    disabledRangeForV2() {\n      if (this.disabledRange && this.disabledRange.length === 2) {\n        return {\n          startDate: this.formatDate(new Date(this.disabledRange[0] * 1000)),\n          endDate: this.formatDate(new Date(this.disabledRange[1] * 1000))\n        };\n      }\n      return { startDate: '', endDate: '' };\n    }\n  },\n  \n  methods: {\n    handleApply(payload) {\n      if (Array.isArray(payload)) {\n        const [mainRange, comparisonRange] = payload;\n        this.applyMainRange(mainRange);\n        this.applyComparisonRange(comparisonRange);\n      } else {\n        this.applyMainRange(payload);\n      }\n    },\n    \n    applyMainRange(rangeStr) {\n      const [start, end] = rangeStr.split('-');\n      this.startDate = start;\n      this.endDate = end;\n    },\n    \n    applyComparisonRange(rangeStr) {\n      // Handle comparison range if needed\n    },\n    \n    formatDateToSlash(date) {\n      const d = new Date(date);\n      const month = String(d.getMonth() + 1).padStart(2, '0');\n      const day = String(d.getDate()).padStart(2, '0');\n      const year = d.getFullYear();\n      return `${month}/${day}/${year}`;\n    },\n    \n    formatDate(date) {\n      const d = new Date(date);\n      const day = String(d.getDate()).padStart(2, '0');\n      const month = String(d.getMonth() + 1).padStart(2, '0');\n      const year = d.getFullYear();\n      return `${month}/${day}/${year}`;\n    }\n  }\n};\n</script>",
+
+  "changeSummary": {
+    "totalChanges": 8,
+    "propsAdded": 3,
+    "propsRemoved": 3,
+    "propsRenamed": 3,
+    "eventsChanged": 1,
+    "helperFunctionsNeeded": 3,
+    "estimatedTimeMinutes": 30
+  },
+
+  "commonPitfalls": [
+    {
+      "pitfall": "Forgetting to wrap value in array",
+      "impact": "Component won't render dates",
+      "solution": "Always use [{ startDate, endDate }]"
+    },
+    {
+      "pitfall": "Using wrong date format in customRanges",
+      "impact": "Invalid date parsing, shows 'Invalid Date'",
+      "solution": "Use mm/dd/yyyy format with formatDateToSlash helper"
+    },
+    {
+      "pitfall": "Not handling array payload in @apply",
+      "impact": "Crashes when comparison mode is used",
+      "solution": "Always check Array.isArray(payload)"
+    },
+    {
+      "pitfall": "Using 'label' instead of 'title' in customRanges",
+      "impact": "Range buttons won't show text",
+      "solution": "Use 'title' property in V2"
+    }
+  ],
+
+  "testingChecklist": [
+    "✓ Basic date selection works",
+    "✓ Custom ranges display correctly",
+    "✓ Disabled range is applied",
+    "✓ Quick range buttons appear",
+    "✓ @apply event handler works with single range",
+    "✓ (If using comparison) @apply event handler works with array",
+    "✓ (If using comparison) Comparison toggle works",
+    "✓ Date formats match locale",
+    "✓ Min/max date restrictions work"
+  ]
+}

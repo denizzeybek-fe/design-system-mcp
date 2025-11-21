@@ -1,0 +1,315 @@
+{
+  "component": "InDatePicker",
+  "propEnrichments": {
+    "value": {
+      "valueFormat": {
+        "structure": "Object (plain object, NOT array)",
+        "objectShape": "{ startDate: string, endDate: string }",
+        "examples": [
+          "{ startDate: '01/12/2024', endDate: '20/12/2024' }",
+          "{ startDate: '12.01.2024', endDate: '20.12.2024' }"
+        ],
+        "notes": "CRITICAL: V1 uses plain object, NOT array like V2. Date format depends on locale setting. Use mm/dd/yyyy for US locale, dd.mm.yyyy for EU/TR locales.",
+        "typescript": "{ startDate: string; endDate: string }"
+      },
+      "relatedProps": ["singleDatePicker", "locale", "formatMapping"],
+      "migrationToV2": {
+        "v2Format": "Array<{ startDate: string, endDate: string }>",
+        "transformation": "const v2Value = [v1Value];",
+        "notes": "V2 requires array to support comparison mode"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Passing array format like V2: [{ startDate, endDate }]",
+          "impact": "Component won't render dates, shows empty picker",
+          "fix": "Remove array wrapper, use plain object: { startDate, endDate }",
+          "severity": "critical"
+        },
+        {
+          "mistake": "Passing Date objects instead of strings",
+          "impact": "Type error, component may crash",
+          "fix": "Convert to string: { startDate: '01/12/2024', endDate: '20/12/2024' }",
+          "severity": "critical"
+        },
+        {
+          "mistake": "Wrong date format for locale (e.g., mm/dd/yyyy for Turkish locale)",
+          "impact": "Date parsing fails, shows invalid dates",
+          "fix": "Match format to locale: dd.mm.yyyy for tr-TR, mm/dd/yyyy for en-US",
+          "severity": "high"
+        }
+      ]
+    },
+    "customRanges": {
+      "valueFormat": {
+        "structure": "Object<string, Array<Date>>",
+        "objectShape": "{ [rangeLabel: string]: [Date, Date] }",
+        "examples": [
+          "{ 'Q4 2024': [new Date('2024-10-01'), new Date('2024-12-31')] }",
+          "{ 'Last Quarter': [new Date('2024-07-01'), new Date('2024-09-30')], 'This Year': [new Date('2024-01-01'), new Date('2024-12-31')] }"
+        ],
+        "notes": "CRITICAL: V1 uses object with Date array values. Keys are display labels. Values MUST be native Date objects, NOT strings.",
+        "typescript": "Record<string, [Date, Date]>"
+      },
+      "relatedProps": ["customDateRange", "additionalRanges"],
+      "migrationToV2": {
+        "v2Format": "Array<{ name: string, title: string, startDate: string, endDate: string }>",
+        "transformation": "Object.entries(v1CustomRanges).map(([title, dates], i) => ({ name: `custom${i+1}`, title, startDate: formatDateToSlash(dates[0]), endDate: formatDateToSlash(dates[1]) }))",
+        "notes": "V2 uses array with mm/dd/yyyy string format"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Using string dates instead of Date objects: { 'Q4': ['10/01/2024', '12/31/2024'] }",
+          "impact": "Component won't render custom ranges, buttons don't appear",
+          "fix": "Use Date objects: { 'Q4': [new Date('2024-10-01'), new Date('2024-12-31')] }",
+          "severity": "critical"
+        },
+        {
+          "mistake": "Passing V2 array format with name/title properties",
+          "impact": "Type error, custom ranges won't work",
+          "fix": "Use V1 object format with Date arrays",
+          "severity": "critical"
+        },
+        {
+          "mistake": "Not setting customDateRange prop to true",
+          "impact": "Custom ranges won't be displayed even if provided",
+          "fix": "Add :custom-date-range=\"true\" to enable custom ranges",
+          "severity": "medium"
+        }
+      ]
+    },
+    "disabledRange": {
+      "valueFormat": {
+        "structure": "Array<number> (Unix timestamps in seconds)",
+        "arrayShape": "[startTimestamp, endTimestamp]",
+        "examples": [
+          "[1704067200, 1735689599]",
+          "[1609459200, 1640995199]"
+        ],
+        "notes": "CRITICAL: V1 uses Unix timestamps in SECONDS (not milliseconds). Array of two numbers: [start, end]. Dates in this range will be disabled.",
+        "typescript": "[number, number]"
+      },
+      "relatedProps": ["minDate", "maxDate"],
+      "migrationToV2": {
+        "v2Format": "{ startDate: string, endDate: string }",
+        "transformation": "{ startDate: formatDate(new Date(v1[0] * 1000)), endDate: formatDate(new Date(v1[1] * 1000)) }",
+        "notes": "V2 uses object with date strings"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Using milliseconds instead of seconds: [Date.now(), Date.now()]",
+          "impact": "Incorrect date range disabled, may disable dates far in future",
+          "fix": "Convert to seconds: [Math.floor(Date.now() / 1000), Math.floor(endDate.getTime() / 1000)]",
+          "severity": "high"
+        },
+        {
+          "mistake": "Passing Date objects or strings",
+          "impact": "Type error, disabled range won't work",
+          "fix": "Convert to Unix timestamps in seconds: [date.getTime() / 1000, ...]",
+          "severity": "high"
+        },
+        {
+          "mistake": "Using V2 object format: { startDate, endDate }",
+          "impact": "Type error, disabled range won't work",
+          "fix": "Use array of Unix timestamps: [startTimestamp, endTimestamp]",
+          "severity": "critical"
+        }
+      ]
+    },
+    "formatMapping": {
+      "valueFormat": {
+        "structure": "Object<string, string>",
+        "objectShape": "{ [locale: string]: formatString }",
+        "examples": [
+          "{ 'en-US': 'mm/dd/yyyy', 'en-GB': 'dd/mm/yyyy', 'tr-TR': 'dd.mm.yyyy', 'default': 'dd.mm.yyyy' }",
+          "{ 'default': 'mm/dd/yyyy' }"
+        ],
+        "notes": "Maps locale codes to date format strings. Must match format used in value prop. Common formats: mm/dd/yyyy (US), dd.mm.yyyy (EU/TR), dd/mm/yyyy (GB).",
+        "typescript": "Record<string, string>"
+      },
+      "relatedProps": ["locale"],
+      "commonMistakes": [
+        {
+          "mistake": "Not providing 'default' fallback key",
+          "impact": "Component may not format dates correctly for unmapped locales",
+          "fix": "Always include 'default' key: { 'default': 'dd.mm.yyyy', ... }",
+          "severity": "medium"
+        },
+        {
+          "mistake": "Format string doesn't match value prop format",
+          "impact": "Date parsing/display mismatch, shows wrong dates",
+          "fix": "Ensure formatMapping matches value date format",
+          "severity": "high"
+        }
+      ]
+    },
+    "openPosition": {
+      "valueFormat": {
+        "structure": "string (enum)",
+        "validValues": ["left", "right", "center"],
+        "default": "right",
+        "notes": "Controls calendar popover position. Renamed to 'calendarPopoverAlign' in V2.",
+        "typescript": "'left' | 'right' | 'center'"
+      },
+      "migrationToV2": {
+        "v2Prop": "calendarPopoverAlign",
+        "transformation": "Direct rename, same values",
+        "notes": "Simple rename for consistency"
+      }
+    },
+    "additionalRanges": {
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "Shows extended set of quick ranges (Last 30 Days, This Month, Last Month, etc.). Replaced with more flexible 'defaultRanges' array in V2.",
+        "typescript": "boolean"
+      },
+      "relatedProps": ["customRanges", "customDateRange"],
+      "migrationToV2": {
+        "v2Prop": "defaultRanges",
+        "transformation": "additionalRanges ? ['Today', 'Yesterday', 'Last 7 Days', 'Last 30 Days', 'This Month', 'Last Month'] : ['Today', 'Yesterday']",
+        "notes": "V2 uses array for granular control"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Expecting customRanges to show without setting customDateRange=true",
+          "impact": "Custom ranges won't appear",
+          "fix": "Set both :custom-date-range=\"true\" and provide :custom-ranges",
+          "severity": "medium"
+        }
+      ]
+    },
+    "singleDatePicker": {
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "Enables single date selection mode. When true, only startDate is used. Renamed to 'singleDatePickerStatus' in V2.",
+        "typescript": "boolean"
+      },
+      "relatedProps": ["value"],
+      "migrationToV2": {
+        "v2Prop": "singleDatePickerStatus",
+        "notes": "Renamed with 'Status' suffix for consistency"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Still providing endDate when singleDatePicker=true",
+          "impact": "endDate is ignored, may cause confusion",
+          "fix": "When single mode, only set startDate in value object",
+          "severity": "low"
+        }
+      ]
+    }
+  },
+  "eventEnrichments": {
+    "update": {
+      "payloadTypes": [
+        {
+          "condition": "Always (V1 has no comparison mode)",
+          "type": "string",
+          "format": "\"mm/dd/yyyy-mm/dd/yyyy\"",
+          "example": "\"12/01/2024-12/20/2024\""
+        }
+      ],
+      "useCase": "Emitted when user selects a date range and clicks apply. V1 always returns string (no comparison support).",
+      "handlingPattern": "@update=\"handleUpdate\"\n\nhandleUpdate(rangeStr) {\n  // rangeStr is always string: \"start-end\"\n  const [start, end] = rangeStr.split('-');\n  this.startDate = start;\n  this.endDate = end;\n}",
+      "migrationToV2": {
+        "v2Event": "@apply",
+        "v2Payload": "string OR Array<string>",
+        "notes": "V2 can return array when comparison is active. Must check Array.isArray(payload) in V2 handler."
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Expecting array payload like V2",
+          "impact": "String.split() will fail if checking Array.isArray() first",
+          "fix": "V1 always returns string, no array check needed",
+          "severity": "medium"
+        },
+        {
+          "mistake": "Not updating value prop reactively",
+          "impact": "Component won't reflect user selection",
+          "fix": "Update startDate/endDate in data() and use computed for value",
+          "severity": "high"
+        }
+      ]
+    }
+  },
+  "exampleEnrichments": [
+    {
+      "title": "Basic V1 Date Range Picker",
+      "description": "Simple date range picker without custom ranges",
+      "complexity": "beginner",
+      "code": "<template>\n  <InDatePicker\n    id=\"date-picker\"\n    label=\"Select Period\"\n    :value=\"dateValue\"\n    :min-date=\"minDate\"\n    :max-date=\"maxDate\"\n    :locale=\"locale\"\n    :format-mapping=\"formatMapping\"\n    :additional-ranges=\"true\"\n    open-position=\"right\"\n    @update=\"handleUpdate\" />\n</template>\n\n<script>\nimport { InDatePicker } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InDatePicker },\n  \n  data() {\n    return {\n      startDate: '01/12/2024',\n      endDate: '20/12/2024',\n      minDate: '01/01/2023',\n      maxDate: new Date().toLocaleDateString('en-US'),\n      locale: 'en-US',\n      formatMapping: {\n        'en-US': 'mm/dd/yyyy',\n        'tr-TR': 'dd.mm.yyyy',\n        'default': 'mm/dd/yyyy'\n      }\n    };\n  },\n  \n  computed: {\n    dateValue() {\n      // V1: Plain object (NOT array)\n      return {\n        startDate: this.startDate,\n        endDate: this.endDate\n      };\n    }\n  },\n  \n  methods: {\n    handleUpdate(rangeStr) {\n      // V1 always returns string: \"mm/dd/yyyy-mm/dd/yyyy\"\n      const [start, end] = rangeStr.split('-');\n      this.startDate = start;\n      this.endDate = end;\n      \n      console.log('Date range selected:', { start, end });\n    }\n  }\n};\n</script>"
+    },
+    {
+      "title": "With Custom Ranges & Disabled Dates",
+      "description": "V1 date picker with custom quick ranges and disabled date range",
+      "complexity": "intermediate",
+      "code": "<template>\n  <InDatePicker\n    id=\"date-picker-custom\"\n    label=\"Reporting Period\"\n    :value=\"dateValue\"\n    :custom-date-range=\"true\"\n    :custom-ranges=\"customRanges\"\n    :disabled-range=\"disabledRange\"\n    :additional-ranges=\"true\"\n    :locale=\"locale\"\n    :format-mapping=\"formatMapping\"\n    open-position=\"center\"\n    @update=\"handleUpdate\" />\n</template>\n\n<script>\nimport { InDatePicker } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InDatePicker },\n  \n  data() {\n    return {\n      startDate: '10/01/2024',\n      endDate: '12/31/2024',\n      locale: 'en-US',\n      formatMapping: {\n        'en-US': 'mm/dd/yyyy',\n        'default': 'mm/dd/yyyy'\n      },\n      // V1 custom ranges: Object with Date arrays\n      customRanges: {\n        'Q4 2024': [new Date('2024-10-01'), new Date('2024-12-31')],\n        'Q3 2024': [new Date('2024-07-01'), new Date('2024-09-30')],\n        'H2 2024': [new Date('2024-07-01'), new Date('2024-12-31')],\n        'Full Year': [new Date('2024-01-01'), new Date('2024-12-31')]\n      },\n      // V1 disabled range: Unix timestamps in SECONDS\n      disabledRange: [\n        Math.floor(new Date('2024-12-25').getTime() / 1000), // Christmas\n        Math.floor(new Date('2024-12-26').getTime() / 1000)\n      ]\n    };\n  },\n  \n  computed: {\n    dateValue() {\n      return {\n        startDate: this.startDate,\n        endDate: this.endDate\n      };\n    }\n  },\n  \n  methods: {\n    handleUpdate(rangeStr) {\n      const [start, end] = rangeStr.split('-');\n      this.startDate = start;\n      this.endDate = end;\n      \n      // Update analytics or fetch data\n      this.fetchReportData(start, end);\n    },\n    \n    fetchReportData(startDate, endDate) {\n      console.log('Fetching data for:', startDate, 'to', endDate);\n      // API call here\n    }\n  }\n};\n</script>"
+    },
+    {
+      "title": "Turkish Locale with Dot Format",
+      "description": "V1 date picker configured for Turkish locale with dd.mm.yyyy format",
+      "complexity": "intermediate",
+      "code": "<template>\n  <InDatePicker\n    id=\"date-picker-tr\"\n    label=\"Tarih Aralığı Seçin\"\n    :value=\"dateValue\"\n    :locale=\"'tr-TR'\"\n    :format-mapping=\"formatMapping\"\n    :additional-ranges=\"true\"\n    :custom-date-range=\"true\"\n    :custom-ranges=\"customRanges\"\n    separator=\" - \"\n    @update=\"handleUpdate\" />\n</template>\n\n<script>\nimport { InDatePicker } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InDatePicker },\n  \n  data() {\n    return {\n      startDate: '01.12.2024',\n      endDate: '31.12.2024',\n      formatMapping: {\n        'tr-TR': 'dd.mm.yyyy',\n        'default': 'dd.mm.yyyy'\n      },\n      customRanges: {\n        'Son Çeyrek': [new Date('2024-10-01'), new Date('2024-12-31')],\n        'Bu Yıl': [new Date('2024-01-01'), new Date('2024-12-31')]\n      }\n    };\n  },\n  \n  computed: {\n    dateValue() {\n      return {\n        startDate: this.startDate,\n        endDate: this.endDate\n      };\n    }\n  },\n  \n  methods: {\n    handleUpdate(rangeStr) {\n      // Note: rangeStr is still in mm/dd/yyyy format from component\n      // Need to convert to dd.mm.yyyy for Turkish display\n      const [start, end] = rangeStr.split('-');\n      this.startDate = this.convertToTurkishFormat(start);\n      this.endDate = this.convertToTurkishFormat(end);\n    },\n    \n    convertToTurkishFormat(usDateStr) {\n      // Convert mm/dd/yyyy to dd.mm.yyyy\n      const [month, day, year] = usDateStr.split('/');\n      return `${day}.${month}.${year}`;\n    }\n  }\n};\n</script>"
+    }
+  ],
+  "helperFunctions": [
+    {
+      "name": "convertToUnixTimestamp",
+      "description": "Convert Date object to Unix timestamp in seconds (for disabledRange)",
+      "code": "convertToUnixTimestamp(date) {\n  return Math.floor(new Date(date).getTime() / 1000);\n}",
+      "typescript": "convertToUnixTimestamp(date: Date | string): number",
+      "usedFor": ["disabledRange"]
+    },
+    {
+      "name": "convertToTurkishFormat",
+      "description": "Convert mm/dd/yyyy to dd.mm.yyyy for Turkish locale",
+      "code": "convertToTurkishFormat(usDateStr) {\n  const [month, day, year] = usDateStr.split('/');\n  return `${day}.${month}.${year}`;\n}",
+      "typescript": "convertToTurkishFormat(usDateStr: string): string",
+      "usedFor": ["Turkish locale date conversion"]
+    },
+    {
+      "name": "convertFromTurkishFormat",
+      "description": "Convert dd.mm.yyyy to mm/dd/yyyy for component",
+      "code": "convertFromTurkishFormat(trDateStr) {\n  const [day, month, year] = trDateStr.split('.');\n  return `${month}/${day}/${year}`;\n}",
+      "typescript": "convertFromTurkishFormat(trDateStr: string): string",
+      "usedFor": ["Turkish locale date conversion"]
+    }
+  ],
+  "performanceNotes": [
+    {
+      "issue": "Creating new Date objects in customRanges on every render",
+      "impact": "Unnecessary object creation",
+      "solution": "Move customRanges to data() or created() hook",
+      "example": "data() { return { customRanges: { 'Q4': [new Date(...), new Date(...)] } }; }",
+      "severity": "low"
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "requirement": "Always provide label prop",
+      "reason": "Screen readers need label for identification",
+      "severity": "high"
+    },
+    {
+      "requirement": "Use meaningful custom range labels",
+      "reason": "Custom range buttons are announced by screen readers",
+      "severity": "medium"
+    }
+  ],
+  "migrationNotes": {
+    "considerV2": "InDatePicker (V1) is deprecated. Consider migrating to InDatePickerV2 for new features like comparison mode, better validation, and consistent API. Migration is medium effort but provides significant UX improvements.",
+    "v2Component": "InDatePickerV2",
+    "migrationGuide": "InDatePicker-to-V2",
+    "breakingChanges": [
+      "value prop format: Object → Array<Object>",
+      "customRanges format: Object with Date arrays → Array with string dates",
+      "disabledRange format: Array of Unix timestamps → Object with date strings",
+      "@update event → @apply event (with different payload handling)"
+    ],
+    "newFeaturesInV2": [
+      "Comparison mode with side-by-side date ranges",
+      "Dynamic comparison range calculation",
+      "Better validation and error messages",
+      "More flexible quick range configuration"
+    ]
+  }
+}

@@ -1,0 +1,257 @@
+{
+  "component": "InSelect",
+  "propEnrichments": {
+    "options": {
+      "valueFormat": {
+        "structure": "Array<Object> or Array<GroupedOptions>",
+        "flatStructure": "Array<{ text: string, value: any, disabled?: boolean, description?: string, icon?: string }>",
+        "groupedStructure": "Array<{ groupLabel: string, options: Array<{ text: string, value: any }> }>",
+        "examples": [
+          "[{ text: 'Option 1', value: 1 }]",
+          "[{ text: 'Active', value: 'active', icon: 'check' }]",
+          "[{ groupLabel: 'Group 1', options: [{ text: 'Opt 1', value: 1 }] }]"
+        ],
+        "requiredKeys": ["text", "value"],
+        "optionalKeys": ["disabled", "description", "icon", "groupLabel"],
+        "notes": "CRITICAL: Property is 'text' not 'label'! Supports both flat and grouped options.",
+        "typescript": "Array<{ text: string; value: any; disabled?: boolean; description?: string; icon?: string }> | Array<{ groupLabel: string; options: Array<{ text: string; value: any }> }>"
+      },
+      "relatedProps": ["value", "searchStatus", "lazyLoad"],
+      "commonMistakes": [
+        {
+          "mistake": "Using 'label' instead of 'text' property",
+          "impact": "Options won't display, shows empty dropdown",
+          "fix": "Change { label: 'X' } to { text: 'X' }",
+          "severity": "critical",
+          "detectPattern": "options.*label:"
+        },
+        {
+          "mistake": "Passing array of strings instead of objects",
+          "impact": "Component expects objects with text/value",
+          "fix": "Transform ['opt1', 'opt2'] to [{ text: 'opt1', value: 'opt1' }]",
+          "severity": "critical"
+        },
+        {
+          "mistake": "Not providing unique values",
+          "impact": "Selection tracking fails",
+          "fix": "Ensure each option has unique value property",
+          "severity": "high"
+        }
+      ]
+    },
+    "value": {
+      "valueFormat": {
+        "structure": "Array<Object>",
+        "objectShape": "{ text: string, value: any }",
+        "examples": [
+          "[]",
+          "[{ text: 'Option 1', value: 1 }]",
+          "[{ text: 'Active', value: 'active' }, { text: 'Pending', value: 'pending' }]"
+        ],
+        "notes": "CRITICAL: Always array, even for single selection. Empty array = no selection. Contains selected option object(s).",
+        "typescript": "Array<{ text: string; value: any }>"
+      },
+      "relatedEvents": ["optionClick"],
+      "commonMistakes": [
+        {
+          "mistake": "Passing single object instead of array",
+          "impact": "Type error, selection won't work",
+          "fix": "Wrap in array: [selectedOption]",
+          "severity": "critical"
+        },
+        {
+          "mistake": "Passing just value without text",
+          "impact": "Selected text won't display",
+          "fix": "Use { text: 'Display', value: actualValue }",
+          "severity": "high"
+        },
+        {
+          "mistake": "Not syncing with v-model pattern",
+          "impact": "Component won't update on selection",
+          "fix": "Listen to @optionClick and update value prop",
+          "severity": "high"
+        }
+      ]
+    },
+    "staticPosition": {
+      "valueFormat": {
+        "structure": "string (enum)",
+        "validValues": ["bottom left", "bottom right", "top left", "top right"],
+        "default": "bottom left",
+        "notes": "Dropdown menu position relative to button",
+        "typescript": "'bottom left' | 'bottom right' | 'top left' | 'top right'"
+      },
+      "relatedProps": ["dynamicPosition"]
+    },
+    "staticChildPosition": {
+      "valueFormat": {
+        "structure": "string (enum)",
+        "validValues": ["bottom left", "bottom right", "top left", "top right"],
+        "default": "bottom right",
+        "notes": "Child dropdown position for grouped options",
+        "typescript": "'bottom left' | 'bottom right' | 'top left' | 'top right'"
+      }
+    },
+    "optionValidationType": {
+      "valueFormat": {
+        "structure": "string | RegExp",
+        "validValues": ["all", "number", "text"],
+        "notes": "Validation type for create new option feature",
+        "typescript": "'all' | 'number' | 'text' | RegExp"
+      },
+      "relatedProps": ["createOptionStatus"]
+    },
+    "state": {
+      "valueFormat": {
+        "structure": "string (enum)",
+        "validValues": ["default", "success", "warning", "error"],
+        "default": "default",
+        "notes": "Visual state for validation feedback",
+        "typescript": "'default' | 'success' | 'warning' | 'error'"
+      },
+      "relatedProps": ["stateMessage"]
+    }
+  },
+  "eventEnrichments": {
+    "optionClick": {
+      "payloadTypes": [
+        {
+          "condition": "Always",
+          "type": "Object",
+          "format": "{ text: string, value: any }",
+          "example": "{ text: 'Option 1', value: 1 }"
+        }
+      ],
+      "useCase": "Main selection event. Update value prop with this payload to reflect selection",
+      "handlingPattern": "@optionClick=\"handleSelect\"\n\nhandleSelect(option) {\n  this.selectedValue = [option]; // Always wrap in array!\n  // Or for v-model pattern:\n  this.$emit('update:modelValue', [option]);\n}",
+      "commonMistakes": [
+        {
+          "mistake": "Not wrapping payload in array when updating value",
+          "impact": "Type mismatch, component breaks",
+          "fix": "Always use [payload]",
+          "severity": "critical"
+        }
+      ]
+    },
+    "search": {
+      "payloadTypes": [
+        {
+          "condition": "When searchStatus=true",
+          "type": "string",
+          "example": "\"search query\""
+        }
+      ],
+      "useCase": "Emitted when user types in search box. Use to filter options or lazy load",
+      "relatedProps": ["searchStatus", "lazyLoadSearch"]
+    },
+    "endScroll": {
+      "payloadTypes": [
+        {
+          "condition": "When lazyLoad=true and user scrolls to bottom",
+          "type": "void",
+          "example": "undefined"
+        }
+      ],
+      "useCase": "Infinite scroll support. Load more options when emitted",
+      "handlingPattern": "@endScroll=\"loadMore\"\n\ndata() {\n  return { page: 1, allOptions: [] };\n},\nmethods: {\n  loadMore() {\n    this.page++;\n    this.fetchOptions(this.page).then(newOptions => {\n      this.allOptions = [...this.allOptions, ...newOptions];\n    });\n  }\n}",
+      "relatedProps": ["lazyLoad", "fetchPage"]
+    },
+    "addOption": {
+      "payloadTypes": [
+        {
+          "condition": "When createOptionStatus=true and user creates new option",
+          "type": "Object",
+          "format": "{ text: string, value: string }",
+          "example": "{ text: 'New Option', value: 'New Option' }"
+        }
+      ],
+      "useCase": "User created a new option via 'create' button",
+      "handlingPattern": "@addOption=\"handleAddOption\"\n\nhandleAddOption(newOption) {\n  // Add to options array\n  this.options = [...this.options, newOption];\n  // Select it\n  this.selectedValue = [newOption];\n}",
+      "relatedProps": ["createOptionStatus", "createButtonLabel"]
+    },
+    "secondaryButtonClick": {
+      "payloadTypes": [
+        {
+          "condition": "When buttonStatus=true",
+          "type": "void"
+        }
+      ],
+      "useCase": "Secondary action button clicked (shown in dropdown footer)",
+      "relatedProps": ["buttonStatus", "buttonLabel", "buttonIcon"]
+    }
+  },
+  "exampleEnrichments": [
+    {
+      "title": "Basic Single Select",
+      "description": "Simple dropdown with static options",
+      "complexity": "beginner",
+      "code": "<template>\n  <InSelect\n    id=\"status-select\"\n    label-text=\"Status\"\n    placeholder-text=\"Select status\"\n    :options=\"statusOptions\"\n    :value=\"selectedStatus\"\n    @optionClick=\"handleSelect\" />\n</template>\n\n<script>\nimport { InSelect } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InSelect },\n  data() {\n    return {\n      statusOptions: [\n        { text: 'Active', value: 'active' },\n        { text: 'Pending', value: 'pending' },\n        { text: 'Inactive', value: 'inactive' }\n      ],\n      selectedStatus: [] // Empty = no selection\n    };\n  },\n  methods: {\n    handleSelect(option) {\n      this.selectedStatus = [option]; // CRITICAL: Always array!\n      console.log('Selected:', option.value);\n    }\n  }\n};\n</script>"
+    },
+    {
+      "title": "With Search and Icons",
+      "description": "Searchable dropdown with icons",
+      "complexity": "intermediate",
+      "code": "<template>\n  <InSelect\n    id=\"country-select\"\n    label-text=\"Country\"\n    placeholder-text=\"Search countries...\"\n    :search-status=\"true\"\n    :options=\"countryOptions\"\n    :value=\"selectedCountry\"\n    @optionClick=\"handleSelect\"\n    @search=\"handleSearch\" />\n</template>\n\n<script>\nimport { InSelect } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InSelect },\n  data() {\n    return {\n      allCountries: [\n        { text: 'United States', value: 'US', icon: 'flag-us' },\n        { text: 'United Kingdom', value: 'UK', icon: 'flag-uk' },\n        { text: 'Turkey', value: 'TR', icon: 'flag-tr' },\n        // ... more countries\n      ],\n      countryOptions: [],\n      selectedCountry: []\n    };\n  },\n  created() {\n    this.countryOptions = this.allCountries;\n  },\n  methods: {\n    handleSelect(option) {\n      this.selectedCountry = [option];\n    },\n    handleSearch(query) {\n      if (!query) {\n        this.countryOptions = this.allCountries;\n        return;\n      }\n      this.countryOptions = this.allCountries.filter(country =>\n        country.text.toLowerCase().includes(query.toLowerCase())\n      );\n    }\n  }\n};\n</script>"
+    },
+    {
+      "title": "Lazy Loading with Infinite Scroll",
+      "description": "Load options on scroll for large datasets",
+      "complexity": "advanced",
+      "code": "<template>\n  <InSelect\n    id=\"user-select\"\n    label-text=\"Select User\"\n    :search-status=\"true\"\n    :lazy-load=\"true\"\n    :lazy-load-search=\"true\"\n    :fetch-page=\"currentPage\"\n    :options=\"users\"\n    :value=\"selectedUser\"\n    :loading-state=\"isLoading\"\n    @optionClick=\"handleSelect\"\n    @search=\"handleSearch\"\n    @endScroll=\"loadMore\" />\n</template>\n\n<script>\nimport { InSelect } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InSelect },\n  data() {\n    return {\n      users: [],\n      selectedUser: [],\n      currentPage: 1,\n      isLoading: false,\n      searchQuery: ''\n    };\n  },\n  created() {\n    this.loadUsers();\n  },\n  methods: {\n    async loadUsers() {\n      this.isLoading = true;\n      try {\n        const response = await fetch(\n          `/api/users?page=${this.currentPage}&search=${this.searchQuery}`\n        );\n        const data = await response.json();\n        \n        // Transform API response to select format\n        const newUsers = data.users.map(u => ({\n          text: u.name,\n          value: u.id,\n          description: u.email\n        }));\n        \n        this.users = [...this.users, ...newUsers];\n      } finally {\n        this.isLoading = false;\n      }\n    },\n    \n    loadMore() {\n      this.currentPage++;\n      this.loadUsers();\n    },\n    \n    handleSearch(query) {\n      this.searchQuery = query;\n      this.currentPage = 1;\n      this.users = []; // Clear existing\n      this.loadUsers();\n    },\n    \n    handleSelect(option) {\n      this.selectedUser = [option];\n    }\n  }\n};\n</script>"
+    },
+    {
+      "title": "Grouped Options",
+      "description": "Options organized in groups",
+      "complexity": "advanced",
+      "code": "<template>\n  <InSelect\n    id=\"product-select\"\n    label-text=\"Select Product\"\n    :options=\"productOptions\"\n    :value=\"selectedProduct\"\n    @optionClick=\"handleSelect\" />\n</template>\n\n<script>\nimport { InSelect } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InSelect },\n  data() {\n    return {\n      productOptions: [\n        {\n          groupLabel: 'Marketing',\n          options: [\n            { text: 'Email Marketing', value: 'email' },\n            { text: 'SMS Marketing', value: 'sms' }\n          ]\n        },\n        {\n          groupLabel: 'Analytics',\n          options: [\n            { text: 'Web Analytics', value: 'web' },\n            { text: 'Mobile Analytics', value: 'mobile' }\n          ]\n        }\n      ],\n      selectedProduct: []\n    };\n  },\n  methods: {\n    handleSelect(option) {\n      this.selectedProduct = [option];\n    }\n  }\n};\n</script>"
+    }
+  ],
+  "helperFunctions": [
+    {
+      "name": "transformToSelectOptions",
+      "description": "Transform API data to InSelect format",
+      "code": "transformToSelectOptions(items, textKey = 'name', valueKey = 'id') {\n  return items.map(item => ({\n    text: item[textKey],\n    value: item[valueKey]\n  }));\n}",
+      "typescript": "transformToSelectOptions<T>(items: T[], textKey: keyof T, valueKey: keyof T): Array<{ text: string; value: any }>",
+      "usedFor": ["options transformation"]
+    },
+    {
+      "name": "getSelectedValue",
+      "description": "Extract value from InSelect value prop",
+      "code": "getSelectedValue(selectValue) {\n  return selectValue[0]?.value || null;\n}",
+      "typescript": "getSelectedValue(selectValue: Array<{ text: string; value: any }>): any | null",
+      "usedFor": ["extracting selected value"]
+    }
+  ],
+  "performanceNotes": [
+    {
+      "issue": "Filtering large options array on every search keystroke",
+      "impact": "UI lag with 1000+ options",
+      "solution": "Debounce search handler or use lazy loading",
+      "example": "methods: { handleSearch: debounce(function(query) { ... }, 300) }",
+      "severity": "medium"
+    },
+    {
+      "issue": "Passing new options array reference on every render",
+      "impact": "Dropdown re-renders unnecessarily",
+      "solution": "Store options in data() or use computed with proper dependencies",
+      "severity": "low"
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "requirement": "Always provide labelText",
+      "reason": "Screen readers need label for identification",
+      "severity": "high"
+    },
+    {
+      "requirement": "Use meaningful option text",
+      "reason": "Text is announced by screen readers",
+      "severity": "high"
+    },
+    {
+      "requirement": "Don't disable keyboard navigation",
+      "reason": "Arrow keys should work for option selection",
+      "severity": "high"
+    }
+  ]
+}

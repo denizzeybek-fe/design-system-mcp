@@ -1,5 +1,5 @@
 import { defineConfig } from 'tsup';
-import { copyFileSync, mkdirSync } from 'fs';
+import { copyFileSync, mkdirSync, cpSync, existsSync } from 'fs';
 
 export default defineConfig({
   entry: ['src/index.ts'],
@@ -15,8 +15,13 @@ export default defineConfig({
     js: '#!/usr/bin/env node',
   },
   onSuccess: async () => {
-    // Copy registry to dist root (loader expects it in __dirname)
-    copyFileSync('src/registry/components.json', 'dist/components.json');
-    console.log('✓ Copied components.json to dist/');
+    // Copy data directory (combined dataset) - PRIMARY SOURCE
+    if (existsSync('data')) {
+      mkdirSync('dist/data', { recursive: true });
+      cpSync('data', 'dist/data', { recursive: true });
+      console.log('✓ Copied data/ to dist/');
+    } else {
+      console.warn('⚠️  data/ directory not found. Run: npm run extract:all');
+    }
   },
 });

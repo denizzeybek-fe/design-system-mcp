@@ -1,0 +1,33 @@
+{
+  "2-install-and-configure": {
+    "component": "2-install-and-configure",
+    "examples": [
+      {
+        "title": "🚀 Introduction",
+        "code": "// main.js or App.vue\nimport '@useinsider/design-system-vue/dist/design-system-vue.css';",
+        "language": "js"
+      },
+      {
+        "title": "🚀 Introduction",
+        "code": "<template>\n  <div>\n    <InButton @click=\"handleClick\" status=\"primary\">\n      Click me\n    </InButton>\n    <InModal v-model=\"showModal\" title=\"Welcome\">\n      <p>Hello from Insider Design System!</p>\n    </InModal>\n  </div>\n</template>\n\n<script>\nimport { InButton, InModal } from '@useinsider/design-system-vue';\n\nexport default {\n  name: 'MyComponent',\n  components: {\n    InButton,\n    InModal\n  },\n  data() {\n    return {\n      showModal: false\n    };\n  },\n  methods: {\n    handleClick() {\n      this.showModal = true;\n    }\n  }\n};\n</script>",
+        "language": "vue"
+      },
+      {
+        "title": "🚀 Introduction",
+        "code": "import { InButton, InModal, InDataTable } from '@useinsider/design-system-vue';",
+        "language": "js"
+      },
+      {
+        "title": "🚀 Introduction",
+        "code": "import { InButton } from '@useinsider/design-system-vue/InButton';\nimport { InModal } from '@useinsider/design-system-vue/InModal';",
+        "language": "js"
+      },
+      {
+        "title": "🚀 Introduction",
+        "code": "import * as InsiderComponents from '@useinsider/design-system-vue';",
+        "language": "js"
+      }
+    ],
+    "description": "import { Meta, Title } from \"@storybook/blocks\";"
+  }
+}
