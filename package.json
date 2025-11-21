@@ -1,0 +1,54 @@
+{
+  "name": "@anthropic/design-system-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for Insider Design System - provides component metadata, documentation, and code generation",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "design-system-mcp": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "start": "node dist/index.js",
+    "generate-registry": "npx ts-node --esm scripts/generate-registry.ts",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "typecheck": "tsc --noEmit",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "design-system",
+    "insider",
+    "vue",
+    "components",
+    "ai",
+    "claude"
+  ],
+  "author": "Insider",
+  "license": "UNLICENSED",
+  "private": true,
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "eslint": "^8.57.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.0",
+    "@vitest/coverage-v8": "^1.6.0"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "CLAUDE.md"
+  ]
+}
