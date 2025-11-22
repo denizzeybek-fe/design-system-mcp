@@ -1,6 +1,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { registerTools } from './tools/index.js';
 import { registerResources } from './resources/index.js';
+import { registerFigmaTools } from './tools/figma-tools.js';
 
 /**
  * Create and configure the MCP server
@@ -13,6 +14,9 @@ export function createServer(): McpServer {
 
   // Register all tools
   registerTools(server);
+
+  // Register Figma integration tools
+  registerFigmaTools(server);
 
   // Register all resources
   registerResources(server);
