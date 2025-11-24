@@ -1,7 +1,7 @@
 {
   "_metadata": {
     "version": "1.0.0",
-    "generatedAt": "2025-11-24T12:48:10.716Z",
+    "generatedAt": "2025-11-24T21:57:09.363Z",
     "sources": [
       "components",
       "storybook",
@@ -680,7 +680,7 @@
       "title": "In Button",
       "description": "",
       "version": "v2",
-      "category": "Form",
+      "category": null,
       "props": {
         "id": {
           "type": "String",

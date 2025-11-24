@@ -40,6 +40,11 @@ interface ComponentData {
   slots: string[];
   category?: string;
   hasStorybook?: boolean;
+  // New metadata structure support
+  metadata?: any;  // From ComponentName.meta.json
+  examples?: any[];  // From ComponentName.examples.ts
+  typeDefs?: string;  // From ComponentName.d.ts
+  hasNewStructure?: boolean;  // Flag to indicate which structure is used
 }
 
 type ComponentsMap = Record<string, ComponentData>;
@@ -357,7 +362,76 @@ function hasStorybookStories(componentName: string): boolean {
 }
 
 /**
+ * Attempts to load new metadata structure files
+ * Returns metadata if found, null otherwise
+ */
+function loadNewStructureMetadata(componentDir: string, componentName: string): {
+  metadata?: any;
+  examples?: any[];
+  typeDefs?: string;
+  hasNewStructure: boolean;
+} {
+  const metaFile = join(componentDir, `${componentName}.meta.json`);
+  const examplesFile = join(componentDir, `${componentName}.examples.ts`);
+  const dtsFile = join(componentDir, `${componentName}.d.ts`);
+
+  const hasNewStructure = existsSync(metaFile) || existsSync(examplesFile) || existsSync(dtsFile);
+
+  if (!hasNewStructure) {
+    return { hasNewStructure: false };
+  }
+
+  console.log(`  📦 Found new metadata structure for ${componentName}`);
+
+  const result: any = { hasNewStructure: true };
+
+  // Load .meta.json
+  if (existsSync(metaFile)) {
+    try {
+      result.metadata = JSON.parse(readFileSync(metaFile, 'utf-8'));
+      console.log(`    ✓ Loaded meta.json`);
+    } catch (error) {
+      console.warn(`    ⚠️  Failed to parse meta.json:`, error);
+    }
+  }
+
+  // Load .examples.ts (parse as text for now, can be enhanced later)
+  if (existsSync(examplesFile)) {
+    try {
+      const examplesContent = readFileSync(examplesFile, 'utf-8');
+
+      // Try to extract the examples array using regex
+      const examplesMatch = examplesContent.match(/export\s+const\s+examples\s*:\s*\w+\[\]\s*=\s*(\[[\s\S]*?\]);/);
+      if (examplesMatch) {
+        // We can't safely eval, so just store the raw content
+        // The merge script or runtime can parse this properly
+        result.examples = { raw: examplesContent, extracted: true };
+        console.log(`    ✓ Loaded examples.ts`);
+      } else {
+        result.examples = { raw: examplesContent, extracted: false };
+        console.log(`    ⚠️  examples.ts found but couldn't extract examples array`);
+      }
+    } catch (error) {
+      console.warn(`    ⚠️  Failed to read examples.ts:`, error);
+    }
+  }
+
+  // Load .d.ts
+  if (existsSync(dtsFile)) {
+    try {
+      result.typeDefs = readFileSync(dtsFile, 'utf-8');
+      console.log(`    ✓ Loaded d.ts (${result.typeDefs.length} bytes)`);
+    } catch (error) {
+      console.warn(`    ⚠️  Failed to read d.ts:`, error);
+    }
+  }
+
+  return result;
+}
+
+/**
  * Processes a single Vue component file
+ * Supports BOTH old (embedded) and new (separate files) metadata structures
  */
 function processComponent(componentDir: string, componentName: string): ComponentData | null {
   let componentFile = join(componentDir, `${componentName}.vue`);
@@ -394,7 +468,10 @@ function processComponent(componentDir: string, componentName: string): Componen
     const enums = extractEnums(scriptContent);
     const slots = extractSlots(templateContent);
 
-    return {
+    // Try to load new metadata structure
+    const newStructureData = loadNewStructureMetadata(componentDir, componentName);
+
+    const componentData: ComponentData = {
       name: componentName,
       title: extractTitle(scriptContent, componentName),
       description: extractDescription(scriptContent),
@@ -406,6 +483,22 @@ function processComponent(componentDir: string, componentName: string): Componen
       category: extractCategory(scriptContent),
       hasStorybook: hasStorybookStories(componentName)
     };
+
+    // Add new structure data if found
+    if (newStructureData.hasNewStructure) {
+      componentData.hasNewStructure = true;
+      if (newStructureData.metadata) {
+        componentData.metadata = newStructureData.metadata;
+      }
+      if (newStructureData.examples) {
+        componentData.examples = newStructureData.examples;
+      }
+      if (newStructureData.typeDefs) {
+        componentData.typeDefs = newStructureData.typeDefs;
+      }
+    }
+
+    return componentData;
   } catch (error) {
     console.error(`❌ Error processing ${componentName}:`, error);
     return null;
