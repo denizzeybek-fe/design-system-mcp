@@ -1,0 +1,190 @@
+{
+  "componentName": "InDropDown",
+  "version": "1.0.0",
+  "lastUpdated": "2024-11-24",
+
+  "propEnrichments": {
+    "options": {
+      "description": "Array of selectable options",
+      "valueFormat": {
+        "structure": "Array of option objects",
+        "typescript": "Array<{ label: string; value: string | number; disabled?: boolean; description?: string; }>",
+        "example": ":options=\"[{ label: 'Option 1', value: '1' }, { label: 'Option 2', value: '2' }]\""
+      }
+    },
+    "value": {
+      "description": "Selected value (v-model)",
+      "valueFormat": {
+        "structure": "string | number",
+        "example": "v-model=\"selectedValue\""
+      }
+    },
+    "customOptionsKey": {
+      "description": "Custom property name for option label",
+      "valueFormat": {
+        "structure": "string",
+        "example": "custom-options-key=\"name\""
+      }
+    },
+    "fetchUrl": {
+      "description": "API endpoint for fetching options",
+      "valueFormat": {
+        "structure": "string (URL)",
+        "example": "fetch-url=\"/api/options\""
+      }
+    },
+    "responseKey": {
+      "description": "JSON path to options in API response",
+      "valueFormat": {
+        "structure": "string (dot notation)",
+        "example": "response-key=\"data.items\""
+      }
+    },
+    "queryString": {
+      "description": "Query parameter name for search",
+      "valueFormat": {
+        "structure": "string",
+        "example": "query-string=\"q\""
+      }
+    },
+    "overriddenListPosition": {
+      "description": "Override dropdown position",
+      "valueFormat": {
+        "structure": "string enum",
+        "possibleValues": ["top", "bottom"],
+        "example": "overridden-list-position=\"top\""
+      }
+    },
+    "type": {
+      "description": "Dropdown type/variant",
+      "valueFormat": {
+        "structure": "string enum",
+        "possibleValues": ["default", "nested"],
+        "example": "type=\"nested\""
+      }
+    },
+    "buttonType": {
+      "description": "Button style variant",
+      "valueFormat": {
+        "structure": "string enum",
+        "possibleValues": ["primary", "secondary", "ghost"],
+        "example": "button-type=\"secondary\""
+      }
+    },
+    "buttonSize": {
+      "description": "Button size",
+      "valueFormat": {
+        "structure": "string enum",
+        "possibleValues": ["small", "medium", "large"],
+        "example": "button-size=\"small\""
+      }
+    },
+    "childOptionsLeftPosition": {
+      "description": "Position of nested child options",
+      "valueFormat": {
+        "structure": "string enum",
+        "possibleValues": ["left", "right"],
+        "example": "child-options-left-position=\"right\""
+      }
+    },
+    "canRemoveSelectedItem": {
+      "description": "Allow clearing selection",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "can-remove-selected-item"
+      }
+    },
+    "createOptionStatus": {
+      "description": "Allow creating new options",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "create-option-status"
+      }
+    }
+  },
+
+  "eventEnrichments": {
+    "change": {
+      "description": "Emitted when selection changes",
+      "payload": "string | number - selected value",
+      "usage": "@change=\"handleChange\""
+    },
+    "select": {
+      "description": "Emitted when option is selected",
+      "payload": "{ label, value } - selected option",
+      "usage": "@select=\"handleSelect\""
+    },
+    "unSelect": {
+      "description": "Emitted when selection is cleared",
+      "payload": "void",
+      "usage": "@un-select=\"handleUnselect\""
+    },
+    "openList": {
+      "description": "Emitted when dropdown opens",
+      "payload": "void",
+      "usage": "@open-list=\"handleOpen\""
+    },
+    "closeList": {
+      "description": "Emitted when dropdown closes",
+      "payload": "void",
+      "usage": "@close-list=\"handleClose\""
+    },
+    "addNewOption": {
+      "description": "Emitted when new option is created",
+      "payload": "string - new option value",
+      "usage": "@add-new-option=\"handleNewOption\""
+    }
+  },
+
+  "exampleEnrichments": [
+    {
+      "title": "Basic Select",
+      "description": "Simple dropdown with static options",
+      "code": "<InDropDown\n  id=\"country\"\n  label=\"Country\"\n  placeholder=\"Select country\"\n  :options=\"[\n    { label: 'USA', value: 'us' },\n    { label: 'UK', value: 'uk' },\n    { label: 'Germany', value: 'de' }\n  ]\"\n  v-model=\"selectedCountry\"\n  @change=\"handleChange\"\n/>"
+    },
+    {
+      "title": "Searchable Select with API",
+      "description": "Select with search and API fetching",
+      "code": "<InDropDown\n  id=\"users\"\n  label=\"Select User\"\n  fetch-url=\"/api/users\"\n  response-key=\"data\"\n  query-string=\"search\"\n  search-status\n  placeholder=\"Search users...\"\n  v-model=\"selectedUser\"\n  @change=\"handleUserChange\"\n/>"
+    },
+    {
+      "title": "Select with Validation",
+      "description": "Required select with error state",
+      "code": "<InDropDown\n  id=\"category\"\n  label=\"Category\"\n  :options=\"categories\"\n  v-model=\"selectedCategory\"\n  visible-label\n  invalid\n  invalid-message=\"Please select a category\"\n  can-remove-selected-item\n/>"
+    }
+  ],
+
+  "commonMistakes": [
+    {
+      "mistake": "Not setting responseKey for API fetch",
+      "issue": "Options don't populate",
+      "solution": "Set response-key to match API response structure",
+      "severity": "high"
+    },
+    {
+      "mistake": "Using wrong event name @closeList",
+      "issue": "Event not triggered",
+      "solution": "Use kebab-case: @close-list",
+      "severity": "medium"
+    },
+    {
+      "mistake": "Forgetting v-model",
+      "issue": "Selection not synced",
+      "solution": "Use v-model for two-way binding",
+      "severity": "high"
+    }
+  ],
+
+  "bestPractices": [
+    {
+      "practice": "Use searchStatus for large option lists",
+      "description": "Enable search when options > 10",
+      "example": "search-status"
+    },
+    {
+      "practice": "Provide clear validation feedback",
+      "description": "Use invalid/warning with messages",
+      "example": "invalid invalid-message=\"Required field\""
+    }
+  ]
+}

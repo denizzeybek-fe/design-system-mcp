@@ -43,6 +43,7 @@ interface EnrichmentData {
   exampleEnrichments?: any[];
   helperFunctions?: any[];
   commonMistakes?: any[];
+  bestPractices?: any[];
   performanceNotes?: any[];
   accessibilityNotes?: any[];
   migrationNotes?: any;
@@ -61,7 +62,7 @@ interface CombinedComponent {
   title: string;
   description: string;
   version: 'v1' | 'v2';
-  category?: string;
+  category: string | null;
 
   // Props & Events
   props: Record<string, any>;
@@ -69,31 +70,32 @@ interface CombinedComponent {
   slots: string[];
   enums: any[];
 
-  // Storybook examples
-  examples?: any[];
-  storybookDescription?: string;
-  storybookCategories?: string[];
+  // Storybook examples (always present)
+  examples: any[];
+  storybookDescription: string | null;
+  storybookCategories: string[];
 
-  // Real usage data
-  totalUsages?: number;
-  usagePatterns?: any[];
-  commonMistakes?: any[];
-  mostUsedProps?: any[];
-  mostUsedEvents?: any[];
+  // Real usage data (always present)
+  totalUsages: number;
+  usagePatterns: any[];
+  commonMistakes: any[];
+  mostUsedProps: any[];
+  mostUsedEvents: any[];
 
-  // Manual enrichments
-  enriched?: boolean;
-  propEnrichments?: Record<string, any>;
-  eventEnrichments?: Record<string, any>;
-  helperFunctions?: any[];
-  performanceNotes?: any[];
-  accessibilityNotes?: any[];
-  migrationNotes?: any;
+  // Manual enrichments (always present)
+  enriched: boolean;
+  propEnrichments: Record<string, any> | null;
+  eventEnrichments: Record<string, any> | null;
+  helperFunctions: any[];
+  bestPractices: any[];
+  performanceNotes: any[];
+  accessibilityNotes: any[];
+  migrationNotes: any | null;
 
-  // Migration info
-  migrationAvailable?: boolean;
-  migrationTo?: string;
-  migrationFrom?: string;
+  // Migration info (always present)
+  migrationAvailable: boolean;
+  migrationTo: string | null;
+  migrationFrom: string | null;
 }
 
 interface CombinedDataset {
@@ -190,52 +192,81 @@ function mergeComponentData(
 ): CombinedComponent {
   const componentName = component.name;
 
-  // Start with base component data
+  // Start with ALL fields initialized (Explicit Null Pattern)
   const combined: CombinedComponent = {
+    // Base component data
     name: component.name,
     title: component.title,
     description: component.description,
     version: component.version,
-    category: component.category,
+    category: component.category || null,
     props: component.props,
     emits: component.emits,
     slots: component.slots,
-    enums: component.enums
+    enums: component.enums,
+
+    // Storybook data (always present, default empty)
+    examples: [],
+    storybookDescription: null,
+    storybookCategories: [],
+
+    // Usage data (always present, default empty/zero)
+    totalUsages: 0,
+    usagePatterns: [],
+    commonMistakes: [],
+    mostUsedProps: [],
+    mostUsedEvents: [],
+
+    // Enrichment data (always present, default empty/null)
+    enriched: false,
+    propEnrichments: null,
+    eventEnrichments: null,
+    helperFunctions: [],
+    bestPractices: [],
+    performanceNotes: [],
+    accessibilityNotes: [],
+    migrationNotes: null,
+
+    // Migration data (always present, default false/null)
+    migrationAvailable: false,
+    migrationTo: null,
+    migrationFrom: null
   };
 
   // Merge Storybook data
   const storybookData = storybook[componentName];
   if (storybookData) {
-    combined.examples = storybookData.examples;
-    combined.storybookDescription = storybookData.description;
-    combined.storybookCategories = storybookData.categories;
+    combined.examples = storybookData.examples || [];
+    combined.storybookDescription = storybookData.description || null;
+    combined.storybookCategories = storybookData.categories || [];
   }
 
   // Merge usage data
   const usageData = usage[componentName];
   if (usageData) {
-    combined.totalUsages = usageData.totalUsages;
-    combined.usagePatterns = usageData.patterns;
-    combined.commonMistakes = usageData.commonMistakes;
-    combined.mostUsedProps = usageData.mostUsedProps;
-    combined.mostUsedEvents = usageData.mostUsedEvents;
+    combined.totalUsages = usageData.totalUsages || 0;
+    combined.usagePatterns = usageData.patterns || [];
+    combined.commonMistakes = usageData.commonMistakes || [];
+    combined.mostUsedProps = usageData.mostUsedProps || [];
+    combined.mostUsedEvents = usageData.mostUsedEvents || [];
   }
 
   // Merge enrichments
   const enrichment = enrichments[componentName];
   if (enrichment) {
     combined.enriched = true;
-    combined.propEnrichments = enrichment.propEnrichments;
-    combined.eventEnrichments = enrichment.eventEnrichments;
-    combined.helperFunctions = enrichment.helperFunctions;
-    combined.performanceNotes = enrichment.performanceNotes;
-    combined.accessibilityNotes = enrichment.accessibilityNotes;
-    combined.migrationNotes = enrichment.migrationNotes;
+    combined.propEnrichments = enrichment.propEnrichments || null;
+    combined.eventEnrichments = enrichment.eventEnrichments || null;
+    combined.helperFunctions = enrichment.helperFunctions || [];
+    combined.bestPractices = enrichment.bestPractices || [];
+    combined.performanceNotes = enrichment.performanceNotes || [];
+    combined.accessibilityNotes = enrichment.accessibilityNotes || [];
+    combined.migrationNotes = enrichment.migrationNotes || null;
 
     // Merge enrichment examples with storybook examples
     if (enrichment.exampleEnrichments) {
       combined.examples = [
-        ...(combined.examples || []),
+        ...combined.examples,
         ...enrichment.exampleEnrichments
       ];
     }
@@ -243,7 +274,7 @@ function mergeComponentData(
     // Merge enrichment mistakes with usage mistakes
     if (enrichment.commonMistakes) {
       combined.commonMistakes = [
-        ...(combined.commonMistakes || []),
+        ...combined.commonMistakes,
         ...enrichment.commonMistakes
       ];
     }
@@ -252,18 +283,24 @@ function mergeComponentData(
   // Check for migrations
   const migrationKey = Object.keys(migrations).find(key => {
     const migration = migrations[key];
-    return migration.fromComponent === componentName || migration.toComponent === componentName;
+    // Support both naming conventions: fromComponent/toComponent and v1Component/v2Component
+    const from = migration.fromComponent || migration.v1Component;
+    const to = migration.toComponent || migration.v2Component;
+    return from === componentName || to === componentName;
   });
 
   if (migrationKey) {
     const migration = migrations[migrationKey];
+    const from = migration.fromComponent || migration.v1Component;
+    const to = migration.toComponent || migration.v2Component;
+
     combined.migrationAvailable = true;
 
-    if (migration.fromComponent === componentName) {
-      combined.migrationTo = migration.toComponent;
+    if (from === componentName) {
+      combined.migrationTo = to;
     }
-    if (migration.toComponent === componentName) {
-      combined.migrationFrom = migration.fromComponent;
+    if (to === componentName) {
+      combined.migrationFrom = from;
     }
   }
 

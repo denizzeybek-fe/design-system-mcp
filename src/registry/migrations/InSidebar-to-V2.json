@@ -1,0 +1,179 @@
+{
+  "migrationId": "InSidebar-to-V2",
+  "v1Component": "InSidebar",
+  "v2Component": "InSidebarV2",
+  "estimatedEffort": "medium",
+  "breakingChanges": 4,
+  "complexity": "medium",
+  "description": "Migration from InSidebar (V1) to InSidebarV2 involves significant restructuring of routes configuration and new search/favorites functionality.",
+
+  "propMigrations": {
+    "items": {
+      "v1Type": "array",
+      "v2Type": "array",
+      "v2Prop": "routes",
+      "transformCode": "// Rename and restructure\n:routes=\"sidebarRoutes\"",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "V2 uses 'routes' with different structure - check route object format"
+    },
+    "activeItem": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "selectedRoute",
+      "transformCode": "// Rename prop\n:selected-route=\"currentRoute\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses selectedRoute instead of activeItem"
+    },
+    "loading": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "loadingStatus",
+      "transformCode": "// Direct rename\n:loading-status=\"isLoading\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses -status suffix pattern"
+    }
+  },
+
+  "eventMigrations": {
+    "@item-click": {
+      "v1Event": "@item-click",
+      "v2Event": "@opened",
+      "v1Payload": "item",
+      "v2Payload": "route",
+      "payloadChange": "V2 emits route object",
+      "breakingChange": true,
+      "complexity": "low"
+    },
+    "@search": {
+      "v1Event": "N/A",
+      "v2Event": "@search",
+      "v1Payload": "N/A",
+      "v2Payload": "searchQuery",
+      "payloadChange": "New in V2",
+      "breakingChange": false,
+      "complexity": "low"
+    }
+  },
+
+  "newFeaturesInV2": [
+    {
+      "feature": "Search Functionality",
+      "props": ["searchResults", "recentSearches"],
+      "description": "Built-in search with recent searches history",
+      "usage": ":search-results=\"results\" :recent-searches=\"recent\" @search=\"handleSearch\""
+    },
+    {
+      "feature": "Favorites System",
+      "props": [],
+      "description": "Add/remove routes to favorites",
+      "usage": "@add-to-favorite=\"onAdd\" @remove-from-favorite=\"onRemove\""
+    },
+    {
+      "feature": "Main Page Route",
+      "props": ["mainPageRoute"],
+      "description": "Configure the main/home page route",
+      "usage": ":main-page-route=\"{ name: 'Home', path: '/' }\""
+    },
+    {
+      "feature": "XSS Prevention",
+      "props": ["preventXss"],
+      "description": "Sanitize route names to prevent XSS",
+      "usage": "prevent-xss"
+    },
+    {
+      "feature": "Clear Recent Search",
+      "props": [],
+      "description": "Event to clear recent search history",
+      "usage": "@clear-recent-search=\"clearHistory\""
+    }
+  ],
+
+  "migrationSteps": [
+    {
+      "step": 1,
+      "title": "Update import",
+      "before": "import { InSidebar } from '@useinsider/design-system-vue';",
+      "after": "import { InSidebarV2 } from '@useinsider/design-system-vue';",
+      "automated": true
+    },
+    {
+      "step": 2,
+      "title": "Update component name",
+      "before": "<InSidebar ...",
+      "after": "<InSidebarV2 ...",
+      "automated": true
+    },
+    {
+      "step": 3,
+      "title": "Rename items to routes",
+      "before": ":items=\"sidebarItems\"",
+      "after": ":routes=\"sidebarRoutes\"",
+      "automated": false,
+      "notes": "Review route object structure - V2 may require different properties"
+    },
+    {
+      "step": 4,
+      "title": "Rename activeItem to selectedRoute",
+      "before": ":active-item=\"currentItem\"",
+      "after": ":selected-route=\"currentRoute\"",
+      "automated": true
+    },
+    {
+      "step": 5,
+      "title": "Rename loading prop",
+      "before": ":loading=\"isLoading\"",
+      "after": ":loading-status=\"isLoading\"",
+      "automated": true
+    },
+    {
+      "step": 6,
+      "title": "Update event handlers",
+      "before": "@item-click=\"onItemClick\"",
+      "after": "@opened=\"onRouteOpened\"",
+      "automated": true,
+      "notes": "Consider adding @search handler for search functionality"
+    }
+  ],
+
+  "fullExampleBefore": "<!-- V1 Implementation -->\n<template>\n  <InSidebar\n    :items=\"sidebarItems\"\n    :active-item=\"currentItem\"\n    :loading=\"isLoading\"\n    @item-click=\"handleItemClick\"\n  />\n</template>\n\n<script>\nimport { InSidebar } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InSidebar },\n  data() {\n    return {\n      sidebarItems: [\n        { id: '1', name: 'Dashboard', icon: 'home' },\n        { id: '2', name: 'Settings', icon: 'cog' }\n      ],\n      currentItem: '1',\n      isLoading: false\n    };\n  },\n  methods: {\n    handleItemClick(item) {\n      this.currentItem = item.id;\n    }\n  }\n};\n</script>",
+
+  "fullExampleAfter": "<!-- V2 Implementation -->\n<template>\n  <InSidebarV2\n    :routes=\"sidebarRoutes\"\n    :selected-route=\"currentRoute\"\n    :loading-status=\"isLoading\"\n    :search-results=\"searchResults\"\n    :recent-searches=\"recentSearches\"\n    @opened=\"handleRouteOpened\"\n    @search=\"handleSearch\"\n    @add-to-favorite=\"handleAddFavorite\"\n    @remove-from-favorite=\"handleRemoveFavorite\"\n  />\n</template>\n\n<script>\nimport { InSidebarV2 } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InSidebarV2 },\n  data() {\n    return {\n      sidebarRoutes: [\n        { id: '1', name: 'Dashboard', icon: 'home', path: '/dashboard' },\n        { id: '2', name: 'Settings', icon: 'cog', path: '/settings' }\n      ],\n      currentRoute: '1',\n      isLoading: false,\n      searchResults: [],\n      recentSearches: []\n    };\n  },\n  methods: {\n    handleRouteOpened(route) {\n      this.currentRoute = route.id;\n    },\n    handleSearch(query) {\n      // Implement search logic\n    },\n    handleAddFavorite(route) {\n      // Add to favorites\n    },\n    handleRemoveFavorite(route) {\n      // Remove from favorites\n    }\n  }\n};\n</script>",
+
+  "commonPitfalls": [
+    {
+      "pitfall": "Using items prop instead of routes",
+      "impact": "Sidebar renders empty",
+      "solution": "Rename :items to :routes"
+    },
+    {
+      "pitfall": "Not updating route object structure",
+      "impact": "Routes may not display correctly",
+      "solution": "Check V2 route object requirements (may need path property)"
+    },
+    {
+      "pitfall": "Missing search event handler",
+      "impact": "Search functionality won't work",
+      "solution": "Add @search handler if using search feature"
+    },
+    {
+      "pitfall": "Using @item-click instead of @opened",
+      "impact": "Click handler not triggered",
+      "solution": "Use @opened event in V2"
+    }
+  ],
+
+  "testingChecklist": [
+    "✓ Routes display correctly",
+    "✓ Selected route highlights",
+    "✓ Route click/opened event fires",
+    "✓ Loading state shows spinner",
+    "✓ Search functionality works (if used)",
+    "✓ Favorites add/remove works (if used)"
+  ]
+}

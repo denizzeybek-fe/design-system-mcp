@@ -1,0 +1,255 @@
+{
+  "component": "InTooltipV2",
+  "propEnrichments": {
+    "offset": {
+      "valueFormat": {
+        "structure": "Offset object with x and y coordinates",
+        "objectShape": "{ x: number, y: number }",
+        "notes": "Controls the offset distance from the target element. Positive values move tooltip away from target, negative values move closer.",
+        "examples": [
+          {
+            "scenario": "Default offset",
+            "value": "{ x: 4, y: 4 }",
+            "code": ":offset=\"{ x: 4, y: 4 }\""
+          },
+          {
+            "scenario": "No offset (tooltip directly on target)",
+            "value": "{ x: 0, y: 0 }",
+            "code": ":offset=\"{ x: 0, y: 0 }\""
+          },
+          {
+            "scenario": "Large offset for spacing",
+            "value": "{ x: 16, y: 16 }",
+            "code": ":offset=\"{ x: 16, y: 16 }\""
+          }
+        ],
+        "typescript": "{ x: number; y: number }"
+      },
+      "relatedProps": ["dynamicPosition", "staticPosition", "absolutePosition"],
+      "commonMistakes": [
+        {
+          "mistake": "Using string values instead of numbers",
+          "impact": "Tooltip positioning breaks",
+          "fix": "Use numbers: { x: 4, y: 4 } not { x: '4px', y: '4px' }",
+          "severity": "high"
+        },
+        {
+          "mistake": "Setting very large offset values (>50)",
+          "impact": "Tooltip appears too far from target, poor UX",
+          "fix": "Keep offset values small (4-16px) for better UX",
+          "severity": "medium"
+        }
+      ]
+    },
+    "absolutePosition": {
+      "valueFormat": {
+        "structure": "Absolute positioning object with top, left, bottom, right coordinates",
+        "objectShape": "{ top?: number, left?: number, bottom?: number, right?: number }",
+        "notes": "When provided, tooltip uses absolute positioning instead of dynamic positioning. Useful for fixed tooltip locations.",
+        "examples": [
+          {
+            "scenario": "Top-left corner",
+            "value": "{ top: 0, left: 0 }",
+            "code": ":absolute-position=\"{ top: 0, left: 0 }\""
+          },
+          {
+            "scenario": "Bottom-right corner",
+            "value": "{ bottom: 0, right: 0 }",
+            "code": ":absolute-position=\"{ bottom: 0, right: 0 }\""
+          },
+          {
+            "scenario": "Centered horizontally, 20px from top",
+            "value": "{ top: 20, left: '50%' }",
+            "code": ":absolute-position=\"{ top: 20, left: '50%' }\""
+          }
+        ],
+        "typescript": "{ top?: number; left?: number; bottom?: number; right?: number }"
+      },
+      "relatedProps": ["dynamicPosition", "staticPosition", "offset"],
+      "commonMistakes": [
+        {
+          "mistake": "Using absolutePosition with dynamicPosition=true",
+          "impact": "absolutePosition is ignored when dynamic positioning is enabled",
+          "fix": "Set dynamicPosition=false when using absolutePosition",
+          "severity": "high"
+        },
+        {
+          "mistake": "Not accounting for tooltip size",
+          "impact": "Tooltip may overflow viewport or cover target element",
+          "fix": "Calculate position considering tooltip dimensions",
+          "severity": "medium"
+        },
+        {
+          "mistake": "Setting conflicting positions (both top and bottom)",
+          "impact": "Unpredictable positioning behavior",
+          "fix": "Use either top OR bottom, and either left OR right",
+          "severity": "medium"
+        }
+      ]
+    },
+    "dynamicPosition": {
+      "valueFormat": {
+        "structure": "Boolean flag",
+        "notes": "When true, tooltip automatically positions itself to stay within viewport bounds. When false, uses staticPosition or absolutePosition.",
+        "typescript": "boolean"
+      },
+      "relatedProps": ["staticPosition", "absolutePosition", "offset"],
+      "commonMistakes": [
+        {
+          "mistake": "Setting dynamicPosition=true with absolutePosition",
+          "impact": "absolutePosition is ignored",
+          "fix": "Use dynamicPosition=false when you want absolute positioning",
+          "severity": "high"
+        }
+      ]
+    },
+    "staticPosition": {
+      "valueFormat": {
+        "structure": "String with position keywords",
+        "notes": "Format: '[vertical] [horizontal]' where vertical is top/bottom/center and horizontal is left/right/center",
+        "examples": [
+          {
+            "scenario": "Top center (default)",
+            "value": "top center",
+            "code": "static-position=\"top center\""
+          },
+          {
+            "scenario": "Bottom right",
+            "value": "bottom right",
+            "code": "static-position=\"bottom right\""
+          },
+          {
+            "scenario": "Left center",
+            "value": "center left",
+            "code": "static-position=\"center left\""
+          }
+        ],
+        "typescript": "string"
+      },
+      "relatedProps": ["dynamicPosition", "absolutePosition"],
+      "commonMistakes": [
+        {
+          "mistake": "Using invalid position keywords",
+          "impact": "Tooltip may not position correctly",
+          "fix": "Use only: top, bottom, center (vertical) and left, right, center (horizontal)",
+          "severity": "medium"
+        },
+        {
+          "mistake": "Incorrect order (horizontal before vertical)",
+          "impact": "May cause unexpected positioning",
+          "fix": "Always use format: 'vertical horizontal' (e.g., 'top center' not 'center top')",
+          "severity": "low"
+        }
+      ]
+    }
+  },
+  "commonMistakes": [
+    {
+      "category": "positioning",
+      "severity": "critical",
+      "title": "Using absolutePosition with dynamicPosition enabled",
+      "description": "When dynamicPosition is true, absolutePosition prop is completely ignored",
+      "wrong": "<InTooltipV2 :dynamic-position=\"true\" :absolute-position=\"{ top: 0, left: 0 }\" />",
+      "correct": "<InTooltipV2 :dynamic-position=\"false\" :absolute-position=\"{ top: 0, left: 0 }\" />",
+      "impact": "Tooltip doesn't appear where expected, absolutePosition settings have no effect"
+    },
+    {
+      "category": "prop-types",
+      "severity": "high",
+      "title": "Using string values for offset coordinates",
+      "description": "offset.x and offset.y must be numbers, not strings with units",
+      "wrong": ":offset=\"{ x: '4px', y: '4px' }\"",
+      "correct": ":offset=\"{ x: 4, y: 4 }\"",
+      "impact": "Tooltip positioning breaks, may not appear or appear in wrong location"
+    },
+    {
+      "category": "positioning",
+      "severity": "medium",
+      "title": "Not considering viewport boundaries",
+      "description": "When using static or absolute positioning, tooltip may overflow viewport",
+      "wrong": "<InTooltipV2 :dynamic-position=\"false\" static-position=\"bottom center\" />",
+      "correct": "<InTooltipV2 :dynamic-position=\"true\" static-position=\"bottom center\" />",
+      "impact": "Tooltip may be cut off or hidden when near viewport edges"
+    },
+    {
+      "category": "accessibility",
+      "severity": "medium",
+      "title": "Not providing accessible content",
+      "description": "Tooltip content should be descriptive and accessible",
+      "wrong": "<InTooltipV2 tooltip-text=\"...\" />",
+      "correct": "<InTooltipV2 tooltip-text=\"Click to edit user profile\" />",
+      "impact": "Poor accessibility for screen readers, unclear purpose"
+    },
+    {
+      "category": "performance",
+      "severity": "low",
+      "title": "Using dynamic positioning for static layouts",
+      "description": "If tooltip target never moves, dynamic positioning is unnecessary overhead",
+      "wrong": "<InTooltipV2 :dynamic-position=\"true\" />  <!-- in static layout -->",
+      "correct": "<InTooltipV2 :dynamic-position=\"false\" static-position=\"top center\" />",
+      "impact": "Unnecessary calculations on every render, minor performance impact"
+    }
+  ],
+  "bestPractices": [
+    {
+      "title": "Use Dynamic Positioning for Responsive Layouts",
+      "description": "Enable dynamic positioning when tooltip target may be near viewport edges or in scrollable containers",
+      "code": "<InTooltipV2\n  :dynamic-position=\"true\"\n  tooltip-text=\"This tooltip will adjust its position to stay visible\"\n/>",
+      "benefit": "Ensures tooltip is always visible and readable, better UX across different screen sizes"
+    },
+    {
+      "title": "Keep Offset Values Small",
+      "description": "Use small offset values (4-16px) to maintain visual connection between tooltip and target",
+      "code": "<InTooltipV2\n  :offset=\"{ x: 8, y: 8 }\"\n  tooltip-text=\"Helpful information\"\n/>",
+      "benefit": "Clear visual relationship between tooltip and its trigger element"
+    },
+    {
+      "title": "Use Static Positioning for Fixed Layouts",
+      "description": "When tooltip target has fixed position, use static positioning for better performance",
+      "code": "<InTooltipV2\n  :dynamic-position=\"false\"\n  static-position=\"top center\"\n  :offset=\"{ x: 0, y: 8 }\"\n/>",
+      "benefit": "Better performance, no unnecessary position calculations"
+    },
+    {
+      "title": "Provide Clear, Concise Tooltip Text",
+      "description": "Keep tooltip content brief and informative (1-2 sentences max)",
+      "code": "<InTooltipV2\n  tooltip-text=\"Save your changes before leaving this page\"\n  :prevent-xss=\"true\"\n/>",
+      "benefit": "Better readability, faster comprehension, improved accessibility"
+    },
+    {
+      "title": "Enable XSS Protection for User-Generated Content",
+      "description": "Always enable preventXss when displaying user-provided content in tooltips",
+      "code": "<InTooltipV2\n  :tooltip-text=\"userProvidedText\"\n  :prevent-xss=\"true\"\n/>",
+      "benefit": "Prevents XSS attacks, secure handling of untrusted content"
+    }
+  ],
+  "eventEnrichments": {},
+  "exampleEnrichments": [
+    {
+      "title": "Basic Tooltip with Dynamic Positioning",
+      "description": "Common use case: tooltip that adjusts position automatically",
+      "code": "<template>\n  <div>\n    <button id=\"help-btn\">\n      Help\n      <InTooltipV2\n        id=\"help-tooltip\"\n        :dynamic-position=\"true\"\n        tooltip-text=\"Click for help documentation\"\n        :offset=\"{ x: 0, y: 8 }\"\n      />\n    </button>\n  </div>\n</template>"
+    },
+    {
+      "title": "Fixed Position Tooltip",
+      "description": "Tooltip with absolute positioning for fixed UI elements",
+      "code": "<template>\n  <InTooltipV2\n    id=\"fixed-tooltip\"\n    :dynamic-position=\"false\"\n    :absolute-position=\"{ top: 60, right: 20 }\"\n    tooltip-text=\"System notification\"\n    :icon-status=\"true\"\n  />\n</template>"
+    },
+    {
+      "title": "Tooltip with Custom Offset",
+      "description": "Larger offset for better spacing in dense layouts",
+      "code": "<template>\n  <div class=\"icon-grid\">\n    <div class=\"icon-item\">\n      <InIcons name=\"settings\" />\n      <InTooltipV2\n        id=\"settings-tooltip\"\n        :dynamic-position=\"true\"\n        static-position=\"bottom center\"\n        :offset=\"{ x: 0, y: 16 }\"\n        tooltip-text=\"Application Settings\"\n      />\n    </div>\n  </div>\n</template>"
+    }
+  ],
+  "helperFunctions": [],
+  "performanceNotes": [
+    "Dynamic positioning calculates on every render - use static positioning when possible",
+    "Tooltips with XSS protection enabled have slight overhead for sanitization",
+    "Multiple tooltips on a page with dynamic positioning can impact scroll performance"
+  ],
+  "accessibilityNotes": [
+    "Always provide meaningful tooltip text for screen readers",
+    "Tooltip text should not duplicate visible text",
+    "Use appropriate ARIA attributes (automatically handled by component)",
+    "Ensure sufficient color contrast for tooltip background and text"
+  ]
+}

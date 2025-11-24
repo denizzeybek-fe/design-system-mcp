@@ -1,0 +1,177 @@
+{
+  "migrationId": "InBox-to-InContainer",
+  "v1Component": "InBox",
+  "v2Component": "InContainer",
+  "estimatedEffort": "low",
+  "breakingChanges": 2,
+  "complexity": "low",
+  "description": "Migration from InBox (V1) to InContainer (V2) involves prop renaming (type → containerType) and removal of boxSpacing.",
+
+  "propMigrations": {
+    "type": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "containerType",
+      "transformCode": "// Rename type to containerType\ncontainer-type=\"default\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses containerType instead of type"
+    },
+    "boxSpacing": {
+      "v1Type": "string",
+      "v2Type": "N/A",
+      "v2Prop": "N/A",
+      "transformCode": "// boxSpacing removed - use containerType or custom CSS",
+      "autoMigratable": false,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "boxSpacing prop removed in V2, use containerType for spacing control"
+    },
+    "border": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "border",
+      "transformCode": "// Same prop\nborder",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": false,
+      "notes": "Same prop name"
+    },
+    "borderRadius": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "borderRadius",
+      "transformCode": "// Same prop\nborder-radius=\"medium\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": false,
+      "notes": "Same prop name"
+    },
+    "borderTriangle": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "borderTriangle",
+      "transformCode": "// Same prop\nborder-triangle",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": false,
+      "notes": "Same prop name"
+    },
+    "borderTrianglePosition": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "borderTrianglePosition",
+      "transformCode": "// Same prop\nborder-triangle-position=\"top\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": false,
+      "notes": "Same prop name"
+    },
+    "borderTriangleAlign": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "borderTriangleAlign",
+      "transformCode": "// Same prop\nborder-triangle-align=\"center\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": false,
+      "notes": "Same prop name"
+    }
+  },
+
+  "eventMigrations": {},
+
+  "newFeaturesInV2": [
+    {
+      "feature": "Header/Footer Slots",
+      "props": ["headerStatus", "footerStatus"],
+      "description": "Built-in header and footer slot areas",
+      "usage": "header-status footer-status with #header and #footer slots"
+    },
+    {
+      "feature": "Full Width Content",
+      "props": ["fullWidthContentStatus"],
+      "description": "Remove padding for edge-to-edge content",
+      "usage": "full-width-content-status"
+    },
+    {
+      "feature": "Color Indicator",
+      "props": ["colorIndicatorStatus", "colorIndicatorColor"],
+      "description": "Colored indicator bar for status feedback",
+      "usage": "color-indicator-status color-indicator-color=\"#4CAF50\""
+    }
+  ],
+
+  "migrationSteps": [
+    {
+      "step": 1,
+      "title": "Update import",
+      "before": "import { InBox } from '@useinsider/design-system-vue';",
+      "after": "import { InContainer } from '@useinsider/design-system-vue';",
+      "automated": true
+    },
+    {
+      "step": 2,
+      "title": "Update component name",
+      "before": "<InBox ...",
+      "after": "<InContainer ...",
+      "automated": true
+    },
+    {
+      "step": 3,
+      "title": "Rename type to containerType",
+      "before": "type=\"default\"",
+      "after": "container-type=\"default\"",
+      "automated": true
+    },
+    {
+      "step": 4,
+      "title": "Handle boxSpacing removal",
+      "before": "box-spacing=\"large\"",
+      "after": "container-type=\"spacious\"",
+      "automated": false,
+      "notes": "Map boxSpacing to appropriate containerType or use custom CSS"
+    },
+    {
+      "step": 5,
+      "title": "Add header/footer slots (optional)",
+      "before": "N/A",
+      "after": "header-status with #header slot",
+      "automated": false,
+      "notes": "V2 supports built-in header and footer slots"
+    }
+  ],
+
+  "fullExampleBefore": "<!-- V1 Implementation -->\n<template>\n  <InBox\n    type=\"default\"\n    box-spacing=\"medium\"\n    border\n    border-radius=\"medium\"\n  >\n    <h3>Box Title</h3>\n    <p>Box content goes here</p>\n  </InBox>\n</template>\n\n<script>\nimport { InBox } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InBox }\n};\n</script>",
+
+  "fullExampleAfter": "<!-- V2 Implementation -->\n<template>\n  <InContainer\n    container-type=\"default\"\n    border\n    border-radius=\"medium\"\n    header-status\n  >\n    <template #header>\n      <h3>Container Title</h3>\n    </template>\n    \n    <p>Container content goes here</p>\n  </InContainer>\n</template>\n\n<script>\nimport { InContainer } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InContainer }\n};\n</script>",
+
+  "commonPitfalls": [
+    {
+      "pitfall": "Using type instead of containerType",
+      "impact": "Container type not applied",
+      "solution": "Use container-type instead of type"
+    },
+    {
+      "pitfall": "Expecting boxSpacing to work",
+      "impact": "Spacing not applied",
+      "solution": "Use containerType (compact/default/spacious) or custom CSS"
+    },
+    {
+      "pitfall": "Not using header-status with #header slot",
+      "impact": "Header slot content not displayed",
+      "solution": "Add header-status prop when using #header slot"
+    }
+  ],
+
+  "testingChecklist": [
+    "✓ Container renders correctly",
+    "✓ Border and border-radius apply",
+    "✓ Container type spacing is correct",
+    "✓ Header slot displays (if used)",
+    "✓ Footer slot displays (if used)",
+    "✓ Color indicator shows (if used)",
+    "✓ Border triangle positions correctly"
+  ]
+}

@@ -1,0 +1,519 @@
+{
+  "migrationId": "InDropDown-to-InSelect",
+  "v1Component": "InDropDown",
+  "v2Component": "InSelect",
+  "estimatedEffort": "medium",
+  "breakingChanges": 14,
+  "complexity": "medium",
+  "description": "Migration from InDropDown (V1) to InSelect (V2) involves significant prop renaming (status/text suffix patterns), validation state changes, and new positioning system.",
+
+  "propMigrations": {
+    "label": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "labelText",
+      "transformCode": "// Rename and add status\nlabel-status label-text=\"Select Option\"",
+      "autoMigratable": false,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 requires labelStatus to show label"
+    },
+    "labelTooltip": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "tooltipText",
+      "transformCode": "// Rename and add status\ntooltip-status tooltip-text=\"Help text\"",
+      "autoMigratable": false,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 requires tooltipStatus"
+    },
+    "disable": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "disabledStatus",
+      "transformCode": "// Rename to status suffix\n:disabled-status=\"isDisabled\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses -status suffix"
+    },
+    "visibleLabel": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "labelStatus",
+      "transformCode": "// Rename\nlabel-status",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses labelStatus"
+    },
+    "placeholder": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "placeholderText",
+      "transformCode": "// Rename to text suffix\nplaceholder-text=\"Select...\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses -text suffix"
+    },
+    "placeHolderStatus": {
+      "v1Type": "boolean",
+      "v2Type": "N/A",
+      "v2Prop": "placeholderText",
+      "transformCode": "// Implicit when placeholderText provided",
+      "autoMigratable": false,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 shows placeholder when text provided"
+    },
+    "invalid": {
+      "v1Type": "boolean",
+      "v2Type": "string",
+      "v2Prop": "state",
+      "transformCode": "// Convert to state enum\nstate=\"error\"",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "V2 uses state enum"
+    },
+    "invalidMessage": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "stateMessage",
+      "transformCode": "// Rename\nstate-message=\"Error text\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Combined with state prop"
+    },
+    "warning": {
+      "v1Type": "boolean",
+      "v2Type": "string",
+      "v2Prop": "state",
+      "transformCode": "// Convert to state enum\nstate=\"warning\"",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "V2 uses state enum"
+    },
+    "warningMessage": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "stateMessage",
+      "transformCode": "// Rename\nstate-message=\"Warning text\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Combined with state prop"
+    },
+    "overriddenListPosition": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "staticPosition",
+      "transformCode": "// Rename\nstatic-position=\"top\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 has static and dynamic positioning"
+    },
+    "childOptionsLeftPosition": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "staticChildPosition",
+      "transformCode": "// Rename\nstatic-child-position=\"right\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses staticChildPosition"
+    },
+    "canRemoveSelectedItem": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "clearSelectionButton",
+      "transformCode": "// Rename\nclear-selection-button",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses clearSelectionButton"
+    },
+    "fetchUrl": {
+      "v1Type": "string",
+      "v2Type": "N/A",
+      "v2Prop": "N/A",
+      "transformCode": "// Use lazyLoad props\nlazy-load @end-scroll=\"loadMore\"",
+      "autoMigratable": false,
+      "complexity": "high",
+      "breakingChange": true,
+      "notes": "V2 uses lazyLoad system"
+    },
+    "responseKey": {
+      "v1Type": "string",
+      "v2Type": "N/A",
+      "v2Prop": "N/A",
+      "transformCode": "// Handle in parent component",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "V2 expects pre-processed options"
+    },
+    "queryString": {
+      "v1Type": "string",
+      "v2Type": "N/A",
+      "v2Prop": "N/A",
+      "transformCode": "// Handle via @search event",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "Use @search for custom API"
+    },
+    "noDataText": {
+      "v1Type": "string",
+      "v2Type": "N/A",
+      "v2Prop": "N/A",
+      "transformCode": "// Use helperMessage or slot",
+      "autoMigratable": false,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Not directly available"
+    },
+    "noSearchResultText": {
+      "v1Type": "string",
+      "v2Type": "N/A",
+      "v2Prop": "N/A",
+      "transformCode": "// Use helperMessage or slot",
+      "autoMigratable": false,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Not directly available"
+    },
+    "attributeVisible": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "isWrappedDescription",
+      "transformCode": "// Similar concept\nis-wrapped-description",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "Check if behavior matches"
+    },
+    "options": {
+      "v1Type": "array",
+      "v2Type": "array",
+      "v2Prop": "options",
+      "transformCode": "// Same structure\n:options=\"optionsList\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": false,
+      "notes": "Same structure"
+    },
+    "value": {
+      "v1Type": "any",
+      "v2Type": "any",
+      "v2Prop": "value",
+      "transformCode": "// Same\nv-model=\"selected\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": false,
+      "notes": "Same usage"
+    },
+    "searchStatus": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "searchStatus",
+      "transformCode": "// Same\nsearch-status",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": false,
+      "notes": "Same prop"
+    },
+    "theme": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "theme",
+      "transformCode": "// Same\ntheme=\"dark\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": false,
+      "notes": "Same prop"
+    },
+    "buttonType": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "buttonType",
+      "transformCode": "// Same\nbutton-type=\"secondary\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": false,
+      "notes": "Same prop"
+    },
+    "createOptionStatus": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "createOptionStatus",
+      "transformCode": "// Same\ncreate-option-status",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": false,
+      "notes": "Same prop"
+    }
+  },
+
+  "eventMigrations": {
+    "@change": {
+      "v1Event": "@change",
+      "v2Event": "N/A",
+      "v1Payload": "value",
+      "v2Payload": "N/A",
+      "payloadChange": "Use @select instead",
+      "breakingChange": true,
+      "complexity": "low"
+    },
+    "@closeList": {
+      "v1Event": "@closeList",
+      "v2Event": "@close",
+      "v1Payload": "void",
+      "v2Payload": "void",
+      "payloadChange": "Renamed",
+      "breakingChange": true,
+      "complexity": "low"
+    },
+    "@openList": {
+      "v1Event": "@openList",
+      "v2Event": "@openList",
+      "v1Payload": "void",
+      "v2Payload": "void",
+      "payloadChange": "Same",
+      "breakingChange": false,
+      "complexity": "low"
+    },
+    "@select": {
+      "v1Event": "@select",
+      "v2Event": "@select",
+      "v1Payload": "option",
+      "v2Payload": "option",
+      "payloadChange": "Same",
+      "breakingChange": false,
+      "complexity": "low"
+    },
+    "@unSelect": {
+      "v1Event": "@unSelect",
+      "v2Event": "@unSelect",
+      "v1Payload": "void",
+      "v2Payload": "void",
+      "payloadChange": "Same",
+      "breakingChange": false,
+      "complexity": "low"
+    },
+    "@addNewOption": {
+      "v1Event": "@addNewOption",
+      "v2Event": "N/A",
+      "v1Payload": "string",
+      "v2Payload": "N/A",
+      "payloadChange": "Handle via @select",
+      "breakingChange": true,
+      "complexity": "medium"
+    }
+  },
+
+  "newFeaturesInV2": [
+    {
+      "feature": "Dynamic Positioning",
+      "props": ["staticPosition", "dynamicPosition", "dynamicChildPosition", "staticChildPosition"],
+      "description": "Auto-position dropdown based on viewport",
+      "usage": "dynamic-position=\"bottom\" dynamic-child-position=\"right\""
+    },
+    {
+      "feature": "Lazy Loading",
+      "props": ["lazyLoad", "lazyLoadSearch", "fetchPage"],
+      "description": "Paginated option loading",
+      "usage": "lazy-load :fetch-page=\"page\" @end-scroll=\"loadMore\""
+    },
+    {
+      "feature": "Button Action",
+      "props": ["buttonStatus", "buttonLabel", "buttonIcon"],
+      "description": "Action button in dropdown",
+      "usage": "button-status button-label=\"Apply\" @secondary-button-click=\"apply\""
+    },
+    {
+      "feature": "Option Validation",
+      "props": ["optionValidationType", "minCharacterLimit", "maxCharacterLimit"],
+      "description": "Validate new option input",
+      "usage": "option-validation-type=\"email\" :min-character-limit=\"3\""
+    },
+    {
+      "feature": "Helper Message",
+      "props": ["helperMessageStatus", "helperMessage"],
+      "description": "Persistent help text",
+      "usage": "helper-message-status helper-message=\"Select one option\""
+    },
+    {
+      "feature": "Loading State",
+      "props": ["loadingState"],
+      "description": "Show loading indicator",
+      "usage": ":loading-state=\"isLoading\""
+    },
+    {
+      "feature": "Max Height",
+      "props": ["maxHeight", "maxChildHeight"],
+      "description": "Control dropdown heights",
+      "usage": ":max-height=\"300\""
+    },
+    {
+      "feature": "Custom Option Text",
+      "props": ["customOptionText"],
+      "description": "Custom text for create option",
+      "usage": "custom-option-text=\"Add new item\""
+    },
+    {
+      "feature": "XSS Prevention",
+      "props": ["preventXss"],
+      "description": "Sanitize option content",
+      "usage": "prevent-xss"
+    }
+  ],
+
+  "migrationSteps": [
+    {
+      "step": 1,
+      "title": "Update import",
+      "before": "import { InDropDown } from '@useinsider/design-system-vue';",
+      "after": "import { InSelect } from '@useinsider/design-system-vue';",
+      "automated": true
+    },
+    {
+      "step": 2,
+      "title": "Update component name",
+      "before": "<InDropDown ...",
+      "after": "<InSelect ...",
+      "automated": true
+    },
+    {
+      "step": 3,
+      "title": "Rename label",
+      "before": "label=\"Option\"",
+      "after": "label-status label-text=\"Option\"",
+      "automated": false,
+      "notes": "Must add labelStatus"
+    },
+    {
+      "step": 4,
+      "title": "Rename labelTooltip",
+      "before": "label-tooltip=\"Help\"",
+      "after": "tooltip-status tooltip-text=\"Help\"",
+      "automated": false,
+      "notes": "Must add tooltipStatus"
+    },
+    {
+      "step": 5,
+      "title": "Rename disable",
+      "before": ":disable=\"isDisabled\"",
+      "after": ":disabled-status=\"isDisabled\"",
+      "automated": true
+    },
+    {
+      "step": 6,
+      "title": "Rename placeholder",
+      "before": "placeholder=\"Select...\"",
+      "after": "placeholder-text=\"Select...\"",
+      "automated": true
+    },
+    {
+      "step": 7,
+      "title": "Rename visibleLabel",
+      "before": "visible-label",
+      "after": "label-status",
+      "automated": true
+    },
+    {
+      "step": 8,
+      "title": "Convert invalid/warning to state",
+      "before": "invalid invalid-message=\"Error\"",
+      "after": "state=\"error\" state-message=\"Error\"",
+      "automated": false,
+      "notes": "Combine boolean + message"
+    },
+    {
+      "step": 9,
+      "title": "Rename positioning props",
+      "before": "overridden-list-position=\"top\" child-options-left-position=\"right\"",
+      "after": "static-position=\"top\" static-child-position=\"right\"",
+      "automated": true
+    },
+    {
+      "step": 10,
+      "title": "Rename canRemoveSelectedItem",
+      "before": "can-remove-selected-item",
+      "after": "clear-selection-button",
+      "automated": true
+    },
+    {
+      "step": 11,
+      "title": "Update event handlers",
+      "before": "@close-list=\"handler\" @change=\"handler\"",
+      "after": "@close=\"handler\" @select=\"handler\"",
+      "automated": true,
+      "notes": "Use @select instead of @change"
+    },
+    {
+      "step": 12,
+      "title": "Handle fetchUrl migration",
+      "before": "fetch-url=\"/api\" response-key=\"data\"",
+      "after": "lazy-load @search=\"fetchOptions\" @end-scroll=\"loadMore\"",
+      "automated": false,
+      "notes": "Implement fetch in parent"
+    }
+  ],
+
+  "fullExampleBefore": "<!-- V1 Implementation -->\n<template>\n  <InDropDown\n    id=\"country\"\n    label=\"Country\"\n    label-tooltip=\"Select your country\"\n    placeholder=\"Select country...\"\n    :options=\"countries\"\n    v-model=\"selectedCountry\"\n    :disable=\"isDisabled\"\n    visible-label\n    search-status\n    can-remove-selected-item\n    invalid\n    invalid-message=\"Country is required\"\n    @change=\"handleChange\"\n    @close-list=\"handleClose\"\n  />\n</template>\n\n<script>\nimport { InDropDown } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InDropDown },\n  data() {\n    return {\n      countries: [\n        { label: 'USA', value: 'us' },\n        { label: 'UK', value: 'uk' }\n      ],\n      selectedCountry: null,\n      isDisabled: false\n    };\n  },\n  methods: {\n    handleChange(value) {\n      console.log('Selected:', value);\n    },\n    handleClose() {\n      console.log('Closed');\n    }\n  }\n};\n</script>",
+
+  "fullExampleAfter": "<!-- V2 Implementation -->\n<template>\n  <InSelect\n    id=\"country\"\n    label-status\n    label-text=\"Country\"\n    tooltip-status\n    tooltip-text=\"Select your country\"\n    placeholder-text=\"Select country...\"\n    :options=\"countries\"\n    v-model=\"selectedCountry\"\n    :disabled-status=\"isDisabled\"\n    search-status\n    clear-selection-button\n    state=\"error\"\n    state-message=\"Country is required\"\n    @select=\"handleSelect\"\n    @close=\"handleClose\"\n  />\n</template>\n\n<script>\nimport { InSelect } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InSelect },\n  data() {\n    return {\n      countries: [\n        { label: 'USA', value: 'us' },\n        { label: 'UK', value: 'uk' }\n      ],\n      selectedCountry: null,\n      isDisabled: false\n    };\n  },\n  methods: {\n    handleSelect(option) {\n      console.log('Selected:', option);\n    },\n    handleClose() {\n      console.log('Closed');\n    }\n  }\n};\n</script>",
+
+  "commonPitfalls": [
+    {
+      "pitfall": "Using label without labelStatus",
+      "impact": "Label not displayed",
+      "solution": "Add label-status with label-text"
+    },
+    {
+      "pitfall": "Using disable instead of disabledStatus",
+      "impact": "Dropdown stays enabled",
+      "solution": "Use disabled-status"
+    },
+    {
+      "pitfall": "Using invalid/warning booleans",
+      "impact": "Validation state not shown",
+      "solution": "Use state=\"error\" or state=\"warning\""
+    },
+    {
+      "pitfall": "Using @change event",
+      "impact": "Handler not called",
+      "solution": "Use @select instead"
+    },
+    {
+      "pitfall": "Using @closeList",
+      "impact": "Event not triggered",
+      "solution": "Use @close"
+    },
+    {
+      "pitfall": "Expecting fetchUrl to work",
+      "impact": "No API fetching",
+      "solution": "Implement lazyLoad with events"
+    }
+  ],
+
+  "testingChecklist": [
+    "✓ Label displays correctly",
+    "✓ Tooltip shows on hover",
+    "✓ Placeholder visible",
+    "✓ Options render",
+    "✓ Selection works",
+    "✓ Search filters options",
+    "✓ Clear selection works",
+    "✓ Disabled state works",
+    "✓ Validation state shows",
+    "✓ All events fire correctly",
+    "✓ v-model syncs"
+  ]
+}

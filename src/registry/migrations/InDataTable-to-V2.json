@@ -1,0 +1,493 @@
+{
+  "migrationId": "InDataTable-to-V2",
+  "v1Component": "InDataTable",
+  "v2Component": "InDataTableV2",
+  "estimatedEffort": "high",
+  "breakingChanges": 15,
+  "complexity": "high",
+  "description": "Major migration from InDataTable (V1) to InDataTableV2. V2 is built on AG Grid with completely restructured column definitions, renamed props (status suffix pattern), and new event names. Requires significant refactoring.",
+
+  "propMigrations": {
+    "tableFields": {
+      "v1Type": "array",
+      "v2Type": "array",
+      "v2Prop": "columnOptions",
+      "transformCode": "// Rename and restructure column format\n// V1: { field: 'name', label: 'Name', sortable: true }\n// V2: { field: 'name', headerName: 'Name', sortable: true, filter: true }",
+      "autoMigratable": false,
+      "complexity": "high",
+      "breakingChange": true,
+      "notes": "Column structure changed to AG Grid format: label → headerName, renderer → cellRenderer"
+    },
+    "apiMode": {
+      "v1Type": "boolean",
+      "v2Type": "string",
+      "v2Prop": "rowModelType",
+      "transformCode": "// Convert boolean to enum\n// V1: api-mode\n// V2: row-model-type=\"serverSide\"",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "Boolean apiMode → string rowModelType ('clientSide', 'serverSide', 'infinite')"
+    },
+    "perPage": {
+      "v1Type": "number",
+      "v2Type": "number",
+      "v2Prop": "defaultItemPerPage",
+      "transformCode": "// Direct rename\n:default-item-per-page=\"25\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Simple rename"
+    },
+    "withSearchFilter": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "searchFilterStatus",
+      "transformCode": "// Rename to status pattern\nsearch-filter-status",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses -status suffix"
+    },
+    "withStatusFilter": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "statusFilterStatus",
+      "transformCode": "// Rename to status pattern\nstatus-filter-status",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses -status suffix"
+    },
+    "statusList": {
+      "v1Type": "array",
+      "v2Type": "array",
+      "v2Prop": "statusFilterList",
+      "transformCode": "// Direct rename\n:status-filter-list=\"statusOptions\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Simple rename"
+    },
+    "noDataTitle": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "noDataTitleText",
+      "transformCode": "// Add Text suffix\nno-data-title-text=\"No results\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses -text suffix"
+    },
+    "noDataDescription": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "noDataDescriptionText",
+      "transformCode": "// Add Text suffix\nno-data-description-text=\"Try different filters\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses -text suffix"
+    },
+    "loadingTitle": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "loadingTitleText",
+      "transformCode": "// Add Text suffix\nloading-title-text=\"Loading...\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses -text suffix"
+    },
+    "loadingDescription": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "loadingDescriptionText",
+      "transformCode": "// Add Text suffix\nloading-description-text=\"Please wait\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses -text suffix"
+    },
+    "actions": {
+      "v1Type": "array",
+      "v2Type": "N/A",
+      "v2Prop": "N/A",
+      "transformCode": "// Actions handled differently in V2\n// Use custom cellRenderer in columnOptions",
+      "autoMigratable": false,
+      "complexity": "high",
+      "breakingChange": true,
+      "notes": "V2 uses AG Grid cellRenderer for actions column"
+    },
+    "paginationPath": {
+      "v1Type": "string",
+      "v2Type": "N/A",
+      "v2Prop": "N/A",
+      "transformCode": "// Handle in fetchData event or API layer",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "V2 expects standardized API response format"
+    },
+    "sortOrder": {
+      "v1Type": "object",
+      "v2Type": "N/A",
+      "v2Prop": "columnOptions[].sort",
+      "transformCode": "// Set sort in column definition\n{ field: 'date', headerName: 'Date', sort: 'desc' }",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "Default sort is set per-column in columnOptions"
+    },
+    "fixFirstColumn": {
+      "v1Type": "boolean",
+      "v2Type": "N/A",
+      "v2Prop": "columnOptions[].pinned",
+      "transformCode": "// Set pinned in column definition\n{ field: 'name', headerName: 'Name', pinned: 'left' }",
+      "autoMigratable": false,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses AG Grid pinned property per-column"
+    },
+    "fixLastColumn": {
+      "v1Type": "boolean",
+      "v2Type": "N/A",
+      "v2Prop": "columnOptions[].pinned",
+      "transformCode": "// Set pinned in column definition\n{ field: 'actions', headerName: '', pinned: 'right' }",
+      "autoMigratable": false,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses AG Grid pinned property per-column"
+    },
+    "isWrapperBox": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "inContainerLayout",
+      "transformCode": "// Rename\nin-container-layout",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses inContainerLayout with options object"
+    },
+    "httpFetch": {
+      "v1Type": "function",
+      "v2Type": "N/A",
+      "v2Prop": "N/A",
+      "transformCode": "// Use @fetch-data event instead",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "V2 uses fetchData event for custom fetch logic"
+    },
+    "httpOptions": {
+      "v1Type": "object",
+      "v2Type": "N/A",
+      "v2Prop": "httpMethod",
+      "transformCode": "// Limited to httpMethod in V2\nhttp-method=\"POST\"",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "V2 only supports httpMethod, handle headers in API layer"
+    },
+    "detailRow": {
+      "v1Type": "component",
+      "v2Type": "boolean + array",
+      "v2Prop": "nestedTableStatus + nestedTableFields",
+      "transformCode": "// Use nested table feature\nnested-table-status\n:nested-table-fields=\"nestedColumns\"",
+      "autoMigratable": false,
+      "complexity": "high",
+      "breakingChange": true,
+      "notes": "V2 uses built-in nested table instead of custom component"
+    },
+    "rowClass": {
+      "v1Type": "function",
+      "v2Type": "N/A",
+      "v2Prop": "columnOptions[].cellClass",
+      "transformCode": "// Use AG Grid getRowClass or cellClass in columns",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "Handle via AG Grid API or cellClass"
+    },
+    "formatMapping": {
+      "v1Type": "object",
+      "v2Type": "N/A",
+      "v2Prop": "columnOptions[].valueFormatter",
+      "transformCode": "// Use valueFormatter per column\n{ field: 'date', valueFormatter: params => formatDate(params.value) }",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "V2 uses AG Grid valueFormatter per column"
+    }
+  },
+
+  "eventMigrations": {
+    "@onLoad": {
+      "v1Event": "@onLoad",
+      "v2Event": "@data-loaded",
+      "v1Payload": "{ data, total }",
+      "v2Payload": "{ data, api }",
+      "payloadChange": "Payload includes AG Grid API instead of total",
+      "breakingChange": true,
+      "complexity": "medium"
+    },
+    "@setPaginationObject": {
+      "v1Event": "@setPaginationObject",
+      "v2Event": "@pagination-changed",
+      "v1Payload": "{ page, perPage, total }",
+      "v2Payload": "{ page, perPage }",
+      "payloadChange": "Similar structure, renamed event",
+      "breakingChange": true,
+      "complexity": "low"
+    },
+    "@paginationCount": {
+      "v1Event": "@paginationCount",
+      "v2Event": "N/A",
+      "v1Payload": "number",
+      "v2Payload": "N/A",
+      "payloadChange": "Use totalData prop or data-loaded event",
+      "breakingChange": true,
+      "complexity": "low"
+    },
+    "@perPage": {
+      "v1Event": "@perPage",
+      "v2Event": "@per-page-selected",
+      "v1Payload": "number",
+      "v2Payload": "number",
+      "payloadChange": "Same payload, renamed event",
+      "breakingChange": true,
+      "complexity": "low"
+    },
+    "@selectStatus": {
+      "v1Event": "@selectStatus",
+      "v2Event": "@select-status",
+      "v1Payload": "{ selectedRows, allSelected }",
+      "v2Payload": "{ selectedRows, selectedCount }",
+      "payloadChange": "allSelected → selectedCount",
+      "breakingChange": true,
+      "complexity": "low"
+    }
+  },
+
+  "newFeaturesInV2": [
+    {
+      "feature": "AG Grid Integration",
+      "props": ["columnOptions"],
+      "description": "Built on AG Grid with all its features (filtering, grouping, etc.)",
+      "usage": "Full AG Grid column definition support"
+    },
+    {
+      "feature": "Bulk Actions",
+      "props": ["hasBulkActions", "bulkActionsOptions"],
+      "description": "Built-in bulk action toolbar for selected rows",
+      "usage": "has-bulk-actions :bulk-actions-options=\"[{ id: 'delete', label: 'Delete' }]\""
+    },
+    {
+      "feature": "Row Selection Modes",
+      "props": ["rowsSelection", "canSelectAllRows"],
+      "description": "Single or multiple row selection with select all",
+      "usage": "rows-selection=\"multiple\" can-select-all-rows"
+    },
+    {
+      "feature": "Tree Data",
+      "props": ["isTreeData", "groupDataPath", "groupDefaultExpanded"],
+      "description": "Hierarchical data display with expand/collapse",
+      "usage": "is-tree-data :group-data-path=\"data => data.hierarchy\""
+    },
+    {
+      "feature": "Nested Tables",
+      "props": ["nestedTableStatus", "nestedTableFields"],
+      "description": "Expandable nested tables within rows",
+      "usage": "nested-table-status :nested-table-fields=\"nestedColumns\""
+    },
+    {
+      "feature": "Container Layout",
+      "props": ["inContainerLayout", "inContainerLayoutOptions"],
+      "description": "Wrap table in styled container with header",
+      "usage": "in-container-layout :in-container-layout-options=\"{ title: 'Users' }\""
+    },
+    {
+      "feature": "Range Selection",
+      "props": ["enableRangeSelection"],
+      "description": "Excel-like cell range selection",
+      "usage": "enable-range-selection"
+    },
+    {
+      "feature": "Row Drag & Drop",
+      "props": ["rowDragManaged"],
+      "description": "Drag and drop row reordering",
+      "usage": "row-drag-managed @row-drag-end=\"handleDragEnd\""
+    },
+    {
+      "feature": "Skeleton Loading",
+      "props": ["skeletonStatus", "horizontalSkeletonsCount"],
+      "description": "Skeleton placeholder during initial load",
+      "usage": "skeleton-status :horizontal-skeletons-count=\"5\""
+    },
+    {
+      "feature": "Responsive Mode",
+      "props": ["isResponsive"],
+      "description": "Mobile-friendly responsive behavior",
+      "usage": "is-responsive"
+    }
+  ],
+
+  "migrationSteps": [
+    {
+      "step": 1,
+      "title": "Update import",
+      "before": "import { InDataTable } from '@useinsider/design-system-vue';",
+      "after": "import { InDataTableV2 } from '@useinsider/design-system-vue';",
+      "automated": true
+    },
+    {
+      "step": 2,
+      "title": "Update component name",
+      "before": "<InDataTable ...",
+      "after": "<InDataTableV2 ...",
+      "automated": true
+    },
+    {
+      "step": 3,
+      "title": "Convert tableFields to columnOptions",
+      "before": ":table-fields=\"[{ field: 'name', label: 'Name', sortable: true }]\"",
+      "after": ":column-options=\"[{ field: 'name', headerName: 'Name', sortable: true, filter: true }]\"",
+      "automated": false,
+      "notes": "Major restructure: label → headerName, add filter: true for filterable columns"
+    },
+    {
+      "step": 4,
+      "title": "Convert apiMode to rowModelType",
+      "before": "api-mode",
+      "after": "row-model-type=\"serverSide\"",
+      "automated": false,
+      "notes": "Boolean to enum conversion"
+    },
+    {
+      "step": 5,
+      "title": "Rename perPage",
+      "before": ":per-page=\"25\"",
+      "after": ":default-item-per-page=\"25\"",
+      "automated": true
+    },
+    {
+      "step": 6,
+      "title": "Rename search/status filter props",
+      "before": "with-search-filter with-status-filter :status-list=\"list\"",
+      "after": "search-filter-status status-filter-status :status-filter-list=\"list\"",
+      "automated": true
+    },
+    {
+      "step": 7,
+      "title": "Rename text props",
+      "before": "no-data-title=\"Title\" no-data-description=\"Desc\"",
+      "after": "no-data-title-text=\"Title\" no-data-description-text=\"Desc\"",
+      "automated": true
+    },
+    {
+      "step": 8,
+      "title": "Update event handlers",
+      "before": "@on-load=\"handler\" @per-page=\"handler\"",
+      "after": "@data-loaded=\"handler\" @per-page-selected=\"handler\"",
+      "automated": true
+    },
+    {
+      "step": 9,
+      "title": "Convert fixedColumns to pinned",
+      "before": "fix-first-column fix-last-column",
+      "after": "// Add pinned: 'left'/'right' to column definitions",
+      "automated": false,
+      "notes": "Move to columnOptions array"
+    },
+    {
+      "step": 10,
+      "title": "Convert formatMapping to valueFormatter",
+      "before": ":format-mapping=\"{ date: formatDate }\"",
+      "after": "// Add valueFormatter to each column\n{ field: 'date', valueFormatter: params => formatDate(params.value) }",
+      "automated": false,
+      "notes": "Per-column valueFormatter in columnOptions"
+    },
+    {
+      "step": 11,
+      "title": "Convert actions to cellRenderer",
+      "before": ":actions=\"[{ name: 'edit', icon: 'edit' }]\"",
+      "after": "// Add actions column with cellRenderer\n{ field: 'actions', cellRenderer: 'actionsRenderer' }",
+      "automated": false,
+      "notes": "Custom cell renderer for actions column"
+    },
+    {
+      "step": 12,
+      "title": "Update API handling",
+      "before": ":http-options=\"options\" pagination-path=\"meta\"",
+      "after": "http-method=\"GET\" @fetch-data=\"customFetch\"",
+      "automated": false,
+      "notes": "Handle complex API logic in fetchData event"
+    }
+  ],
+
+  "fullExampleBefore": "<!-- V1 Implementation -->\n<template>\n  <InDataTable\n    name=\"users-table\"\n    api-mode\n    fetch-url=\"/api/users\"\n    :table-fields=\"[\n      { field: 'name', label: 'Name', sortable: true },\n      { field: 'email', label: 'Email', width: 200 },\n      { field: 'status', label: 'Status', renderer: 'status' }\n    ]\"\n    :table-search-params=\"{ tenant: tenantId }\"\n    :per-page=\"25\"\n    :sort-order=\"{ field: 'name', direction: 'asc' }\"\n    :actions=\"[\n      { name: 'edit', icon: 'edit', label: 'Edit' },\n      { name: 'delete', icon: 'trash', label: 'Delete' }\n    ]\"\n    :http-options=\"{ headers: { 'Authorization': token } }\"\n    pagination-path=\"meta.pagination\"\n    pagination-status\n    with-search-filter\n    with-status-filter\n    :status-list=\"statusOptions\"\n    horizontal-scroll\n    fix-first-column\n    fix-last-column\n    is-wrapper-box\n    no-data-title=\"No users found\"\n    no-data-description=\"Try adjusting your filters\"\n    :format-mapping=\"{ createdAt: formatDate }\"\n    @on-load=\"handleLoad\"\n    @select-status=\"handleSelection\"\n    @per-page=\"handlePerPage\"\n  />\n</template>\n\n<script>\nimport { InDataTable } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InDataTable },\n  data() {\n    return {\n      tenantId: 'tenant-1',\n      token: 'Bearer xxx',\n      statusOptions: [\n        { label: 'Active', value: 'active' },\n        { label: 'Inactive', value: 'inactive' }\n      ]\n    };\n  },\n  methods: {\n    formatDate(date) {\n      return new Date(date).toLocaleDateString();\n    },\n    handleLoad(data) {\n      console.log('Loaded', data);\n    },\n    handleSelection(status) {\n      console.log('Selected', status.selectedRows);\n    },\n    handlePerPage(perPage) {\n      console.log('Per page', perPage);\n    }\n  }\n};\n</script>",
+
+  "fullExampleAfter": "<!-- V2 Implementation -->\n<template>\n  <InDataTableV2\n    row-model-type=\"serverSide\"\n    fetch-url=\"/api/users\"\n    http-method=\"GET\"\n    :column-options=\"[\n      { field: 'name', headerName: 'Name', sortable: true, filter: true, pinned: 'left', sort: 'asc' },\n      { field: 'email', headerName: 'Email', width: 200, sortable: true, filter: true },\n      { field: 'status', headerName: 'Status', cellRenderer: 'statusRenderer' },\n      { field: 'createdAt', headerName: 'Created', valueFormatter: params => formatDate(params.value) },\n      { field: 'actions', headerName: '', pinned: 'right', cellRenderer: 'actionsRenderer', width: 120 }\n    ]\"\n    :table-search-params=\"{ tenant: tenantId }\"\n    :default-item-per-page=\"25\"\n    pagination-status\n    items-per-page-status\n    search-filter-status\n    status-filter-status\n    :status-filter-list=\"statusOptions\"\n    horizontal-scroll\n    in-container-layout\n    :in-container-layout-options=\"{ headerStatus: true, title: 'Users' }\"\n    no-data-title-text=\"No users found\"\n    no-data-description-text=\"Try adjusting your filters\"\n    rows-selection=\"multiple\"\n    can-select-all-rows\n    @data-loaded=\"handleLoad\"\n    @select-status=\"handleSelection\"\n    @per-page-selected=\"handlePerPage\"\n    @fetch-data=\"customFetch\"\n  />\n</template>\n\n<script>\nimport { InDataTableV2 } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InDataTableV2 },\n  data() {\n    return {\n      tenantId: 'tenant-1',\n      token: 'Bearer xxx',\n      statusOptions: [\n        { label: 'Active', value: 'active' },\n        { label: 'Inactive', value: 'inactive' }\n      ]\n    };\n  },\n  methods: {\n    formatDate(date) {\n      return new Date(date).toLocaleDateString();\n    },\n    handleLoad({ data, api }) {\n      console.log('Loaded', data);\n    },\n    handleSelection({ selectedRows, selectedCount }) {\n      console.log('Selected', selectedRows);\n    },\n    handlePerPage(perPage) {\n      console.log('Per page', perPage);\n    },\n    async customFetch({ params }) {\n      // Handle custom API logic with auth headers\n      const response = await fetch(params.url, {\n        headers: { 'Authorization': this.token }\n      });\n      return response.json();\n    }\n  }\n};\n</script>",
+
+  "commonPitfalls": [
+    {
+      "pitfall": "Using tableFields instead of columnOptions",
+      "impact": "Table renders with no columns",
+      "solution": "Rename to columnOptions and update column structure to AG Grid format"
+    },
+    {
+      "pitfall": "Using label instead of headerName in columns",
+      "impact": "Column headers show as undefined",
+      "solution": "Replace all 'label' with 'headerName' in column definitions"
+    },
+    {
+      "pitfall": "Using api-mode boolean",
+      "impact": "Server-side fetching doesn't work",
+      "solution": "Use row-model-type=\"serverSide\" instead"
+    },
+    {
+      "pitfall": "Expecting @onLoad event",
+      "impact": "Data load handler not called",
+      "solution": "Use @data-loaded instead of @on-load"
+    },
+    {
+      "pitfall": "Using formatMapping object",
+      "impact": "Values not formatted",
+      "solution": "Add valueFormatter function to each column in columnOptions"
+    },
+    {
+      "pitfall": "Using fix-first-column prop",
+      "impact": "Columns not pinned",
+      "solution": "Add pinned: 'left' to column definition in columnOptions"
+    },
+    {
+      "pitfall": "Passing httpOptions for auth",
+      "impact": "API requests fail",
+      "solution": "Handle auth in @fetch-data event handler"
+    },
+    {
+      "pitfall": "Using V1 renderer names",
+      "impact": "Cell renderers don't work",
+      "solution": "V2 uses AG Grid cellRenderer - check V2 renderer mappings"
+    }
+  ],
+
+  "testingChecklist": [
+    "✓ Table renders with data",
+    "✓ Column headers display correctly (headerName)",
+    "✓ Sorting works on sortable columns",
+    "✓ Filtering works on filterable columns",
+    "✓ Pagination changes pages correctly",
+    "✓ Items per page selection works",
+    "✓ Search filter filters data",
+    "✓ Status filter filters data",
+    "✓ Row selection (single/multiple) works",
+    "✓ Pinned columns stay fixed on scroll",
+    "✓ Value formatters display correctly",
+    "✓ Cell renderers render correctly",
+    "✓ Loading state displays",
+    "✓ No data state displays",
+    "✓ All event handlers fire correctly",
+    "✓ Server-side fetching works (if used)",
+    "✓ Bulk actions work (if used)"
+  ]
+}

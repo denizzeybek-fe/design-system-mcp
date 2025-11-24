@@ -9,9 +9,8 @@ import {
   validateFigmaComponentName,
   getAllMappings,
   FigmaFrame,
-  FigmaNode,
 } from '../services/figma-converter.js';
-import { findMapping, parseFigmaName } from '../registry/figma-mappings.js';
+import { findMapping } from '../registry/figma-mappings.js';
 import { getComponentByName } from '../registry/combined-loader.js';
 
 /**

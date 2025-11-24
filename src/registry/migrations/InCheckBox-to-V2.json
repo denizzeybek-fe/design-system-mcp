@@ -1,0 +1,196 @@
+{
+  "migrationId": "InCheckBox-to-V2",
+  "v1Component": "InCheckBox",
+  "v2Component": "InCheckBoxV2",
+  "estimatedEffort": "low",
+  "breakingChanges": 3,
+  "complexity": "low",
+  "description": "Migration from InCheckBox (V1) to InCheckBoxV2 involves prop renaming (status suffix pattern) and updated label handling.",
+
+  "propMigrations": {
+    "disabled": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "disabledStatus",
+      "transformCode": "// Direct rename\n:disabled-status=\"isDisabled\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses -status suffix pattern"
+    },
+    "label": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "labelText",
+      "transformCode": "// Direct rename\nlabel-text=\"Checkbox Label\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses -text suffix for text props"
+    },
+    "value": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "checked",
+      "transformCode": "// Rename value to checked\n:checked=\"isChecked\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses 'checked' instead of 'value'"
+    },
+    "id": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "id",
+      "transformCode": "// Same prop\nid=\"checkbox-1\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": false,
+      "notes": "Same prop name"
+    },
+    "name": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "name",
+      "transformCode": "// Same prop\nname=\"checkbox-field\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": false,
+      "notes": "Same prop name"
+    }
+  },
+
+  "eventMigrations": {
+    "@change": {
+      "v1Event": "@change",
+      "v2Event": "@click",
+      "v1Payload": "boolean",
+      "v2Payload": "Event",
+      "payloadChange": "V2 emits click event instead of change",
+      "breakingChange": true,
+      "complexity": "low"
+    }
+  },
+
+  "newFeaturesInV2": [
+    {
+      "feature": "Description Text",
+      "props": ["descriptionText", "descriptionStatus"],
+      "description": "Add description text below the checkbox",
+      "usage": "description-text=\"Additional info\" description-status"
+    },
+    {
+      "feature": "Tooltip Support",
+      "props": ["tooltipText", "tooltipStatus"],
+      "description": "Built-in tooltip on hover",
+      "usage": "tooltip-text=\"Help text\" tooltip-status"
+    },
+    {
+      "feature": "State Message",
+      "props": ["stateMessage", "state"],
+      "description": "Validation state with message",
+      "usage": "state=\"error\" state-message=\"Required field\""
+    },
+    {
+      "feature": "Indeterminate State",
+      "props": ["indeterminate"],
+      "description": "Partial selection state for group checkboxes",
+      "usage": ":indeterminate=\"hasPartialSelection\""
+    },
+    {
+      "feature": "Skeleton Loading",
+      "props": ["skeletonStatus", "skeletonSizing"],
+      "description": "Skeleton placeholder while loading",
+      "usage": "skeleton-status skeleton-sizing=\"medium\""
+    },
+    {
+      "feature": "Bold Label",
+      "props": ["boldLabel"],
+      "description": "Make label text bold",
+      "usage": "bold-label"
+    },
+    {
+      "feature": "Options Array",
+      "props": ["options"],
+      "description": "Create checkbox group from options array",
+      "usage": ":options=\"[{ label: 'Option 1', value: '1' }]\""
+    }
+  ],
+
+  "migrationSteps": [
+    {
+      "step": 1,
+      "title": "Update import",
+      "before": "import { InCheckBox } from '@useinsider/design-system-vue';",
+      "after": "import { InCheckBoxV2 } from '@useinsider/design-system-vue';",
+      "automated": true
+    },
+    {
+      "step": 2,
+      "title": "Update component name",
+      "before": "<InCheckBox ...",
+      "after": "<InCheckBoxV2 ...",
+      "automated": true
+    },
+    {
+      "step": 3,
+      "title": "Rename disabled prop",
+      "before": ":disabled=\"isDisabled\"",
+      "after": ":disabled-status=\"isDisabled\"",
+      "automated": true
+    },
+    {
+      "step": 4,
+      "title": "Rename label prop",
+      "before": "label=\"Accept terms\"",
+      "after": "label-text=\"Accept terms\"",
+      "automated": true
+    },
+    {
+      "step": 5,
+      "title": "Rename value to checked",
+      "before": ":value=\"isChecked\"",
+      "after": ":checked=\"isChecked\"",
+      "automated": true
+    },
+    {
+      "step": 6,
+      "title": "Update event handler",
+      "before": "@change=\"handleChange\"",
+      "after": "@click=\"handleClick\"",
+      "automated": true,
+      "notes": "V2 uses click event instead of change"
+    }
+  ],
+
+  "fullExampleBefore": "<!-- V1 Implementation -->\n<template>\n  <InCheckBox\n    id=\"terms-checkbox\"\n    name=\"terms\"\n    label=\"I accept the terms and conditions\"\n    :value=\"accepted\"\n    :disabled=\"isDisabled\"\n    @change=\"handleChange\"\n  />\n</template>\n\n<script>\nimport { InCheckBox } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InCheckBox },\n  data() {\n    return {\n      accepted: false,\n      isDisabled: false\n    };\n  },\n  methods: {\n    handleChange(value) {\n      this.accepted = value;\n    }\n  }\n};\n</script>",
+
+  "fullExampleAfter": "<!-- V2 Implementation -->\n<template>\n  <InCheckBoxV2\n    id=\"terms-checkbox\"\n    name=\"terms\"\n    label-text=\"I accept the terms and conditions\"\n    :checked=\"accepted\"\n    :disabled-status=\"isDisabled\"\n    @click=\"handleClick\"\n  />\n</template>\n\n<script>\nimport { InCheckBoxV2 } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InCheckBoxV2 },\n  data() {\n    return {\n      accepted: false,\n      isDisabled: false\n    };\n  },\n  methods: {\n    handleClick() {\n      this.accepted = !this.accepted;\n    }\n  }\n};\n</script>",
+
+  "commonPitfalls": [
+    {
+      "pitfall": "Using :value instead of :checked",
+      "impact": "Checkbox state not bound correctly",
+      "solution": "Use :checked=\"value\" in V2"
+    },
+    {
+      "pitfall": "Using @change instead of @click",
+      "impact": "Event handler not triggered",
+      "solution": "V2 uses @click event"
+    },
+    {
+      "pitfall": "Forgetting to rename label to labelText",
+      "impact": "Checkbox appears without label",
+      "solution": "Use label-text=\"Your Label\""
+    }
+  ],
+
+  "testingChecklist": [
+    "✓ Checkbox toggles correctly",
+    "✓ Label displays properly",
+    "✓ Disabled state works",
+    "✓ Click event fires",
+    "✓ Checked state binds correctly",
+    "✓ Indeterminate state works (if used)"
+  ]
+}

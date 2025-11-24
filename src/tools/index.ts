@@ -7,9 +7,6 @@ import {
   getComponentsByCategory,
   getCategories,
   mapFigmaComponent,
-  getMigration,
-  getComponentUsageStats,
-  getMetadata,
 } from '../registry/combined-loader.js';
 import { Component } from '../types/index.js';
 
@@ -187,7 +184,7 @@ export function registerTools(server: McpServer): void {
             text: JSON.stringify(
               {
                 component: component.name,
-                events: component.events,
+                events: component.emits,
               },
               null,
               2
@@ -262,7 +259,7 @@ export function registerTools(server: McpServer): void {
         };
       }
 
-      const code = generateComponentCode(comp, props, includeScript);
+      const code = generateComponentCode(comp as any, props, includeScript);
 
       return {
         content: [
@@ -283,9 +280,9 @@ export function registerTools(server: McpServer): void {
       figmaComponentName: z.string().describe('Component name from Figma (e.g., "Button/Primary", "DatePicker/Range")'),
     },
     async ({ figmaComponentName }) => {
-      const mapping = mapFigmaComponent(figmaComponentName);
+      const component = mapFigmaComponent(figmaComponentName);
 
-      if (!mapping) {
+      if (!component) {
         return {
           content: [
             {
@@ -304,8 +301,8 @@ export function registerTools(server: McpServer): void {
         };
       }
 
-      const component = getComponentByName(mapping.component);
-
+      // TODO: Add defaultProps support when integrating with Figma MCP
+      // The mapFigmaComponent should return props from figma-mappings.ts
       return {
         content: [
           {
@@ -314,15 +311,12 @@ export function registerTools(server: McpServer): void {
               {
                 figmaName: figmaComponentName,
                 matched: true,
-                dsComponent: mapping.component,
-                defaultProps: mapping.defaultProps,
-                componentInfo: component
-                  ? {
-                      description: component.description,
-                      category: component.category,
-                      propsCount: component.props.length,
-                    }
-                  : null,
+                dsComponent: component.name,
+                componentInfo: {
+                  description: component.description,
+                  category: component.category,
+                  propsCount: Object.keys(component.props).length,
+                },
               },
               null,
               2

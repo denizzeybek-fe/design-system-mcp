@@ -1,0 +1,280 @@
+{
+  "componentName": "InDataTable",
+  "version": "1.0.0",
+  "lastUpdated": "2024-11-24",
+
+  "propEnrichments": {
+    "tableFields": {
+      "description": "Column definitions array for the table",
+      "valueFormat": {
+        "structure": "Array of column objects",
+        "typescript": "Array<{ field: string; label: string; sortable?: boolean; width?: number; renderer?: string; }>",
+        "example": ":table-fields=\"[{ field: 'name', label: 'Name', sortable: true }, { field: 'email', label: 'Email' }]\""
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Not providing field property in column definition",
+          "correction": "Each column must have a 'field' property matching data key",
+          "severity": "high"
+        },
+        {
+          "mistake": "Using 'title' instead of 'label' for column header",
+          "correction": "V1 uses 'label' for column headers",
+          "severity": "medium"
+        }
+      ]
+    },
+    "data": {
+      "description": "Table data array for client-side mode",
+      "valueFormat": {
+        "structure": "Array of row objects",
+        "typescript": "Array<Record<string, any>>",
+        "example": ":data=\"[{ id: 1, name: 'John', email: 'john@example.com' }]\""
+      }
+    },
+    "fetchUrl": {
+      "description": "API endpoint URL for server-side data fetching",
+      "valueFormat": {
+        "structure": "string (URL)",
+        "example": "fetch-url=\"/api/users\""
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Using fetchUrl without setting apiMode to true",
+          "correction": "Set api-mode=\"true\" when using fetchUrl",
+          "severity": "high"
+        }
+      ]
+    },
+    "apiMode": {
+      "description": "Enable server-side data fetching mode",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "api-mode"
+      }
+    },
+    "tableSearchParams": {
+      "description": "Additional query parameters for API requests",
+      "valueFormat": {
+        "structure": "Object with key-value pairs",
+        "typescript": "Record<string, string | number | boolean>",
+        "example": ":table-search-params=\"{ status: 'active', type: 'user' }\""
+      }
+    },
+    "actions": {
+      "description": "Row action buttons configuration",
+      "valueFormat": {
+        "structure": "Array of action objects",
+        "typescript": "Array<{ name: string; icon?: string; label?: string; handler?: Function; }>",
+        "example": ":actions=\"[{ name: 'edit', icon: 'edit', label: 'Edit' }, { name: 'delete', icon: 'trash', label: 'Delete' }]\""
+      }
+    },
+    "perPage": {
+      "description": "Number of rows per page",
+      "valueFormat": {
+        "structure": "number",
+        "example": ":per-page=\"25\""
+      }
+    },
+    "sortOrder": {
+      "description": "Default sort configuration",
+      "valueFormat": {
+        "structure": "Object with field and direction",
+        "typescript": "{ field: string; direction: 'asc' | 'desc' }",
+        "example": ":sort-order=\"{ field: 'createdAt', direction: 'desc' }\""
+      }
+    },
+    "paginationPath": {
+      "description": "JSON path to pagination data in API response",
+      "valueFormat": {
+        "structure": "string (dot notation path)",
+        "example": "pagination-path=\"meta.pagination\""
+      }
+    },
+    "statusList": {
+      "description": "Status filter options for the table",
+      "valueFormat": {
+        "structure": "Array of status objects",
+        "typescript": "Array<{ label: string; value: string | number; }>",
+        "example": ":status-list=\"[{ label: 'Active', value: 'active' }, { label: 'Inactive', value: 'inactive' }]\""
+      }
+    },
+    "pinnedRows": {
+      "description": "Rows to pin at top/bottom of table",
+      "valueFormat": {
+        "structure": "Object with top and bottom arrays",
+        "typescript": "{ top?: Array<any>; bottom?: Array<any> }",
+        "example": ":pinned-rows=\"{ top: [summaryRow] }\""
+      }
+    },
+    "httpOptions": {
+      "description": "HTTP request configuration for API calls",
+      "valueFormat": {
+        "structure": "Object with fetch options",
+        "typescript": "{ headers?: Record<string, string>; credentials?: string; }",
+        "example": ":http-options=\"{ headers: { 'Authorization': 'Bearer token' } }\""
+      }
+    },
+    "detailRow": {
+      "description": "Expandable row detail component",
+      "valueFormat": {
+        "structure": "Vue component or template",
+        "example": ":detail-row=\"DetailRowComponent\""
+      }
+    },
+    "trackBy": {
+      "description": "Unique identifier field for row tracking",
+      "valueFormat": {
+        "structure": "string (field name)",
+        "example": "track-by=\"id\""
+      }
+    },
+    "formatMapping": {
+      "description": "Custom formatters for cell values",
+      "valueFormat": {
+        "structure": "Object mapping field names to formatter functions",
+        "typescript": "Record<string, (value: any) => string>",
+        "example": ":format-mapping=\"{ date: formatDate, price: formatCurrency }\""
+      }
+    },
+    "fixFirstColumn": {
+      "description": "Fix first column when scrolling horizontally",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "fix-first-column"
+      }
+    },
+    "fixLastColumn": {
+      "description": "Fix last column when scrolling horizontally",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "fix-last-column"
+      }
+    },
+    "rowClass": {
+      "description": "Dynamic row class based on row data",
+      "valueFormat": {
+        "structure": "Function returning class string",
+        "typescript": "(row: any) => string",
+        "example": ":row-class=\"row => row.status === 'error' ? 'error-row' : ''\""
+      }
+    },
+    "loadingType": {
+      "description": "Type of loading indicator",
+      "valueFormat": {
+        "structure": "string enum",
+        "possibleValues": ["spinner", "skeleton", "overlay"],
+        "example": "loading-type=\"skeleton\""
+      }
+    }
+  },
+
+  "eventEnrichments": {
+    "onLoad": {
+      "description": "Emitted when table data is loaded",
+      "payload": "{ data: Array, total: number }",
+      "usage": "@on-load=\"handleDataLoaded\""
+    },
+    "setPaginationObject": {
+      "description": "Emitted when pagination changes",
+      "payload": "{ page: number, perPage: number, total: number }",
+      "usage": "@set-pagination-object=\"handlePagination\""
+    },
+    "paginationCount": {
+      "description": "Emitted with total record count",
+      "payload": "number",
+      "usage": "@pagination-count=\"updateCount\""
+    },
+    "perPage": {
+      "description": "Emitted when per-page selection changes",
+      "payload": "number",
+      "usage": "@per-page=\"handlePerPageChange\""
+    },
+    "selectStatus": {
+      "description": "Emitted when row selection changes",
+      "payload": "{ selectedRows: Array, allSelected: boolean }",
+      "usage": "@select-status=\"handleSelection\""
+    }
+  },
+
+  "exampleEnrichments": [
+    {
+      "title": "Basic Client-Side Table",
+      "description": "Simple table with local data",
+      "code": "<InDataTable\n  name=\"users-table\"\n  :data=\"users\"\n  :table-fields=\"[\n    { field: 'name', label: 'Name', sortable: true },\n    { field: 'email', label: 'Email' },\n    { field: 'status', label: 'Status' }\n  ]\"\n  :per-page=\"10\"\n  pagination-status\n/>"
+    },
+    {
+      "title": "Server-Side Table with API",
+      "description": "Table fetching data from API endpoint",
+      "code": "<InDataTable\n  name=\"api-table\"\n  api-mode\n  fetch-url=\"/api/users\"\n  :table-search-params=\"{ tenant: tenantId }\"\n  :table-fields=\"tableColumns\"\n  :http-options=\"{ headers: { 'Authorization': authToken } }\"\n  pagination-path=\"meta.pagination\"\n  :per-page=\"25\"\n  with-search-filter\n  with-status-filter\n  :status-list=\"statusOptions\"\n  @on-load=\"handleLoad\"\n  @select-status=\"handleSelection\"\n/>"
+    },
+    {
+      "title": "Table with Actions and Fixed Columns",
+      "description": "Advanced table with row actions",
+      "code": "<InDataTable\n  name=\"actions-table\"\n  :data=\"data\"\n  :table-fields=\"columns\"\n  :actions=\"[\n    { name: 'edit', icon: 'edit', label: 'Edit' },\n    { name: 'delete', icon: 'trash', label: 'Delete' }\n  ]\"\n  horizontal-scroll\n  fix-first-column\n  fix-last-column\n  :row-class=\"getRowClass\"\n/>"
+    }
+  ],
+
+  "commonMistakes": [
+    {
+      "mistake": "Not setting api-mode when using fetchUrl",
+      "issue": "Table tries to render empty local data instead of fetching",
+      "solution": "Always set api-mode=\"true\" or api-mode when using fetchUrl",
+      "severity": "high"
+    },
+    {
+      "mistake": "Missing field property in tableFields columns",
+      "issue": "Columns don't render or show undefined",
+      "solution": "Each column object must have 'field' matching a data property",
+      "severity": "high"
+    },
+    {
+      "mistake": "Using wrong pagination path for API response",
+      "issue": "Pagination doesn't work correctly",
+      "solution": "Set pagination-path to match your API response structure",
+      "severity": "medium"
+    },
+    {
+      "mistake": "Not providing httpOptions for authenticated APIs",
+      "issue": "API requests fail with 401",
+      "solution": "Pass Authorization header in http-options",
+      "severity": "high"
+    }
+  ],
+
+  "bestPractices": [
+    {
+      "practice": "Use trackBy for row identification",
+      "description": "Always set trackBy to unique field for proper row tracking and selection",
+      "example": "track-by=\"id\""
+    },
+    {
+      "practice": "Implement proper loading states",
+      "description": "Use loadingStatus and loadingType for better UX during data fetches",
+      "example": ":loading-status=\"isLoading\" loading-type=\"skeleton\""
+    },
+    {
+      "practice": "Use formatMapping for consistent formatting",
+      "description": "Centralize value formatting logic in formatMapping object",
+      "example": ":format-mapping=\"{ date: formatDate, currency: formatMoney }\""
+    },
+    {
+      "practice": "Enable horizontal scroll for many columns",
+      "description": "Use horizontal-scroll with fix-first-column for wide tables",
+      "example": "horizontal-scroll fix-first-column"
+    }
+  ],
+
+  "performanceNotes": [
+    {
+      "note": "Use server-side pagination for large datasets",
+      "description": "For datasets > 1000 rows, use api-mode with server-side pagination",
+      "recommendation": "Set api-mode and implement proper backend pagination"
+    },
+    {
+      "note": "Avoid complex rowClass functions",
+      "description": "rowClass is called for every row on every render",
+      "recommendation": "Keep rowClass function simple or memoize results"
+    }
+  ]
+}

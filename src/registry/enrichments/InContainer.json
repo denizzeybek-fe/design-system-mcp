@@ -1,0 +1,147 @@
+{
+  "componentName": "InContainer",
+  "version": "2.0.0",
+  "lastUpdated": "2024-11-24",
+
+  "propEnrichments": {
+    "containerType": {
+      "description": "Visual type/spacing of the container",
+      "valueFormat": {
+        "structure": "string enum",
+        "possibleValues": ["default", "compact", "spacious"],
+        "example": "container-type=\"compact\""
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Using 'type' prop from V1",
+          "correction": "V2 uses containerType instead of type",
+          "severity": "high"
+        }
+      ]
+    },
+    "headerStatus": {
+      "description": "Whether to show the header slot area",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "header-status"
+      }
+    },
+    "footerStatus": {
+      "description": "Whether to show the footer slot area",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "footer-status"
+      }
+    },
+    "fullWidthContentStatus": {
+      "description": "Remove padding from content area for full-width content",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "full-width-content-status"
+      }
+    },
+    "colorIndicatorStatus": {
+      "description": "Show colored indicator bar on the container",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "color-indicator-status"
+      }
+    },
+    "colorIndicatorColor": {
+      "description": "Color of the indicator bar",
+      "valueFormat": {
+        "structure": "string (CSS color)",
+        "example": "color-indicator-color=\"#4CAF50\""
+      }
+    },
+    "border": {
+      "description": "Whether to show border around container",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "border"
+      }
+    },
+    "borderRadius": {
+      "description": "Border radius size",
+      "valueFormat": {
+        "structure": "string enum",
+        "possibleValues": ["none", "small", "medium", "large"],
+        "example": "border-radius=\"medium\""
+      }
+    },
+    "borderTriangle": {
+      "description": "Show triangle pointer on border",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "border-triangle"
+      }
+    },
+    "borderTrianglePosition": {
+      "description": "Position of border triangle",
+      "valueFormat": {
+        "structure": "string enum",
+        "possibleValues": ["top", "bottom", "left", "right"],
+        "example": "border-triangle-position=\"top\""
+      }
+    },
+    "borderTriangleAlign": {
+      "description": "Alignment of border triangle along its edge",
+      "valueFormat": {
+        "structure": "string enum",
+        "possibleValues": ["start", "center", "end"],
+        "example": "border-triangle-align=\"center\""
+      }
+    }
+  },
+
+  "exampleEnrichments": [
+    {
+      "title": "Basic Container",
+      "description": "Simple container with border",
+      "code": "<InContainer border border-radius=\"medium\">\n  <p>Container content</p>\n</InContainer>"
+    },
+    {
+      "title": "Container with Header and Footer",
+      "description": "Full container with all sections",
+      "code": "<InContainer\n  border\n  border-radius=\"medium\"\n  header-status\n  footer-status\n>\n  <template #header>\n    <h3>Title</h3>\n  </template>\n  \n  <p>Main content</p>\n  \n  <template #footer>\n    <InButtonV2 label-text=\"Action\" />\n  </template>\n</InContainer>"
+    },
+    {
+      "title": "Container with Color Indicator",
+      "description": "Status indicator container",
+      "code": "<InContainer\n  border\n  color-indicator-status\n  color-indicator-color=\"#4CAF50\"\n>\n  <p>Success message content</p>\n</InContainer>"
+    }
+  ],
+
+  "commonMistakes": [
+    {
+      "mistake": "Using type prop instead of containerType",
+      "issue": "V2 renamed type to containerType",
+      "solution": "Use container-type=\"default\" instead of type=\"default\"",
+      "severity": "high"
+    },
+    {
+      "mistake": "Using boxSpacing prop from V1",
+      "issue": "boxSpacing removed in V2",
+      "solution": "Use containerType for spacing control or custom CSS",
+      "severity": "medium"
+    }
+  ],
+
+  "bestPractices": [
+    {
+      "practice": "Use semantic containerType for consistent spacing",
+      "description": "Choose type based on content density: compact for dense UI, spacious for breathing room",
+      "example": "container-type=\"compact\" for form sections"
+    },
+    {
+      "practice": "Use color indicators for status",
+      "description": "Color indicators provide quick visual feedback without changing container style",
+      "example": "Green for success, red for error, yellow for warning"
+    },
+    {
+      "practice": "Leverage header/footer slots for structured layout",
+      "description": "Use header-status and footer-status with named slots for consistent card-like layouts",
+      "example": "header-status with #header slot for titles"
+    }
+  ]
+}

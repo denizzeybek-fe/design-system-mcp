@@ -1,0 +1,622 @@
+{
+  "componentName": "InDataTableV2",
+  "version": "2.0.0",
+  "lastUpdated": "2024-11-24",
+
+  "propEnrichments": {
+    "columnOptions": {
+      "description": "Column definitions array - replaces V1 tableFields",
+      "valueFormat": {
+        "structure": "Array of AG Grid column definitions",
+        "typescript": "Array<{ field: string; headerName: string; sortable?: boolean; filter?: boolean; width?: number; pinned?: 'left' | 'right'; cellRenderer?: string; valueFormatter?: Function; }>",
+        "example": ":column-options=\"[{ field: 'name', headerName: 'Name', sortable: true, filter: true }, { field: 'email', headerName: 'Email', width: 200 }]\""
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Using 'label' instead of 'headerName' from V1",
+          "correction": "V2 uses AG Grid format: headerName instead of label",
+          "severity": "high"
+        },
+        {
+          "mistake": "Using V1 renderer names",
+          "correction": "V2 uses AG Grid cellRenderer with different component mappings",
+          "severity": "medium"
+        }
+      ]
+    },
+    "data": {
+      "description": "Table data array for client-side mode",
+      "valueFormat": {
+        "structure": "Array of row objects",
+        "typescript": "Array<Record<string, any>>",
+        "example": ":data=\"tableData\""
+      }
+    },
+    "totalData": {
+      "description": "Total number of records (for server-side pagination display)",
+      "valueFormat": {
+        "structure": "number",
+        "example": ":total-data=\"1000\""
+      }
+    },
+    "rowModelType": {
+      "description": "Data loading mode - replaces V1 apiMode",
+      "valueFormat": {
+        "structure": "string enum",
+        "possibleValues": ["clientSide", "serverSide", "infinite"],
+        "example": "row-model-type=\"serverSide\""
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Using api-mode boolean from V1",
+          "correction": "V2 uses row-model-type=\"serverSide\" instead of api-mode",
+          "severity": "high"
+        }
+      ]
+    },
+    "fetchUrl": {
+      "description": "API endpoint URL for server-side data fetching",
+      "valueFormat": {
+        "structure": "string (URL)",
+        "example": "fetch-url=\"/api/users\""
+      }
+    },
+    "httpMethod": {
+      "description": "HTTP method for API requests",
+      "valueFormat": {
+        "structure": "string enum",
+        "possibleValues": ["GET", "POST"],
+        "example": "http-method=\"POST\""
+      }
+    },
+    "bulkActionsOptions": {
+      "description": "Bulk action buttons for selected rows",
+      "valueFormat": {
+        "structure": "Array of action objects",
+        "typescript": "Array<{ id: string; label: string; icon?: string; variant?: string; disabled?: boolean; }>",
+        "example": ":bulk-actions-options=\"[{ id: 'delete', label: 'Delete Selected', icon: 'trash', variant: 'danger' }]\""
+      }
+    },
+    "hasBulkActions": {
+      "description": "Enable bulk actions toolbar",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "has-bulk-actions"
+      }
+    },
+    "rowsSelection": {
+      "description": "Row selection mode",
+      "valueFormat": {
+        "structure": "string enum",
+        "possibleValues": ["single", "multiple"],
+        "example": "rows-selection=\"multiple\""
+      }
+    },
+    "canSelectAllRows": {
+      "description": "Enable select all checkbox in header",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "can-select-all-rows"
+      }
+    },
+    "rowHeight": {
+      "description": "Height of each row in pixels",
+      "valueFormat": {
+        "structure": "string enum or number",
+        "possibleValues": ["small (48px)", "medium (64px)", "custom number"],
+        "example": "row-height=\"medium\""
+      }
+    },
+    "inContainerLayout": {
+      "description": "Wrap table in InContainer component",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "in-container-layout"
+      }
+    },
+    "inContainerLayoutOptions": {
+      "description": "Options for the container wrapper",
+      "valueFormat": {
+        "structure": "Object with container props",
+        "typescript": "{ headerStatus?: boolean; title?: string; border?: boolean; }",
+        "example": ":in-container-layout-options=\"{ headerStatus: true, title: 'Users' }\""
+      }
+    },
+    "nestedTableStatus": {
+      "description": "Enable nested/expandable tables",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "nested-table-status"
+      }
+    },
+    "nestedTableFields": {
+      "description": "Column definitions for nested table",
+      "valueFormat": {
+        "structure": "Array of column definitions (same as columnOptions)",
+        "example": ":nested-table-fields=\"nestedColumns\""
+      }
+    },
+    "isTreeData": {
+      "description": "Enable tree/hierarchical data display",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "is-tree-data"
+      }
+    },
+    "groupDataPath": {
+      "description": "Path to child nodes in tree data",
+      "valueFormat": {
+        "structure": "Function returning path array",
+        "typescript": "(data: any) => string[]",
+        "example": ":group-data-path=\"data => data.hierarchy\""
+      }
+    },
+    "searchFilterStatus": {
+      "description": "Show search input - replaces V1 withSearchFilter",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "search-filter-status"
+      }
+    },
+    "searchFilterPlaceholder": {
+      "description": "Placeholder text for search input",
+      "valueFormat": {
+        "structure": "string",
+        "example": "search-filter-placeholder=\"Search users...\""
+      }
+    },
+    "statusFilterStatus": {
+      "description": "Show status filter dropdown - replaces V1 withStatusFilter",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "status-filter-status"
+      }
+    },
+    "statusFilterList": {
+      "description": "Options for status filter - replaces V1 statusList",
+      "valueFormat": {
+        "structure": "Array of status objects",
+        "typescript": "Array<{ label: string; value: string | number; }>",
+        "example": ":status-filter-list=\"[{ label: 'Active', value: 'active' }]\""
+      }
+    },
+    "paginationStatus": {
+      "description": "Show pagination controls",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "pagination-status"
+      }
+    },
+    "itemsPerPageStatus": {
+      "description": "Show items per page selector",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "items-per-page-status"
+      }
+    },
+    "defaultItemPerPage": {
+      "description": "Default number of items per page - replaces V1 perPage",
+      "valueFormat": {
+        "structure": "number",
+        "example": ":default-item-per-page=\"25\""
+      }
+    },
+    "minItemPerPage": {
+      "description": "Minimum items per page option",
+      "valueFormat": {
+        "structure": "number",
+        "example": ":min-item-per-page=\"10\""
+      }
+    },
+    "maxItemPerPage": {
+      "description": "Maximum items per page option",
+      "valueFormat": {
+        "structure": "number",
+        "example": ":max-item-per-page=\"100\""
+      }
+    },
+    "showingItemsStatus": {
+      "description": "Show 'Showing X of Y items' text",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "showing-items-status"
+      }
+    },
+    "paginationInformationStatus": {
+      "description": "Show pagination information section",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "pagination-information-status"
+      }
+    },
+    "loadingStatus": {
+      "description": "Show loading state",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": ":loading-status=\"isLoading\""
+      }
+    },
+    "skeletonStatus": {
+      "description": "Show skeleton loading state",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "skeleton-status"
+      }
+    },
+    "horizontalSkeletonsCount": {
+      "description": "Number of skeleton columns to show",
+      "valueFormat": {
+        "structure": "number",
+        "example": ":horizontal-skeletons-count=\"5\""
+      }
+    },
+    "loadingType": {
+      "description": "Type of loading indicator",
+      "valueFormat": {
+        "structure": "string enum",
+        "possibleValues": ["spinner", "skeleton"],
+        "example": "loading-type=\"skeleton\""
+      }
+    },
+    "loadingTitleText": {
+      "description": "Title text during loading",
+      "valueFormat": {
+        "structure": "string",
+        "example": "loading-title-text=\"Loading data...\""
+      }
+    },
+    "loadingDescriptionText": {
+      "description": "Description text during loading",
+      "valueFormat": {
+        "structure": "string",
+        "example": "loading-description-text=\"Please wait\""
+      }
+    },
+    "noDataTitleText": {
+      "description": "Title when no data - replaces V1 noDataTitle",
+      "valueFormat": {
+        "structure": "string",
+        "example": "no-data-title-text=\"No results found\""
+      }
+    },
+    "noDataDescriptionText": {
+      "description": "Description when no data - replaces V1 noDataDescription",
+      "valueFormat": {
+        "structure": "string",
+        "example": "no-data-description-text=\"Try adjusting your filters\""
+      }
+    },
+    "noDataOptions": {
+      "description": "Custom no-data display options",
+      "valueFormat": {
+        "structure": "Object with display options",
+        "typescript": "{ icon?: string; buttonText?: string; buttonAction?: Function; }",
+        "example": ":no-data-options=\"{ icon: 'search', buttonText: 'Clear Filters', buttonAction: clearFilters }\""
+      }
+    },
+    "autoHeight": {
+      "description": "Auto-adjust table height based on content",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "auto-height"
+      }
+    },
+    "fixedHeight": {
+      "description": "Fixed table height in pixels",
+      "valueFormat": {
+        "structure": "number",
+        "example": ":fixed-height=\"400\""
+      }
+    },
+    "horizontalScroll": {
+      "description": "Enable horizontal scrolling",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "horizontal-scroll"
+      }
+    },
+    "maxPinnedColumns": {
+      "description": "Maximum number of pinnable columns",
+      "valueFormat": {
+        "structure": "number",
+        "example": ":max-pinned-columns=\"3\""
+      }
+    },
+    "enableRangeSelection": {
+      "description": "Enable cell range selection (Excel-like)",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "enable-range-selection"
+      }
+    },
+    "enableCellTextSelection": {
+      "description": "Allow text selection within cells",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "enable-cell-text-selection"
+      }
+    },
+    "rowDragManaged": {
+      "description": "Enable row drag and drop reordering",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "row-drag-managed"
+      }
+    },
+    "customColumnMenuItems": {
+      "description": "Custom items for column context menu",
+      "valueFormat": {
+        "structure": "Array of menu item objects",
+        "typescript": "Array<{ name: string; action: Function; icon?: string; }>",
+        "example": ":custom-column-menu-items=\"[{ name: 'Export Column', action: exportColumn }]\""
+      }
+    },
+    "isResponsive": {
+      "description": "Enable responsive behavior for mobile",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "is-responsive"
+      }
+    }
+  },
+
+  "eventEnrichments": {
+    "dataLoaded": {
+      "description": "Emitted when table data is loaded",
+      "payload": "{ data: Array, api: GridApi }",
+      "usage": "@data-loaded=\"handleDataLoaded\""
+    },
+    "dataReady": {
+      "description": "Emitted when grid is ready with data",
+      "payload": "GridApi",
+      "usage": "@data-ready=\"handleReady\""
+    },
+    "firstDataRendered": {
+      "description": "Emitted when first data is rendered",
+      "payload": "GridApi",
+      "usage": "@first-data-rendered=\"handleFirstRender\""
+    },
+    "paginationChanged": {
+      "description": "Emitted when pagination changes",
+      "payload": "{ page: number, perPage: number }",
+      "usage": "@pagination-changed=\"handlePagination\""
+    },
+    "perPageSelected": {
+      "description": "Emitted when per-page selection changes",
+      "payload": "number",
+      "usage": "@per-page-selected=\"handlePerPage\""
+    },
+    "sortingChanged": {
+      "description": "Emitted when sort column/direction changes",
+      "payload": "{ colId: string, sort: 'asc' | 'desc' | null }",
+      "usage": "@sorting-changed=\"handleSort\""
+    },
+    "filterChanged": {
+      "description": "Emitted when column filter changes",
+      "payload": "{ filterModel: Object }",
+      "usage": "@filter-changed=\"handleFilter\""
+    },
+    "rowSelected": {
+      "description": "Emitted when row selection changes",
+      "payload": "{ node: RowNode, data: any, selected: boolean }",
+      "usage": "@row-selected=\"handleRowSelect\""
+    },
+    "selectStatus": {
+      "description": "Emitted with selection status",
+      "payload": "{ selectedRows: Array, selectedCount: number }",
+      "usage": "@select-status=\"handleSelection\""
+    },
+    "allRowsSelected": {
+      "description": "Emitted when all rows are selected",
+      "payload": "boolean",
+      "usage": "@all-rows-selected=\"handleSelectAll\""
+    },
+    "bulkAction": {
+      "description": "Emitted when bulk action is triggered",
+      "payload": "{ actionId: string, selectedRows: Array }",
+      "usage": "@bulk-action=\"handleBulkAction\""
+    },
+    "cellClicked": {
+      "description": "Emitted when cell is clicked",
+      "payload": "{ colId: string, data: any, value: any }",
+      "usage": "@cell-clicked=\"handleCellClick\""
+    },
+    "cellHovered": {
+      "description": "Emitted when cell is hovered",
+      "payload": "{ colId: string, data: any }",
+      "usage": "@cell-hovered=\"handleCellHover\""
+    },
+    "columnPinned": {
+      "description": "Emitted when column is pinned",
+      "payload": "{ colId: string, pinned: 'left' | 'right' | null }",
+      "usage": "@column-pinned=\"handleColumnPin\""
+    },
+    "maxColumnsPinned": {
+      "description": "Emitted when max pinned columns reached",
+      "payload": "number",
+      "usage": "@max-columns-pinned=\"handleMaxPinned\""
+    },
+    "fetchData": {
+      "description": "Emitted to trigger data fetch",
+      "payload": "{ params: Object }",
+      "usage": "@fetch-data=\"handleFetch\""
+    },
+    "setSearchValue": {
+      "description": "Emitted when search value changes",
+      "payload": "string",
+      "usage": "@set-search-value=\"handleSearch\""
+    },
+    "rowDragEnd": {
+      "description": "Emitted when row drag ends",
+      "payload": "{ node: RowNode, overNode: RowNode }",
+      "usage": "@row-drag-end=\"handleDragEnd\""
+    },
+    "rowsUpdated": {
+      "description": "Emitted when rows are updated",
+      "payload": "Array",
+      "usage": "@rows-updated=\"handleUpdate\""
+    },
+    "refreshed": {
+      "description": "Emitted when table is refreshed",
+      "payload": "void",
+      "usage": "@refreshed=\"handleRefresh\""
+    },
+    "copied": {
+      "description": "Emitted when data is copied to clipboard",
+      "payload": "string",
+      "usage": "@copied=\"handleCopy\""
+    },
+    "nestedDataReady": {
+      "description": "Emitted when nested table data is ready",
+      "payload": "{ parentRow: any, nestedData: Array }",
+      "usage": "@nested-data-ready=\"handleNestedReady\""
+    },
+    "rowGroupStatusChanged": {
+      "description": "Emitted when row group expand/collapse changes",
+      "payload": "{ expanded: boolean, node: RowNode }",
+      "usage": "@row-group-status-changed=\"handleGroupChange\""
+    },
+    "gridSizeChanged": {
+      "description": "Emitted when grid size changes",
+      "payload": "{ width: number, height: number }",
+      "usage": "@grid-size-changed=\"handleResize\""
+    }
+  },
+
+  "exampleEnrichments": [
+    {
+      "title": "Basic Client-Side Table",
+      "description": "Simple table with local data",
+      "code": "<InDataTableV2\n  :data=\"users\"\n  :column-options=\"[\n    { field: 'name', headerName: 'Name', sortable: true, filter: true },\n    { field: 'email', headerName: 'Email', width: 200 },\n    { field: 'status', headerName: 'Status' }\n  ]\"\n  :default-item-per-page=\"10\"\n  pagination-status\n  items-per-page-status\n/>"
+    },
+    {
+      "title": "Server-Side Table with API",
+      "description": "Table fetching data from API",
+      "code": "<InDataTableV2\n  row-model-type=\"serverSide\"\n  fetch-url=\"/api/users\"\n  http-method=\"GET\"\n  :column-options=\"columns\"\n  :total-data=\"totalCount\"\n  :default-item-per-page=\"25\"\n  pagination-status\n  search-filter-status\n  search-filter-placeholder=\"Search users...\"\n  status-filter-status\n  :status-filter-list=\"statusOptions\"\n  @data-loaded=\"handleLoad\"\n  @pagination-changed=\"handlePagination\"\n/>"
+    },
+    {
+      "title": "Table with Bulk Actions and Selection",
+      "description": "Multi-select table with bulk operations",
+      "code": "<InDataTableV2\n  :data=\"data\"\n  :column-options=\"columns\"\n  rows-selection=\"multiple\"\n  can-select-all-rows\n  has-bulk-actions\n  :bulk-actions-options=\"[\n    { id: 'export', label: 'Export', icon: 'download' },\n    { id: 'delete', label: 'Delete', icon: 'trash', variant: 'danger' }\n  ]\"\n  @select-status=\"handleSelection\"\n  @bulk-action=\"handleBulkAction\"\n/>"
+    },
+    {
+      "title": "Table in Container with Header",
+      "description": "Table wrapped in styled container",
+      "code": "<InDataTableV2\n  :data=\"data\"\n  :column-options=\"columns\"\n  in-container-layout\n  :in-container-layout-options=\"{\n    headerStatus: true,\n    title: 'User Management',\n    border: true\n  }\"\n  pagination-status\n  showing-items-status\n/>"
+    },
+    {
+      "title": "Tree Data Table",
+      "description": "Hierarchical data display",
+      "code": "<InDataTableV2\n  :data=\"hierarchicalData\"\n  :column-options=\"columns\"\n  is-tree-data\n  :group-data-path=\"data => data.orgHierarchy\"\n  :group-default-expanded=\"1\"\n  auto-height\n/>"
+    },
+    {
+      "title": "Nested Expandable Tables",
+      "description": "Table with expandable nested rows",
+      "code": "<InDataTableV2\n  :data=\"orders\"\n  :column-options=\"orderColumns\"\n  nested-table-status\n  :nested-table-fields=\"orderItemColumns\"\n  @nested-data-ready=\"loadNestedData\"\n/>"
+    }
+  ],
+
+  "commonMistakes": [
+    {
+      "mistake": "Using tableFields instead of columnOptions",
+      "issue": "V1 prop name won't work in V2",
+      "solution": "Rename tableFields to columnOptions and update column structure",
+      "severity": "high"
+    },
+    {
+      "mistake": "Using 'label' instead of 'headerName' in columns",
+      "issue": "Column headers show as undefined",
+      "solution": "V2 uses AG Grid format: use headerName instead of label",
+      "severity": "high"
+    },
+    {
+      "mistake": "Using api-mode boolean instead of row-model-type",
+      "issue": "Server-side fetching doesn't work",
+      "solution": "Use row-model-type=\"serverSide\" instead of api-mode",
+      "severity": "high"
+    },
+    {
+      "mistake": "Using perPage instead of defaultItemPerPage",
+      "issue": "Items per page not set correctly",
+      "solution": "Rename perPage to defaultItemPerPage",
+      "severity": "medium"
+    },
+    {
+      "mistake": "Using withSearchFilter instead of searchFilterStatus",
+      "issue": "Search filter not shown",
+      "solution": "V2 uses -status suffix: search-filter-status",
+      "severity": "medium"
+    },
+    {
+      "mistake": "Expecting @onLoad event",
+      "issue": "Event handler not called",
+      "solution": "V2 uses @data-loaded instead of @on-load",
+      "severity": "high"
+    },
+    {
+      "mistake": "Not handling AG Grid column definition format",
+      "issue": "Advanced features like filters don't work",
+      "solution": "V2 uses AG Grid format - add filter: true, sortable: true explicitly",
+      "severity": "medium"
+    }
+  ],
+
+  "bestPractices": [
+    {
+      "practice": "Use AG Grid column definition format",
+      "description": "V2 is built on AG Grid - leverage its column features",
+      "example": "{ field: 'date', headerName: 'Date', sortable: true, filter: 'agDateColumnFilter', valueFormatter: params => formatDate(params.value) }"
+    },
+    {
+      "practice": "Implement proper loading states",
+      "description": "Use skeleton-status for initial load, loading-status for refreshes",
+      "example": ":skeleton-status=\"isInitialLoad\" :loading-status=\"isRefreshing\""
+    },
+    {
+      "practice": "Use container layout for consistent styling",
+      "description": "Wrap table in container for better visual consistency",
+      "example": "in-container-layout :in-container-layout-options=\"{ headerStatus: true, title: 'Table Title' }\""
+    },
+    {
+      "practice": "Handle bulk actions properly",
+      "description": "Use @bulk-action event with action ID and selected rows",
+      "example": "@bulk-action=\"({ actionId, selectedRows }) => handleAction(actionId, selectedRows)\""
+    },
+    {
+      "practice": "Use appropriate row model type",
+      "description": "clientSide for <1000 rows, serverSide for larger datasets",
+      "example": "row-model-type=\"serverSide\" for paginated API data"
+    }
+  ],
+
+  "performanceNotes": [
+    {
+      "note": "AG Grid virtualization",
+      "description": "V2 uses AG Grid's row virtualization - only visible rows are rendered",
+      "recommendation": "Can handle 100K+ rows with serverSide row model"
+    },
+    {
+      "note": "Use proper row height",
+      "description": "Fixed row height improves scroll performance",
+      "recommendation": "Use row-height=\"small\" or \"medium\" instead of auto-height for large datasets"
+    },
+    {
+      "note": "Avoid expensive valueFormatters",
+      "description": "valueFormatter is called for every visible cell on scroll",
+      "recommendation": "Memoize or pre-compute formatted values"
+    }
+  ],
+
+  "accessibilityNotes": [
+    {
+      "note": "Keyboard navigation",
+      "description": "AG Grid provides built-in keyboard navigation",
+      "recommendation": "Don't disable default keyboard handling"
+    },
+    {
+      "note": "Screen reader support",
+      "description": "Use proper headerName for screen reader announcements",
+      "recommendation": "Provide descriptive headerName for each column"
+    }
+  ]
+}

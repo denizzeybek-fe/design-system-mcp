@@ -1,0 +1,175 @@
+{
+  "migrationId": "InTooltip-to-V2",
+  "v1Component": "InTooltip",
+  "v2Component": "InTooltipV2",
+  "estimatedEffort": "low",
+  "breakingChanges": 2,
+  "complexity": "low",
+  "description": "Migration from InTooltip (V1) to InTooltipV2 involves prop renaming and new positioning options.",
+
+  "propMigrations": {
+    "content": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "text",
+      "transformCode": "// Rename content to text\ntext=\"Tooltip content\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses 'text' prop instead of 'content'"
+    },
+    "position": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "staticPosition",
+      "transformCode": "// Rename position to staticPosition\nstatic-position=\"top\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 distinguishes between static and dynamic positioning"
+    },
+    "disabled": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "status",
+      "transformCode": "// Invert logic - V2 uses status (true = enabled)\n:status=\"!isDisabled\"",
+      "autoMigratable": false,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses status (enabled) vs V1 disabled - logic must be inverted"
+    },
+    "id": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "id",
+      "transformCode": "// Same prop\nid=\"tooltip-1\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": false,
+      "notes": "Same prop name"
+    }
+  },
+
+  "eventMigrations": {},
+
+  "newFeaturesInV2": [
+    {
+      "feature": "Dynamic Positioning",
+      "props": ["dynamicPosition"],
+      "description": "Auto-adjust position based on viewport",
+      "usage": "dynamic-position=\"top\""
+    },
+    {
+      "feature": "Icon Support",
+      "props": ["iconStatus"],
+      "description": "Show info icon with tooltip",
+      "usage": "icon-status"
+    },
+    {
+      "feature": "Offset Control",
+      "props": ["offset"],
+      "description": "Adjust tooltip distance from trigger",
+      "usage": ":offset=\"8\""
+    },
+    {
+      "feature": "Max Height",
+      "props": ["maxHeight"],
+      "description": "Limit tooltip height with scroll",
+      "usage": ":max-height=\"200\""
+    },
+    {
+      "feature": "Tooltip Alignment",
+      "props": ["tooltipAlignment"],
+      "description": "Align tooltip content (start, center, end)",
+      "usage": "tooltip-alignment=\"start\""
+    },
+    {
+      "feature": "Absolute Positioning",
+      "props": ["absolutePositionStatus", "absolutePosition", "absoluteTriangleAlignment", "absoluteTrianglePosition"],
+      "description": "Precise positioning with coordinates",
+      "usage": "absolute-position-status :absolute-position=\"{ top: 100, left: 200 }\""
+    },
+    {
+      "feature": "XSS Prevention",
+      "props": ["preventXss"],
+      "description": "Sanitize tooltip text content",
+      "usage": "prevent-xss"
+    }
+  ],
+
+  "migrationSteps": [
+    {
+      "step": 1,
+      "title": "Update import",
+      "before": "import { InTooltip } from '@useinsider/design-system-vue';",
+      "after": "import { InTooltipV2 } from '@useinsider/design-system-vue';",
+      "automated": true
+    },
+    {
+      "step": 2,
+      "title": "Update component name",
+      "before": "<InTooltip ...",
+      "after": "<InTooltipV2 ...",
+      "automated": true
+    },
+    {
+      "step": 3,
+      "title": "Rename content to text",
+      "before": "content=\"Tooltip message\"",
+      "after": "text=\"Tooltip message\"",
+      "automated": true
+    },
+    {
+      "step": 4,
+      "title": "Rename position to staticPosition",
+      "before": "position=\"top\"",
+      "after": "static-position=\"top\"",
+      "automated": true,
+      "notes": "Or use dynamic-position for auto-adjustment"
+    },
+    {
+      "step": 5,
+      "title": "Update disabled to status",
+      "before": ":disabled=\"isDisabled\"",
+      "after": ":status=\"!isDisabled\"",
+      "automated": false,
+      "notes": "Invert the logic: disabled=true → status=false"
+    }
+  ],
+
+  "fullExampleBefore": "<!-- V1 Implementation -->\n<template>\n  <InTooltip\n    id=\"help-tooltip\"\n    content=\"This is helpful information\"\n    position=\"top\"\n    :disabled=\"isDisabled\"\n  >\n    <button>Hover me</button>\n  </InTooltip>\n</template>\n\n<script>\nimport { InTooltip } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InTooltip },\n  data() {\n    return {\n      isDisabled: false\n    };\n  }\n};\n</script>",
+
+  "fullExampleAfter": "<!-- V2 Implementation -->\n<template>\n  <InTooltipV2\n    id=\"help-tooltip\"\n    text=\"This is helpful information\"\n    static-position=\"top\"\n    :status=\"!isDisabled\"\n    :offset=\"8\"\n  >\n    <button>Hover me</button>\n  </InTooltipV2>\n</template>\n\n<script>\nimport { InTooltipV2 } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InTooltipV2 },\n  data() {\n    return {\n      isDisabled: false\n    };\n  }\n};\n</script>",
+
+  "commonPitfalls": [
+    {
+      "pitfall": "Using content prop instead of text",
+      "impact": "Tooltip appears empty",
+      "solution": "Use text=\"Your content\" in V2"
+    },
+    {
+      "pitfall": "Not inverting disabled to status logic",
+      "impact": "Tooltip visibility inverted",
+      "solution": "status is enabled flag, so :status=\"!disabled\""
+    },
+    {
+      "pitfall": "Using position instead of staticPosition",
+      "impact": "Position may not apply",
+      "solution": "Use static-position or dynamic-position"
+    },
+    {
+      "pitfall": "Confusing staticPosition vs dynamicPosition",
+      "impact": "Unexpected positioning behavior",
+      "solution": "Use dynamicPosition for auto-adjust, staticPosition for fixed"
+    }
+  ],
+
+  "testingChecklist": [
+    "✓ Tooltip displays on hover",
+    "✓ Text content shows correctly",
+    "✓ Position is correct (top/bottom/left/right)",
+    "✓ Status toggle works (enabled/disabled)",
+    "✓ Offset distance is correct",
+    "✓ Max height scrolls if exceeded"
+  ]
+}

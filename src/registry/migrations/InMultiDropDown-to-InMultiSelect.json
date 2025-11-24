@@ -1,0 +1,495 @@
+{
+  "migrationId": "InMultiDropDown-to-InMultiSelect",
+  "v1Component": "InMultiDropDown",
+  "v2Component": "InMultiSelect",
+  "estimatedEffort": "medium",
+  "breakingChanges": 12,
+  "complexity": "medium",
+  "description": "Migration from InMultiDropDown (V1) to InMultiSelect (V2) involves significant prop renaming (status suffix pattern, text suffix), event name changes, and new validation features.",
+
+  "propMigrations": {
+    "label": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "labelText",
+      "transformCode": "// Rename to text suffix\nlabel-text=\"Select Items\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses -text suffix for text props"
+    },
+    "labelTooltip": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "tooltipText",
+      "transformCode": "// Rename and add status\ntooltip-status tooltip-text=\"Help text\"",
+      "autoMigratable": false,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 requires tooltipStatus to show tooltip"
+    },
+    "disable": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "disabledStatus",
+      "transformCode": "// Rename to status suffix\n:disabled-status=\"isDisabled\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses -status suffix pattern"
+    },
+    "placeholder": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "placeholderText",
+      "transformCode": "// Rename to text suffix\nplaceholder-text=\"Select options...\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses -text suffix"
+    },
+    "visibleLabel": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "labelStatus",
+      "transformCode": "// Rename to status\nlabel-status",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses -status suffix"
+    },
+    "addNewTagStatus": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "createOptionStatus",
+      "transformCode": "// Rename\ncreate-option-status",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses createOptionStatus"
+    },
+    "minimumNewTagCharacterLimit": {
+      "v1Type": "number",
+      "v2Type": "number",
+      "v2Prop": "minCharacterLimit",
+      "transformCode": "// Rename\n:min-character-limit=\"2\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Shortened prop name"
+    },
+    "maxNewTagCharacterLimit": {
+      "v1Type": "number",
+      "v2Type": "number",
+      "v2Prop": "maxCharacterLimit",
+      "transformCode": "// Rename\n:max-character-limit=\"50\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Shortened prop name"
+    },
+    "newOptionText": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "createButtonLabel",
+      "transformCode": "// Rename\ncreate-button-label=\"Create new\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses createButtonLabel"
+    },
+    "warning": {
+      "v1Type": "boolean",
+      "v2Type": "string",
+      "v2Prop": "state",
+      "transformCode": "// Convert to state enum\nstate=\"warning\"",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "V2 uses state enum: success, warning, error"
+    },
+    "warningMessage": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "stateMessage",
+      "transformCode": "// Rename\nstate-message=\"Warning text\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Combined with state prop"
+    },
+    "invalid": {
+      "v1Type": "boolean",
+      "v2Type": "string",
+      "v2Prop": "state",
+      "transformCode": "// Convert to state enum\nstate=\"error\"",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "V2 uses state=\"error\" instead of invalid boolean"
+    },
+    "invalidMessage": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "stateMessage",
+      "transformCode": "// Rename\nstate-message=\"Error text\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Combined with state prop"
+    },
+    "fetchUrl": {
+      "v1Type": "string",
+      "v2Type": "N/A",
+      "v2Prop": "N/A",
+      "transformCode": "// Handle via lazyLoad props\nlazy-load lazy-load-search",
+      "autoMigratable": false,
+      "complexity": "high",
+      "breakingChange": true,
+      "notes": "V2 uses lazyLoad system instead of direct fetchUrl"
+    },
+    "responseKey": {
+      "v1Type": "string",
+      "v2Type": "N/A",
+      "v2Prop": "N/A",
+      "transformCode": "// Handle in parent component",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "V2 expects pre-processed options"
+    },
+    "queryString": {
+      "v1Type": "string",
+      "v2Type": "N/A",
+      "v2Prop": "N/A",
+      "transformCode": "// Handle via @search event",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "Use @search event for custom API logic"
+    },
+    "noDataText": {
+      "v1Type": "string",
+      "v2Type": "N/A",
+      "v2Prop": "N/A",
+      "transformCode": "// Not directly available in V2",
+      "autoMigratable": false,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Use slot or helperMessage for no data state"
+    },
+    "noSearchResultText": {
+      "v1Type": "string",
+      "v2Type": "N/A",
+      "v2Prop": "N/A",
+      "transformCode": "// Not directly available in V2",
+      "autoMigratable": false,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Use slot or helperMessage"
+    },
+    "options": {
+      "v1Type": "array",
+      "v2Type": "array",
+      "v2Prop": "options",
+      "transformCode": "// Same prop, same structure\n:options=\"optionsList\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": false,
+      "notes": "Same structure: { label, value, disabled }"
+    },
+    "value": {
+      "v1Type": "array",
+      "v2Type": "array",
+      "v2Prop": "value",
+      "transformCode": "// Same prop\nv-model=\"selectedValues\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": false,
+      "notes": "Same usage with v-model"
+    },
+    "searchStatus": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "searchStatus",
+      "transformCode": "// Same prop\nsearch-status",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": false,
+      "notes": "Same prop name"
+    },
+    "maxSelectableItem": {
+      "v1Type": "number",
+      "v2Type": "number",
+      "v2Prop": "maxSelectableItem",
+      "transformCode": "// Same prop\n:max-selectable-item=\"5\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": false,
+      "notes": "Same prop name"
+    },
+    "theme": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "theme",
+      "transformCode": "// Same prop\ntheme=\"dark\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": false,
+      "notes": "Same prop name"
+    }
+  },
+
+  "eventMigrations": {
+    "@closeList": {
+      "v1Event": "@closeList",
+      "v2Event": "@close",
+      "v1Payload": "void",
+      "v2Payload": "void",
+      "payloadChange": "Same payload, renamed event",
+      "breakingChange": true,
+      "complexity": "low"
+    },
+    "@change": {
+      "v1Event": "@change",
+      "v2Event": "@change",
+      "v1Payload": "Array",
+      "v2Payload": "Array",
+      "payloadChange": "Same payload",
+      "breakingChange": false,
+      "complexity": "low"
+    },
+    "@search": {
+      "v1Event": "@search",
+      "v2Event": "@search",
+      "v1Payload": "string",
+      "v2Payload": "string",
+      "payloadChange": "Same payload",
+      "breakingChange": false,
+      "complexity": "low"
+    },
+    "@addNewOption": {
+      "v1Event": "@addNewOption",
+      "v2Event": "N/A",
+      "v1Payload": "string",
+      "v2Payload": "N/A",
+      "payloadChange": "Handle via @select with new option",
+      "breakingChange": true,
+      "complexity": "medium"
+    },
+    "@click": {
+      "v1Event": "@click",
+      "v2Event": "@openList",
+      "v1Payload": "Event",
+      "v2Payload": "void",
+      "payloadChange": "Use @openList for dropdown open",
+      "breakingChange": true,
+      "complexity": "low"
+    }
+  },
+
+  "newFeaturesInV2": [
+    {
+      "feature": "Select All Option",
+      "props": ["selectAllOptionStatus"],
+      "description": "Built-in select all checkbox",
+      "usage": "select-all-option-status @select-all-options=\"handleSelectAll\""
+    },
+    {
+      "feature": "Lazy Loading",
+      "props": ["lazyLoad", "lazyLoadSearch", "fetchPage"],
+      "description": "Paginated option loading on scroll",
+      "usage": "lazy-load :fetch-page=\"currentPage\" @end-scroll=\"loadMore\""
+    },
+    {
+      "feature": "Button Action",
+      "props": ["buttonStatus", "buttonLabel", "buttonIcon"],
+      "description": "Action button in dropdown footer",
+      "usage": "button-status button-label=\"Apply\" @secondary-button-click=\"apply\""
+    },
+    {
+      "feature": "Dynamic Positioning",
+      "props": ["staticPosition", "dynamicPosition", "dynamicChildPosition"],
+      "description": "Auto-position dropdown based on viewport",
+      "usage": "dynamic-position=\"bottom\" dynamic-child-position=\"right\""
+    },
+    {
+      "feature": "Option Validation",
+      "props": ["optionValidationType", "optionValidationText"],
+      "description": "Validate new option input",
+      "usage": "option-validation-type=\"email\" option-validation-text=\"Invalid email\""
+    },
+    {
+      "feature": "Helper Message",
+      "props": ["helperMessageStatus", "helperMessage"],
+      "description": "Persistent helper text below dropdown",
+      "usage": "helper-message-status helper-message=\"Select up to 5 items\""
+    },
+    {
+      "feature": "Max Height Control",
+      "props": ["maxHeight", "maxChildHeight", "tooltipMaxHeight"],
+      "description": "Control dropdown and tooltip heights",
+      "usage": ":max-height=\"300\""
+    },
+    {
+      "feature": "Loading State",
+      "props": ["loadingState"],
+      "description": "Show loading indicator in dropdown",
+      "usage": ":loading-state=\"isLoading\""
+    },
+    {
+      "feature": "XSS Prevention",
+      "props": ["preventXss"],
+      "description": "Sanitize option labels",
+      "usage": "prevent-xss"
+    }
+  ],
+
+  "migrationSteps": [
+    {
+      "step": 1,
+      "title": "Update import",
+      "before": "import { InMultiDropDown } from '@useinsider/design-system-vue';",
+      "after": "import { InMultiSelect } from '@useinsider/design-system-vue';",
+      "automated": true
+    },
+    {
+      "step": 2,
+      "title": "Update component name",
+      "before": "<InMultiDropDown ...",
+      "after": "<InMultiSelect ...",
+      "automated": true
+    },
+    {
+      "step": 3,
+      "title": "Rename label to labelText",
+      "before": "label=\"Select Items\"",
+      "after": "label-text=\"Select Items\"",
+      "automated": true
+    },
+    {
+      "step": 4,
+      "title": "Rename labelTooltip",
+      "before": "label-tooltip=\"Help text\"",
+      "after": "tooltip-status tooltip-text=\"Help text\"",
+      "automated": false,
+      "notes": "Must add tooltipStatus to enable tooltip"
+    },
+    {
+      "step": 5,
+      "title": "Rename disable to disabledStatus",
+      "before": ":disable=\"isDisabled\"",
+      "after": ":disabled-status=\"isDisabled\"",
+      "automated": true
+    },
+    {
+      "step": 6,
+      "title": "Rename placeholder to placeholderText",
+      "before": "placeholder=\"Select...\"",
+      "after": "placeholder-text=\"Select...\"",
+      "automated": true
+    },
+    {
+      "step": 7,
+      "title": "Rename visibleLabel to labelStatus",
+      "before": "visible-label",
+      "after": "label-status",
+      "automated": true
+    },
+    {
+      "step": 8,
+      "title": "Convert warning/invalid to state",
+      "before": "warning warning-message=\"Text\" OR invalid invalid-message=\"Text\"",
+      "after": "state=\"warning\" state-message=\"Text\" OR state=\"error\" state-message=\"Text\"",
+      "automated": false,
+      "notes": "Combine boolean + message into state enum + message"
+    },
+    {
+      "step": 9,
+      "title": "Rename addNewTagStatus",
+      "before": "add-new-tag-status",
+      "after": "create-option-status",
+      "automated": true
+    },
+    {
+      "step": 10,
+      "title": "Rename character limits",
+      "before": ":minimum-new-tag-character-limit=\"2\" :max-new-tag-character-limit=\"50\"",
+      "after": ":min-character-limit=\"2\" :max-character-limit=\"50\"",
+      "automated": true
+    },
+    {
+      "step": 11,
+      "title": "Update event handlers",
+      "before": "@close-list=\"handler\" @add-new-option=\"handler\"",
+      "after": "@close=\"handler\" @select=\"handler\"",
+      "automated": false,
+      "notes": "addNewOption is handled differently in V2"
+    },
+    {
+      "step": 12,
+      "title": "Handle fetchUrl migration",
+      "before": "fetch-url=\"/api/options\" response-key=\"data\"",
+      "after": "lazy-load @end-scroll=\"fetchMore\" @search=\"searchOptions\"",
+      "automated": false,
+      "notes": "V2 uses lazyLoad system - implement fetch logic in parent"
+    }
+  ],
+
+  "fullExampleBefore": "<!-- V1 Implementation -->\n<template>\n  <InMultiDropDown\n    id=\"categories\"\n    label=\"Categories\"\n    label-tooltip=\"Select product categories\"\n    placeholder=\"Select categories...\"\n    :options=\"categories\"\n    v-model=\"selectedCategories\"\n    :disable=\"isDisabled\"\n    visible-label\n    search-status\n    search-placeholder=\"Search...\"\n    add-new-tag-status\n    :minimum-new-tag-character-limit=\"2\"\n    :max-new-tag-character-limit=\"30\"\n    new-option-text=\"Create category\"\n    :max-selectable-item=\"5\"\n    warning\n    warning-message=\"Maximum 5 categories\"\n    @change=\"handleChange\"\n    @close-list=\"handleClose\"\n    @add-new-option=\"handleNewOption\"\n    @search=\"handleSearch\"\n  />\n</template>\n\n<script>\nimport { InMultiDropDown } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InMultiDropDown },\n  data() {\n    return {\n      categories: [\n        { label: 'Electronics', value: 'electronics' },\n        { label: 'Clothing', value: 'clothing' }\n      ],\n      selectedCategories: [],\n      isDisabled: false\n    };\n  },\n  methods: {\n    handleChange(values) {\n      console.log('Selected:', values);\n    },\n    handleClose() {\n      console.log('Dropdown closed');\n    },\n    handleNewOption(value) {\n      this.categories.push({ label: value, value });\n    },\n    handleSearch(query) {\n      console.log('Search:', query);\n    }\n  }\n};\n</script>",
+
+  "fullExampleAfter": "<!-- V2 Implementation -->\n<template>\n  <InMultiSelect\n    id=\"categories\"\n    label-text=\"Categories\"\n    label-status\n    tooltip-status\n    tooltip-text=\"Select product categories\"\n    placeholder-text=\"Select categories...\"\n    :options=\"categories\"\n    v-model=\"selectedCategories\"\n    :disabled-status=\"isDisabled\"\n    search-status\n    create-option-status\n    :min-character-limit=\"2\"\n    :max-character-limit=\"30\"\n    create-button-label=\"Create category\"\n    :max-selectable-item=\"5\"\n    state=\"warning\"\n    state-message=\"Maximum 5 categories\"\n    select-all-option-status\n    helper-message-status\n    helper-message=\"You can create new categories\"\n    @change=\"handleChange\"\n    @close=\"handleClose\"\n    @select=\"handleSelect\"\n    @search=\"handleSearch\"\n  />\n</template>\n\n<script>\nimport { InMultiSelect } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InMultiSelect },\n  data() {\n    return {\n      categories: [\n        { label: 'Electronics', value: 'electronics' },\n        { label: 'Clothing', value: 'clothing' }\n      ],\n      selectedCategories: [],\n      isDisabled: false\n    };\n  },\n  methods: {\n    handleChange(values) {\n      console.log('Selected:', values);\n    },\n    handleClose() {\n      console.log('Dropdown closed');\n    },\n    handleSelect(option) {\n      // Handle new option creation if needed\n      if (!this.categories.find(c => c.value === option.value)) {\n        this.categories.push(option);\n      }\n    },\n    handleSearch(query) {\n      console.log('Search:', query);\n    }\n  }\n};\n</script>",
+
+  "commonPitfalls": [
+    {
+      "pitfall": "Using label instead of labelText",
+      "impact": "Label not displayed",
+      "solution": "Rename to label-text"
+    },
+    {
+      "pitfall": "Using labelTooltip without tooltipStatus",
+      "impact": "Tooltip not shown",
+      "solution": "Add tooltip-status when using tooltip-text"
+    },
+    {
+      "pitfall": "Using disable instead of disabledStatus",
+      "impact": "Dropdown stays enabled",
+      "solution": "Use disabled-status"
+    },
+    {
+      "pitfall": "Using warning/invalid booleans",
+      "impact": "Validation state not shown",
+      "solution": "Use state=\"warning\" or state=\"error\" with state-message"
+    },
+    {
+      "pitfall": "Expecting fetchUrl to work",
+      "impact": "No API fetching",
+      "solution": "Implement lazy loading with @end-scroll and @search events"
+    },
+    {
+      "pitfall": "Using @closeList event",
+      "impact": "Event handler not called",
+      "solution": "Use @close instead"
+    },
+    {
+      "pitfall": "Using @addNewOption event",
+      "impact": "New option creation not working",
+      "solution": "Handle via @select event and check for new options"
+    }
+  ],
+
+  "testingChecklist": [
+    "✓ Label displays correctly",
+    "✓ Tooltip shows on hover",
+    "✓ Placeholder text visible",
+    "✓ Options render correctly",
+    "✓ Selection works (single/multiple)",
+    "✓ Search filters options",
+    "✓ Create new option works",
+    "✓ Max selectable limit enforced",
+    "✓ Disabled state works",
+    "✓ State (warning/error) displays",
+    "✓ All event handlers fire",
+    "✓ v-model syncs correctly"
+  ]
+}

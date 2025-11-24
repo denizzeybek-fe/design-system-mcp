@@ -360,7 +360,17 @@ function hasStorybookStories(componentName: string): boolean {
  * Processes a single Vue component file
  */
 function processComponent(componentDir: string, componentName: string): ComponentData | null {
-  const componentFile = join(componentDir, `${componentName}.vue`);
+  let componentFile = join(componentDir, `${componentName}.vue`);
+
+  // If file not found and folder ends with V2, try without V2 suffix
+  // e.g., InDataTableV2/InDataTable.vue
+  if (!existsSync(componentFile) && componentName.endsWith('V2')) {
+    const baseNameFile = join(componentDir, `${componentName.replace(/V2$/, '')}.vue`);
+    if (existsSync(baseNameFile)) {
+      componentFile = baseNameFile;
+      console.log(`  📝 Using ${componentName.replace(/V2$/, '')}.vue for ${componentName}`);
+    }
+  }
 
   if (!existsSync(componentFile)) {
     console.warn(`⚠️  Component file not found: ${componentFile}`);

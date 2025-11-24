@@ -1,0 +1,448 @@
+{
+  "migrationId": "InSuperInput-to-InRichTextInput",
+  "v1Component": "InSuperInput",
+  "v2Component": "InRichTextInput",
+  "estimatedEffort": "high",
+  "breakingChanges": 18,
+  "complexity": "high",
+  "description": "Major migration from InSuperInput (V1) to InRichTextInput (V2). V2 has completely restructured props with new naming conventions, toolbar configuration, and enhanced dynamic content features. Requires significant refactoring.",
+
+  "propMigrations": {
+    "label": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "labelText",
+      "transformCode": "// Rename and add status\nlabel-status label-text=\"Message\"",
+      "autoMigratable": false,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 requires labelStatus to show label"
+    },
+    "attributeList": {
+      "v1Type": "array",
+      "v2Type": "array",
+      "v2Prop": "dynamicContentList",
+      "transformCode": "// Rename\n:dynamic-content-list=\"attributes\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Same structure, different prop name"
+    },
+    "textValidateConfig": {
+      "v1Type": "object",
+      "v2Type": "object",
+      "v2Prop": "helperTextValidationConfig",
+      "transformCode": "// Rename and add status\nhelper-text-validation-config-status\n:helper-text-validation-config=\"{ maxLength: 160 }\"",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "V2 requires helperTextValidationConfigStatus"
+    },
+    "disable": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "disabledStatus",
+      "transformCode": "// Rename to status suffix\n:disabled-status=\"isDisabled\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses -status suffix"
+    },
+    "invalid": {
+      "v1Type": "boolean",
+      "v2Type": "string",
+      "v2Prop": "states",
+      "transformCode": "// Convert to state enum\nstates=\"error\"",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "V2 uses states enum"
+    },
+    "invalidMessage": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "stateMessage",
+      "transformCode": "// Rename\nstate-message=\"Error message\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Combined with states prop"
+    },
+    "warning": {
+      "v1Type": "boolean",
+      "v2Type": "string",
+      "v2Prop": "states",
+      "transformCode": "// Convert to state enum\nstates=\"warning\"",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "V2 uses states enum"
+    },
+    "warningMessage": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "stateMessage",
+      "transformCode": "// Rename\nstate-message=\"Warning message\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Combined with states prop"
+    },
+    "isCounter": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "characterCounterStatus",
+      "transformCode": "// Rename\ncharacter-counter-status",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses characterCounterStatus"
+    },
+    "hasEmoji": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "emojiButtonStatus",
+      "transformCode": "// Rename\nemoji-button-status",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses emojiButtonStatus"
+    },
+    "tagsLimit": {
+      "v1Type": "number",
+      "v2Type": "number",
+      "v2Prop": "maxSelectableDynamicContent",
+      "transformCode": "// Rename\n:max-selectable-dynamic-content=\"5\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses maxSelectableDynamicContent"
+    },
+    "showLabel": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "labelStatus",
+      "transformCode": "// Rename\nlabel-status",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses labelStatus"
+    },
+    "dynamicContentSupport": {
+      "v1Type": "boolean",
+      "v2Type": "N/A",
+      "v2Prop": "dynamicContentList",
+      "transformCode": "// Implicit - provide dynamicContentList instead",
+      "autoMigratable": false,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 automatically enables when dynamicContentList provided"
+    },
+    "isTagContainer": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "isDynamicContentOnly",
+      "transformCode": "// Similar concept\nis-dynamic-content-only",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "Behavior may differ - test thoroughly"
+    },
+    "dropDownType": {
+      "v1Type": "string",
+      "v2Type": "object",
+      "v2Prop": "dynamicContentBoxProps",
+      "transformCode": "// Convert to object\n:dynamic-content-box-props=\"{ searchable: true }\"",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "V2 uses object configuration"
+    },
+    "strictAddMode": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "canOnlyReplaceDynamicContent",
+      "transformCode": "// Similar concept\ncan-only-replace-dynamic-content",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "Verify behavior matches requirements"
+    },
+    "disableAddAttribute": {
+      "v1Type": "boolean",
+      "v2Type": "array",
+      "v2Prop": "disabledToolbarOptions",
+      "transformCode": "// Use toolbar options\n:disabled-toolbar-options=\"['dynamicContent']\"",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "V2 uses granular toolbar control"
+    },
+    "rowLength": {
+      "v1Type": "number",
+      "v2Type": "N/A",
+      "v2Prop": "N/A",
+      "transformCode": "// Use CSS for height control",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "V2 handles height differently"
+    },
+    "createNewOptionStatus": {
+      "v1Type": "boolean",
+      "v2Type": "N/A",
+      "v2Prop": "N/A",
+      "transformCode": "// Handle via @add-dynamic-attribute event",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "V2 uses event-based approach"
+    }
+  },
+
+  "eventMigrations": {
+    "@purify": {
+      "v1Event": "@purify",
+      "v2Event": "@purify",
+      "v1Payload": "string",
+      "v2Payload": "string",
+      "payloadChange": "Same payload",
+      "breakingChange": false,
+      "complexity": "low"
+    }
+  },
+
+  "newFeaturesInV2": [
+    {
+      "feature": "Toolbar Configuration",
+      "props": ["toolbarOptions", "disabledToolbarOptions"],
+      "description": "Granular control over toolbar buttons",
+      "usage": ":toolbar-options=\"['bold', 'italic', 'link', 'emoji', 'dynamicContent']\""
+    },
+    {
+      "feature": "Footer Configuration",
+      "props": ["footerOptions", "footerLabel", "hasFooter", "customFooter"],
+      "description": "Configurable footer with counter, tags, labels",
+      "usage": ":footer-options=\"['counter', 'tags']\" footer-label=\"Characters\""
+    },
+    {
+      "feature": "WhatsApp Styling",
+      "props": ["whatsappStylingSupport"],
+      "description": "Support for WhatsApp text formatting (*bold*, _italic_)",
+      "usage": "whatsapp-styling-support"
+    },
+    {
+      "feature": "URL Highlighting",
+      "props": ["isHighlightUrlEnabled", "urlPatternRegex"],
+      "description": "Detect and highlight URLs in content",
+      "usage": "is-highlight-url-enabled"
+    },
+    {
+      "feature": "Character Highlighting",
+      "props": ["isHighlightCharactersEnabled", "specialCharacters"],
+      "description": "Highlight special characters in text",
+      "usage": "is-highlight-characters-enabled :special-characters=\"{ enabled: true }\""
+    },
+    {
+      "feature": "Tag States",
+      "props": ["errorTags", "warningTags", "dynamicContentStates"],
+      "description": "Visual feedback for tag validity",
+      "usage": ":error-tags=\"['invalid']\" :warning-tags=\"['deprecated']\""
+    },
+    {
+      "feature": "Extended Dynamic Content",
+      "props": ["isExtendedDynamicContent", "dynamicContentBoxProps"],
+      "description": "Enhanced dynamic content selection UI",
+      "usage": "is-extended-dynamic-content :dynamic-content-box-props=\"{ searchable: true, grouped: true }\""
+    },
+    {
+      "feature": "Upload Fallback",
+      "props": ["isUploadFallback", "fallbackImageSrc", "fallbackImageName"],
+      "description": "Image upload support for fallback values",
+      "usage": "is-upload-fallback"
+    },
+    {
+      "feature": "Tooltip Support",
+      "props": ["tooltipStatus", "tooltipText"],
+      "description": "Label tooltip for help text",
+      "usage": "tooltip-status tooltip-text=\"Help text\""
+    },
+    {
+      "feature": "Tips Display",
+      "props": ["tipStatus"],
+      "description": "Show usage tips to users",
+      "usage": "tip-status"
+    },
+    {
+      "feature": "URL Shortening",
+      "props": [],
+      "description": "Built-in URL shortening trigger",
+      "usage": "@on-shorten-url-click=\"handleShorten\""
+    },
+    {
+      "feature": "Purify Object",
+      "props": [],
+      "description": "Get detailed purified content with tags",
+      "usage": "@purify-object=\"({ text, html, tags }) => ...\""
+    }
+  ],
+
+  "migrationSteps": [
+    {
+      "step": 1,
+      "title": "Update import",
+      "before": "import { InSuperInput } from '@useinsider/design-system-vue';",
+      "after": "import { InRichTextInput } from '@useinsider/design-system-vue';",
+      "automated": true
+    },
+    {
+      "step": 2,
+      "title": "Update component name",
+      "before": "<InSuperInput ...",
+      "after": "<InRichTextInput ...",
+      "automated": true
+    },
+    {
+      "step": 3,
+      "title": "Rename label prop",
+      "before": "label=\"Message\"",
+      "after": "label-status label-text=\"Message\"",
+      "automated": false,
+      "notes": "Must add labelStatus to show label"
+    },
+    {
+      "step": 4,
+      "title": "Rename attributeList",
+      "before": ":attribute-list=\"attributes\"",
+      "after": ":dynamic-content-list=\"attributes\"",
+      "automated": true
+    },
+    {
+      "step": 5,
+      "title": "Rename textValidateConfig",
+      "before": ":text-validate-config=\"{ maxLength: 160 }\"",
+      "after": "helper-text-validation-config-status :helper-text-validation-config=\"{ maxLength: 160 }\"",
+      "automated": false,
+      "notes": "Must add status prop"
+    },
+    {
+      "step": 6,
+      "title": "Rename disable",
+      "before": ":disable=\"isDisabled\"",
+      "after": ":disabled-status=\"isDisabled\"",
+      "automated": true
+    },
+    {
+      "step": 7,
+      "title": "Convert invalid/warning to states",
+      "before": "invalid invalid-message=\"Error\" OR warning warning-message=\"Warning\"",
+      "after": "states=\"error\" state-message=\"Error\" OR states=\"warning\" state-message=\"Warning\"",
+      "automated": false,
+      "notes": "Combine boolean + message into states enum"
+    },
+    {
+      "step": 8,
+      "title": "Rename isCounter",
+      "before": "is-counter",
+      "after": "character-counter-status",
+      "automated": true
+    },
+    {
+      "step": 9,
+      "title": "Rename hasEmoji",
+      "before": "has-emoji",
+      "after": "emoji-button-status",
+      "automated": true
+    },
+    {
+      "step": 10,
+      "title": "Rename tagsLimit",
+      "before": ":tags-limit=\"5\"",
+      "after": ":max-selectable-dynamic-content=\"5\"",
+      "automated": true
+    },
+    {
+      "step": 11,
+      "title": "Configure toolbar",
+      "before": "has-emoji dynamic-content-support",
+      "after": ":toolbar-options=\"['emoji', 'dynamicContent']\"",
+      "automated": false,
+      "notes": "V2 uses explicit toolbar configuration"
+    },
+    {
+      "step": 12,
+      "title": "Configure footer",
+      "before": "is-counter",
+      "after": ":footer-options=\"['counter']\" character-counter-status",
+      "automated": false,
+      "notes": "V2 uses footer options array"
+    },
+    {
+      "step": 13,
+      "title": "Remove dynamicContentSupport",
+      "before": "dynamic-content-support",
+      "after": "// Remove - implicit when dynamicContentList provided",
+      "automated": true,
+      "notes": "V2 doesn't need explicit enable"
+    }
+  ],
+
+  "fullExampleBefore": "<!-- V1 Implementation -->\n<template>\n  <InSuperInput\n    id=\"message\"\n    label=\"Message Content\"\n    placeholder-text=\"Enter your message...\"\n    v-model=\"content\"\n    dynamic-content-support\n    :attribute-list=\"[\n      { label: 'First Name', value: 'first_name' },\n      { label: 'Email', value: 'email' }\n    ]\"\n    :text-validate-config=\"{ maxLength: 160 }\"\n    :delimiters=\"['{{', '}}']\"\n    is-counter\n    has-emoji\n    :disable=\"isDisabled\"\n    :tags-limit=\"5\"\n    fall-back-label=\"Default Value\"\n    fall-back-placeholder=\"Enter default...\"\n    show-label\n    drop-down-type=\"searchable\"\n    invalid\n    invalid-message=\"Message is required\"\n    @purify=\"handlePurify\"\n  />\n</template>\n\n<script>\nimport { InSuperInput } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InSuperInput },\n  data() {\n    return {\n      content: '',\n      isDisabled: false\n    };\n  },\n  methods: {\n    handlePurify(text) {\n      this.purifiedContent = text;\n    }\n  }\n};\n</script>",
+
+  "fullExampleAfter": "<!-- V2 Implementation -->\n<template>\n  <InRichTextInput\n    id=\"message\"\n    label-status\n    label-text=\"Message Content\"\n    placeholder-text=\"Enter your message...\"\n    v-model=\"content\"\n    :dynamic-content-list=\"[\n      { label: 'First Name', value: 'first_name' },\n      { label: 'Email', value: 'email' }\n    ]\"\n    helper-text-validation-config-status\n    :helper-text-validation-config=\"{ maxLength: 160 }\"\n    :delimiters=\"['{{', '}}']\"\n    :toolbar-options=\"['bold', 'italic', 'emoji', 'dynamicContent']\"\n    :footer-options=\"['counter', 'tags']\"\n    character-counter-status\n    emoji-button-status\n    :disabled-status=\"isDisabled\"\n    :max-selectable-dynamic-content=\"5\"\n    fall-back-label=\"Default Value\"\n    fall-back-placeholder=\"Enter default...\"\n    :dynamic-content-box-props=\"{ searchable: true }\"\n    states=\"error\"\n    state-message=\"Message is required\"\n    @purify=\"handlePurify\"\n    @purify-object=\"handlePurifyObject\"\n  />\n</template>\n\n<script>\nimport { InRichTextInput } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InRichTextInput },\n  data() {\n    return {\n      content: '',\n      isDisabled: false\n    };\n  },\n  methods: {\n    handlePurify(text) {\n      this.purifiedContent = text;\n    },\n    handlePurifyObject({ text, html, tags }) {\n      this.purifiedContent = text;\n      this.usedTags = tags;\n    }\n  }\n};\n</script>",
+
+  "commonPitfalls": [
+    {
+      "pitfall": "Using attributeList instead of dynamicContentList",
+      "impact": "No dynamic content available",
+      "solution": "Rename to dynamic-content-list"
+    },
+    {
+      "pitfall": "Using textValidateConfig without status",
+      "impact": "Validation not shown",
+      "solution": "Add helper-text-validation-config-status"
+    },
+    {
+      "pitfall": "Using label without labelStatus",
+      "impact": "Label not displayed",
+      "solution": "Add label-status when using label-text"
+    },
+    {
+      "pitfall": "Using invalid/warning booleans",
+      "impact": "Validation state not shown",
+      "solution": "Use states=\"error\" or states=\"warning\""
+    },
+    {
+      "pitfall": "Using isCounter alone",
+      "impact": "Counter not in right place",
+      "solution": "Use character-counter-status with footer-options"
+    },
+    {
+      "pitfall": "Using dynamicContentSupport boolean",
+      "impact": "Not needed in V2",
+      "solution": "Remove - V2 enables when dynamicContentList provided"
+    },
+    {
+      "pitfall": "Using dropDownType string",
+      "impact": "Dropdown config not applied",
+      "solution": "Use dynamicContentBoxProps object"
+    }
+  ],
+
+  "testingChecklist": [
+    "✓ Label displays correctly",
+    "✓ Placeholder shows",
+    "✓ Dynamic content list populates",
+    "✓ Tag insertion works",
+    "✓ Toolbar buttons function",
+    "✓ Emoji picker works",
+    "✓ Character counter displays",
+    "✓ Validation states show",
+    "✓ Fallback input works",
+    "✓ Max tags limit enforced",
+    "✓ Disabled state works",
+    "✓ @purify event fires",
+    "✓ Delimiters work correctly",
+    "✓ Footer displays correctly"
+  ]
+}

@@ -1,0 +1,387 @@
+{
+  "componentName": "InRichTextInput",
+  "version": "2.0.0",
+  "lastUpdated": "2024-11-24",
+
+  "propEnrichments": {
+    "value": {
+      "description": "Input content with dynamic tags (v-model)",
+      "valueFormat": {
+        "structure": "string with tag placeholders",
+        "example": "v-model=\"content\""
+      }
+    },
+    "labelText": {
+      "description": "Label text for the input",
+      "valueFormat": {
+        "structure": "string",
+        "example": "label-text=\"Message Content\""
+      }
+    },
+    "dynamicContentList": {
+      "description": "Available dynamic content attributes - replaces V1 attributeList",
+      "valueFormat": {
+        "structure": "Array of attribute objects",
+        "typescript": "Array<{ label: string; value: string; category?: string; icon?: string; }>",
+        "example": ":dynamic-content-list=\"[{ label: 'First Name', value: 'first_name', category: 'User' }]\""
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Using attributeList from V1",
+          "correction": "V2 uses dynamicContentList instead of attributeList",
+          "severity": "high"
+        }
+      ]
+    },
+    "toolbarOptions": {
+      "description": "Configure visible toolbar buttons",
+      "valueFormat": {
+        "structure": "Array of toolbar option strings",
+        "typescript": "Array<'bold' | 'italic' | 'underline' | 'link' | 'emoji' | 'dynamicContent'>",
+        "example": ":toolbar-options=\"['bold', 'italic', 'link', 'emoji', 'dynamicContent']\""
+      }
+    },
+    "footerOptions": {
+      "description": "Configure footer elements",
+      "valueFormat": {
+        "structure": "Array of footer option strings",
+        "typescript": "Array<'counter' | 'label' | 'tags'>",
+        "example": ":footer-options=\"['counter', 'tags']\""
+      }
+    },
+    "helperTextValidationConfig": {
+      "description": "Validation configuration - replaces V1 textValidateConfig",
+      "valueFormat": {
+        "structure": "Object with validation rules",
+        "typescript": "{ maxLength?: number; minLength?: number; segmentLength?: number; }",
+        "example": ":helper-text-validation-config=\"{ maxLength: 160, segmentLength: 160 }\""
+      }
+    },
+    "helperTextValidationConfigStatus": {
+      "description": "Enable helper text validation display",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "helper-text-validation-config-status"
+      }
+    },
+    "states": {
+      "description": "Validation state - replaces V1 invalid/warning",
+      "valueFormat": {
+        "structure": "string enum",
+        "possibleValues": ["default", "success", "warning", "error"],
+        "example": "states=\"error\""
+      }
+    },
+    "stateMessage": {
+      "description": "Message for validation state",
+      "valueFormat": {
+        "structure": "string",
+        "example": "state-message=\"This field is required\""
+      }
+    },
+    "characterCounterStatus": {
+      "description": "Show character counter - replaces V1 isCounter",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "character-counter-status"
+      }
+    },
+    "maxSelectableDynamicContent": {
+      "description": "Maximum dynamic content tags allowed",
+      "valueFormat": {
+        "structure": "number",
+        "example": ":max-selectable-dynamic-content=\"5\""
+      }
+    },
+    "isDynamicContentOnly": {
+      "description": "Only allow dynamic content (no free text)",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "is-dynamic-content-only"
+      }
+    },
+    "canOnlyReplaceDynamicContent": {
+      "description": "Only allow replacing existing dynamic content",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "can-only-replace-dynamic-content"
+      }
+    },
+    "tipStatus": {
+      "description": "Show usage tips",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "tip-status"
+      }
+    },
+    "specialCharacters": {
+      "description": "Special characters configuration",
+      "valueFormat": {
+        "structure": "Object with character settings",
+        "typescript": "{ enabled: boolean; list?: string[]; }",
+        "example": ":special-characters=\"{ enabled: true, list: ['©', '®', '™'] }\""
+      }
+    },
+    "isHighlightCharactersEnabled": {
+      "description": "Highlight special characters in text",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "is-highlight-characters-enabled"
+      }
+    },
+    "isHighlightUrlEnabled": {
+      "description": "Highlight URLs in text",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "is-highlight-url-enabled"
+      }
+    },
+    "whatsappStylingSupport": {
+      "description": "Enable WhatsApp text formatting (*bold*, _italic_)",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "whatsapp-styling-support"
+      }
+    },
+    "emojiButtonStatus": {
+      "description": "Show emoji picker button - replaces V1 hasEmoji",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "emoji-button-status"
+      }
+    },
+    "isExtendedDynamicContent": {
+      "description": "Enable extended dynamic content features",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "is-extended-dynamic-content"
+      }
+    },
+    "dynamicContentBoxProps": {
+      "description": "Props for dynamic content selection box",
+      "valueFormat": {
+        "structure": "Object with box configuration",
+        "typescript": "{ searchable?: boolean; grouped?: boolean; maxHeight?: number; }",
+        "example": ":dynamic-content-box-props=\"{ searchable: true, grouped: true }\""
+      }
+    },
+    "usedDynamicContent": {
+      "description": "Track which dynamic content is used",
+      "valueFormat": {
+        "structure": "Array of used attribute values",
+        "example": ":used-dynamic-content=\"usedAttributes\""
+      }
+    },
+    "errorTags": {
+      "description": "Tags to highlight as errors",
+      "valueFormat": {
+        "structure": "Array of tag values",
+        "example": ":error-tags=\"['invalid_attr']\""
+      }
+    },
+    "warningTags": {
+      "description": "Tags to highlight as warnings",
+      "valueFormat": {
+        "structure": "Array of tag values",
+        "example": ":warning-tags=\"['deprecated_attr']\""
+      }
+    },
+    "customCounter": {
+      "description": "Custom counter component/logic",
+      "valueFormat": {
+        "structure": "Object or component",
+        "example": ":custom-counter=\"customCounterConfig\""
+      }
+    },
+    "footerLabel": {
+      "description": "Label text in footer",
+      "valueFormat": {
+        "structure": "string",
+        "example": "footer-label=\"Characters remaining\""
+      }
+    },
+    "urlPatternRegex": {
+      "description": "Custom regex for URL detection",
+      "valueFormat": {
+        "structure": "RegExp",
+        "example": ":url-pattern-regex=\"/https?:\\/\\/[^\\s]+/g\""
+      }
+    },
+    "isUploadFallback": {
+      "description": "Enable image upload for fallback",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "is-upload-fallback"
+      }
+    },
+    "fallbackVisibility": {
+      "description": "Control fallback UI visibility",
+      "valueFormat": {
+        "structure": "string enum",
+        "possibleValues": ["always", "onHover", "onClick"],
+        "example": "fallback-visibility=\"onHover\""
+      }
+    },
+    "disabledToolbarOptions": {
+      "description": "Disable specific toolbar buttons",
+      "valueFormat": {
+        "structure": "Array of option strings",
+        "example": ":disabled-toolbar-options=\"['link', 'emoji']\""
+      }
+    },
+    "dynamicContentStates": {
+      "description": "State configuration for dynamic content tags",
+      "valueFormat": {
+        "structure": "Object mapping tags to states",
+        "typescript": "Record<string, 'default' | 'warning' | 'error'>",
+        "example": ":dynamic-content-states=\"{ 'old_attr': 'warning' }\""
+      }
+    }
+  },
+
+  "eventEnrichments": {
+    "purify": {
+      "description": "Emitted with sanitized string content",
+      "payload": "string",
+      "usage": "@purify=\"handlePurify\""
+    },
+    "purifyObject": {
+      "description": "Emitted with detailed purified content object",
+      "payload": "{ text: string, html: string, tags: Array }",
+      "usage": "@purify-object=\"handlePurifyObject\""
+    },
+    "generate": {
+      "description": "Emitted when content is generated/composed",
+      "payload": "string",
+      "usage": "@generate=\"handleGenerate\""
+    },
+    "markedTags": {
+      "description": "Emitted with list of used tags",
+      "payload": "Array<string>",
+      "usage": "@marked-tags=\"handleMarkedTags\""
+    },
+    "updateFallBackOptions": {
+      "description": "Emitted when fallback options change",
+      "payload": "Object - fallback configuration",
+      "usage": "@update-fall-back-options=\"handleFallbackUpdate\""
+    },
+    "saveFallBackOption": {
+      "description": "Emitted when fallback is saved",
+      "payload": "{ tag: string, value: string }",
+      "usage": "@save-fall-back-option=\"handleSaveFallback\""
+    },
+    "addDynamicAttribute": {
+      "description": "Emitted when new dynamic attribute is added",
+      "payload": "{ label: string, value: string }",
+      "usage": "@add-dynamic-attribute=\"handleAddAttribute\""
+    },
+    "onShortenUrlClick": {
+      "description": "Emitted when URL shortening is requested",
+      "payload": "string - URL to shorten",
+      "usage": "@on-shorten-url-click=\"handleShortenUrl\""
+    },
+    "closeAllEmojiPickers": {
+      "description": "Emitted to close all emoji pickers",
+      "payload": "void",
+      "usage": "@close-all-emoji-pickers=\"handleCloseEmoji\""
+    }
+  },
+
+  "exampleEnrichments": [
+    {
+      "title": "Basic Rich Text Editor",
+      "description": "Simple editor with toolbar and dynamic content",
+      "code": "<InRichTextInput\n  id=\"message\"\n  label-status\n  label-text=\"Message Content\"\n  placeholder-text=\"Enter your message...\"\n  v-model=\"content\"\n  :dynamic-content-list=\"[\n    { label: 'First Name', value: 'first_name', category: 'User' },\n    { label: 'Email', value: 'email', category: 'User' }\n  ]\"\n  :toolbar-options=\"['bold', 'italic', 'link', 'emoji', 'dynamicContent']\"\n  :footer-options=\"['counter']\"\n  character-counter-status\n  @purify=\"handlePurify\"\n/>"
+    },
+    {
+      "title": "SMS Editor with Validation",
+      "description": "SMS message editor with character limits",
+      "code": "<InRichTextInput\n  id=\"sms\"\n  label-status\n  label-text=\"SMS Message\"\n  v-model=\"smsContent\"\n  :dynamic-content-list=\"attributes\"\n  helper-text-validation-config-status\n  :helper-text-validation-config=\"{ maxLength: 160, segmentLength: 160 }\"\n  character-counter-status\n  :footer-options=\"['counter', 'tags']\"\n  :max-selectable-dynamic-content=\"5\"\n  states=\"warning\"\n  state-message=\"Message will be split into multiple segments\"\n  @purify=\"handlePurify\"\n  @marked-tags=\"handleTags\"\n/>"
+    },
+    {
+      "title": "WhatsApp Message Editor",
+      "description": "Editor with WhatsApp formatting support",
+      "code": "<InRichTextInput\n  id=\"whatsapp\"\n  label-status\n  label-text=\"WhatsApp Message\"\n  v-model=\"waContent\"\n  :dynamic-content-list=\"attributes\"\n  whatsapp-styling-support\n  emoji-button-status\n  is-highlight-url-enabled\n  :toolbar-options=\"['bold', 'italic', 'emoji', 'dynamicContent']\"\n  tip-status\n  @purify=\"handlePurify\"\n/>"
+    },
+    {
+      "title": "Advanced Editor with Fallbacks",
+      "description": "Full-featured editor with fallback handling",
+      "code": "<InRichTextInput\n  id=\"email\"\n  label-status\n  label-text=\"Email Content\"\n  v-model=\"emailContent\"\n  :dynamic-content-list=\"attributes\"\n  is-extended-dynamic-content\n  :dynamic-content-box-props=\"{ searchable: true, grouped: true }\"\n  fall-back-label=\"Default Value\"\n  fall-back-placeholder=\"Enter default...\"\n  is-upload-fallback\n  fallback-visibility=\"onHover\"\n  :error-tags=\"invalidAttributes\"\n  :warning-tags=\"deprecatedAttributes\"\n  @purify-object=\"handlePurifyObject\"\n  @save-fall-back-option=\"handleSaveFallback\"\n  @add-dynamic-attribute=\"handleAddAttribute\"\n/>"
+    }
+  ],
+
+  "commonMistakes": [
+    {
+      "mistake": "Using attributeList instead of dynamicContentList",
+      "issue": "No dynamic content available",
+      "solution": "V2 uses dynamic-content-list, not attribute-list",
+      "severity": "high"
+    },
+    {
+      "mistake": "Using textValidateConfig instead of helperTextValidationConfig",
+      "issue": "Validation not working",
+      "solution": "Use helper-text-validation-config with helper-text-validation-config-status",
+      "severity": "high"
+    },
+    {
+      "mistake": "Using invalid/warning booleans",
+      "issue": "Validation state not shown",
+      "solution": "Use states=\"error\" or states=\"warning\" with state-message",
+      "severity": "high"
+    },
+    {
+      "mistake": "Using isCounter instead of characterCounterStatus",
+      "issue": "Counter not displayed",
+      "solution": "Use character-counter-status",
+      "severity": "medium"
+    },
+    {
+      "mistake": "Using hasEmoji instead of emojiButtonStatus",
+      "issue": "Emoji picker not shown",
+      "solution": "Use emoji-button-status",
+      "severity": "medium"
+    },
+    {
+      "mistake": "Not handling @purify event",
+      "issue": "Using raw unsanitized content",
+      "solution": "Always use @purify or @purify-object for final content",
+      "severity": "high"
+    }
+  ],
+
+  "bestPractices": [
+    {
+      "practice": "Use toolbarOptions to control available features",
+      "description": "Only show relevant toolbar buttons for the use case",
+      "example": ":toolbar-options=\"['bold', 'italic', 'dynamicContent']\" for SMS"
+    },
+    {
+      "practice": "Implement proper fallback handling",
+      "description": "Use @save-fall-back-option to persist fallback values",
+      "example": "@save-fall-back-option=\"persistFallback\""
+    },
+    {
+      "practice": "Use dynamicContentStates for tag validation",
+      "description": "Mark deprecated or invalid tags with visual feedback",
+      "example": ":dynamic-content-states=\"{ 'old_field': 'warning' }\""
+    },
+    {
+      "practice": "Enable helperTextValidationConfigStatus for limits",
+      "description": "Show users validation feedback in real-time",
+      "example": "helper-text-validation-config-status :helper-text-validation-config=\"{ maxLength: 160 }\""
+    }
+  ],
+
+  "performanceNotes": [
+    {
+      "note": "Large dynamicContentList can slow dropdown",
+      "description": "Use dynamicContentBoxProps.searchable for large lists",
+      "recommendation": "Enable search when > 20 attributes"
+    },
+    {
+      "note": "Frequent @purify calls",
+      "description": "purify event fires on every change",
+      "recommendation": "Debounce if doing expensive operations"
+    }
+  ]
+}

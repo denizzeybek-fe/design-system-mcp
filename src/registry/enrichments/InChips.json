@@ -1,0 +1,144 @@
+{
+  "componentName": "InChips",
+  "version": "2.0.0",
+  "lastUpdated": "2024-11-24",
+
+  "propEnrichments": {
+    "type": {
+      "description": "Visual style type of the chip",
+      "valueFormat": {
+        "structure": "string enum",
+        "possibleValues": ["default", "primary", "success", "warning", "danger", "info"],
+        "example": "type=\"primary\""
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Using V1 type values like 'bordered' or 'pill'",
+          "correction": "V2 uses semantic types: default, primary, success, warning, danger, info",
+          "severity": "medium"
+        }
+      ]
+    },
+    "styles": {
+      "description": "Additional styling variant for the chip",
+      "valueFormat": {
+        "structure": "string enum",
+        "possibleValues": ["solid", "soft", "outline"],
+        "example": "styles=\"soft\""
+      }
+    },
+    "disabledStatus": {
+      "description": "Whether the chip is disabled",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": ":disabled-status=\"isDisabled\""
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Using :disable instead of :disabled-status",
+          "correction": "V2 uses -status suffix pattern: disabled-status",
+          "severity": "high"
+        }
+      ]
+    },
+    "interactive": {
+      "description": "Makes chip clickable with hover/active states",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "interactive"
+      }
+    },
+    "closeButton": {
+      "description": "Shows close/remove button on the chip",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "close-button"
+      }
+    },
+    "selectedStatus": {
+      "description": "Whether the chip is in selected state",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": ":selected-status=\"isSelected\""
+      }
+    },
+    "actionableLabel": {
+      "description": "Accessible label for the actionable chip",
+      "valueFormat": {
+        "structure": "string",
+        "example": "actionable-label=\"Remove tag\""
+      }
+    },
+    "maxWidth": {
+      "description": "Maximum width of chip text before truncation",
+      "valueFormat": {
+        "structure": "string (CSS value)",
+        "example": "max-width=\"150px\""
+      }
+    }
+  },
+
+  "eventEnrichments": {
+    "tagClick": {
+      "description": "Emitted when chip is clicked (for interactive chips)",
+      "payload": "Event object",
+      "usage": "@tag-click=\"handleChipClick\""
+    },
+    "click": {
+      "description": "Emitted when close button is clicked",
+      "payload": "Event object",
+      "usage": "@click=\"handleClose\""
+    }
+  },
+
+  "exampleEnrichments": [
+    {
+      "title": "Basic Chip",
+      "description": "Simple chip with text",
+      "code": "<InChips text=\"Label\" type=\"default\" />"
+    },
+    {
+      "title": "Interactive Chip with Selection",
+      "description": "Clickable chip that can be selected",
+      "code": "<InChips\n  text=\"Category\"\n  type=\"primary\"\n  styles=\"soft\"\n  interactive\n  :selected-status=\"isSelected\"\n  @tag-click=\"toggleSelection\"\n/>"
+    },
+    {
+      "title": "Removable Chip",
+      "description": "Chip with close button for removal",
+      "code": "<InChips\n  text=\"Tag Name\"\n  type=\"info\"\n  close-button\n  actionable-label=\"Remove tag\"\n  @click=\"handleRemove\"\n/>"
+    }
+  ],
+
+  "commonMistakes": [
+    {
+      "mistake": "Using withIcon prop from V1",
+      "issue": "V2 doesn't have withIcon prop",
+      "solution": "InChips V2 handles icons differently, check documentation for icon usage",
+      "severity": "medium"
+    },
+    {
+      "mistake": "Confusing @click and @tag-click events",
+      "issue": "@click is for close button, @tag-click is for chip body click",
+      "solution": "Use @tag-click for interactive chips, @click for close button action",
+      "severity": "high"
+    }
+  ],
+
+  "bestPractices": [
+    {
+      "practice": "Use semantic types for status indication",
+      "description": "Choose type based on meaning: success for positive, danger for negative, etc.",
+      "example": "type=\"success\" for confirmed items, type=\"danger\" for errors"
+    },
+    {
+      "practice": "Always provide actionableLabel for accessibility",
+      "description": "When using close-button, provide actionableLabel for screen readers",
+      "example": "actionable-label=\"Remove filter: Category\""
+    },
+    {
+      "practice": "Use styles prop for visual hierarchy",
+      "description": "solid for primary actions, soft for secondary, outline for subtle",
+      "example": "styles=\"soft\" for less prominent chips"
+    }
+  ]
+}

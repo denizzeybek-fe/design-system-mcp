@@ -1,0 +1,113 @@
+{
+  "component": "InOnPageMessage",
+  "propEnrichments": {
+    "type": {
+      "valueFormat": {
+        "structure": "string (enum)",
+        "validValues": ["error", "warning", "success", "info"],
+        "notes": "Message type determines icon and color scheme",
+        "typescript": "'error' | 'warning' | 'success' | 'info'"
+      },
+      "relatedProps": ["titleText", "descriptionText"]
+    },
+    "size": {
+      "valueFormat": {
+        "structure": "string (enum)",
+        "validValues": ["small", "medium", "large"],
+        "notes": "Controls overall component size and spacing",
+        "typescript": "'small' | 'medium' | 'large'"
+      }
+    }
+  },
+  "commonMistakes": [
+    {
+      "category": "prop-usage",
+      "severity": "medium",
+      "title": "Not providing descriptive title and description",
+      "description": "Messages should have clear, actionable text",
+      "wrong": "<InOnPageMessage type=\"error\" />",
+      "correct": "<InOnPageMessage type=\"error\" title-text=\"Error occurred\" description-text=\"Please check your input and try again\" />",
+      "impact": "Empty or unclear error messages confuse users"
+    },
+    {
+      "category": "accessibility",
+      "severity": "high",
+      "title": "Not using appropriate message types",
+      "description": "Type should match message severity for accessibility",
+      "wrong": "<InOnPageMessage type=\"info\" title-text=\"Critical error\" />",
+      "correct": "<InOnPageMessage type=\"error\" title-text=\"Critical error\" />",
+      "impact": "Screen readers and visual indicators won't match message severity"
+    }
+  ],
+  "bestPractices": [
+    {
+      "title": "Use Clear, Actionable Messages",
+      "description": "Messages should tell users what happened and what to do next",
+      "code": "<InOnPageMessage\n  type=\"error\"\n  title-text=\"Upload failed\"\n  description-text=\"File size exceeds 5MB. Please compress and try again.\"\n  link-button-status\n  link-button-text=\"Learn more\"\n  @link-click=\"openHelp\"\n/>",
+      "benefit": "Users understand the problem and know how to fix it"
+    },
+    {
+      "title": "Match Message Type to Severity",
+      "description": "Use appropriate type for each situation",
+      "code": "// Error: Something failed\n<InOnPageMessage type=\"error\" title-text=\"Save failed\" />\n\n// Warning: Potential issue\n<InOnPageMessage type=\"warning\" title-text=\"Unsaved changes\" />\n\n// Success: Action completed\n<InOnPageMessage type=\"success\" title-text=\"Saved successfully\" />\n\n// Info: General information\n<InOnPageMessage type=\"info\" title-text=\"New feature available\" />",
+      "benefit": "Consistent messaging improves user understanding"
+    }
+  ],
+  "exampleEnrichments": [
+    {
+      "title": "Error Message with Action",
+      "description": "Show error with helpful link",
+      "code": "<script setup>\nimport { InOnPageMessage } from '@useinsider/design-system-vue';\n\nconst openSupport = () => {\n  window.open('https://support.example.com', '_blank');\n};\n</script>\n\n<template>\n  <InOnPageMessage\n    type=\"error\"\n    size=\"medium\"\n    title-status\n    title-text=\"Connection failed\"\n    description-text=\"Unable to connect to server. Please check your internet connection.\"\n    link-button-status\n    link-button-text=\"Contact Support\"\n    @link-click=\"openSupport\"\n  />\n</template>"
+    },
+    {
+      "title": "Success Message",
+      "description": "Simple success confirmation",
+      "code": "<InOnPageMessage\n  type=\"success\"\n  size=\"medium\"\n  title-status\n  title-text=\"Changes saved\"\n  description-text=\"Your profile has been updated successfully.\"\n/>"
+    }
+  ],
+  "figmaMapping": {
+    "componentName": "InOnPageMessage",
+    "storybookUrl": "InOnPageMessage",
+    "propertyOverrides": {},
+    "propertyTypes": {
+      "Type": "enum",
+      "Size": "enum",
+      "Link Button": "boolean",
+      "Title Status": "boolean",
+      "Title Text": "string",
+      "Description Text": "string",
+      "Content Slot Status": "boolean"
+    },
+    "valueMapping": {
+      "Type": {
+        "Error": "error",
+        "Warning": "warning",
+        "Success": "success",
+        "Info": "info"
+      },
+      "Size": {
+        "Small": "small",
+        "Medium": "medium",
+        "Large": "large"
+      }
+    },
+    "stateProps": [],
+    "notes": [
+      "No property overrides needed - all props follow convention",
+      "Type, Size → lowercase (generic rule)",
+      "'xxx Text' → xxxText (text-suffix rule)",
+      "'xxx Status' → xxxStatus (status-suffix rule)",
+      "Boolean 'Link Button' → linkButtonStatus (boolean-status rule)"
+    ]
+  },
+  "helperFunctions": [],
+  "performanceNotes": [
+    "Component is lightweight, no performance concerns",
+    "Use v-if to conditionally show/hide messages"
+  ],
+  "accessibilityNotes": [
+    "Component automatically uses appropriate ARIA roles based on type",
+    "Ensure title and description are descriptive for screen readers",
+    "Link button should have clear action text"
+  ]
+}

@@ -1,0 +1,202 @@
+{
+  "componentName": "InMultiDropDown",
+  "version": "1.0.0",
+  "lastUpdated": "2024-11-24",
+
+  "propEnrichments": {
+    "options": {
+      "description": "Array of selectable options",
+      "valueFormat": {
+        "structure": "Array of option objects",
+        "typescript": "Array<{ label: string; value: string | number; disabled?: boolean; }>",
+        "example": ":options=\"[{ label: 'Option 1', value: '1' }, { label: 'Option 2', value: '2', disabled: true }]\""
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Using 'text' instead of 'label' for option display",
+          "correction": "V1 uses 'label' property for option text",
+          "severity": "high"
+        }
+      ]
+    },
+    "value": {
+      "description": "Selected values array (v-model)",
+      "valueFormat": {
+        "structure": "Array of selected values",
+        "typescript": "Array<string | number>",
+        "example": "v-model=\"selectedValues\""
+      }
+    },
+    "customOptionsKey": {
+      "description": "Custom property name for option label",
+      "valueFormat": {
+        "structure": "string",
+        "example": "custom-options-key=\"name\""
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Not setting when options have different label key",
+          "correction": "Set customOptionsKey when options use 'name' or other key instead of 'label'",
+          "severity": "medium"
+        }
+      ]
+    },
+    "fetchUrl": {
+      "description": "API endpoint for fetching options dynamically",
+      "valueFormat": {
+        "structure": "string (URL)",
+        "example": "fetch-url=\"/api/options\""
+      }
+    },
+    "responseKey": {
+      "description": "JSON path to options array in API response",
+      "valueFormat": {
+        "structure": "string (dot notation)",
+        "example": "response-key=\"data.items\""
+      }
+    },
+    "queryString": {
+      "description": "Query parameter name for search",
+      "valueFormat": {
+        "structure": "string",
+        "example": "query-string=\"q\""
+      }
+    },
+    "maxSelectableItem": {
+      "description": "Maximum number of items that can be selected",
+      "valueFormat": {
+        "structure": "number",
+        "example": ":max-selectable-item=\"5\""
+      }
+    },
+    "addNewTagStatus": {
+      "description": "Allow creating new options by typing",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "add-new-tag-status"
+      }
+    },
+    "minimumNewTagCharacterLimit": {
+      "description": "Minimum characters required for new tag",
+      "valueFormat": {
+        "structure": "number",
+        "example": ":minimum-new-tag-character-limit=\"2\""
+      }
+    },
+    "maxNewTagCharacterLimit": {
+      "description": "Maximum characters allowed for new tag",
+      "valueFormat": {
+        "structure": "number",
+        "example": ":max-new-tag-character-limit=\"50\""
+      }
+    },
+    "hasTemporaryOptions": {
+      "description": "Allow temporary options that aren't persisted",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "has-temporary-options"
+      }
+    },
+    "type": {
+      "description": "Visual type/variant of the dropdown",
+      "valueFormat": {
+        "structure": "string enum",
+        "possibleValues": ["default", "tags"],
+        "example": "type=\"tags\""
+      }
+    },
+    "theme": {
+      "description": "Color theme of the dropdown",
+      "valueFormat": {
+        "structure": "string enum",
+        "possibleValues": ["light", "dark"],
+        "example": "theme=\"dark\""
+      }
+    }
+  },
+
+  "eventEnrichments": {
+    "change": {
+      "description": "Emitted when selection changes",
+      "payload": "Array<string | number> - selected values",
+      "usage": "@change=\"handleChange\""
+    },
+    "search": {
+      "description": "Emitted when search input changes",
+      "payload": "string - search query",
+      "usage": "@search=\"handleSearch\""
+    },
+    "addNewOption": {
+      "description": "Emitted when new option is created",
+      "payload": "string - new option value",
+      "usage": "@add-new-option=\"handleNewOption\""
+    },
+    "closeList": {
+      "description": "Emitted when dropdown closes",
+      "payload": "void",
+      "usage": "@close-list=\"handleClose\""
+    },
+    "click": {
+      "description": "Emitted when dropdown is clicked",
+      "payload": "Event",
+      "usage": "@click=\"handleClick\""
+    }
+  },
+
+  "exampleEnrichments": [
+    {
+      "title": "Basic Multi-Select",
+      "description": "Simple multi-select with static options",
+      "code": "<InMultiDropDown\n  id=\"categories\"\n  label=\"Categories\"\n  placeholder=\"Select categories\"\n  :options=\"[\n    { label: 'Technology', value: 'tech' },\n    { label: 'Business', value: 'business' },\n    { label: 'Design', value: 'design' }\n  ]\"\n  v-model=\"selectedCategories\"\n  @change=\"handleChange\"\n/>"
+    },
+    {
+      "title": "With API Fetch",
+      "description": "Dynamic options from API",
+      "code": "<InMultiDropDown\n  id=\"users\"\n  label=\"Assign Users\"\n  fetch-url=\"/api/users\"\n  response-key=\"data.users\"\n  query-string=\"search\"\n  search-status\n  search-placeholder=\"Search users...\"\n  v-model=\"assignedUsers\"\n  @search=\"handleSearch\"\n/>"
+    },
+    {
+      "title": "With New Tag Creation",
+      "description": "Allow adding custom options",
+      "code": "<InMultiDropDown\n  id=\"tags\"\n  label=\"Tags\"\n  type=\"tags\"\n  :options=\"availableTags\"\n  v-model=\"selectedTags\"\n  add-new-tag-status\n  :minimum-new-tag-character-limit=\"2\"\n  :max-new-tag-character-limit=\"30\"\n  new-option-text=\"Create tag\"\n  @add-new-option=\"createTag\"\n/>"
+    }
+  ],
+
+  "commonMistakes": [
+    {
+      "mistake": "Not setting responseKey for API fetch",
+      "issue": "Options don't populate from API",
+      "solution": "Set response-key to match your API response structure",
+      "severity": "high"
+    },
+    {
+      "mistake": "Using disable instead of disabled in options",
+      "issue": "Individual options can't be disabled",
+      "solution": "Use { label: 'X', value: 'x', disabled: true }",
+      "severity": "medium"
+    },
+    {
+      "mistake": "Forgetting v-model for two-way binding",
+      "issue": "Selected values not synced",
+      "solution": "Use v-model instead of just :value",
+      "severity": "high"
+    }
+  ],
+
+  "bestPractices": [
+    {
+      "practice": "Use searchStatus for large option lists",
+      "description": "Enable search when options > 10 for better UX",
+      "example": "search-status search-placeholder=\"Search...\""
+    },
+    {
+      "practice": "Set maxSelectableItem for limited selections",
+      "description": "Prevent over-selection with clear limits",
+      "example": ":max-selectable-item=\"3\""
+    },
+    {
+      "practice": "Provide meaningful validation messages",
+      "description": "Use warningMessage and invalidMessage for user feedback",
+      "example": "invalid invalid-message=\"Please select at least one option\""
+    }
+  ]
+}

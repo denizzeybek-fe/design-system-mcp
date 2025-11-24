@@ -89,7 +89,7 @@ export const FIGMA_COMPONENT_MAPPINGS: FigmaComponentMapping[] = [
       {
         figmaProperty: 'Loading',
         dsProp: 'loadingStatus',
-        transform: (value: string) => value === 'True' || value === true,
+        transform: (value: string) => value === 'True' || value === 'true',
       },
     ],
     examples: [
@@ -123,12 +123,12 @@ export const FIGMA_COMPONENT_MAPPINGS: FigmaComponentMapping[] = [
       {
         figmaProperty: 'Range',
         dsProp: 'range',
-        transform: (value: string) => value === 'True' || value === true,
+        transform: (value: string) => value === 'True' || value === 'true',
       },
       {
         figmaProperty: 'Compare',
         dsProp: 'comparisonStatus',
-        transform: (value: string) => value === 'True' || value === true,
+        transform: (value: string) => value === 'True' || value === 'true',
       },
     ],
     examples: [
@@ -198,7 +198,7 @@ export const FIGMA_COMPONENT_MAPPINGS: FigmaComponentMapping[] = [
       {
         figmaProperty: 'Search',
         dsProp: 'searchStatus',
-        transform: (value: string) => value === 'True' || value === true,
+        transform: (value: string) => value === 'True' || value === 'true',
       },
       {
         figmaProperty: 'State',
@@ -224,12 +224,12 @@ export const FIGMA_COMPONENT_MAPPINGS: FigmaComponentMapping[] = [
       {
         figmaProperty: 'Search',
         dsProp: 'searchStatus',
-        transform: (value: string) => value === 'True' || value === true,
+        transform: (value: string) => value === 'True' || value === 'true',
       },
       {
         figmaProperty: 'CreateOption',
         dsProp: 'createOptionStatus',
-        transform: (value: string) => value === 'True' || value === true,
+        transform: (value: string) => value === 'True' || value === 'true',
       },
     ],
   },
@@ -247,7 +247,7 @@ export const FIGMA_COMPONENT_MAPPINGS: FigmaComponentMapping[] = [
       {
         figmaProperty: 'Disabled',
         dsProp: 'disable',
-        transform: (value: string) => value === 'True' || value === true,
+        transform: (value: string) => value === 'True' || value === 'true',
       },
     ],
   },

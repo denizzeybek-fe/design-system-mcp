@@ -80,18 +80,111 @@
     },
     "buttonGroupOptions": {
       "valueFormat": {
-        "structure": "Array<Object>",
-        "objectShape": "{ label: string, value: any, disabled?: boolean, icon?: string }",
-        "notes": "Creates dropdown menu when provided. Renders InButtonGroup component",
-        "typescript": "Array<{ label: string; value: any; disabled?: boolean; icon?: string }>"
+        "structure": "Array<ButtonGroupOption>",
+        "objectShape": "{ id: string, type: string, styling: string, labelText: string, selectedStatus?: boolean, tooltipText?: string }",
+        "notes": "Creates button group (multiple buttons in a row) when provided. Each button can have its own styling and type.",
+        "typescript": "Array<{ id: string; type: string; styling: string; labelText: string; selectedStatus?: boolean; tooltipText?: string }>",
+        "realWorldExample": "[{ id: 'daily', type: 'secondary', styling: 'solid', labelText: 'Daily', selectedStatus: true }, { id: 'weekly', type: 'secondary', styling: 'ghost', labelText: 'Weekly', selectedStatus: false }]"
       },
       "relatedEvents": ["click"],
       "commonMistakes": [
         {
-          "mistake": "Expecting simple array of strings",
-          "impact": "Won't render dropdown properly",
-          "fix": "Use array of objects with label and value properties",
+          "mistake": "Expecting simple array of strings ['Option 1', 'Option 2']",
+          "impact": "Component won't render button group properly",
+          "fix": "Use array of ButtonGroupOption objects with required properties (id, type, styling, labelText)",
+          "severity": "critical"
+        },
+        {
+          "mistake": "Missing 'id' property in button group options",
+          "impact": "Cannot track which button was clicked",
+          "fix": "Always provide unique 'id' for each button: { id: 'unique-id', ... }",
           "severity": "high"
+        },
+        {
+          "mistake": "Mixing button group with single button props (leftIcon, labelText)",
+          "impact": "Single button props are ignored when buttonGroupOptions is provided",
+          "fix": "Either use buttonGroupOptions OR single button props, not both",
+          "severity": "medium"
+        }
+      ]
+    },
+    "leftIcon": {
+      "valueFormat": {
+        "structure": "string",
+        "notes": "Icon name from InIcons component set. See InIcons documentation for available icons.",
+        "typescript": "string",
+        "commonValues": ["filled-plus", "filled-trash", "filled-save", "line-search", "line-edit"]
+      },
+      "relatedProps": ["rightIcon", "iconSize", "iconClick"],
+      "commonMistakes": [
+        {
+          "mistake": "Using icon names that don't exist in InIcons",
+          "impact": "Icon won't display, may show broken icon or nothing",
+          "fix": "Check InIcons component for valid icon names",
+          "severity": "low"
+        }
+      ]
+    },
+    "rightIcon": {
+      "valueFormat": {
+        "structure": "string",
+        "notes": "Icon name from InIcons component set. Commonly used for dropdowns or external links.",
+        "typescript": "string",
+        "commonValues": ["filled-dropdown-down", "line-external-link", "line-chevron-right"]
+      },
+      "relatedProps": ["leftIcon", "iconSize", "iconClick"]
+    },
+    "iconClick": {
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "ADVANCED: When true, clicking the icon emits 'clickIcon' event instead of 'click'. Used for buttons with separate icon and button actions.",
+        "typescript": "boolean"
+      },
+      "relatedProps": ["leftIcon", "rightIcon"],
+      "relatedEvents": ["clickIcon"],
+      "commonMistakes": [
+        {
+          "mistake": "Setting iconClick=true but not listening to @clickIcon event",
+          "impact": "Icon clicks have no effect",
+          "fix": "Add @clickIcon handler: <InButtonV2 :icon-click=\"true\" @clickIcon=\"handleIconClick\" />",
+          "severity": "medium"
+        }
+      ]
+    },
+    "loadingStatus": {
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "Shows loading spinner and automatically disables button. Use during async operations.",
+        "typescript": "boolean"
+      },
+      "relatedProps": ["disabledStatus"],
+      "commonMistakes": [
+        {
+          "mistake": "Not resetting loadingStatus after operation completes (especially on error)",
+          "impact": "Button stays in loading state permanently",
+          "fix": "Always set loadingStatus=false in finally block or error handler",
+          "severity": "critical"
+        },
+        {
+          "mistake": "Using both loadingStatus and disabledStatus together",
+          "impact": "Redundant - loadingStatus already disables the button",
+          "fix": "Use only loadingStatus during async operations",
+          "severity": "low"
+        }
+      ]
+    },
+    "successStatus": {
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "Shows success checkmark icon. Typically displayed briefly (2-3 seconds) after successful operation.",
+        "typescript": "boolean"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Showing success state indefinitely",
+          "impact": "User confusion - button appears successful forever",
+          "fix": "Use setTimeout to reset after 2-3 seconds: setTimeout(() => this.successStatus = false, 2000)",
+          "severity": "medium"
         }
       ]
     },
@@ -119,30 +212,55 @@
     "click": {
       "payloadTypes": [
         {
-          "condition": "Basic button (no buttonGroupOptions)",
-          "type": "Object (empty) or undefined",
-          "example": "{}"
+          "condition": "Single button (no buttonGroupOptions)",
+          "type": "Object (empty)",
+          "example": "{}",
+          "notes": "Empty object payload for simple button clicks"
         },
         {
-          "condition": "Button group with dropdown",
-          "type": "Object",
-          "example": "{ label: 'Option 1', value: 1 }",
-          "notes": "Returns the clicked option from buttonGroupOptions"
+          "condition": "Button group (with buttonGroupOptions)",
+          "type": "Object (ButtonGroupOption)",
+          "example": "{ id: 'daily', type: 'secondary', styling: 'solid', labelText: 'Daily', selectedStatus: true }",
+          "notes": "Returns the entire button configuration object of the clicked button"
         }
       ],
-      "handlingPattern": "@click=\"handleClick\"\n\nhandleClick(payload) {\n  if (payload?.value) {\n    // Dropdown option clicked\n    console.log('Selected:', payload.value);\n  } else {\n    // Basic button clicked\n    console.log('Button clicked');\n  }\n}",
-      "useCase": "Main button click handler. Payload varies based on buttonGroupOptions presence"
+      "handlingPattern": "// Single button\n<InButtonV2 @click=\"handleSave\" />\n\nmethods: {\n  handleSave(payload) {\n    // payload = {}\n    console.log('Save clicked');\n  }\n}\n\n// Button group\n<InButtonV2 :button-group-options=\"tabOptions\" @click=\"handleTabClick\" />\n\nmethods: {\n  handleTabClick(payload) {\n    // payload = { id: 'daily', type: 'secondary', ... }\n    console.log('Tab clicked:', payload.id);\n    this.activeTab = payload.id;\n  }\n}",
+      "useCase": "Main button click handler. Payload structure varies based on single vs button group mode.",
+      "commonMistakes": [
+        {
+          "mistake": "Expecting payload.value in button group mode",
+          "impact": "Cannot access clicked button data",
+          "fix": "Use payload.id and payload.labelText - there's no payload.value",
+          "severity": "high"
+        },
+        {
+          "mistake": "Not checking if buttonGroupOptions exists before accessing payload properties",
+          "impact": "Runtime errors when switching between modes",
+          "fix": "Check payload?.id before accessing: if (payload?.id) { ... }",
+          "severity": "medium"
+        }
+      ]
     },
     "clickIcon": {
       "payloadTypes": [
         {
           "condition": "Always",
           "type": "void",
-          "example": "undefined"
+          "example": "undefined",
+          "notes": "No payload - icon click events don't carry data"
         }
       ],
-      "useCase": "Emitted when icon is clicked (requires iconClick=true)",
-      "relatedProps": ["iconClick", "leftIcon", "rightIcon"]
+      "useCase": "Emitted when icon is clicked (ONLY when iconClick prop is true). Used for buttons with separate icon and label actions (e.g., removable tags).",
+      "relatedProps": ["iconClick", "leftIcon", "rightIcon"],
+      "handlingPattern": "<InButtonV2\n  :icon-click=\"true\"\n  left-icon=\"filled-close\"\n  label-text=\"Tag Name\"\n  @click=\"handleTagClick\"\n  @clickIcon=\"handleRemoveTag\"\n/>\n\nmethods: {\n  handleTagClick() {\n    console.log('Tag body clicked');\n  },\n  handleRemoveTag() {\n    console.log('Remove icon clicked');\n    this.removeTag();\n  }\n}",
+      "commonMistakes": [
+        {
+          "mistake": "Forgetting to set iconClick=true",
+          "impact": "Icon clicks trigger regular @click event instead of @clickIcon",
+          "fix": "Add :icon-click=\"true\" prop when using @clickIcon",
+          "severity": "high"
+        }
+      ]
     }
   },
   "exampleEnrichments": [
@@ -179,12 +297,174 @@
     {
       "requirement": "Always provide meaningful labelText",
       "reason": "Screen readers need descriptive button text",
-      "severity": "high"
+      "severity": "high",
+      "example": "labelText=\"Delete User\" not \"Delete\" or \"OK\""
     },
     {
       "requirement": "Use disabledStatus instead of removing button",
       "reason": "Disabled state maintains button in tab order with aria-disabled",
-      "severity": "medium"
+      "severity": "medium",
+      "example": ":disabled-status=\"!canSubmit\" instead of v-if=\"canSubmit\""
+    },
+    {
+      "requirement": "Avoid icon-only buttons without labelText",
+      "reason": "Screen readers won't know button purpose",
+      "severity": "high",
+      "fix": "Either keep labelText visible or add aria-label/tooltipText"
     }
-  ]
+  ],
+  "commonMistakes": [
+    {
+      "category": "prop-combination",
+      "severity": "critical",
+      "title": "Using buttonGroupOptions with single button props",
+      "description": "When buttonGroupOptions is provided, single button props (labelText, leftIcon, type, styling) are ignored",
+      "wrong": "<InButtonV2\n  :button-group-options=\"[...]\"\n  label-text=\"Click Me\"\n  left-icon=\"save\"\n/>",
+      "correct": "// Button group mode (no single props)\n<InButtonV2 :button-group-options=\"options\" />\n\n// OR single button mode (no buttonGroupOptions)\n<InButtonV2 label-text=\"Click Me\" left-icon=\"save\" />",
+      "impact": "Single button props don't work, causing confusion"
+    },
+    {
+      "category": "type-mismatch",
+      "severity": "critical",
+      "title": "Passing number for iconSize instead of string",
+      "description": "iconSize prop expects STRING not NUMBER",
+      "wrong": ":icon-size=\"24\"",
+      "correct": "icon-size=\"24\" or :icon-size=\"'24'\"",
+      "impact": "Type validator fails, icon size defaults to '24'"
+    },
+    {
+      "category": "state-management",
+      "severity": "critical",
+      "title": "Not resetting loadingStatus in error handlers",
+      "description": "If async operation fails, loadingStatus stays true forever",
+      "wrong": "async handleSave() {\n  this.loadingStatus = true;\n  await saveData(); // throws error\n  this.loadingStatus = false; // never reached\n}",
+      "correct": "async handleSave() {\n  this.loadingStatus = true;\n  try {\n    await saveData();\n  } finally {\n    this.loadingStatus = false; // always executes\n  }\n}",
+      "impact": "Button stuck in loading state, user can't interact"
+    },
+    {
+      "category": "event-handling",
+      "severity": "high",
+      "title": "Expecting payload.value in button group click handler",
+      "description": "Button group click payload doesn't have 'value' property",
+      "wrong": "handleClick(payload) {\n  console.log(payload.value); // undefined!\n}",
+      "correct": "handleClick(payload) {\n  console.log(payload.id); // correct!\n  console.log(payload.labelText); // correct!\n}",
+      "impact": "Cannot access clicked button data"
+    },
+    {
+      "category": "validation",
+      "severity": "high",
+      "title": "Using camelCase for type prop value",
+      "description": "Type values use kebab-case, not camelCase",
+      "wrong": "type=\"subtlePrimary\"",
+      "correct": "type=\"subtle-primary\"",
+      "impact": "Validator fails, button shows as 'primary' type"
+    },
+    {
+      "category": "accessibility",
+      "severity": "high",
+      "title": "Icon-only button without accessible label",
+      "description": "Setting labelTextStatus=false without alternative text",
+      "wrong": "<InButtonV2\n  :label-text-status=\"false\"\n  left-icon=\"trash\"\n/>",
+      "correct": "<InButtonV2\n  :label-text-status=\"false\"\n  left-icon=\"trash\"\n  tooltip-text=\"Delete item\"\n/>",
+      "impact": "Screen readers can't identify button purpose"
+    },
+    {
+      "category": "performance",
+      "severity": "medium",
+      "title": "Creating buttonGroupOptions inline",
+      "description": "Inline array creation causes unnecessary re-renders",
+      "wrong": "<InButtonV2 :button-group-options=\"[{...}, {...}]\" />",
+      "correct": "// In data/computed\ndata() {\n  return {\n    tabOptions: [{...}, {...}]\n  };\n}\n\n<InButtonV2 :button-group-options=\"tabOptions\" />",
+      "impact": "Component re-renders on every parent update"
+    }
+  ],
+  "bestPractices": [
+    {
+      "title": "Use constants for type and styling",
+      "description": "Import and use TYPES and STYLES constants instead of string literals",
+      "reason": "Provides autocomplete, prevents typos, and type safety",
+      "example": "import { TYPES, STYLES } from '@useinsider/design-system-vue';\n\n<InButtonV2\n  :type=\"TYPES.PRIMARY\"\n  :styling=\"STYLES.SOLID\"\n/>"
+    },
+    {
+      "title": "Always use try-finally with loadingStatus",
+      "description": "Ensure loadingStatus is reset even if operation fails",
+      "reason": "Prevents button from being stuck in loading state",
+      "example": "async handleSave() {\n  this.loadingStatus = true;\n  try {\n    await this.api.save();\n    this.successStatus = true;\n    setTimeout(() => this.successStatus = false, 2000);\n  } catch (error) {\n    this.$notify.error(error.message);\n  } finally {\n    this.loadingStatus = false;\n  }\n}"
+    },
+    {
+      "title": "Provide meaningful labelText",
+      "description": "Button text should clearly describe the action",
+      "reason": "Improves usability and accessibility",
+      "good": ["Save Changes", "Delete Account", "Continue to Checkout"],
+      "bad": ["OK", "Submit", "Click Here"]
+    },
+    {
+      "title": "Use appropriate button types for actions",
+      "description": "Match button type to action semantics",
+      "patterns": [
+        { "action": "Primary CTA", "type": "primary", "styling": "solid" },
+        { "action": "Destructive action", "type": "danger", "styling": "solid" },
+        { "action": "Secondary action", "type": "secondary", "styling": "ghost" },
+        { "action": "Tertiary/cancel", "type": "secondary", "styling": "text" }
+      ]
+    },
+    {
+      "title": "Show success feedback briefly",
+      "description": "Use successStatus for 2-3 seconds then reset",
+      "reason": "Provides confirmation without permanent state change",
+      "example": "async handleSave() {\n  await this.save();\n  this.successStatus = true;\n  setTimeout(() => {\n    this.successStatus = false;\n  }, 2000);\n}"
+    }
+  ],
+  "figmaMapping": {
+    "componentName": "InButtonV2",
+    "storybookUrl": "InButtonV2",
+    "propertyOverrides": {
+      "Label": "labelText",
+      "Style": "styling"
+    },
+    "propertyTypes": {
+      "Label": "string",
+      "Style": "enum",
+      "Type": "enum",
+      "Size": "enum",
+      "Disabled": "boolean",
+      "Loading": "boolean",
+      "Loading Status": "boolean",
+      "Success Status": "boolean",
+      "Hover": "boolean",
+      "Pressed": "boolean",
+      "Selected": "boolean",
+      "Right Icon Status": "boolean",
+      "Left Icon Status": "boolean",
+      "Label Status": "boolean"
+    },
+    "valueMapping": {
+      "Style": {
+        "Solid": "solid",
+        "Ghost": "ghost",
+        "Text": "text"
+      },
+      "Type": {
+        "Primary": "primary",
+        "Subtle Primary": "subtle-primary",
+        "Secondary": "secondary",
+        "Danger": "danger",
+        "Warning": "warning",
+        "Smart": "smart",
+        "Subtle Smart": "subtle-smart",
+        "Inverse": "inverse"
+      },
+      "Size": {
+        "Default": "default",
+        "Small": "small"
+      }
+    },
+    "stateProps": ["Hover", "Pressed", "Selected"],
+    "notes": [
+      "State props (Hover, Pressed, Selected) are for Figma preview only",
+      "Don't include state props in generated code unless explicitly needed",
+      "Label property maps to labelText (not just 'label')",
+      "Style property maps to styling (not 'style')"
+    ]
+  }
 }

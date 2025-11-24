@@ -1,0 +1,213 @@
+{
+  "component": "InCheckBoxV2",
+  "propEnrichments": {
+    "options": {
+      "valueFormat": {
+        "structure": "Array of checkbox option objects",
+        "objectShape": "Array<{ id: string, label: string, value: any, disabled?: boolean, checked?: boolean }>",
+        "notes": "When provided, renders multiple checkboxes in a group. Each option must have id and label. Useful for checkbox groups with multiple selections.",
+        "examples": [
+          {
+            "scenario": "Basic checkbox group",
+            "value": "[{ id: 'opt1', label: 'Option 1', value: 'value1' }, { id: 'opt2', label: 'Option 2', value: 'value2' }]",
+            "code": ":options=\"[\n  { id: 'marketing', label: 'Marketing Emails', value: 'marketing' },\n  { id: 'newsletter', label: 'Newsletter', value: 'newsletter' }\n]\""
+          },
+          {
+            "scenario": "With disabled options",
+            "value": "[{ id: 'opt1', label: 'Available', value: 'a', disabled: false }, { id: 'opt2', label: 'Unavailable', value: 'b', disabled: true }]",
+            "code": ":options=\"[\n  { id: 'free', label: 'Free Tier', value: 'free', disabled: false },\n  { id: 'enterprise', label: 'Enterprise (Contact Sales)', value: 'ent', disabled: true }\n]\""
+          },
+          {
+            "scenario": "Pre-selected checkboxes",
+            "value": "[{ id: 'opt1', label: 'Option 1', value: 'a', checked: true }, { id: 'opt2', label: 'Option 2', value: 'b', checked: false }]",
+            "code": ":options=\"[\n  { id: 'terms', label: 'I agree to terms', value: 'terms', checked: true },\n  { id: 'marketing', label: 'Marketing emails', value: 'marketing', checked: false }\n]\""
+          }
+        ],
+        "typescript": "Array<{ id: string; label: string; value: any; disabled?: boolean; checked?: boolean }>"
+      },
+      "relatedProps": ["modelValue", "disabled"],
+      "relatedEvents": ["change", "update:modelValue"],
+      "commonMistakes": [
+        {
+          "mistake": "Using simple array of strings ['Option 1', 'Option 2']",
+          "impact": "Component won't render checkbox group properly",
+          "fix": "Use array of objects with id, label, and value properties",
+          "severity": "critical"
+        },
+        {
+          "mistake": "Missing 'id' property in options",
+          "impact": "Cannot track which checkbox was selected, events don't work properly",
+          "fix": "Always provide unique 'id' for each option: { id: 'unique-id', label: '...', value: '...' }",
+          "severity": "high"
+        },
+        {
+          "mistake": "Using same id for multiple options",
+          "impact": "Checkbox state conflicts, unpredictable behavior",
+          "fix": "Ensure each option has a unique id within the group",
+          "severity": "high"
+        },
+        {
+          "mistake": "Not handling v-model with checkbox group",
+          "impact": "Selected values not tracked, state not updated",
+          "fix": "Use v-model to bind selected values array: v-model=\"selectedOptions\"",
+          "severity": "medium"
+        }
+      ]
+    },
+    "skeletonSizing": {
+      "valueFormat": {
+        "structure": "Skeleton loader size object",
+        "objectShape": "{ width: number, height: number }",
+        "notes": "Defines dimensions for skeleton loader placeholder. Only used when skeletonStatus is true.",
+        "examples": [
+          {
+            "scenario": "Default checkbox skeleton",
+            "value": "{ width: 20, height: 20 }",
+            "code": ":skeleton-sizing=\"{ width: 20, height: 20 }\""
+          },
+          {
+            "scenario": "Larger skeleton for custom styling",
+            "value": "{ width: 24, height: 24 }",
+            "code": ":skeleton-sizing=\"{ width: 24, height: 24 }\""
+          }
+        ],
+        "typescript": "{ width: number; height: number }"
+      },
+      "relatedProps": ["skeletonStatus"],
+      "commonMistakes": [
+        {
+          "mistake": "Setting skeletonSizing without skeletonStatus",
+          "impact": "skeletonSizing has no effect if skeletonStatus is false",
+          "fix": "Enable skeleton: :skeleton-status=\"true\" :skeleton-sizing=\"{ width: 20, height: 20 }\"",
+          "severity": "low"
+        }
+      ]
+    }
+  },
+  "commonMistakes": [
+    {
+      "category": "prop-usage",
+      "severity": "critical",
+      "title": "Using simple string array for options",
+      "description": "options prop requires array of objects, not strings",
+      "wrong": ":options=\"['Option 1', 'Option 2', 'Option 3']\"",
+      "correct": ":options=\"[{ id: 'opt1', label: 'Option 1', value: 'value1' }, { id: 'opt2', label: 'Option 2', value: 'value2' }]\"",
+      "impact": "Checkbox group won't render, component may throw errors"
+    },
+    {
+      "category": "state-management",
+      "severity": "high",
+      "title": "Not using v-model for checkbox group",
+      "description": "Checkbox group needs v-model to track selected values",
+      "wrong": "<InCheckBoxV2 :options=\"checkboxOptions\" />",
+      "correct": "<InCheckBoxV2 v-model=\"selectedValues\" :options=\"checkboxOptions\" />",
+      "impact": "Selected values not tracked, state not synchronized"
+    },
+    {
+      "category": "prop-combination",
+      "severity": "high",
+      "title": "Mixing single checkbox with options array",
+      "description": "Either use single checkbox mode OR checkbox group mode, not both",
+      "wrong": "<InCheckBoxV2 label=\"Single\" :options=\"[...]\" />",
+      "correct": "<!-- Single: -->\n<InCheckBoxV2 label=\"Accept Terms\" />\n<!-- OR Group: -->\n<InCheckBoxV2 :options=\"[...]\" />",
+      "impact": "Unpredictable behavior, single checkbox props ignored when options provided"
+    },
+    {
+      "category": "accessibility",
+      "severity": "medium",
+      "title": "Not providing accessible labels",
+      "description": "Each checkbox should have clear, descriptive label",
+      "wrong": ":options=\"[{ id: '1', label: 'Yes', value: true }]\"",
+      "correct": ":options=\"[{ id: 'terms', label: 'I agree to the Terms and Conditions', value: true }]\"",
+      "impact": "Poor accessibility for screen readers, unclear purpose"
+    },
+    {
+      "category": "event-handling",
+      "severity": "medium",
+      "title": "Not handling change events",
+      "description": "Checkbox selections should trigger appropriate actions",
+      "wrong": "<InCheckBoxV2 v-model=\"selected\" :options=\"opts\" />",
+      "correct": "<InCheckBoxV2 v-model=\"selected\" :options=\"opts\" @change=\"handleSelection\" />",
+      "impact": "User selections don't trigger expected behavior or validation"
+    }
+  ],
+  "bestPractices": [
+    {
+      "title": "Always Provide Unique IDs for Options",
+      "description": "Use meaningful, unique identifiers for each checkbox option",
+      "code": "const checkboxOptions = [\n  { id: 'email-marketing', label: 'Marketing Emails', value: 'marketing' },\n  { id: 'email-newsletter', label: 'Weekly Newsletter', value: 'newsletter' },\n  { id: 'email-updates', label: 'Product Updates', value: 'updates' }\n];",
+      "benefit": "Reliable state tracking, easier debugging, better event handling"
+    },
+    {
+      "title": "Use v-model for Reactive State",
+      "description": "Bind checkbox selections to reactive data for automatic state management",
+      "code": "<script setup>\nimport { ref } from 'vue';\n\nconst selectedPreferences = ref([]);\nconst preferences = [\n  { id: 'pref1', label: 'Email', value: 'email' },\n  { id: 'pref2', label: 'SMS', value: 'sms' }\n];\n</script>\n\n<template>\n  <InCheckBoxV2 \n    v-model=\"selectedPreferences\" \n    :options=\"preferences\"\n  />\n</template>",
+      "benefit": "Automatic state synchronization, reactive updates, easier form handling"
+    },
+    {
+      "title": "Disable Individual Options When Needed",
+      "description": "Use disabled property to prevent selection of unavailable options",
+      "code": "const subscriptionOptions = [\n  { id: 'free', label: 'Free Plan', value: 'free', disabled: false },\n  { id: 'pro', label: 'Pro Plan (Coming Soon)', value: 'pro', disabled: true },\n  { id: 'enterprise', label: 'Enterprise', value: 'ent', disabled: !hasEnterpriseAccess }\n];",
+      "benefit": "Clear visual feedback, prevents invalid selections, better UX"
+    },
+    {
+      "title": "Provide Clear, Descriptive Labels",
+      "description": "Use full sentences or clear descriptions for checkbox labels",
+      "code": "// ❌ Bad\nconst opts = [{ id: '1', label: 'Yes', value: true }];\n\n// ✅ Good\nconst opts = [\n  { id: 'terms', label: 'I have read and agree to the Terms of Service', value: 'terms' },\n  { id: 'privacy', label: 'I understand the Privacy Policy', value: 'privacy' }\n];",
+      "benefit": "Better accessibility, clearer user intent, reduced confusion"
+    },
+    {
+      "title": "Handle Change Events for Validation",
+      "description": "Validate selections and provide feedback",
+      "code": "<script setup>\nconst handleChange = (selectedValues) => {\n  if (!selectedValues.includes('terms')) {\n    showError('You must accept the terms to continue');\n  }\n  validateForm();\n};\n</script>\n\n<template>\n  <InCheckBoxV2 \n    v-model=\"selections\" \n    :options=\"options\"\n    @change=\"handleChange\"\n  />\n</template>",
+      "benefit": "Real-time validation, immediate user feedback, better form UX"
+    }
+  ],
+  "eventEnrichments": {
+    "change": {
+      "when": "Fires when any checkbox in the group is toggled",
+      "payload": "Array of selected values",
+      "commonMistakes": [
+        {
+          "mistake": "Expecting single value instead of array",
+          "fix": "Checkbox group always emits array of values: (values) => console.log(values)",
+          "severity": "medium"
+        }
+      ]
+    },
+    "update:modelValue": {
+      "when": "Fires when v-model needs updating (checkbox toggled)",
+      "payload": "Array of selected values",
+      "commonMistakes": []
+    }
+  },
+  "exampleEnrichments": [
+    {
+      "title": "Basic Checkbox Group with v-model",
+      "description": "Common use case: multiple selection checkbox group",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InCheckBoxV2 } from '@useinsider/design-system-vue';\n\nconst selectedFeatures = ref([]);\nconst featureOptions = [\n  { id: 'analytics', label: 'Analytics Dashboard', value: 'analytics' },\n  { id: 'reports', label: 'Custom Reports', value: 'reports' },\n  { id: 'export', label: 'Data Export', value: 'export' }\n];\n</script>\n\n<template>\n  <InCheckBoxV2 \n    v-model=\"selectedFeatures\"\n    :options=\"featureOptions\"\n  />\n  <p>Selected: {{ selectedFeatures }}</p>\n</template>"
+    },
+    {
+      "title": "Checkbox Group with Validation",
+      "description": "Form with required checkbox and validation",
+      "code": "<script setup>\nimport { ref, computed } from 'vue';\n\nconst agreements = ref([]);\nconst options = [\n  { id: 'terms', label: 'I agree to Terms of Service *', value: 'terms' },\n  { id: 'privacy', label: 'I agree to Privacy Policy *', value: 'privacy' },\n  { id: 'marketing', label: 'I want to receive marketing emails', value: 'marketing' }\n];\n\nconst isValid = computed(() => \n  agreements.value.includes('terms') && \n  agreements.value.includes('privacy')\n);\n\nconst handleSubmit = () => {\n  if (!isValid.value) {\n    alert('Please accept required agreements');\n    return;\n  }\n  // Submit form\n};\n</script>\n\n<template>\n  <form @submit.prevent=\"handleSubmit\">\n    <InCheckBoxV2 \n      v-model=\"agreements\"\n      :options=\"options\"\n    />\n    <button :disabled=\"!isValid\">Submit</button>\n  </form>\n</template>"
+    },
+    {
+      "title": "Conditional Disabled Options",
+      "description": "Dynamically disable options based on user tier",
+      "code": "<script setup>\nimport { ref, computed } from 'vue';\n\nconst userTier = ref('free'); // 'free', 'pro', 'enterprise'\nconst selectedFeatures = ref([]);\n\nconst featureOptions = computed(() => [\n  { \n    id: 'basic', \n    label: 'Basic Features', \n    value: 'basic',\n    disabled: false \n  },\n  { \n    id: 'advanced', \n    label: 'Advanced Analytics (Pro+)', \n    value: 'advanced',\n    disabled: userTier.value === 'free'\n  },\n  { \n    id: 'enterprise', \n    label: 'Enterprise Support (Enterprise Only)', \n    value: 'enterprise',\n    disabled: userTier.value !== 'enterprise'\n  }\n]);\n</script>\n\n<template>\n  <InCheckBoxV2 \n    v-model=\"selectedFeatures\"\n    :options=\"featureOptions\"\n  />\n</template>"
+    }
+  ],
+  "helperFunctions": [],
+  "performanceNotes": [
+    "Large checkbox groups (50+ options) may impact render performance - consider virtualization",
+    "Re-creating options array on every render causes unnecessary re-renders - use computed or ref",
+    "Checkbox group with many options should use key prop for efficient updates"
+  ],
+  "accessibilityNotes": [
+    "Each checkbox automatically gets proper ARIA attributes",
+    "Ensure labels are descriptive and clear for screen readers",
+    "Required checkboxes should be marked visually (e.g., with asterisk)",
+    "Group related checkboxes with fieldset and legend for better context"
+  ]
+}

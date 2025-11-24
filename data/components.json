@@ -708,6 +708,7 @@
       }
     ],
     "slots": [],
+    "category": "Form",
     "hasStorybook": false
   },
   "InChart": {
@@ -1944,6 +1945,482 @@
       "secondDropdown",
       "left-side-filters",
       "secondRowHeader",
+      "default"
+    ],
+    "hasStorybook": false
+  },
+  "InDataTableV2": {
+    "name": "InDataTableV2",
+    "title": "In Data Table",
+    "description": "",
+    "version": "v2",
+    "props": {
+      "data": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "totalData": {
+        "type": "Number",
+        "required": false,
+        "default": 1
+      },
+      "columnOptions": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "rowModelType": {
+        "type": "String",
+        "required": false,
+        "default": "clientSide"
+      },
+      "rowModelTypeServer": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "fetchUrl": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "rowsSelection": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "canSelectAllRows": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "defaultColumnMenuItems": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "customColumnMenuItems": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "nestedTableFields": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "nestedTableStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "isTreeData": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "groupDataPath": {
+        "type": "String",
+        "required": false,
+        "default": "group"
+      },
+      "groupDefaultExpanded": {
+        "type": "Number",
+        "required": false,
+        "default": 0
+      },
+      "paginationStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "paginationInformationStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "defaultItemPerPage": {
+        "type": "Number",
+        "required": false,
+        "default": 10
+      },
+      "maxItemPerPage": {
+        "type": "Number",
+        "required": false,
+        "default": 20
+      },
+      "minItemPerPage": {
+        "type": "Number",
+        "required": false,
+        "default": 1
+      },
+      "rowHeight": {
+        "type": "String",
+        "required": false,
+        "default": "medium"
+      },
+      "horizontalScroll": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "maxPinnedColumns": {
+        "type": "Number",
+        "required": false,
+        "default": "null"
+      },
+      "autoHeight": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "fixedHeight": {
+        "type": "Number",
+        "required": false,
+        "default": 300
+      },
+      "inContainerLayout": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "inContainerLayoutOptions": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "noDataTitleText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "noDataDescriptionText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "noDataIcon": {
+        "type": "String",
+        "required": false,
+        "default": "no-personalization"
+      },
+      "loadingStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "rowDragManaged": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "loadingType": {
+        "type": "String",
+        "required": false,
+        "default": "skeleton"
+      },
+      "loadingTitleText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "loadingDescriptionText": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "loadingIcon": {
+        "type": "String",
+        "required": false,
+        "default": "email"
+      },
+      "horizontalSkeletonsCount": {
+        "type": "Number",
+        "required": false,
+        "default": 6
+      },
+      "statusFilterStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "statusFilterList": {
+        "type": "Array",
+        "required": false,
+        "default": "[Function]"
+      },
+      "searchFilterStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "embedFullWidthRows": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "searchFilterPlaceholder": {
+        "type": "String",
+        "required": false,
+        "default": "Search"
+      },
+      "tableSearchParams": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "httpMethod": {
+        "type": "String",
+        "required": false,
+        "default": "GET"
+      },
+      "alignHeaderTitle": {
+        "type": "String",
+        "required": false,
+        "default": ""
+      },
+      "preventXss": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "hasBulkActions": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "bulkActionsOptions": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      },
+      "isUsDateFormat": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "enableCellTextSelection": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "suppressCopyRowsToClipboard": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "enableRangeSelection": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "isRowsPreselectEnabled": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "isResponsive": {
+        "type": "Boolean",
+        "required": false,
+        "default": false
+      },
+      "showingItemsStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "visiblePaginationPages": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "itemsPerPageStatus": {
+        "type": "Boolean",
+        "required": false,
+        "default": true
+      },
+      "noDataOptions": {
+        "type": "Object",
+        "required": false,
+        "default": "[Function]"
+      }
+    },
+    "emits": [
+      {
+        "name": "loadingStatus"
+      },
+      {
+        "name": "dataLoaded"
+      },
+      {
+        "name": "perPageSelected"
+      },
+      {
+        "name": "fetchData"
+      },
+      {
+        "name": "copied"
+      },
+      {
+        "name": "dataReady"
+      },
+      {
+        "name": "nestedDataReady"
+      },
+      {
+        "name": "firstDataRendered"
+      },
+      {
+        "name": "gridSizeChanged"
+      },
+      {
+        "name": "paginationChanged"
+      },
+      {
+        "name": "selectStatus"
+      },
+      {
+        "name": "setSearchValue"
+      },
+      {
+        "name": "rowsUpdated"
+      },
+      {
+        "name": "rowGroupStatusChanged"
+      },
+      {
+        "name": "sortingChanged"
+      },
+      {
+        "name": "maxColumnsPinned"
+      },
+      {
+        "name": "columnPinned"
+      },
+      {
+        "name": "refreshed"
+      },
+      {
+        "name": "rowDragEnter"
+      },
+      {
+        "name": "rowDragEnd"
+      },
+      {
+        "name": "rowDragMove"
+      },
+      {
+        "name": "rowDragLeave"
+      },
+      {
+        "name": "rowDragCancel"
+      },
+      {
+        "name": "rowDragStopped"
+      },
+      {
+        "name": "filterChanged"
+      },
+      {
+        "name": "rowSelected"
+      },
+      {
+        "name": "cellHovered"
+      },
+      {
+        "name": "allRowsSelected"
+      },
+      {
+        "name": "cellClicked"
+      },
+      {
+        "name": "bulkAction"
+      }
+    ],
+    "enums": [
+      {
+        "name": "SORTING_ICONS",
+        "values": {
+          "ascending": "filled-sorting-ascending",
+          "descending": "filled-sorting-descending",
+          "unsort": "filled-sorting-default"
+        },
+        "type": "const"
+      },
+      {
+        "name": "CELL_RENDERERS",
+        "values": {
+          "actions": "InActions",
+          "status": "InStatus",
+          "statuses": "InStatuses",
+          "text": "InText",
+          "date": "InText",
+          "link": "InLink",
+          "button": "InButton",
+          "menu": "InMenu",
+          "preview": "InPreview",
+          "tags": "InTags",
+          "toggle": "InToggle",
+          "radioButton": "InRadioButton",
+          "progress": "InProgress",
+          "default": "InText",
+          "icon": "InIcon",
+          "iconsGroup": "InIconsGroup",
+          "expandable": "agGroupCellRenderer",
+          "skeleton": "InLoadingCell"
+        },
+        "type": "const"
+      },
+      {
+        "name": "GRID_MODE_TYPES",
+        "values": {
+          "viewport": "viewport",
+          "clientSide": "clientSide",
+          "serverSide": "clientSide"
+        },
+        "type": "const"
+      },
+      {
+        "name": "PAGINATION_RENDERERS",
+        "values": {
+          "right": "InPaginationPerPage",
+          "center": "InPaginationPages",
+          "left": "InPaginationCount"
+        },
+        "type": "const"
+      },
+      {
+        "name": "ROW_HEIGHT",
+        "values": {},
+        "type": "const"
+      },
+      {
+        "name": "DEFAULT_SEARCH_PARAMS",
+        "values": {},
+        "type": "const"
+      },
+      {
+        "name": "MULTIPLIERS",
+        "values": {},
+        "type": "const"
+      },
+      {
+        "name": "ARROW_ALIGNMENT",
+        "values": {
+          "left": "start",
+          "center": "center",
+          "right": "end"
+        },
+        "type": "const"
+      }
+    ],
+    "slots": [
+      "extraItem",
+      "extraItemRight",
+      "rightSlot",
+      "secondRowHeader",
+      "customFloatContent",
       "default"
     ],
     "hasStorybook": false

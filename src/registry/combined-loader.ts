@@ -203,7 +203,7 @@ export function getMigration(fromComponent: string, toComponent?: string): any |
   const dataset = loadCombinedDataset();
 
   // Search migrations
-  for (const [key, migration] of Object.entries(dataset.migrations)) {
+  for (const [_key, migration] of Object.entries(dataset.migrations)) {
     if (migration.fromComponent === fromComponent) {
       if (!toComponent || migration.toComponent === toComponent) {
         return migration;

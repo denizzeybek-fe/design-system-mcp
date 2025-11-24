@@ -1,0 +1,294 @@
+{
+  "component": "InSidebarV2",
+  "propEnrichments": {
+    "routes": {
+      "valueFormat": {
+        "structure": "Array of navigation route objects",
+        "objectShape": "Array<{ id: string, label: string, path: string, icon?: string, badge?: number, children?: Array<Route>, disabled?: boolean, active?: boolean }>",
+        "notes": "Defines the navigation structure for sidebar. Required prop. Supports nested routes via children property for sub-navigation.",
+        "examples": [
+          {
+            "scenario": "Basic navigation routes",
+            "value": "[{ id: 'home', label: 'Home', path: '/', icon: 'home' }, { id: 'settings', label: 'Settings', path: '/settings', icon: 'settings' }]",
+            "code": ":routes=\"[\n  { id: 'home', label: 'Home', path: '/', icon: 'home' },\n  { id: 'analytics', label: 'Analytics', path: '/analytics', icon: 'chart' },\n  { id: 'settings', label: 'Settings', path: '/settings', icon: 'settings' }\n]\""
+          },
+          {
+            "scenario": "Routes with badges (notifications)",
+            "value": "[{ id: 'inbox', label: 'Inbox', path: '/inbox', icon: 'mail', badge: 5 }, { id: 'tasks', label: 'Tasks', path: '/tasks', icon: 'check', badge: 12 }]",
+            "code": ":routes=\"[\n  { id: 'inbox', label: 'Inbox', path: '/inbox', icon: 'mail', badge: unreadCount },\n  { id: 'notifications', label: 'Notifications', path: '/notifications', icon: 'bell', badge: notificationCount }\n]\""
+          },
+          {
+            "scenario": "Nested routes (sub-navigation)",
+            "value": "[{ id: 'admin', label: 'Admin', path: '/admin', icon: 'lock', children: [{ id: 'users', label: 'Users', path: '/admin/users' }, { id: 'roles', label: 'Roles', path: '/admin/roles' }] }]",
+            "code": ":routes=\"[\n  { \n    id: 'admin', \n    label: 'Administration', \n    path: '/admin', \n    icon: 'lock',\n    children: [\n      { id: 'users', label: 'User Management', path: '/admin/users' },\n      { id: 'roles', label: 'Roles & Permissions', path: '/admin/roles' },\n      { id: 'audit', label: 'Audit Logs', path: '/admin/audit' }\n    ]\n  }\n]\""
+          },
+          {
+            "scenario": "With disabled and active states",
+            "value": "[{ id: 'dashboard', label: 'Dashboard', path: '/', active: true }, { id: 'reports', label: 'Reports (Coming Soon)', path: '/reports', disabled: true }]",
+            "code": ":routes=\"[\n  { id: 'dashboard', label: 'Dashboard', path: '/', active: currentRoute === '/' },\n  { id: 'beta', label: 'Beta Features', path: '/beta', disabled: !hasBetaAccess }\n]\""
+          }
+        ],
+        "typescript": "Array<{ id: string; label: string; path: string; icon?: string; badge?: number; children?: Array<Route>; disabled?: boolean; active?: boolean }>"
+      },
+      "relatedProps": ["recentSearches", "searchResults"],
+      "relatedEvents": ["navigate", "route-click"],
+      "commonMistakes": [
+        {
+          "mistake": "Missing required 'id' property in route objects",
+          "impact": "Route tracking and active state don't work, events fail",
+          "fix": "Always provide unique id: { id: 'dashboard', label: 'Dashboard', path: '/' }",
+          "severity": "critical"
+        },
+        {
+          "mistake": "Using duplicate route IDs",
+          "impact": "Active state conflicts, navigation breaks",
+          "fix": "Ensure each route has unique id, including nested routes",
+          "severity": "high"
+        },
+        {
+          "mistake": "Not providing path property",
+          "impact": "Navigation doesn't work, routes not clickable",
+          "fix": "Always include path: { id: 'home', label: 'Home', path: '/' }",
+          "severity": "high"
+        },
+        {
+          "mistake": "Deep nesting (>3 levels)",
+          "impact": "Poor UX, complex navigation structure",
+          "fix": "Keep navigation hierarchy shallow (max 2 levels recommended)",
+          "severity": "medium"
+        }
+      ]
+    },
+    "recentSearches": {
+      "valueFormat": {
+        "structure": "Array of recent search strings or objects",
+        "objectShape": "Array<string> or Array<{ query: string, timestamp?: number, count?: number }>",
+        "notes": "Displays recent search queries in sidebar search. Can be simple string array or objects with metadata.",
+        "examples": [
+          {
+            "scenario": "Simple search history",
+            "value": "['user management', 'analytics dashboard', 'export data']",
+            "code": ":recent-searches=\"['user management', 'analytics', 'export']\"",
+            "simple": true
+          },
+          {
+            "scenario": "Search history with metadata",
+            "value": "[{ query: 'user management', timestamp: 1234567890, count: 5 }, { query: 'analytics', timestamp: 1234567800, count: 3 }]",
+            "code": ":recent-searches=\"[\n  { query: 'user management', timestamp: Date.now(), count: 5 },\n  { query: 'analytics dashboard', timestamp: Date.now() - 3600000 }\n]\""
+          }
+        ],
+        "typescript": "Array<string> | Array<{ query: string; timestamp?: number; count?: number }>"
+      },
+      "relatedProps": ["searchResults"],
+      "relatedEvents": ["search", "recent-search-click"],
+      "commonMistakes": [
+        {
+          "mistake": "Storing too many recent searches (>20)",
+          "impact": "UI clutter, poor performance",
+          "fix": "Limit to 5-10 most recent: recentSearches.slice(0, 10)",
+          "severity": "medium"
+        },
+        {
+          "mistake": "Not clearing old searches",
+          "impact": "Stale search history, irrelevant suggestions",
+          "fix": "Implement timestamp-based cleanup or max count limit",
+          "severity": "low"
+        }
+      ]
+    },
+    "searchResults": {
+      "valueFormat": {
+        "structure": "Array of search result objects",
+        "objectShape": "Array<{ id: string, title: string, type?: string, path?: string, icon?: string, description?: string }>",
+        "notes": "Displays search results in sidebar. Updated dynamically as user types in search box.",
+        "examples": [
+          {
+            "scenario": "Basic search results",
+            "value": "[{ id: '1', title: 'User Management', type: 'page', path: '/admin/users' }, { id: '2', title: 'Analytics Dashboard', type: 'page', path: '/analytics' }]",
+            "code": ":search-results=\"[\n  { id: 'usr1', title: 'User Management', type: 'page', path: '/admin/users', icon: 'users' },\n  { id: 'ana1', title: 'Analytics Dashboard', type: 'page', path: '/analytics', icon: 'chart' }\n]\""
+          },
+          {
+            "scenario": "Search results with descriptions",
+            "value": "[{ id: '1', title: 'Export Data', path: '/export', description: 'Download your data in CSV or JSON format' }]",
+            "code": ":search-results=\"filteredResults.map(r => ({\n  id: r.id,\n  title: r.title,\n  path: r.path,\n  description: r.description,\n  icon: r.icon\n}))\""
+          },
+          {
+            "scenario": "Empty search results",
+            "value": "[]",
+            "code": ":search-results=\"searchQuery ? filteredResults : []\""
+          }
+        ],
+        "typescript": "Array<{ id: string; title: string; type?: string; path?: string; icon?: string; description?: string }>"
+      },
+      "relatedProps": ["recentSearches"],
+      "relatedEvents": ["search-result-click", "search"],
+      "commonMistakes": [
+        {
+          "mistake": "Not limiting search results (showing 100+ results)",
+          "impact": "Performance issues, overwhelming UI",
+          "fix": "Limit to top 10-20 results: searchResults.slice(0, 10)",
+          "severity": "high"
+        },
+        {
+          "mistake": "Not providing feedback for no results",
+          "impact": "User confused when search returns empty",
+          "fix": "Show empty state message when searchResults.length === 0",
+          "severity": "medium"
+        },
+        {
+          "mistake": "Searching on every keystroke without debounce",
+          "impact": "Performance issues, excessive API calls",
+          "fix": "Implement debounce (300-500ms) for search input",
+          "severity": "high"
+        }
+      ]
+    }
+  },
+  "commonMistakes": [
+    {
+      "category": "prop-usage",
+      "severity": "critical",
+      "title": "Not providing required routes prop",
+      "description": "routes is a required prop - sidebar cannot render without it",
+      "wrong": "<InSidebarV2 />",
+      "correct": "<InSidebarV2 :routes=\"navigationRoutes\" />",
+      "impact": "Component doesn't render, throws error"
+    },
+    {
+      "category": "data-structure",
+      "severity": "high",
+      "title": "Missing 'id' in route objects",
+      "description": "Each route must have unique id for tracking and state management",
+      "wrong": ":routes=\"[{ label: 'Home', path: '/' }]\"",
+      "correct": ":routes=\"[{ id: 'home', label: 'Home', path: '/' }]\"",
+      "impact": "Active route tracking fails, navigation events don't work properly"
+    },
+    {
+      "category": "navigation",
+      "severity": "high",
+      "title": "Not handling route clicks",
+      "description": "Sidebar emits navigation events but doesn't navigate automatically",
+      "wrong": "<InSidebarV2 :routes=\"routes\" />",
+      "correct": "<InSidebarV2 :routes=\"routes\" @navigate=\"handleNavigation\" />",
+      "impact": "Clicking routes doesn't navigate, poor UX"
+    },
+    {
+      "category": "performance",
+      "severity": "medium",
+      "title": "Re-creating routes array on every render",
+      "description": "Routes should be defined once, not recreated in template",
+      "wrong": "<InSidebarV2 :routes=\"[{ id: 'home', label: 'Home', path: '/' }]\" />",
+      "correct": "<!-- Define routes in setup/data -->\nconst routes = ref([{ id: 'home', label: 'Home', path: '/' }]);\n<InSidebarV2 :routes=\"routes\" />",
+      "impact": "Unnecessary re-renders, poor performance"
+    },
+    {
+      "category": "search",
+      "severity": "medium",
+      "title": "Not debouncing search input",
+      "description": "Search should be debounced to avoid excessive API calls",
+      "wrong": "@search=\"handleSearch\"  <!-- fires on every keystroke -->",
+      "correct": "// Use debounced search handler\nconst debouncedSearch = debounce(handleSearch, 300);\n@search=\"debouncedSearch\"",
+      "impact": "Performance issues, excessive API calls, poor UX"
+    },
+    {
+      "category": "ux",
+      "severity": "low",
+      "title": "Too many top-level routes (>10)",
+      "description": "Long lists of routes create cluttered sidebar",
+      "wrong": "routes: [ /* 20 top-level routes */ ]",
+      "correct": "// Group related routes under parent:\nroutes: [\n  { id: 'admin', label: 'Admin', children: [/* related routes */] }\n]",
+      "impact": "Cluttered UI, difficult navigation, poor UX"
+    }
+  ],
+  "bestPractices": [
+    {
+      "title": "Group Related Routes with Children",
+      "description": "Use nested routes to organize related pages and reduce clutter",
+      "code": "const routes = [\n  {\n    id: 'content',\n    label: 'Content',\n    path: '/content',\n    icon: 'document',\n    children: [\n      { id: 'posts', label: 'Posts', path: '/content/posts' },\n      { id: 'pages', label: 'Pages', path: '/content/pages' },\n      { id: 'media', label: 'Media Library', path: '/content/media' }\n    ]\n  }\n];",
+      "benefit": "Cleaner navigation, better information architecture, improved UX"
+    },
+    {
+      "title": "Use Badges for Notifications",
+      "description": "Show unread counts or pending items with badge property",
+      "code": "const routes = computed(() => [\n  { \n    id: 'inbox', \n    label: 'Inbox', \n    path: '/inbox', \n    icon: 'mail',\n    badge: unreadMessages.value  // Reactive count\n  },\n  { \n    id: 'tasks', \n    label: 'Tasks', \n    path: '/tasks', \n    icon: 'check',\n    badge: pendingTasks.value > 0 ? pendingTasks.value : undefined\n  }\n]);",
+      "benefit": "Clear visual indicators, better user awareness, improved engagement"
+    },
+    {
+      "title": "Implement Active Route Highlighting",
+      "description": "Mark current route as active for clear navigation context",
+      "code": "import { useRoute } from 'vue-router';\n\nconst route = useRoute();\nconst routes = computed(() => navigationRoutes.map(r => ({\n  ...r,\n  active: r.path === route.path\n})));",
+      "benefit": "Clear visual feedback, better orientation, improved UX"
+    },
+    {
+      "title": "Debounce Search for Performance",
+      "description": "Use debounced search to reduce API calls and improve performance",
+      "code": "import { debounce } from 'lodash-es';\n\nconst searchQuery = ref('');\nconst searchResults = ref([]);\n\nconst performSearch = async (query) => {\n  if (!query) {\n    searchResults.value = [];\n    return;\n  }\n  const results = await api.search(query);\n  searchResults.value = results.slice(0, 10); // Limit results\n};\n\nconst debouncedSearch = debounce(performSearch, 300);\n\nconst handleSearch = (query) => {\n  searchQuery.value = query;\n  debouncedSearch(query);\n};",
+      "benefit": "Better performance, reduced server load, smoother UX"
+    },
+    {
+      "title": "Persist Recent Searches in LocalStorage",
+      "description": "Save recent searches for better user experience across sessions",
+      "code": "import { ref, watch } from 'vue';\n\nconst recentSearches = ref(\n  JSON.parse(localStorage.getItem('recentSearches') || '[]')\n);\n\nconst addRecentSearch = (query) => {\n  // Remove duplicates and limit to 10\n  const updated = [\n    query,\n    ...recentSearches.value.filter(s => s !== query)\n  ].slice(0, 10);\n  \n  recentSearches.value = updated;\n};\n\nwatch(recentSearches, (searches) => {\n  localStorage.setItem('recentSearches', JSON.stringify(searches));\n}, { deep: true });",
+      "benefit": "Persistent user experience, faster repeated searches, better UX"
+    }
+  ],
+  "eventEnrichments": {
+    "navigate": {
+      "when": "Fires when user clicks a route in sidebar",
+      "payload": "Route object { id, label, path, ... }",
+      "commonMistakes": [
+        {
+          "mistake": "Not handling navigation event",
+          "fix": "Implement @navigate handler to actually navigate: @navigate=\"router.push\"",
+          "severity": "high"
+        }
+      ]
+    },
+    "search": {
+      "when": "Fires when user types in search box",
+      "payload": "Search query string",
+      "commonMistakes": [
+        {
+          "mistake": "Searching on every keystroke without debounce",
+          "fix": "Use debounced search handler to reduce API calls",
+          "severity": "medium"
+        }
+      ]
+    },
+    "search-result-click": {
+      "when": "Fires when user clicks a search result",
+      "payload": "Search result object { id, title, path, ... }",
+      "commonMistakes": []
+    },
+    "recent-search-click": {
+      "when": "Fires when user clicks a recent search",
+      "payload": "Recent search string or object",
+      "commonMistakes": []
+    }
+  },
+  "exampleEnrichments": [
+    {
+      "title": "Complete Sidebar with Navigation",
+      "description": "Full example with routes, search, and navigation",
+      "code": "<script setup>\nimport { ref, computed } from 'vue';\nimport { useRouter, useRoute } from 'vue-router';\nimport { InSidebarV2 } from '@useinsider/design-system-vue';\n\nconst router = useRouter();\nconst route = useRoute();\n\nconst unreadCount = ref(5);\nconst navigationRoutes = computed(() => [\n  { \n    id: 'dashboard', \n    label: 'Dashboard', \n    path: '/', \n    icon: 'home',\n    active: route.path === '/'\n  },\n  { \n    id: 'inbox', \n    label: 'Inbox', \n    path: '/inbox', \n    icon: 'mail',\n    badge: unreadCount.value,\n    active: route.path === '/inbox'\n  },\n  {\n    id: 'admin',\n    label: 'Administration',\n    path: '/admin',\n    icon: 'lock',\n    children: [\n      { id: 'users', label: 'Users', path: '/admin/users' },\n      { id: 'settings', label: 'Settings', path: '/admin/settings' }\n    ]\n  }\n]);\n\nconst handleNavigate = (routeObj) => {\n  router.push(routeObj.path);\n};\n</script>\n\n<template>\n  <InSidebarV2 \n    :routes=\"navigationRoutes\"\n    @navigate=\"handleNavigate\"\n  />\n</template>"
+    },
+    {
+      "title": "Sidebar with Search Functionality",
+      "description": "Sidebar with debounced search and recent searches",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { debounce } from 'lodash-es';\n\nconst searchQuery = ref('');\nconst searchResults = ref([]);\nconst recentSearches = ref(\n  JSON.parse(localStorage.getItem('recentSearches') || '[]')\n);\n\nconst performSearch = async (query) => {\n  if (!query) {\n    searchResults.value = [];\n    return;\n  }\n  \n  // Simulate API call\n  const results = await api.search(query);\n  searchResults.value = results.slice(0, 10);\n  \n  // Add to recent searches\n  const updated = [query, ...recentSearches.value.filter(s => s !== query)].slice(0, 10);\n  recentSearches.value = updated;\n  localStorage.setItem('recentSearches', JSON.stringify(updated));\n};\n\nconst debouncedSearch = debounce(performSearch, 300);\n\nconst handleSearch = (query) => {\n  searchQuery.value = query;\n  debouncedSearch(query);\n};\n\nconst handleSearchResultClick = (result) => {\n  router.push(result.path);\n};\n</script>\n\n<template>\n  <InSidebarV2 \n    :routes=\"routes\"\n    :search-results=\"searchResults\"\n    :recent-searches=\"recentSearches\"\n    @search=\"handleSearch\"\n    @search-result-click=\"handleSearchResultClick\"\n  />\n</template>"
+    }
+  ],
+  "helperFunctions": [],
+  "performanceNotes": [
+    "Large route arrays (>50 routes) may impact initial render - consider lazy loading nested routes",
+    "Search should always be debounced (300-500ms) to avoid excessive API calls",
+    "Recent searches should be limited to 10-20 items for performance",
+    "Use computed properties for route active states to avoid unnecessary re-renders"
+  ],
+  "accessibilityNotes": [
+    "Sidebar navigation automatically includes ARIA landmarks",
+    "Route labels should be clear and descriptive for screen readers",
+    "Keyboard navigation is supported by default (Tab, Enter, Arrow keys)",
+    "Search results should announce count to screen readers"
+  ]
+}

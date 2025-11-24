@@ -1,0 +1,365 @@
+{
+  "summary": {
+    "totalComponents": 62,
+    "withComplexProps": 49,
+    "alreadyEnriched": 9,
+    "needEnrichment": 40,
+    "byPriority": {
+      "high": 0,
+      "medium": 15,
+      "low": 25
+    }
+  },
+  "highPriority": [],
+  "mediumPriority": [
+    {
+      "component": "InChart",
+      "version": "v1",
+      "complexProps": [
+        "labels",
+        "data",
+        "dataText",
+        "dataTooltips",
+        "backgroundColor",
+        "step",
+        "tooltipsExtraSettings",
+        "labelXAxesTicksExtraSettings",
+        "labelYAxesTicksExtraSettings",
+        "legendSettings",
+        "legendNames",
+        "colorPalette",
+        "chartAnnotations",
+        "annotationsExtraSettings",
+        "datasetSettings",
+        "iconLocations",
+        "singleInfoIcons"
+      ]
+    },
+    {
+      "component": "InRichTextInput",
+      "version": "v1",
+      "complexProps": [
+        "helperTextValidationConfig",
+        "dynamicContentList",
+        "skeletonSizing",
+        "delimiters",
+        "toolbarOptions",
+        "footerOptions",
+        "errorTags",
+        "warningTags",
+        "dynamicContentBoxProps",
+        "usedDynamicContent",
+        "fallBackDisabledCharacters",
+        "disabledToolbarOptions",
+        "dynamicContentStates",
+        "uploadTriggerWords"
+      ]
+    },
+    {
+      "component": "InCodeSnippet",
+      "version": "v1",
+      "complexProps": [
+        "options",
+        "size",
+        "replaceDynamicContentMap",
+        "fallbackOptions",
+        "fallBackDisabledCharacters",
+        "dynamicContentBoxProps",
+        "warningTags",
+        "errorTags",
+        "uploadTriggerWords"
+      ]
+    },
+    {
+      "component": "InDataTable",
+      "version": "v1",
+      "complexProps": [
+        "tableFields",
+        "tableSearchParams",
+        "actions",
+        "sortOrder",
+        "data",
+        "statusList",
+        "httpOptions",
+        "formatMapping"
+      ]
+    },
+    {
+      "component": "InDynamicContentBox",
+      "version": "v1",
+      "complexProps": [
+        "fieldsConfig",
+        "dynamicContent",
+        "buttonOptions",
+        "groupLevelPartners",
+        "groupedEvents"
+      ]
+    },
+    {
+      "component": "InSuperInput",
+      "version": "v1",
+      "complexProps": [
+        "textValidateConfig",
+        "fallBackDisabledCharacters",
+        "attributeList",
+        "skeletonSizing",
+        "delimiters"
+      ]
+    },
+    {
+      "component": "InMultiDropDown",
+      "version": "v1",
+      "complexProps": [
+        "options",
+        "value",
+        "skeletonSizing",
+        "customOptionsKey"
+      ]
+    },
+    {
+      "component": "InTags",
+      "version": "v1",
+      "complexProps": [
+        "value",
+        "validate",
+        "allowedEntries",
+        "skeletonSizing"
+      ]
+    },
+    {
+      "component": "InBasicTextInput",
+      "version": "v1",
+      "complexProps": [
+        "skeletonSizing",
+        "prefixDropdownOptions",
+        "suffixDropdownOptions"
+      ]
+    },
+    {
+      "component": "InCustomDropDown",
+      "version": "v1",
+      "complexProps": [
+        "options",
+        "extraOption",
+        "skeletonSizing"
+      ]
+    },
+    {
+      "component": "InDropDown",
+      "version": "v1",
+      "complexProps": [
+        "options",
+        "customOptionsKey",
+        "skeletonSizing"
+      ]
+    },
+    {
+      "component": "InBulkActions",
+      "version": "v1",
+      "complexProps": [
+        "bulkActionButtons",
+        "selectionButtons"
+      ]
+    },
+    {
+      "component": "InSteps",
+      "version": "v1",
+      "complexProps": [
+        "routes",
+        "backStep"
+      ]
+    },
+    {
+      "component": "InTabs",
+      "version": "v1",
+      "complexProps": [
+        "tabsList",
+        "addTabDropdownOptions"
+      ]
+    },
+    {
+      "component": "InModalV2",
+      "version": "v2",
+      "complexProps": [
+        "footerButtonGroupOptions"
+      ]
+    }
+  ],
+  "lowPriority": [
+    {
+      "component": "InAccordion",
+      "version": "v1",
+      "complexProps": [
+        "toggleTexts"
+      ]
+    },
+    {
+      "component": "InBreadcrumb",
+      "version": "v1",
+      "complexProps": [
+        "routes"
+      ]
+    },
+    {
+      "component": "InButton",
+      "version": "v1",
+      "complexProps": [
+        "skeletonSizing"
+      ]
+    },
+    {
+      "component": "InCheckBox",
+      "version": "v1",
+      "complexProps": [
+        "skeletonSizing"
+      ]
+    },
+    {
+      "component": "InColorPicker",
+      "version": "v1",
+      "complexProps": [
+        "skeletonSizing"
+      ]
+    },
+    {
+      "component": "InCreateButton",
+      "version": "v1",
+      "complexProps": [
+        "skeletonSizing"
+      ]
+    },
+    {
+      "component": "InDrawer",
+      "version": "v1",
+      "complexProps": [
+        "footerButtonGroupOptions"
+      ]
+    },
+    {
+      "component": "InFormStatus",
+      "version": "v1",
+      "complexProps": [
+        "skeletonSizing"
+      ]
+    },
+    {
+      "component": "InHeader",
+      "version": "v1",
+      "complexProps": [
+        "routes"
+      ]
+    },
+    {
+      "component": "InIcons",
+      "version": "v1",
+      "complexProps": [
+        "sizeObject"
+      ]
+    },
+    {
+      "component": "InInfoBox",
+      "version": "v1",
+      "complexProps": [
+        "buttonOptions"
+      ]
+    },
+    {
+      "component": "InLinks",
+      "version": "v1",
+      "complexProps": [
+        "skeletonSizing"
+      ]
+    },
+    {
+      "component": "InNoData",
+      "version": "v1",
+      "complexProps": [
+        "buttonProps"
+      ]
+    },
+    {
+      "component": "InOnPageMessage",
+      "version": "v1",
+      "complexProps": [
+        "skeletonSizing"
+      ]
+    },
+    {
+      "component": "InOnboard",
+      "version": "v1",
+      "complexProps": [
+        "pagesConfig"
+      ]
+    },
+    {
+      "component": "InRadioButton",
+      "version": "v1",
+      "complexProps": [
+        "skeletonSizing"
+      ]
+    },
+    {
+      "component": "InSegments",
+      "version": "v1",
+      "complexProps": [
+        "skeletonSizing"
+      ]
+    },
+    {
+      "component": "InSidebar",
+      "version": "v1",
+      "complexProps": [
+        "routes"
+      ]
+    },
+    {
+      "component": "InSkeleton",
+      "version": "v1",
+      "complexProps": [
+        "sizing"
+      ]
+    },
+    {
+      "component": "InSlider",
+      "version": "v1",
+      "complexProps": [
+        "slides"
+      ]
+    },
+    {
+      "component": "InTextArea",
+      "version": "v1",
+      "complexProps": [
+        "skeletonSizing"
+      ]
+    },
+    {
+      "component": "InTextInput",
+      "version": "v1",
+      "complexProps": [
+        "skeletonSizing"
+      ]
+    },
+    {
+      "component": "InTimePicker",
+      "version": "v1",
+      "complexProps": [
+        "skeletonSizing"
+      ]
+    },
+    {
+      "component": "InToasts",
+      "version": "v1",
+      "complexProps": [
+        "actionButtonsConfig"
+      ]
+    },
+    {
+      "component": "InToggle",
+      "version": "v1",
+      "complexProps": [
+        "skeletonSizing"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,169 @@
+{
+  "migrationId": "InButton-to-V2",
+  "v1Component": "InButton",
+  "v2Component": "InButtonV2",
+  "estimatedEffort": "low",
+  "breakingChanges": 4,
+  "complexity": "medium",
+  "description": "Migration from InButton (V1) to InButtonV2 involves prop renaming (status suffix pattern) and moving slot content to labelText prop.",
+
+  "propMigrations": {
+    "disabled": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "disabledStatus",
+      "transformCode": "// Direct rename\n:disabled-status=\"isDisabled\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses -status suffix pattern"
+    },
+    "loading": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "loadingStatus",
+      "transformCode": "// Direct rename\n:loading-status=\"isLoading\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses -status suffix pattern"
+    },
+    "type": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "type",
+      "transformCode": "// Same prop name, verify enum values\ntype=\"primary\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": false,
+      "notes": "Same prop, but verify valid values with MCP"
+    },
+    "slot": {
+      "v1Type": "slot (default)",
+      "v2Type": "string",
+      "v2Prop": "labelText",
+      "transformCode": "// Move slot content to labelText prop\nlabel-text=\"Button Text\"",
+      "autoMigratable": false,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 doesn't use slot for button text, use labelText prop instead"
+    }
+  },
+
+  "eventMigrations": {
+    "@click": {
+      "v1Event": "@click",
+      "v2Event": "@click",
+      "v1Payload": "Event",
+      "v2Payload": "Event",
+      "payloadChange": "No change",
+      "breakingChange": false,
+      "complexity": "low"
+    }
+  },
+
+  "newFeaturesInV2": [
+    {
+      "feature": "Styling Prop",
+      "props": ["styling"],
+      "description": "New styling prop for button visual style: solid, ghost, text",
+      "usage": "styling=\"solid\" (default)"
+    },
+    {
+      "feature": "Success Status",
+      "props": ["successStatus"],
+      "description": "Built-in success feedback state",
+      "usage": ":success-status=\"showSuccess\""
+    },
+    {
+      "feature": "Button Group",
+      "props": ["buttonGroupOptions"],
+      "description": "Create button groups with options array",
+      "usage": ":button-group-options=\"[...]\" "
+    },
+    {
+      "feature": "Icon Support",
+      "props": ["rightIconStatus", "leftIconStatus", "rightIconName", "leftIconName"],
+      "description": "Built-in icon support with positioning",
+      "usage": "right-icon-status :right-icon-name=\"'arrow-right'\""
+    }
+  ],
+
+  "migrationSteps": [
+    {
+      "step": 1,
+      "title": "Update import",
+      "before": "import { InButton } from '@useinsider/design-system-vue';",
+      "after": "import { InButtonV2 } from '@useinsider/design-system-vue';",
+      "automated": true
+    },
+    {
+      "step": 2,
+      "title": "Update component name",
+      "before": "<InButton ...",
+      "after": "<InButtonV2 ...",
+      "automated": true
+    },
+    {
+      "step": 3,
+      "title": "Rename disabled prop",
+      "before": ":disabled=\"isDisabled\"",
+      "after": ":disabled-status=\"isDisabled\"",
+      "automated": true
+    },
+    {
+      "step": 4,
+      "title": "Rename loading prop",
+      "before": ":loading=\"isLoading\"",
+      "after": ":loading-status=\"isLoading\"",
+      "automated": true
+    },
+    {
+      "step": 5,
+      "title": "Move slot content to labelText",
+      "before": "<InButton>Click Me</InButton>",
+      "after": "<InButtonV2 label-text=\"Click Me\" />",
+      "automated": false,
+      "notes": "Extract text from slot and add as labelText prop"
+    },
+    {
+      "step": 6,
+      "title": "Add styling prop (optional)",
+      "before": "N/A",
+      "after": "styling=\"solid\"",
+      "automated": false,
+      "notes": "V2 defaults to solid, add if you need ghost or text"
+    }
+  ],
+
+  "fullExampleBefore": "<!-- V1 Implementation -->\n<template>\n  <InButton\n    id=\"submit-btn\"\n    type=\"primary\"\n    :disabled=\"isDisabled\"\n    :loading=\"isLoading\"\n    @click=\"handleClick\"\n  >\n    Submit\n  </InButton>\n</template>\n\n<script>\nimport { InButton } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InButton },\n  data() {\n    return {\n      isDisabled: false,\n      isLoading: false\n    };\n  },\n  methods: {\n    handleClick() {\n      this.isLoading = true;\n      // ... action\n    }\n  }\n};\n</script>",
+
+  "fullExampleAfter": "<!-- V2 Implementation -->\n<template>\n  <InButtonV2\n    id=\"submit-btn\"\n    styling=\"solid\"\n    type=\"primary\"\n    label-text=\"Submit\"\n    :disabled-status=\"isDisabled\"\n    :loading-status=\"isLoading\"\n    @click=\"handleClick\"\n  />\n</template>\n\n<script>\nimport { InButtonV2 } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InButtonV2 },\n  data() {\n    return {\n      isDisabled: false,\n      isLoading: false\n    };\n  },\n  methods: {\n    handleClick() {\n      this.isLoading = true;\n      // ... action\n    }\n  }\n};\n</script>",
+
+  "commonPitfalls": [
+    {
+      "pitfall": "Forgetting to move slot content to labelText",
+      "impact": "Button appears empty",
+      "solution": "Add label-text=\"Your Text\" prop"
+    },
+    {
+      "pitfall": "Using :disabled instead of :disabled-status",
+      "impact": "Button stays enabled",
+      "solution": "Use V2 naming: disabled-status"
+    },
+    {
+      "pitfall": "Not resetting loadingStatus after action",
+      "impact": "Button stays in loading state",
+      "solution": "Always reset: this.isLoading = false"
+    }
+  ],
+
+  "testingChecklist": [
+    "✓ Button text displays correctly",
+    "✓ Click event fires",
+    "✓ Disabled state works",
+    "✓ Loading state shows spinner",
+    "✓ Styling (solid/ghost/text) applies",
+    "✓ Type (primary/secondary/danger) colors correct"
+  ]
+}

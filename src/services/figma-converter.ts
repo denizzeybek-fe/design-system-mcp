@@ -274,7 +274,7 @@ function convertComponentInstance(
  */
 function convertUnmappedComponent(
   node: FigmaNode,
-  context: ConversionContext,
+  _context: ConversionContext,
   indent: number
 ): string {
   return `${' '.repeat(indent)}<div class="${kebabCase(node.name)}">\n` +

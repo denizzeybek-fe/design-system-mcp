@@ -1,0 +1,226 @@
+{
+  "migrationId": "InTagsText-to-InChips",
+  "v1Component": "InTagsText",
+  "v2Component": "InChips",
+  "estimatedEffort": "low",
+  "breakingChanges": 3,
+  "complexity": "low",
+  "description": "Migration from InTagsText (V1) to InChips (V2) involves prop renaming (disable → disabledStatus) and updated event handling.",
+
+  "propMigrations": {
+    "disable": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "disabledStatus",
+      "transformCode": "// Direct rename\n:disabled-status=\"isDisabled\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "V2 uses -status suffix pattern"
+    },
+    "type": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "type",
+      "transformCode": "// Same prop, but V2 has different values\ntype=\"primary\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": false,
+      "notes": "V2 uses semantic types: default, primary, success, warning, danger, info"
+    },
+    "text": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "text",
+      "transformCode": "// Same prop\ntext=\"Tag Label\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": false,
+      "notes": "Same prop name"
+    },
+    "value": {
+      "v1Type": "any",
+      "v2Type": "any",
+      "v2Prop": "value",
+      "transformCode": "// Same prop\n:value=\"tagValue\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": false,
+      "notes": "Same prop name"
+    },
+    "withIcon": {
+      "v1Type": "boolean",
+      "v2Type": "N/A",
+      "v2Prop": "N/A",
+      "transformCode": "// V2 handles icons differently - check documentation",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "withIcon prop removed in V2"
+    },
+    "maxWidth": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "maxWidth",
+      "transformCode": "// Same prop\nmax-width=\"150px\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": false,
+      "notes": "Same prop name"
+    },
+    "preventXss": {
+      "v1Type": "boolean",
+      "v2Type": "N/A",
+      "v2Prop": "N/A",
+      "transformCode": "// Not available in V2 - sanitize text before passing",
+      "autoMigratable": false,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "preventXss prop removed in V2"
+    }
+  },
+
+  "eventMigrations": {
+    "@click": {
+      "v1Event": "@click",
+      "v2Event": "@tag-click",
+      "v1Payload": "Event",
+      "v2Payload": "Event",
+      "payloadChange": "Use @tag-click for chip body clicks",
+      "breakingChange": true,
+      "complexity": "low"
+    }
+  },
+
+  "newFeaturesInV2": [
+    {
+      "feature": "Styles Variant",
+      "props": ["styles"],
+      "description": "Visual style variants: solid, soft, outline",
+      "usage": "styles=\"soft\""
+    },
+    {
+      "feature": "Interactive Mode",
+      "props": ["interactive"],
+      "description": "Make chip clickable with hover/active states",
+      "usage": "interactive"
+    },
+    {
+      "feature": "Close Button",
+      "props": ["closeButton"],
+      "description": "Show removable close button",
+      "usage": "close-button @click=\"handleRemove\""
+    },
+    {
+      "feature": "Selected State",
+      "props": ["selectedStatus"],
+      "description": "Visual selection state for toggle behavior",
+      "usage": ":selected-status=\"isSelected\""
+    },
+    {
+      "feature": "Accessibility Label",
+      "props": ["actionableLabel"],
+      "description": "Screen reader label for actionable chips",
+      "usage": "actionable-label=\"Remove tag\""
+    },
+    {
+      "feature": "ID Support",
+      "props": ["id"],
+      "description": "HTML id attribute for the chip",
+      "usage": "id=\"chip-1\""
+    }
+  ],
+
+  "migrationSteps": [
+    {
+      "step": 1,
+      "title": "Update import",
+      "before": "import { InTagsText } from '@useinsider/design-system-vue';",
+      "after": "import { InChips } from '@useinsider/design-system-vue';",
+      "automated": true
+    },
+    {
+      "step": 2,
+      "title": "Update component name",
+      "before": "<InTagsText ...",
+      "after": "<InChips ...",
+      "automated": true
+    },
+    {
+      "step": 3,
+      "title": "Rename disable prop",
+      "before": ":disable=\"isDisabled\"",
+      "after": ":disabled-status=\"isDisabled\"",
+      "automated": true
+    },
+    {
+      "step": 4,
+      "title": "Update click event",
+      "before": "@click=\"handleClick\"",
+      "after": "@tag-click=\"handleClick\"",
+      "automated": true,
+      "notes": "Use @tag-click for chip body clicks, @click for close button"
+    },
+    {
+      "step": 5,
+      "title": "Remove withIcon if used",
+      "before": "with-icon",
+      "after": "// Check V2 documentation for icon handling",
+      "automated": false,
+      "notes": "withIcon prop not available in V2"
+    },
+    {
+      "step": 6,
+      "title": "Handle preventXss removal",
+      "before": "prevent-xss",
+      "after": "// Sanitize text before passing to component",
+      "automated": false,
+      "notes": "preventXss prop not available in V2"
+    },
+    {
+      "step": 7,
+      "title": "Add styles prop (optional)",
+      "before": "N/A",
+      "after": "styles=\"solid\"",
+      "automated": false,
+      "notes": "V2 supports solid, soft, outline styles"
+    }
+  ],
+
+  "fullExampleBefore": "<!-- V1 Implementation -->\n<template>\n  <InTagsText\n    type=\"default\"\n    text=\"Category\"\n    :value=\"categoryId\"\n    :disable=\"isDisabled\"\n    with-icon\n    prevent-xss\n    @click=\"handleTagClick\"\n  />\n</template>\n\n<script>\nimport { InTagsText } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InTagsText },\n  data() {\n    return {\n      categoryId: 'cat-1',\n      isDisabled: false\n    };\n  },\n  methods: {\n    handleTagClick() {\n      console.log('Tag clicked');\n    }\n  }\n};\n</script>",
+
+  "fullExampleAfter": "<!-- V2 Implementation -->\n<template>\n  <InChips\n    type=\"default\"\n    styles=\"solid\"\n    text=\"Category\"\n    :value=\"categoryId\"\n    :disabled-status=\"isDisabled\"\n    interactive\n    @tag-click=\"handleTagClick\"\n  />\n</template>\n\n<script>\nimport { InChips } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InChips },\n  data() {\n    return {\n      categoryId: 'cat-1',\n      isDisabled: false\n    };\n  },\n  methods: {\n    handleTagClick() {\n      console.log('Chip clicked');\n    }\n  }\n};\n</script>",
+
+  "commonPitfalls": [
+    {
+      "pitfall": "Using :disable instead of :disabled-status",
+      "impact": "Chip stays enabled",
+      "solution": "Use V2 naming: disabled-status"
+    },
+    {
+      "pitfall": "Using @click instead of @tag-click for chip clicks",
+      "impact": "Event not triggered (or only on close button)",
+      "solution": "Use @tag-click for chip body clicks"
+    },
+    {
+      "pitfall": "Expecting withIcon prop to work",
+      "impact": "No icon displayed",
+      "solution": "Check V2 documentation for new icon handling approach"
+    },
+    {
+      "pitfall": "Not adding interactive prop for clickable chips",
+      "impact": "No hover/active visual feedback",
+      "solution": "Add interactive prop for clickable behavior"
+    }
+  ],
+
+  "testingChecklist": [
+    "✓ Chip text displays correctly",
+    "✓ Type styling applies (primary, success, etc.)",
+    "✓ Styles variant works (solid, soft, outline)",
+    "✓ Disabled state prevents interaction",
+    "✓ Click event fires via @tag-click",
+    "✓ Close button works (if used)",
+    "✓ Selected state visual feedback"
+  ]
+}

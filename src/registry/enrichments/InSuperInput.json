@@ -1,0 +1,209 @@
+{
+  "componentName": "InSuperInput",
+  "version": "1.0.0",
+  "lastUpdated": "2024-11-24",
+
+  "propEnrichments": {
+    "value": {
+      "description": "Input content with dynamic tags (v-model)",
+      "valueFormat": {
+        "structure": "string with tag placeholders",
+        "example": "v-model=\"content\" // 'Hello {{name}}, welcome!'"
+      }
+    },
+    "attributeList": {
+      "description": "Available dynamic content/attributes for insertion",
+      "valueFormat": {
+        "structure": "Array of attribute objects",
+        "typescript": "Array<{ label: string; value: string; category?: string; }>",
+        "example": ":attribute-list=\"[{ label: 'First Name', value: 'first_name' }, { label: 'Email', value: 'email' }]\""
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Not providing attributeList when dynamicContentSupport is true",
+          "correction": "Always provide attributeList with available attributes",
+          "severity": "high"
+        }
+      ]
+    },
+    "dynamicContentSupport": {
+      "description": "Enable dynamic content/attribute insertion",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "dynamic-content-support"
+      }
+    },
+    "textValidateConfig": {
+      "description": "Text validation configuration object",
+      "valueFormat": {
+        "structure": "Object with validation rules",
+        "typescript": "{ maxLength?: number; minLength?: number; pattern?: RegExp; required?: boolean; }",
+        "example": ":text-validate-config=\"{ maxLength: 160, minLength: 10 }\""
+      }
+    },
+    "fallBackText": {
+      "description": "Default fallback text for dynamic attributes",
+      "valueFormat": {
+        "structure": "string",
+        "example": "fall-back-text=\"Customer\""
+      }
+    },
+    "fallBackLabel": {
+      "description": "Label for fallback input field",
+      "valueFormat": {
+        "structure": "string",
+        "example": "fall-back-label=\"Default Value\""
+      }
+    },
+    "fallBackDisabledCharacters": {
+      "description": "Characters not allowed in fallback text",
+      "valueFormat": {
+        "structure": "Array of characters",
+        "example": ":fall-back-disabled-characters=\"['<', '>', '&']\""
+      }
+    },
+    "delimiters": {
+      "description": "Tag delimiters for dynamic content",
+      "valueFormat": {
+        "structure": "Array with start and end delimiter",
+        "typescript": "[string, string]",
+        "example": ":delimiters=\"['{{', '}}']\""
+      }
+    },
+    "hasEmoji": {
+      "description": "Enable emoji picker",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "has-emoji"
+      }
+    },
+    "isTagContainer": {
+      "description": "Display as tag container mode",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "is-tag-container"
+      }
+    },
+    "isCounter": {
+      "description": "Show character counter",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "is-counter"
+      }
+    },
+    "tagsLimit": {
+      "description": "Maximum number of tags allowed",
+      "valueFormat": {
+        "structure": "number",
+        "example": ":tags-limit=\"5\""
+      }
+    },
+    "rowLength": {
+      "description": "Number of visible text rows",
+      "valueFormat": {
+        "structure": "number",
+        "example": ":row-length=\"3\""
+      }
+    },
+    "dropDownType": {
+      "description": "Type of attribute dropdown",
+      "valueFormat": {
+        "structure": "string enum",
+        "possibleValues": ["default", "grouped", "searchable"],
+        "example": "drop-down-type=\"searchable\""
+      }
+    },
+    "createNewOptionStatus": {
+      "description": "Allow creating new attributes",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "create-new-option-status"
+      }
+    },
+    "strictAddMode": {
+      "description": "Only allow predefined attributes",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "strict-add-mode"
+      }
+    },
+    "countDynamicContentForValidation": {
+      "description": "Include dynamic content in character count",
+      "valueFormat": {
+        "structure": "boolean",
+        "example": "count-dynamic-content-for-validation"
+      }
+    }
+  },
+
+  "eventEnrichments": {
+    "purify": {
+      "description": "Emitted with sanitized content",
+      "payload": "string - purified text content",
+      "usage": "@purify=\"handlePurify\""
+    }
+  },
+
+  "exampleEnrichments": [
+    {
+      "title": "Basic Rich Text with Dynamic Content",
+      "description": "Text input with attribute insertion",
+      "code": "<InSuperInput\n  id=\"message\"\n  label=\"Message\"\n  placeholder-text=\"Enter your message...\"\n  v-model=\"messageContent\"\n  dynamic-content-support\n  :attribute-list=\"[\n    { label: 'First Name', value: 'first_name' },\n    { label: 'Last Name', value: 'last_name' },\n    { label: 'Email', value: 'email' }\n  ]\"\n  is-counter\n  :text-validate-config=\"{ maxLength: 500 }\"\n  @purify=\"handlePurify\"\n/>"
+    },
+    {
+      "title": "SMS Input with Fallbacks",
+      "description": "SMS message with dynamic content and fallbacks",
+      "code": "<InSuperInput\n  id=\"sms\"\n  label=\"SMS Message\"\n  sms-text=\"SMS\"\n  v-model=\"smsContent\"\n  dynamic-content-support\n  :attribute-list=\"attributes\"\n  :delimiters=\"['{{', '}}']\"\n  fall-back-label=\"Default Value\"\n  fall-back-placeholder=\"Enter default...\"\n  is-counter\n  :text-validate-config=\"{ maxLength: 160 }\"\n  count-dynamic-content-for-validation\n/>"
+    },
+    {
+      "title": "Tag Container Mode",
+      "description": "Display as tag-based input",
+      "code": "<InSuperInput\n  id=\"tags\"\n  label=\"Tags\"\n  v-model=\"tagContent\"\n  is-tag-container\n  :tags-limit=\"10\"\n  :attribute-list=\"tagOptions\"\n  create-new-option-status\n  create-new-option-text=\"Add new tag\"\n  disable-duplicate-tags\n/>"
+    }
+  ],
+
+  "commonMistakes": [
+    {
+      "mistake": "Not providing attributeList with dynamicContentSupport",
+      "issue": "No attributes available for insertion",
+      "solution": "Always provide :attribute-list when using dynamic-content-support",
+      "severity": "high"
+    },
+    {
+      "mistake": "Wrong delimiter format",
+      "issue": "Tags not recognized",
+      "solution": "Use array format: :delimiters=\"['{{', '}}']\", not string",
+      "severity": "medium"
+    },
+    {
+      "mistake": "Using invalid without invalidMessage",
+      "issue": "Error state shown without explanation",
+      "solution": "Always provide invalid-message with invalid prop",
+      "severity": "medium"
+    },
+    {
+      "mistake": "Not handling @purify event",
+      "issue": "Unsanitized content used",
+      "solution": "Use @purify to get clean content for submission",
+      "severity": "high"
+    }
+  ],
+
+  "bestPractices": [
+    {
+      "practice": "Use textValidateConfig for validation",
+      "description": "Centralize validation rules in config object",
+      "example": ":text-validate-config=\"{ maxLength: 160, minLength: 10 }\""
+    },
+    {
+      "practice": "Provide meaningful fallback labels",
+      "description": "Help users understand what fallback values are for",
+      "example": "fall-back-label=\"Default value if attribute is empty\""
+    },
+    {
+      "practice": "Use strictAddMode for controlled inputs",
+      "description": "Prevent users from adding arbitrary attributes",
+      "example": "strict-add-mode"
+    }
+  ]
+}
