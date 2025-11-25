@@ -19,6 +19,23 @@ interface ComponentData {
   slots: string[];
   category?: string;
   hasStorybook?: boolean;
+
+  // New metadata structure fields (from component-metadata-organizer agent)
+  hasNewStructure?: boolean;
+  metadata?: {
+    description: string;
+    category: string;
+    keywords: string[];
+    relatedComponents: string[];
+    accessibility?: any;
+    performance?: any;
+  };
+  examples?: any[];  // From .examples.ts
+  typeDefs?: string; // From .d.ts
+  hasMetadata?: boolean;
+  hasExamples?: boolean;
+  hasTypeDefs?: boolean;
+  examplesCount?: number;
 }
 
 interface StorybookData {
@@ -69,6 +86,23 @@ interface CombinedComponent {
   emits: any[];
   slots: string[];
   enums: any[];
+
+  // New metadata structure (from component-metadata-organizer agent)
+  hasNewStructure: boolean;
+  metadata: {
+    description: string;
+    category: string;
+    keywords: string[];
+    relatedComponents: string[];
+    accessibility?: any;
+    performance?: any;
+  } | null;
+  componentExamples: any[]; // From .examples.ts (renamed to avoid conflict with storybook examples)
+  typeDefs: string | null; // From .d.ts
+  hasMetadata: boolean;
+  hasExamples: boolean;
+  hasTypeDefs: boolean;
+  examplesCount: number;
 
   // Storybook examples (always present)
   examples: any[];
@@ -204,6 +238,25 @@ function mergeComponentData(
     emits: component.emits,
     slots: component.slots,
     enums: component.enums,
+
+    // New metadata structure (from component-metadata-organizer agent)
+    hasNewStructure: component.hasNewStructure || false,
+    metadata: component.metadata || null,
+    componentExamples: component.examples || [], // From .examples.ts
+    typeDefs: component.typeDefs || null,
+    // Computed flags based on actual data presence
+    hasMetadata: !!(component.metadata && Object.keys(component.metadata).length > 0),
+    hasExamples: !!(component.examples && (
+      Array.isArray(component.examples)
+        ? component.examples.length > 0
+        : Object.keys(component.examples).length > 0
+    )),
+    hasTypeDefs: !!(component.typeDefs && component.typeDefs.length > 0),
+    examplesCount: component.examples
+      ? (Array.isArray(component.examples)
+          ? component.examples.length
+          : Object.keys(component.examples).length)
+      : 0,
 
     // Storybook data (always present, default empty)
     examples: [],
