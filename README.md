@@ -199,30 +199,80 @@ npm run build
 
 ## 📖 Usage Examples
 
+### 🎯 Optimize Your Prompts (NEW!)
+
+Use `/optimize-ds-prompt` to transform raw requests into MCP-optimized prompts:
+
+```bash
+# Raw request (Turkish or English)
+/optimize-ds-prompt "bir buton ve dropdown menü lazım"
+
+# Returns optimized prompt with:
+✅ Component identification (InButtonV2, InDropdownMenu)
+✅ Suggested MCP tools (search, get-component, generate-code)
+✅ Token savings estimates (~20,000 tokens)
+✅ Step-by-step implementation guide
+✅ Clear output expectations
+```
+
+**Example output:**
+```markdown
+I need to implement a button that opens a dropdown menu when clicked.
+
+Please use the Design System MCP to:
+
+1. Search for components
+   Tool: mcp__design-system__search-components
+
+2. Get documentation for both components
+   Tool: mcp__design-system__get-component
+   Components: InButtonV2, InDropdownMenu
+
+3. Generate integrated code
+   Tool: mcp__design-system__generate-code
+
+Show me:
+✅ Components used
+✅ Token savings (Markdown format: ~87% savings)
+✅ Complete Vue implementation
+```
+
 ### Get Component Details
 
 ```typescript
 // Claude automatically calls:
 mcp__design-system__get-component("InButtonV2")
 
-// Returns:
-{
-  "name": "InButtonV2",
-  "props": {
-    "styling": {
-      "type": "String",
-      "validValues": ["solid", "ghost", "text"],  // ✅ Enum resolved!
-      "default": "solid"
-    },
-    "iconSize": {
-      "type": "String",
-      "validValues": ["40", "24", "20"]  // ✅ Not "String"!
-    }
-  },
-  "enums": [...],
-  "enriched": true,
-  "commonMistakes": [...]
-}
+// Returns in Markdown format (88% token savings):
+# InButtonV2
+
+**Version:** v2
+
+## Props
+
+### `styling`
+**Type:** `String` | **Default:** `"STYLES.SOLID"`
+
+**Allowed values:** `solid`, `ghost`, `text`
+
+### `type`
+**Type:** `String` | **Default:** `"TYPES.PRIMARY"`
+
+...
+
+## Examples
+
+### Basic Primary Button
+```vue
+<InButtonV2
+  id="primary-btn"
+  styling="solid"
+  type="primary"
+  label-text="Click Me"
+/>
+```
+
+Token savings: 55KB → 6.6KB (88% reduction)
 ```
 
 ### Search Components

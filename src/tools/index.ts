@@ -13,6 +13,7 @@ import {
   getMarkdownMetadata,
 } from '../registry/markdown-loader.js';
 import { Component } from '../types/index.js';
+import { PromptOptimizer } from '../services/prompt-optimizer.js';
 
 /**
  * Register all tools with the MCP server
@@ -372,6 +373,56 @@ export function registerTools(server: McpServer): void {
       };
     }
   );
+
+  // Optimize prompt tool
+  server.tool(
+    'optimize-prompt',
+    `Transform raw user prompt into MCP-optimized prompt for better Design System integration.
+
+    This tool analyzes user intent, identifies components, and generates a structured prompt
+    that guides Claude to use the right MCP tools in the right order with token awareness.
+
+    Example: "bir buton ve dropdown lazım"
+    → Returns optimized prompt with tool sequence, token savings estimates, and clear steps`,
+    {
+      userPrompt: z.string().describe('Raw user prompt in Turkish or English'),
+    },
+    async ({ userPrompt }) => {
+      const optimizer = new PromptOptimizer();
+      const result = optimizer.optimize(userPrompt);
+
+      // Format output as markdown for readability
+      const output = `# Original Prompt
+${result.original}
+
+# Analysis
+- **Language**: ${result.analysis.language}
+- **Intent**: ${result.analysis.intent}
+- **Components**: ${result.analysis.components.length > 0 ? result.analysis.components.join(', ') : 'Not specified (will search)'}
+- **Complexity**: ${result.analysis.complexity}
+- **Estimated Token Savings**: ~${result.analysis.estimatedTokenSavings.toLocaleString()} tokens
+
+# Optimized Prompt
+
+${result.optimizedPrompt}
+
+# Expected Tool Sequence
+${result.toolSequence.map((tool, i) => `${i + 1}. ${tool}`).join('\n')}
+
+# Why This Optimization Works
+${result.improvements.map(imp => `- ${imp}`).join('\n')}
+`;
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: output,
+          },
+        ],
+      };
+    }
+  );
 }
 
 /**
@@ -415,3 +466,4 @@ import '@useinsider/design-system-vue/dist/design-system-vue.css';
 
   return template + '\n' + script;
 }
+

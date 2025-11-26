@@ -7,7 +7,7 @@ import { createServer } from './server.js';
 async function main(): Promise<void> {
   // Log to stderr (stdout is reserved for MCP protocol)
   console.error('🎨 Design System MCP Server is running...');
-  console.error('   Tools: list-components, get-component, search-components, generate-code, map-figma-component');
+  console.error('   Tools: list-components, get-component, search-components, generate-code, map-figma-component, optimize-prompt');
   console.error('   Resources: ds://components, ds://registry, ds://categories');
 
   const server = createServer();

@@ -427,6 +427,59 @@ This MCP server provides tools and resources for working with the Insider Design
 3. get-component for detailed info
 ```
 
+## 🎯 Prompt Optimization (NEW!)
+
+### `/optimize-ds-prompt` Command
+
+When users provide raw requests, use this slash command to optimize their prompts for better MCP integration:
+
+```bash
+/optimize-ds-prompt "bir buton ve dropdown lazım"
+```
+
+**What it does:**
+- Detects user intent (implement, debug, migrate, learn)
+- Identifies Design System components needed
+- Suggests specific MCP tools to use
+- Includes token savings awareness
+- Provides step-by-step guidance
+- Sets clear output expectations
+
+**Example transformation:**
+
+```markdown
+# User's Raw Input
+"bir buton ve dropdown lazım"
+
+# Optimized Output
+I need to implement a button that opens a dropdown menu when clicked.
+
+Please use the Design System MCP to:
+
+1. Search for components
+   Tool: mcp__design-system__search-components
+
+2. Get documentation for both components
+   Tool: mcp__design-system__get-component
+   Components: InButtonV2, InDropdownMenu
+   Note: Markdown format saves ~87% tokens
+
+3. Generate integrated code
+   Tool: mcp__design-system__generate-code
+
+Show me:
+✅ Components used
+✅ Token savings from Markdown format
+✅ Complete Vue implementation
+✅ Integration example
+```
+
+**When to use:**
+- User's prompt is vague or unclear
+- Multiple components might be needed
+- Token optimization matters
+- User is new to the Design System
+
 ## Example Prompts
 
 ### Basic Implementation
@@ -435,6 +488,7 @@ User: "Add a DatePicker with compare feature"
 
 ```
 1. Call get-component("InDatePickerV2")
+   → Returns Markdown format (84% token savings)
 2. Call generate-code("InDatePickerV2", { compare: true, range: true })
 3. Insert code into user's file
 4. Add necessary imports
@@ -459,6 +513,20 @@ User: "What form components are available?"
 1. Call list-components({ category: "Form" })
 2. Present list to user
 3. Offer to show details for specific components
+```
+
+### Optimized Multi-Component Request
+
+User uses `/optimize-ds-prompt`:
+
+```
+/optimize-ds-prompt "buton ve dropdown menü birlikte kullanıp butona basınca dropdown açılacak"
+
+→ Returns optimized prompt with:
+  - Component identification (InButtonV2, InDropdownMenu)
+  - MCP tool sequence
+  - Token savings estimate (~20,000 tokens)
+  - Clear integration requirements
 ```
 
 ## Important Notes
