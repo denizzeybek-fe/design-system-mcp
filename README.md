@@ -55,6 +55,8 @@ The `get-component` tool now includes intelligent enrichment filtering to optimi
 
 ## 📖 Documentation
 
+**→ See [docs/](docs/) for complete documentation index**
+
 - **[Architecture](docs/architecture/)** - System design and data flow
   - [How It Works](docs/architecture/how-it-works.md) - Complete architecture overview
   - [Smart Filter Layer](docs/architecture/smart-filter-layer.md) - Token optimization system

@@ -62,20 +62,30 @@ else
   success "Root directory is clean ($ROOT_FILES files)"
 fi
 
-# 4. Check for README files in major directories
+# 4. Check README files (only root allowed)
 echo ""
-echo "📖 Checking README presence..."
-MISSING_READMES=""
-for dir in docs archive scripts src/services; do
-  if [ -d "$dir" ] && [ ! -f "$dir/README.md" ]; then
-    MISSING_READMES="$MISSING_READMES\n  - $dir/"
+echo "📖 Checking README files..."
+SUBDIR_READMES=$(find . -mindepth 2 -name "README.md" -not -path "*/node_modules/*" -not -path "*/.git/*" || true)
+if [ -n "$SUBDIR_READMES" ]; then
+  error "README.md found in subdirectories (only allowed at root):"
+  echo "$SUBDIR_READMES"
+  echo "  → Use index.md instead for subdirectory indexes"
+else
+  success "No README.md in subdirectories (correct)"
+fi
+
+# Check for index files in major directories
+MISSING_INDEXES=""
+for dir in docs archive; do
+  if [ -d "$dir" ] && [ ! -f "$dir/index.md" ]; then
+    MISSING_INDEXES="$MISSING_INDEXES\n  - $dir/index.md"
   fi
 done
 
-if [ -n "$MISSING_READMES" ]; then
-  warning "Missing README.md in:$MISSING_READMES"
+if [ -n "$MISSING_INDEXES" ]; then
+  warning "Missing index files:$MISSING_INDEXES"
 else
-  success "All major directories have READMEs"
+  success "All major directories have index.md"
 fi
 
 # 5. Check for test files
