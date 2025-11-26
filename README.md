@@ -24,26 +24,31 @@
 
 ### 🔧 MCP Tools
 - `list-components` - List all components
-- `get-component` - **🆕 Smart filtering** - Get component info with context-aware enrichment filtering
+- `get-component` - **🆕 Markdown format** - Get component info in human-readable format with **77% token savings**
 - `search-components` - Search by name/description
 - `generate-code` - Generate Vue component code
 - `map-figma-component` - Map Figma to DS components
 
-### 🧠 Smart Filter Layer (NEW!)
-The `get-component` tool now includes intelligent enrichment filtering to optimize token usage:
-
-**Three Modes:**
-- **Auto Mode** (default): AI analyzes your context to select relevant enrichments
-  - Example: `get-component({ name: "InButtonV2", context: "migrate from v1" })` → Returns migration-focused data
-- **Preset Mode**: Use predefined strategies (`minimal`, `standard`, `comprehensive`)
-  - Example: `get-component({ name: "InButtonV2", enrichments: { strategy: "minimal" } })` → Only props + events
-- **Manual Mode**: Explicitly choose which enrichments to include
-  - Example: `get-component({ name: "InButtonV2", enrichments: { include: ["props", "examples"] } })`
+### ⚡ Markdown Format (NEW!)
+The `get-component` tool now returns component documentation in **Markdown format** for massive token savings:
 
 **Benefits:**
-- 💰 Saves up to 70% tokens compared to comprehensive mode
-- 🎯 Returns only relevant data for your task
-- ⚡ Faster responses with smaller payloads
+- 💰 **77% token savings** compared to JSON format (690KB → 161KB)
+- 📖 **Human-readable** format with clear structure
+- 🎯 **~135,335 tokens saved** across all components
+- ⚡ **Faster responses** with smaller payloads
+
+**Top Performers:**
+- InButtonV2: 88% savings (55KB → 6.6KB)
+- InDropdownMenu: 87% savings (36KB → 4.8KB)
+- InTooltipV2: 86% savings (31KB → 4.2KB)
+
+**Format includes:**
+- Props with types, defaults, descriptions
+- Events with payloads
+- Examples with code snippets
+- Common mistakes and best practices
+- Related components
 
 ### 📚 MCP Resources
 - `ds://components` - All components list

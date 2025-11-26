@@ -16,8 +16,9 @@
     "extract:merge": "tsx scripts/merge-datasets.ts",
     "extract:storybook": "tsx scripts/extract-storybook.ts",
     "extract:usage": "tsx scripts/extract-usage.ts",
-    "extract:all": "npm run extract:components && npm run extract:enrich && npm run extract:merge && npm run build",
-    "extract:full": "npm run extract:components && npm run extract:storybook && npm run extract:usage && npm run extract:merge",
+    "generate:markdown": "tsx scripts/generate-markdown.ts",
+    "extract:all": "npm run extract:components && npm run extract:enrich && npm run extract:merge && npm run generate:markdown && npm run build",
+    "extract:full": "npm run extract:components && npm run extract:storybook && npm run extract:usage && npm run extract:merge && npm run generate:markdown",
     "validate:docs": "tsx scripts/validate-docs.ts",
     "validate:docs:component": "tsx scripts/validate-docs.ts",
     "sync:docs": "tsx scripts/sync-docs.ts",
@@ -52,6 +53,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
+    "@vitest/coverage-v8": "^1.6.0",
     "@vue/compiler-sfc": "^3.4.0",
     "cheerio": "^1.0.0",
     "eslint": "^8.57.0",
@@ -59,8 +61,7 @@
     "tsup": "^8.0.0",
     "tsx": "^4.7.0",
     "typescript": "^5.4.0",
-    "vitest": "^1.6.0",
-    "@vitest/coverage-v8": "^1.6.0"
+    "vitest": "^1.6.0"
   },
   "files": [
     "dist",
