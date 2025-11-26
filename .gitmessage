@@ -1,0 +1,40 @@
+# <type>(<scope>): <subject>
+#
+# <body>
+#
+# 🤖 Generated with [Claude Code](https://claude.com/claude-code)
+#
+# Co-Authored-By: Claude <noreply@anthropic.com>
+
+# Types:
+#   feat:     New feature (user-facing)
+#   fix:      Bug fix
+#   docs:     Documentation changes
+#   refactor: Code refactoring (no behavior change)
+#   test:     Adding or updating tests
+#   chore:    Maintenance tasks (deps, configs)
+#   perf:     Performance improvements
+#   style:    Code style changes (formatting)
+#
+# Scope (optional):
+#   filter, adapter, tools, enrichment, docs, conventions
+#
+# Subject:
+#   - Use imperative mood: "add" not "added"
+#   - Lowercase, no period at end
+#   - Max 50 characters
+#
+# Body (optional):
+#   - Explain what and why (not how)
+#   - Use bullet points for multiple changes
+#   - Reference issues: Closes #123
+#
+# Examples:
+#   feat(filter): add auto mode for enrichment selection
+#   fix(adapter): handle missing props in legacy components
+#   docs: update commit convention guide
+#
+# Breaking changes:
+#   feat(tools)!: change API signature
+#
+#   BREAKING CHANGE: Description of breaking change

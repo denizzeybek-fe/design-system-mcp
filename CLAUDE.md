@@ -195,6 +195,126 @@ npm run build        # Must compile successfully
 - Build fails
 - Validation script shows errors (warnings are OK)
 
+### Commit Message Convention
+
+**CRITICAL:** Always use Conventional Commits format.
+
+**Format:**
+```
+<type>(<scope>): <subject>
+
+<body>
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+```
+
+**Types:**
+- `feat:` - New feature (user-facing)
+- `fix:` - Bug fix
+- `docs:` - Documentation changes
+- `refactor:` - Code refactoring (no behavior change)
+- `test:` - Adding or updating tests
+- `chore:` - Maintenance tasks (deps, configs)
+- `perf:` - Performance improvements
+- `style:` - Code style changes (formatting)
+
+**Scope (optional):**
+- `filter` - Smart filter layer
+- `adapter` - Component adapter
+- `tools` - MCP tools
+- `enrichment` - Enrichment system
+- `docs` - Documentation
+- `conventions` - Project conventions
+
+**Subject:**
+- Use imperative mood: "add feature" not "added feature"
+- Lowercase, no period at end
+- Max 50 characters
+- Be specific and descriptive
+
+**Body (optional):**
+- Explain what and why (not how)
+- Use bullet points for multiple changes
+- Include breaking changes if any
+- Reference issues: `Closes #123`
+
+**Examples:**
+
+```bash
+# Simple feature
+feat(filter): add auto mode for enrichment selection
+
+# Bug fix with explanation
+fix(adapter): handle missing props in legacy components
+
+Legacy components may not have all required fields.
+Added null checks and default values.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+# Multiple changes
+feat(tools): add Smart Filter Layer for token optimization
+
+- Add ComponentAdapter for format conversion
+- Add SmartEnrichmentSelector for intent detection
+- Add EnrichmentFilter for in-memory filtering
+- Integrate with get-component tool
+
+Token savings: 30-70% depending on mode
+Performance: <2ms overhead
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+# Documentation update
+docs: reorganize documentation structure
+
+- Move 18 files from root to organized structure
+- Create docs/, archive/ hierarchy
+- Normalize all filenames to kebab-case
+- Update all cross-references
+
+Root directory: 21 files → 12 files
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+# Breaking change
+feat(tools)!: change get-component API to support filtering
+
+BREAKING CHANGE: get-component now requires enrichments parameter
+
+Before:
+  get-component("InButton")
+
+After:
+  get-component("InButton", { enrichments: { strategy: "auto" } })
+
+Migration: Add enrichments parameter to all get-component calls
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+```
+
+**Always include:**
+- ✅ Type prefix (feat/fix/docs/etc.)
+- ✅ Descriptive subject
+- ✅ Co-authored-by footer
+- ✅ Claude Code attribution
+
+**Never:**
+- ❌ Vague messages: "fix stuff", "update code"
+- ❌ Missing type prefix
+- ❌ ALL CAPS subjects
+- ❌ Multiple unrelated changes in one commit
+
 ### Common Mistakes to Avoid
 
 ❌ Using snake_case for file names
