@@ -19,7 +19,7 @@ This MCP server provides tools and resources for working with the Insider Design
 |------|-------------|-------------|
 | `list-components` | List all components, optionally by category | Starting a new feature, exploring available components |
 | `search-components` | Search by name/description | Looking for specific functionality |
-| `get-component` | Get full component details | Need complete documentation for implementation |
+| `get-component` | **🆕 Smart filtering** - Get component details with context-aware enrichment filtering | Need documentation tailored to your specific task (migration, implementation, debugging, etc.) |
 
 ### Documentation Tools
 
@@ -38,13 +38,54 @@ This MCP server provides tools and resources for working with the Insider Design
 
 ## Usage Patterns
 
-### Pattern 1: Implementing a Component
+### Pattern 1: Implementing a Component (with Smart Filtering)
 
 ```
-1. get-component("InDatePickerV2")     → Understand all props/events
+1. get-component("InDatePickerV2", {
+     context: "implement date range picker feature",
+     enrichments: { strategy: "auto" }
+   })  → AI selects relevant enrichments for implementation
 2. generate-code("InDatePickerV2", { compare: true, range: true })
 3. Add generated code to Vue file
 ```
+
+**Smart Filtering Options:**
+- **Auto Mode**: Let AI analyze your context and select relevant enrichments
+  ```javascript
+  get-component("InButtonV2", {
+    context: "migrate from v1 to v2"
+  })
+  // Returns: props, events, propEnrichments (migration guides), helperFunctions
+  ```
+
+- **Preset Mode**: Use predefined strategies
+  ```javascript
+  get-component("InButtonV2", {
+    enrichments: { strategy: "minimal" }
+  })
+  // Returns: Only props + events (fastest, minimal tokens)
+
+  get-component("InButtonV2", {
+    enrichments: { strategy: "standard" }
+  })
+  // Returns: props, events, examples, helperFunctions
+
+  get-component("InButtonV2", {
+    enrichments: { strategy: "comprehensive" }
+  })
+  // Returns: Everything (default if no options provided)
+  ```
+
+- **Manual Mode**: Explicitly choose enrichments
+  ```javascript
+  get-component("InButtonV2", {
+    enrichments: {
+      include: ["props", "events", "examples"],
+      strategy: "manual"
+    }
+  })
+  // Returns: Only specified categories
+  ```
 
 ### Pattern 2: Implementing from Figma
 

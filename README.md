@@ -24,16 +24,49 @@
 
 ### 🔧 MCP Tools
 - `list-components` - List all components
-- `get-component` - Get detailed component info with enum values
+- `get-component` - **🆕 Smart filtering** - Get component info with context-aware enrichment filtering
 - `search-components` - Search by name/description
 - `generate-code` - Generate Vue component code
 - `map-figma-component` - Map Figma to DS components
+
+### 🧠 Smart Filter Layer (NEW!)
+The `get-component` tool now includes intelligent enrichment filtering to optimize token usage:
+
+**Three Modes:**
+- **Auto Mode** (default): AI analyzes your context to select relevant enrichments
+  - Example: `get-component({ name: "InButtonV2", context: "migrate from v1" })` → Returns migration-focused data
+- **Preset Mode**: Use predefined strategies (`minimal`, `standard`, `comprehensive`)
+  - Example: `get-component({ name: "InButtonV2", enrichments: { strategy: "minimal" } })` → Only props + events
+- **Manual Mode**: Explicitly choose which enrichments to include
+  - Example: `get-component({ name: "InButtonV2", enrichments: { include: ["props", "examples"] } })`
+
+**Benefits:**
+- 💰 Saves up to 70% tokens compared to comprehensive mode
+- 🎯 Returns only relevant data for your task
+- ⚡ Faster responses with smaller payloads
 
 ### 📚 MCP Resources
 - `ds://components` - All components list
 - `ds://registry` - Registry metadata
 - `ds://component/{name}` - Individual component
 - `ds://categories` - Component categories
+
+---
+
+## 📖 Documentation
+
+- **[Architecture](docs/architecture/)** - System design and data flow
+  - [How It Works](docs/architecture/how-it-works.md) - Complete architecture overview
+  - [Smart Filter Layer](docs/architecture/smart-filter-layer.md) - Token optimization system
+  - [Figma Integration](docs/architecture/figma-integration.md) - Figma to Vue workflow
+
+- **[Guides](docs/guides/)** - How-to guides and workflows
+  - [Developer Workflow](docs/guides/workflow.md) - Day-to-day development
+  - [Enrichment Strategy](docs/guides/enrichment-strategy.md) - Creating enrichments
+  - [Enrichment Template](docs/guides/enrichment-template.md) - Enrichment templates
+
+- **[Reference](docs/reference/)** - API and tool references
+  - [Agent Usage](docs/reference/agent-usage.md) - Specialized agents guide
 
 ---
 

@@ -9,6 +9,10 @@ import {
   mapFigmaComponent,
 } from '../registry/combined-loader.js';
 import { Component } from '../types/index.js';
+import { SmartEnrichmentSelector } from '../services/smart-enrichment-selector.js';
+import { EnrichmentFilter } from '../services/enrichment-filter.js';
+import { ComponentAdapter } from '../services/component-adapter.js';
+import { EnrichmentOptionsSchema } from '../types/enrichment-options.js';
 
 /**
  * Register all tools with the MCP server
@@ -49,17 +53,29 @@ export function registerTools(server: McpServer): void {
     }
   );
 
-  // Get component details
+  // Get component details with Smart Filter Layer
   server.tool(
     'get-component',
-    'Get detailed information about a specific Design System component including props, events, slots, and examples',
+    `Get detailed information about a specific Design System component with smart enrichment filtering.
+
+    Supports three modes:
+    - auto: AI analyzes context to select relevant enrichments (default)
+    - preset: Use predefined strategies (minimal/standard/comprehensive)
+    - manual: Explicitly specify which enrichments to include/exclude
+
+    Examples:
+    - Auto mode: { name: "InDatePickerV2", context: "migrate from v1", strategy: "auto" }
+    - Preset: { name: "InDatePickerV2", enrichments: { strategy: "minimal" } }
+    - Manual: { name: "InDatePickerV2", enrichments: { include: ["props", "events"] } }`,
     {
       name: z.string().describe('Component name (e.g., InButton, InDatePickerV2)'),
+      context: z.string().optional().describe('What are you trying to do? Helps AI select relevant enrichments (e.g., "migrate from v1", "fix bug", "implement feature")'),
+      enrichments: EnrichmentOptionsSchema.optional().describe('Enrichment filtering options'),
     },
-    async ({ name }) => {
-      const component = getComponentByName(name);
+    async ({ name, context, enrichments }) => {
+      const combinedComponent = getComponentByName(name);
 
-      if (!component) {
+      if (!combinedComponent) {
         return {
           content: [
             {
@@ -71,11 +87,61 @@ export function registerTools(server: McpServer): void {
         };
       }
 
+      // Initialize services
+      const adapter = new ComponentAdapter();
+      const selector = new SmartEnrichmentSelector();
+      const filter = new EnrichmentFilter();
+
+      // Adapt CombinedComponent to Component type
+      const component = adapter.adapt(combinedComponent);
+
+      // Determine enrichment strategy
+      const strategy = enrichments?.strategy || 'auto';
+      let categories;
+      let intent;
+
+      if (strategy === 'auto') {
+        // AI-powered selection based on context
+        intent = await selector.analyzeIntent({
+          explicitContext: context,
+          componentName: name,
+        });
+        categories = await selector.selectEnrichments({
+          explicitContext: context,
+          componentName: name,
+        });
+      } else if (strategy === 'manual') {
+        // Manual selection via include/exclude
+        categories = filter.resolveCategories(enrichments);
+      } else {
+        // Preset strategy (minimal/standard/comprehensive)
+        categories = filter.resolveCategories(enrichments);
+      }
+
+      // Filter component
+      const { component: filtered, metadata } = filter.filter(
+        component,
+        categories,
+        strategy,
+        intent
+      );
+
+      // Return filtered component with metadata
+      const result = {
+        component: filtered,
+        metadata: {
+          ...metadata,
+          note: metadata.tokensSaved > 0
+            ? `Smart filtering saved ~${metadata.tokensSaved} tokens compared to comprehensive mode.`
+            : 'Returning all enrichments (comprehensive mode).',
+        },
+      };
+
       return {
         content: [
           {
             type: 'text',
-            text: JSON.stringify(component, null, 2),
+            text: JSON.stringify(result, null, 2),
           },
         ],
       };

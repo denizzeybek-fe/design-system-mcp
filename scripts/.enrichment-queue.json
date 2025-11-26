@@ -1,15 +1,743 @@
 [
   {
-    "component": "InDataTableV2",
-    "priority": "low",
-    "reason": "Event count changed: 29 → 30 | Missing sections: examples",
-    "prompt": "Update enrichment for InDataTableV2.\n\nAdd missing v2 sections: examples\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "component": "InAccordion",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InAccordion.\n\nAdd missing v2 sections: title, subTextStatus, subText, status, preventXss, borderStatus, toggleTexts, accordionType\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
     "metadata": {
-      "lastUpdated": "2025-11-26T09:05:15.805Z",
-      "propsHash": "99623a75db10",
-      "eventsHash": "90ff4592ef03",
-      "propCount": 58,
-      "eventCount": 30
+      "lastUpdated": "2025-11-26T09:49:59.353Z",
+      "propsHash": "ae3df80e2f16",
+      "eventsHash": "e10808d43975",
+      "propCount": 8,
+      "eventCount": 1
+    }
+  },
+  {
+    "component": "InBasicTextInput",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InBasicTextInput.\n\nAdd missing v2 sections: id, name, theme, value, labelStatus, labelText, tooltipStatus, tooltipText, type, states, placeholderText, disabledStatus, leftIconStatus, leftIconName, rightIconStatus, rightIconName, autoComplete, skeletonStatus, skeletonSizing, prefixStatus, prefixText, actionablePrefixStatus, prefixDropdownOptions, suffixStatus, suffixText, actionableSuffixStatus, suffixDropdownOptions, maxCharacterLength, minValue, maxValue, autoFocus, allowDecimal, allowComma, preventXss, helperMessageStatus, helperMessage, stateMessage, characterCounterStatus, characterCounterMaxValue\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.353Z",
+      "propsHash": "c3e78e0672fe",
+      "eventsHash": "efddfbea438c",
+      "propCount": 39,
+      "eventCount": 11
+    }
+  },
+  {
+    "component": "InBox",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InBox.\n\nAdd missing v2 sections: type, boxSpacing, border, borderRadius, borderTriangle, borderTrianglePosition, borderTriangleAlign\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.354Z",
+      "propsHash": "5d2ec1789fc1",
+      "eventsHash": "4f53cda18c2b",
+      "propCount": 7,
+      "eventCount": 0
+    }
+  },
+  {
+    "component": "InBreadcrumb",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InBreadcrumb.\n\nAdd missing v2 sections: routes\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.354Z",
+      "propsHash": "6e84fd4ee53a",
+      "eventsHash": "4f53cda18c2b",
+      "propCount": 1,
+      "eventCount": 0
+    }
+  },
+  {
+    "component": "InBulkActions",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InBulkActions.\n\nAdd missing v2 sections: id, selectedInfoText, selectAllButtonText, clearAllButtonText, bulkActionButtons, selectionButtons\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.354Z",
+      "propsHash": "ad2578283ac7",
+      "eventsHash": "4f53cda18c2b",
+      "propCount": 6,
+      "eventCount": 0
+    }
+  },
+  {
+    "component": "InButton",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InButton.\n\nAdd missing v2 sections: id, type, status, text, value, icon, iconPosition, withIcon, withoutText, disable, theme, iconSize, withTooltip, loadingStatus, skeletonStatus, skeletonSizing, buttonClass\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.354Z",
+      "propsHash": "bfe98c333827",
+      "eventsHash": "d827049039f8",
+      "propCount": 17,
+      "eventCount": 2
+    }
+  },
+  {
+    "component": "InChart",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InChart.\n\nAdd missing v2 sections: type, labels, data, dataText, dataTooltips, backgroundColor, width, height, theme, labelLimit, labelLimitYAxes, labelOffsetX, drawYLine, drawXLine, step, tooltipsExtraSettings, labelXAxesTicksExtraSettings, labelYAxesTicksExtraSettings, labelYAxeScaleType, labelRotationXAxes, noDataIconStatus, noDataTitle, noDataDescription, legendSettings, legendNames, colorPalette, chartAnnotations, annotationsExtraSettings, datasetSettings, iconLocations, enableUsDateFormat, showDescription, hintIcon, singleInfoIcons\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.355Z",
+      "propsHash": "bf162b7e20b1",
+      "eventsHash": "4f53cda18c2b",
+      "propCount": 34,
+      "eventCount": 0
+    }
+  },
+  {
+    "component": "InCheckBox",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InCheckBox.\n\nAdd missing v2 sections: id, name, checked, label, boldLabel, disable, indeterminate, preventXss, skeletonStatus, skeletonSizing\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.355Z",
+      "propsHash": "4ec1977deb55",
+      "eventsHash": "4f53cda18c2b",
+      "propCount": 10,
+      "eventCount": 0
+    }
+  },
+  {
+    "component": "InCodeSnippet",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InCodeSnippet.\n\nAdd missing v2 sections: code, options, size, syntaxCheck, disable, invalid, invalidMessage, warning, warningMessage, focusEditor, usePercentageSize, replaceDynamicContentMap, fallbackSaveButtonText, fallbackCloseButtonText, fallbackOptions, fallBackDisabledCharacters, fallBackDisabledCharactersMessage, preventXss, canAddDynamicContent, skeletonStatus, canEdit, dynamicContentBoxProps, replaceDynamicContentText, dynamicContentButtonText, fallBackStatusMessage, groupingEventInfoText, saveButtonCallback, position, warningTags, errorTags, validateTagsWithFallback, markNotExistDynamicContent, notExistingAttributeHasErrorState, notExistingAttributeWhiteListRegExp, uploadTriggerWords\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.356Z",
+      "propsHash": "592f9a3439eb",
+      "eventsHash": "c7cf003aa202",
+      "propCount": 35,
+      "eventCount": 8
+    }
+  },
+  {
+    "component": "InColorPicker",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InColorPicker.\n\nAdd missing v2 sections: value, label, placeholder, invalid, invalidMessage, skeletonStatus, skeletonSizing, disabled\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.356Z",
+      "propsHash": "e8da32d514fd",
+      "eventsHash": "e10808d43975",
+      "propCount": 8,
+      "eventCount": 1
+    }
+  },
+  {
+    "component": "InCreateButton",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InCreateButton.\n\nAdd missing v2 sections: id, skeletonStatus, skeletonSizing, label, disabledStatus\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.357Z",
+      "propsHash": "8c106ac898be",
+      "eventsHash": "e10808d43975",
+      "propCount": 5,
+      "eventCount": 1
+    }
+  },
+  {
+    "component": "InCustomDropDown",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InCustomDropDown.\n\nAdd missing v2 sections: id, text, status, type, target, options, searchStatus, createNewOptionStatus, createNewOptionText, openPosition, buttonType, icon, iconPosition, iconName, disable, title, extraOption, noDataText, noSearchResultText, skeletonStatus, skeletonSizing, visibleButton, visibleBorder, avoidClosingSelectors, isFullWidth, isHoverEffectDisabled, dropdownMenuPosition, withTitle, withTooltip, tooltipText\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.357Z",
+      "propsHash": "907a1667a6a2",
+      "eventsHash": "7db6af6c4a11",
+      "propCount": 30,
+      "eventCount": 7
+    }
+  },
+  {
+    "component": "InDataTable",
+    "priority": "high",
+    "reason": "2 new complex props: statusList, pinnedRows",
+    "prompt": "Update enrichment for InDataTable.\n\nNew props to document: statusList, pinnedRows\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.358Z",
+      "propsHash": "b81668415884",
+      "eventsHash": "41c59fa49883",
+      "propCount": 43,
+      "eventCount": 5
+    }
+  },
+  {
+    "component": "InDatePicker",
+    "priority": "high",
+    "reason": "3 new complex props: skeletonSizing, daysOfWeek, monthNames | Missing sections: codeSnippets, styling, examples, bestPractices, implementationPatterns",
+    "prompt": "Update enrichment for InDatePicker.\n\nNew props to document: skeletonSizing, daysOfWeek, monthNames\n\nAdd missing v2 sections: codeSnippets, styling, examples, bestPractices, implementationPatterns\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.360Z",
+      "propsHash": "4c002fa8a262",
+      "eventsHash": "e10808d43975",
+      "propCount": 23,
+      "eventCount": 1
+    }
+  },
+  {
+    "component": "InDatePickerV2",
+    "priority": "high",
+    "reason": "4 new complex props: calendarPopoverMessage, specificDates, skeletonSizing, defaultRanges | 4 new events: dateRangeUpdated, dateComparedRangeUpdated, close, rangeSelected | Missing sections: codeSnippets, styling, examples, bestPractices, implementationPatterns",
+    "prompt": "Update enrichment for InDatePickerV2.\n\nNew props to document: calendarPopoverMessage, specificDates, skeletonSizing, defaultRanges\n\nNew events to document: dateRangeUpdated, dateComparedRangeUpdated, close, rangeSelected\n\nAdd missing v2 sections: codeSnippets, styling, examples, bestPractices, implementationPatterns\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.360Z",
+      "propsHash": "29c197a84335",
+      "eventsHash": "7db6af6c4a11",
+      "propCount": 41,
+      "eventCount": 7
+    }
+  },
+  {
+    "component": "InDeviceTemplate",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InDeviceTemplate.\n\nAdd missing v2 sections: type, size, slotXPosition, slotYPosition\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.361Z",
+      "propsHash": "3849b82e838a",
+      "eventsHash": "4f53cda18c2b",
+      "propCount": 4,
+      "eventCount": 0
+    }
+  },
+  {
+    "component": "InDrawer",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InDrawer.\n\nAdd missing v2 sections: closeButtonStatus, closeOnOutsideClick, fullWidthContentStatus, descriptionStatus, descriptionText, footerStatus, id, overlayStatus, size, state, status, titleText, footerButtonGroupOptions\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.361Z",
+      "propsHash": "416653cbc6fb",
+      "eventsHash": "e10808d43975",
+      "propCount": 13,
+      "eventCount": 1
+    }
+  },
+  {
+    "component": "InDynamicContentBox",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InDynamicContentBox.\n\nAdd missing v2 sections: id, fieldsConfig, dynamicContent, theme, variant, titleStatus, titleText, descriptionStatus, descriptionText, size, fullWidthContentStatus, buttonOptions, hasGroupLevelPartners, groupLevelPartners, hasConstantEvent, hasConstantAttribute, constantEventInfoMessage, constantAttributeInfoMessage, constantSelectedAttributeInfoMessage, constantEventWarningMessage, constantAttributeWarningMessage, groupingEventWarningText, groupEventsCheckboxLabel, activateGroupingEvents, isGroupingEvents, groupEventsTooltip, groupEventsDisabledTooltip, groupedEvents, maxChildHeight, lazyLoadChunkSize, preloadBunchSize\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.362Z",
+      "propsHash": "00904eb6938e",
+      "eventsHash": "d827049039f8",
+      "propCount": 31,
+      "eventCount": 2
+    }
+  },
+  {
+    "component": "InFormStatus",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InFormStatus.\n\nAdd missing v2 sections: target, skeletonSizing, preventXss\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.362Z",
+      "propsHash": "4843cffb191e",
+      "eventsHash": "e10808d43975",
+      "propCount": 3,
+      "eventCount": 1
+    }
+  },
+  {
+    "component": "InHeader",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InHeader.\n\nAdd missing v2 sections: routes, generateProgressStatus, progressValue, maxProgressValue, generateTooltip, preventXss\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.362Z",
+      "propsHash": "90bbebb62d2a",
+      "eventsHash": "4f53cda18c2b",
+      "propCount": 6,
+      "eventCount": 0
+    }
+  },
+  {
+    "component": "InIcons",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InIcons.\n\nAdd missing v2 sections: name, size, sizeObject\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.362Z",
+      "propsHash": "7e0508ec6b47",
+      "eventsHash": "4f53cda18c2b",
+      "propCount": 3,
+      "eventCount": 0
+    }
+  },
+  {
+    "component": "InInfoBox",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InInfoBox.\n\nAdd missing v2 sections: id, theme, variant, titleStatus, titleText, descriptionStatus, descriptionText, buttonOptions, size, fullWidthContentStatus\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.362Z",
+      "propsHash": "925b2b61a400",
+      "eventsHash": "4f53cda18c2b",
+      "propCount": 10,
+      "eventCount": 0
+    }
+  },
+  {
+    "component": "InLinks",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InLinks.\n\nAdd missing v2 sections: id, link, text, type, target, icon, iconSize, withIcon, disable, externalLink, download, skeletonStatus, skeletonSizing\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.362Z",
+      "propsHash": "8c4fc32a9440",
+      "eventsHash": "e10808d43975",
+      "propCount": 13,
+      "eventCount": 1
+    }
+  },
+  {
+    "component": "InLoading",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InLoading.\n\nAdd missing v2 sections: size, colorClass\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.362Z",
+      "propsHash": "eacb69009db9",
+      "eventsHash": "4f53cda18c2b",
+      "propCount": 2,
+      "eventCount": 0
+    }
+  },
+  {
+    "component": "InModalV2",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InModalV2.\n\nAdd missing v2 sections: id, status, state, size, titleText, descriptionStatus, descriptionText, footerStatus, closeButtonStatus, closeOnOutsideClick, footerButtonGroupOptions, preventXss, fullWidthContentStatus\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.362Z",
+      "propsHash": "0f3492b9356b",
+      "eventsHash": "063f6c36be70",
+      "propCount": 13,
+      "eventCount": 4
+    }
+  },
+  {
+    "component": "InModals",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InModals.\n\nAdd missing v2 sections: id, status, type, title, size, informationModalDescription, modalStatus, acceptButtonType, acceptButtonText, acceptButtonDisable, cancelButtonText, visibleButtons, withSpacing, closeButtons, modalDescription, withPage, backButtonText, closeOnOverlayClick, hasOverlay, isModalAcceptButtonLoading, withBackOption, preventXss\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.362Z",
+      "propsHash": "8d7d9b543e6b",
+      "eventsHash": "82e81eff8fdb",
+      "propCount": 22,
+      "eventCount": 3
+    }
+  },
+  {
+    "component": "InNoData",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InNoData.\n\nAdd missing v2 sections: title, description, visibleIcon, icon, buttonStatus, buttonText, backgroundColorClass, titleColorClass, descriptionColorClass, iconClass, parseAsHtml, preventXss, buttonType, isButtonDisabled, buttonTooltip, buttonTooltipPosition, buttonProps\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.363Z",
+      "propsHash": "100e96749474",
+      "eventsHash": "4f53cda18c2b",
+      "propCount": 17,
+      "eventCount": 0
+    }
+  },
+  {
+    "component": "InOnboard",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InOnboard.\n\nAdd missing v2 sections: id, title, description, imageSource, visible, leftPosition, topPosition, bottomPosition, rightPosition, withButton, buttonType, buttonText, isMultiplePage, pagesConfig, pointerPosition, preventXss\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.363Z",
+      "propsHash": "329f09994358",
+      "eventsHash": "063f6c36be70",
+      "propCount": 16,
+      "eventCount": 4
+    }
+  },
+  {
+    "component": "InPageHeadings",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InPageHeadings.\n\nAdd missing v2 sections: withBorder, preventXss\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.363Z",
+      "propsHash": "3258a93004b2",
+      "eventsHash": "4f53cda18c2b",
+      "propCount": 2,
+      "eventCount": 0
+    }
+  },
+  {
+    "component": "InProgress",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InProgress.\n\nAdd missing v2 sections: status, id, value, maxValue, descriptionStatus, description, descriptionPosition, invalid, invalidType, invalidMessage, invalidIcon, success, successMessage, successIcon, semiCircle, type, semiCircleWidth, variant, completed\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.363Z",
+      "propsHash": "1445ab760df9",
+      "eventsHash": "e10808d43975",
+      "propCount": 19,
+      "eventCount": 1
+    }
+  },
+  {
+    "component": "InRadioButton",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InRadioButton.\n\nAdd missing v2 sections: id, name, value, selected, label, disable, skeletonStatus, skeletonSizing\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.363Z",
+      "propsHash": "2f4782dc5199",
+      "eventsHash": "e10808d43975",
+      "propCount": 8,
+      "eventCount": 1
+    }
+  },
+  {
+    "component": "InRichTextInput",
+    "priority": "high",
+    "reason": "5 new complex props: skeletonSizing, delimiters, fallBackDisabledCharacters, saveButtonCallback, uploadTriggerWords | 9 new events: charactersHighlighted, onAlternativeTextChange, saveUrlOption, saveFallBackOptionObject, onDynamicContentCancel, updateEventPersistent, updateProductAttributePersistent, selectedInActiveOption, closeFallBackOption | Missing sections: codeSnippets, styling, examples, implementationPatterns",
+    "prompt": "Update enrichment for InRichTextInput.\n\nNew props to document: skeletonSizing, delimiters, fallBackDisabledCharacters, saveButtonCallback, uploadTriggerWords\n\nNew events to document: charactersHighlighted, onAlternativeTextChange, saveUrlOption, saveFallBackOptionObject, onDynamicContentCancel, updateEventPersistent, updateProductAttributePersistent, selectedInActiveOption, closeFallBackOption\n\nAdd missing v2 sections: codeSnippets, styling, examples, implementationPatterns\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.364Z",
+      "propsHash": "0b2c0ec016be",
+      "eventsHash": "0de5e4df1f1d",
+      "propCount": 73,
+      "eventCount": 18
+    }
+  },
+  {
+    "component": "InSegments",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InSegments.\n\nAdd missing v2 sections: selected, withIcon, small, disable, align, skeletonStatus, skeletonSizing\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.365Z",
+      "propsHash": "fff41e74a4d4",
+      "eventsHash": "e10808d43975",
+      "propCount": 7,
+      "eventCount": 1
+    }
+  },
+  {
+    "component": "InSidebar",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InSidebar.\n\nAdd missing v2 sections: selectedRoute, routes, preventXss\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.366Z",
+      "propsHash": "8dcc09b4f93c",
+      "eventsHash": "82e81eff8fdb",
+      "propCount": 3,
+      "eventCount": 3
+    }
+  },
+  {
+    "component": "InSkeleton",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InSkeleton.\n\nAdd missing v2 sections: name, status, sizing\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.366Z",
+      "propsHash": "12989b886520",
+      "eventsHash": "4f53cda18c2b",
+      "propCount": 3,
+      "eventCount": 0
+    }
+  },
+  {
+    "component": "InSlider",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InSlider.\n\nAdd missing v2 sections: slides, autoplay\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.366Z",
+      "propsHash": "bdd45c04c481",
+      "eventsHash": "4f53cda18c2b",
+      "propCount": 2,
+      "eventCount": 0
+    }
+  },
+  {
+    "component": "InStatusText",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InStatusText.\n\nAdd missing v2 sections: text, icon, iconSize, status, size\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.366Z",
+      "propsHash": "f54271b65d2f",
+      "eventsHash": "4f53cda18c2b",
+      "propCount": 5,
+      "eventCount": 0
+    }
+  },
+  {
+    "component": "InSteps",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InSteps.\n\nAdd missing v2 sections: id, routes, activeStep, backStep, externalLink, type, backStepStatus, skeletonStatus\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.366Z",
+      "propsHash": "1c366e46537f",
+      "eventsHash": "4f53cda18c2b",
+      "propCount": 8,
+      "eventCount": 0
+    }
+  },
+  {
+    "component": "InTabs",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InTabs.\n\nAdd missing v2 sections: tabsList, useRouter, withSpacing, dropdownTabs, dropdownVariationTabs, addNewTabActive, addTabDropdownSearchStatus, addTabDropdownOptions, addNewTabFunctionality, useEmitForRemove, dynamicDropdownTabs, addNewTabTooltipStatus, addNewTabTooltipText, draggable, preventTabSelectionOnClick, boxStyle, renameOption, removeOption, duplicateOption, isDuplicateVisible, isMixedMode, isRenameDropdown, removeButtonText, disableDragIconClick, maxTabDisplayTextLength, dropdownOffset, localizationOption\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.366Z",
+      "propsHash": "6e98d3645fee",
+      "eventsHash": "67b68754bcb3",
+      "propCount": 27,
+      "eventCount": 10
+    }
+  },
+  {
+    "component": "InTags",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InTags.\n\nAdd missing v2 sections: value, label, placeholder, validate, allowDuplicates, allowInvalidTags, allowedEntries, disable, invalid, warning, invalidMessage, warningMessage, skeletonStatus, allowBulkPaste, skeletonSizing\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.366Z",
+      "propsHash": "027692e8c8e2",
+      "eventsHash": "d827049039f8",
+      "propCount": 15,
+      "eventCount": 2
+    }
+  },
+  {
+    "component": "InTagsText",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InTagsText.\n\nAdd missing v2 sections: type, text, value, disable, withIcon, maxWidth, preventXss\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.366Z",
+      "propsHash": "188a68b2577c",
+      "eventsHash": "e10808d43975",
+      "propCount": 7,
+      "eventCount": 1
+    }
+  },
+  {
+    "component": "InTextArea",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InTextArea.\n\nAdd missing v2 sections: id, name, value, label, withLabel, placeholder, disable, invalid, invalidMessage, theme, skeletonStatus, skeletonSizing, rowLength, preventXss\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.366Z",
+      "propsHash": "0616fa3bde5f",
+      "eventsHash": "ee736357bbbb",
+      "propCount": 14,
+      "eventCount": 6
+    }
+  },
+  {
+    "component": "InTextInput",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InTextInput.\n\nAdd missing v2 sections: id, name, value, withLabel, label, labelTooltip, type, placeholder, disable, invalid, invalidMessage, small, withIcon, iconName, iconPosition, theme, autoComplete, skeletonStatus, skeletonSizing, accept, warning, warningMessage, withSuffix, suffix, maxLength, min, autoFocus, allowDecimal, allowComma, prefix, preventXss\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.366Z",
+      "propsHash": "18c443d3d7a2",
+      "eventsHash": "c7cf003aa202",
+      "propCount": 31,
+      "eventCount": 8
+    }
+  },
+  {
+    "component": "InTimePicker",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InTimePicker.\n\nAdd missing v2 sections: label, name, value, skeletonStatus, invalid, invalidMessage, disable, withLabel, skeletonSizing\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.366Z",
+      "propsHash": "3c7596d5ad80",
+      "eventsHash": "d827049039f8",
+      "propCount": 9,
+      "eventCount": 2
+    }
+  },
+  {
+    "component": "InToasts",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InToasts.\n\nAdd missing v2 sections: id, text, type, icon, status, withIcon, withoutLeftMargin, actionButtonsConfig, preventXss\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.366Z",
+      "propsHash": "533fa9898ec5",
+      "eventsHash": "4f53cda18c2b",
+      "propCount": 9,
+      "eventCount": 0
+    }
+  },
+  {
+    "component": "InToggle",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InToggle.\n\nAdd missing v2 sections: id, name, checked, disable, skeletonStatus, skeletonSizing\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.366Z",
+      "propsHash": "5815eec3a45f",
+      "eventsHash": "e10808d43975",
+      "propCount": 6,
+      "eventCount": 1
+    }
+  },
+  {
+    "component": "InTooltip",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InTooltip.\n\nAdd missing v2 sections: text, position, align, themeDark, withIcon, disable, preventXss, renderHtml\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.366Z",
+      "propsHash": "7d8df073a40e",
+      "eventsHash": "4f53cda18c2b",
+      "propCount": 8,
+      "eventCount": 0
+    }
+  },
+  {
+    "component": "InUpload",
+    "priority": "high",
+    "reason": "No enrichment file exists",
+    "prompt": "Create comprehensive enrichment for InUpload.\n\nAdd missing v2 sections: fileType, fileName, iconName, uploadDescription, deleteText, changeText, imageSrc, inputName, disable, progressValue, small, smallWithButtons, failed, errorMessage, helperMessage, dragEnterDescription, retryMessage, selectable, preventFileUpload\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.367Z",
+      "propsHash": "e2eb9a043a1a",
+      "eventsHash": "063f6c36be70",
+      "propCount": 19,
+      "eventCount": 4
+    }
+  },
+  {
+    "component": "InDropDown",
+    "priority": "medium",
+    "reason": "1 new complex props: skeletonSizing | 2 new events: selectedInActiveOption, loadingDropDownOptions | Missing sections: codeSnippets, styling, examples, implementationPatterns",
+    "prompt": "Update enrichment for InDropDown.\n\nNew props to document: skeletonSizing\n\nNew events to document: selectedInActiveOption, loadingDropDownOptions\n\nAdd missing v2 sections: codeSnippets, styling, examples, implementationPatterns\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.361Z",
+      "propsHash": "5af3ca16ac82",
+      "eventsHash": "c7cf003aa202",
+      "propCount": 33,
+      "eventCount": 8
+    }
+  },
+  {
+    "component": "InDropdownMenu",
+    "priority": "medium",
+    "reason": "3 new events: selectedDisabledValues, endScroll, clickOutside | Missing sections: codeSnippets, styling, bestPractices, implementationPatterns",
+    "prompt": "Update enrichment for InDropdownMenu.\n\nNew events to document: selectedDisabledValues, endScroll, clickOutside\n\nAdd missing v2 sections: codeSnippets, styling, bestPractices, implementationPatterns\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.362Z",
+      "propsHash": "405ec2061e6b",
+      "eventsHash": "d9b44726d530",
+      "propCount": 40,
+      "eventCount": 9
+    }
+  },
+  {
+    "component": "InMultiDropDown",
+    "priority": "medium",
+    "reason": "1 new complex props: skeletonSizing | Missing sections: codeSnippets, styling, examples, implementationPatterns",
+    "prompt": "Update enrichment for InMultiDropDown.\n\nNew props to document: skeletonSizing\n\nAdd missing v2 sections: codeSnippets, styling, examples, implementationPatterns\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.362Z",
+      "propsHash": "7a84befceda1",
+      "eventsHash": "41c59fa49883",
+      "propCount": 35,
+      "eventCount": 5
+    }
+  },
+  {
+    "component": "InMultiSelect",
+    "priority": "medium",
+    "reason": "1 new complex props: skeletonSizing | 4 new events: openList, close, endScroll, secondaryButtonClick | Missing sections: codeSnippets, styling, bestPractices, implementationPatterns",
+    "prompt": "Update enrichment for InMultiSelect.\n\nNew props to document: skeletonSizing\n\nNew events to document: openList, close, endScroll, secondaryButtonClick\n\nAdd missing v2 sections: codeSnippets, styling, bestPractices, implementationPatterns\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.363Z",
+      "propsHash": "345f121c122c",
+      "eventsHash": "67b68754bcb3",
+      "propCount": 49,
+      "eventCount": 10
+    }
+  },
+  {
+    "component": "InOnPageMessage",
+    "priority": "medium",
+    "reason": "1 new complex props: skeletonSizing | Missing sections: codeSnippets, styling, examples, implementationPatterns",
+    "prompt": "Update enrichment for InOnPageMessage.\n\nNew props to document: skeletonSizing\n\nAdd missing v2 sections: codeSnippets, styling, examples, implementationPatterns\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.363Z",
+      "propsHash": "93809f71daae",
+      "eventsHash": "4f53cda18c2b",
+      "propCount": 12,
+      "eventCount": 0
+    }
+  },
+  {
+    "component": "InSelect",
+    "priority": "medium",
+    "reason": "1 new complex props: skeletonSizing | 5 new events: openList, close, selectedInActiveOption, select, unSelect | Missing sections: codeSnippets, styling, examples, bestPractices, implementationPatterns",
+    "prompt": "Update enrichment for InSelect.\n\nNew props to document: skeletonSizing\n\nNew events to document: openList, close, selectedInActiveOption, select, unSelect\n\nAdd missing v2 sections: codeSnippets, styling, examples, bestPractices, implementationPatterns\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.365Z",
+      "propsHash": "f63c4768d755",
+      "eventsHash": "c7cf003aa202",
+      "propCount": 47,
+      "eventCount": 8
+    }
+  },
+  {
+    "component": "InSidebarV2",
+    "priority": "medium",
+    "reason": "4 new events: opened, clearRecentSearch, removeFromFavorite, addToFavorite | Missing sections: codeSnippets, styling, examples, implementationPatterns",
+    "prompt": "Update enrichment for InSidebarV2.\n\nNew events to document: opened, clearRecentSearch, removeFromFavorite, addToFavorite\n\nAdd missing v2 sections: codeSnippets, styling, examples, implementationPatterns\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.366Z",
+      "propsHash": "fd53edc29c4b",
+      "eventsHash": "41c59fa49883",
+      "propCount": 7,
+      "eventCount": 5
+    }
+  },
+  {
+    "component": "InSuperInput",
+    "priority": "medium",
+    "reason": "1 new complex props: skeletonSizing | Missing sections: codeSnippets, styling, examples, implementationPatterns",
+    "prompt": "Update enrichment for InSuperInput.\n\nNew props to document: skeletonSizing\n\nAdd missing v2 sections: codeSnippets, styling, examples, implementationPatterns\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.366Z",
+      "propsHash": "eceb9f5b9cc3",
+      "eventsHash": "e10808d43975",
+      "propCount": 49,
+      "eventCount": 1
+    }
+  },
+  {
+    "component": "InTooltipV2",
+    "priority": "medium",
+    "reason": "Missing sections: codeSnippets, styling, examples, implementationPatterns",
+    "prompt": "Update enrichment for InTooltipV2.\n\nAdd missing v2 sections: codeSnippets, styling, examples, implementationPatterns\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:49:59.367Z",
+      "propsHash": "b4ef99145505",
+      "eventsHash": "4f53cda18c2b",
+      "propCount": 14,
+      "eventCount": 0
     }
   }
 ]
