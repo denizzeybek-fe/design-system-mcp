@@ -199,42 +199,167 @@ npm run build
 
 ## 📖 Usage Examples
 
-### 🎯 Optimize Your Prompts (NEW!)
+### 🎯 Complete Walkthrough: From Raw Request to Implementation
 
-Use `mcp__design-system__optimize-prompt` to transform raw requests into MCP-optimized prompts:
+**Scenario:** You need a button that opens a dropdown menu.
 
-```typescript
-// Works in ANY project that has Design System MCP configured!
-mcp__design-system__optimize-prompt("bir buton ve dropdown menü lazım")
+#### Step 1: Optimize Your Raw Request
 
-// Returns optimized prompt with:
-✅ Component identification (InButtonV2, InDropdownMenu)
-✅ Suggested MCP tools (search, get-component, generate-code)
-✅ Token savings estimates (~20,000 tokens)
-✅ Step-by-step implementation guide
-✅ Clear output expectations
+```bash
+# In Claude Code (works in ANY project with Design System MCP!)
+User: "Use optimize-prompt to transform this request: I need a button that opens a dropdown menu"
 ```
 
-**Example output:**
+Claude calls `mcp__design-system__optimize-prompt` and returns:
+
 ```markdown
-I need to implement a button that opens a dropdown menu when clicked.
+# Original Prompt
+I need a button that opens a dropdown menu
+
+# Analysis
+- Language: English
+- Intent: implement
+- Components: InButtonV2, InDropdownMenu
+- Complexity: medium
+- Estimated Token Savings: ~24,000 tokens
+
+# Optimized Prompt
+I need to implement InButtonV2 and InDropdownMenu components with proper integration.
 
 Please use the Design System MCP to:
 
-1. Search for components
-   Tool: mcp__design-system__search-components
+1. Get documentation for both components
+   - Tool: mcp__design-system__get-component
+   - Components: InButtonV2, InDropdownMenu
+   - Note: Markdown format saves ~87% tokens on average
 
-2. Get documentation for both components
-   Tool: mcp__design-system__get-component
-   Components: InButtonV2, InDropdownMenu
+2. Generate implementation code
+   - Tool: mcp__design-system__generate-code
+   - Include integration between components
 
-3. Generate integrated code
-   Tool: mcp__design-system__generate-code
+Requirements:
+- Primary styling for main actions
+- Dropdown opens below trigger element
+- Proper state management between components
 
 Show me:
-✅ Components used
-✅ Token savings (Markdown format: ~87% savings)
-✅ Complete Vue implementation
+✅ Which components you're using
+✅ Token savings from Markdown format for each component
+✅ The generated Vue code
+✅ Integration example showing how components work together
+```
+
+#### Step 2: Use the Optimized Prompt
+
+```bash
+User: "Now use the optimized prompt above to implement the button + dropdown"
+```
+
+Claude executes:
+
+1. **Gets InButtonV2 docs** (Markdown format)
+   - Original: 55KB JSON → 6.6KB Markdown
+   - Token savings: 88% (~12,198 tokens)
+
+2. **Gets InDropdownMenu docs** (Markdown format)
+   - Original: 36KB JSON → 4.8KB Markdown
+   - Token savings: 87% (~8,214 tokens)
+
+3. **Generates integrated Vue code:**
+
+```vue
+<template>
+  <div class="button-dropdown-container">
+    <InButtonV2
+      id="actions-button"
+      :type="TYPES.PRIMARY"
+      :styling="STYLES.SOLID"
+      label-text="Actions"
+      @click="toggleDropdown"
+    />
+
+    <InDropdownMenu
+      v-if="isOpen"
+      :items="menuItems"
+      @item-click="handleItemClick"
+      @close="isOpen = false"
+    />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue';
+import { InButtonV2, InDropdownMenu } from '@useinsider/design-system-vue';
+import '@useinsider/design-system-vue/dist/design-system-vue.css';
+
+const isOpen = ref(false);
+
+const menuItems = [
+  { id: 'export', label: 'Export Data', icon: 'download' },
+  { id: 'share', label: 'Share Report', icon: 'share' },
+  { id: 'settings', label: 'Settings', icon: 'settings' },
+];
+
+const toggleDropdown = () => {
+  isOpen.value = !isOpen.value;
+};
+
+const handleItemClick = (item: any) => {
+  console.log('Clicked:', item.id);
+  isOpen.value = false;
+};
+</script>
+```
+
+#### Summary
+
+**Total token savings:** ~20,412 tokens (87.5% reduction)
+**Time saved:** Claude uses the right tools in the right order
+**Quality:** Proper integration, best practices included
+
+---
+
+### 💡 Pro Tips
+
+**Always optimize raw requests first:**
+
+❌ **Don't do this:**
+```
+User: "I need a button"
+```
+Claude searches through code files, wastes time.
+
+✅ **Do this:**
+```
+User: "Use optimize-prompt: I need a button"
+```
+Claude gets optimized prompt → Uses MCP tools → Fast & accurate implementation.
+
+**Works everywhere:**
+- ✅ analytics-fe project
+- ✅ marketing-web project
+- ✅ customer-portal project
+- ✅ ANY project with Design System MCP configured
+
+---
+
+### 🎯 Quick Reference: optimize-prompt
+
+```typescript
+// Single component
+mcp__design-system__optimize-prompt("I need a button")
+
+// Multiple components
+mcp__design-system__optimize-prompt("button and dropdown menu")
+
+// Migration task
+mcp__design-system__optimize-prompt("migrate InDatePicker from V1 to V2")
+
+// Debug issue
+mcp__design-system__optimize-prompt("InSelect not working, showing errors")
+
+// Learning
+mcp__design-system__optimize-prompt("how to use InTooltipV2?")
 ```
 
 ### Get Component Details
