@@ -201,13 +201,13 @@ npm run build
 
 ### 🎯 Optimize Your Prompts (NEW!)
 
-Use `/optimize-ds-prompt` to transform raw requests into MCP-optimized prompts:
+Use `mcp__design-system__optimize-prompt` to transform raw requests into MCP-optimized prompts:
 
-```bash
-# Raw request (Turkish or English)
-/optimize-ds-prompt "bir buton ve dropdown menü lazım"
+```typescript
+// Works in ANY project that has Design System MCP configured!
+mcp__design-system__optimize-prompt("bir buton ve dropdown menü lazım")
 
-# Returns optimized prompt with:
+// Returns optimized prompt with:
 ✅ Component identification (InButtonV2, InDropdownMenu)
 ✅ Suggested MCP tools (search, get-component, generate-code)
 ✅ Token savings estimates (~20,000 tokens)

@@ -429,12 +429,12 @@ This MCP server provides tools and resources for working with the Insider Design
 
 ## 🎯 Prompt Optimization (NEW!)
 
-### `/optimize-ds-prompt` Command
+### `optimize-prompt` MCP Tool
 
-When users provide raw requests, use this slash command to optimize their prompts for better MCP integration:
+When users provide raw requests, use this MCP tool to optimize their prompts for better MCP integration:
 
-```bash
-/optimize-ds-prompt "bir buton ve dropdown lazım"
+```typescript
+mcp__design-system__optimize-prompt("bir buton ve dropdown lazım")
 ```
 
 **What it does:**
@@ -517,10 +517,10 @@ User: "What form components are available?"
 
 ### Optimized Multi-Component Request
 
-User uses `/optimize-ds-prompt`:
+User provides raw prompt, Claude uses optimize-prompt tool:
 
 ```
-/optimize-ds-prompt "buton ve dropdown menü birlikte kullanıp butona basınca dropdown açılacak"
+mcp__design-system__optimize-prompt("buton ve dropdown menü birlikte kullanıp butona basınca dropdown açılacak")
 
 → Returns optimized prompt with:
   - Component identification (InButtonV2, InDropdownMenu)
