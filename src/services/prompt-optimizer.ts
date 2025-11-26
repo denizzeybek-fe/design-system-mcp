@@ -25,18 +25,18 @@ export interface OptimizedPrompt {
 export class PromptOptimizer {
   // Component keywords mapping
   private componentKeywords: Record<string, string[]> = {
-    'InButtonV2': ['button', 'buton', 'btn', 'click'],
-    'InDropdownMenu': ['dropdown', 'menu', 'menü', 'açılır'],
+    'InButtonV2': ['button', 'buton', 'btn'],
+    'InDropdownMenu': ['dropdown', 'menu', 'menü'],
     'InDatePickerV2': ['date', 'tarih', 'picker', 'calendar', 'takvim'],
-    'InSelect': ['select', 'seç', 'dropdown', 'combobox'],
+    'InSelect': ['select', 'seç'],
     'InInput': ['input', 'text', 'girdi'],
     'InTextArea': ['textarea', 'text area', 'multiline'],
-    'InCheckBoxV2': ['checkbox', 'check', 'onay'],
-    'InRadioButton': ['radio', 'radyo', 'seçenek'],
-    'InToggle': ['toggle', 'switch', 'anahtar'],
-    'InModal': ['modal', 'dialog', 'popup'],
-    'InTooltipV2': ['tooltip', 'hint', 'ipucu'],
-    'InDataTableV2': ['table', 'tablo', 'grid', 'datatable'],
+    'InCheckBoxV2': ['checkbox'],
+    'InRadioButton': ['radio'],
+    'InToggle': ['toggle', 'switch'],
+    'InModal': ['modal'],
+    'InTooltipV2': ['tooltip'],
+    'InDataTableV2': ['table', 'tablo', 'datatable'],
   };
 
   // Intent keywords
