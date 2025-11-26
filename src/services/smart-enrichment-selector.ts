@@ -86,7 +86,7 @@ export class SmartEnrichmentSelector {
       quick_lookup: ['what is', 'type of', 'prop', 'event', 'quick', 'info', 'details'],
     };
 
-    for (const [intent, intentKeywords] of Object.entries(patterns)) {
+    for (const [_intent, intentKeywords] of Object.entries(patterns)) {
       for (const keyword of intentKeywords) {
         if (text.includes(keyword)) {
           keywords.push(keyword);
@@ -100,7 +100,7 @@ export class SmartEnrichmentSelector {
   /**
    * Calculate scores for each intent type
    */
-  private calculateIntentScores(text: string, keywords: string[]): Map<IntentType, number> {
+  private calculateIntentScores(text: string, _keywords: string[]): Map<IntentType, number> {
     const scores = new Map<IntentType, number>();
 
     // Migration intent

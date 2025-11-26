@@ -147,8 +147,8 @@ export class EnrichmentFilter {
    * Build metadata about filtering
    */
   private buildMetadata(
-    original: Component,
-    filtered: Component,
+    _original: Component,
+    _filtered: Component,
     categories: EnrichmentCategory[],
     strategy: EnrichmentStrategy,
     intent?: Intent
