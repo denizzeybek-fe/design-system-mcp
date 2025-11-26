@@ -2,6 +2,210 @@
 
 This file provides guidance to Claude Code and other AI assistants when using the Insider Design System MCP server.
 
+## 🎯 Code Writing Conventions
+
+**IMPORTANT:** When writing code for this project, always follow these rules:
+
+### File Naming
+
+| Type | Convention | Example |
+|------|------------|---------|
+| **TypeScript source** | `kebab-case.ts` | `smart-enrichment-selector.ts` |
+| **TypeScript types** | `kebab-case.ts` | `enrichment-options.ts` |
+| **Test files** | `kebab-case.test.ts` | `enrichment-filter.test.ts` |
+| **Scripts** | `kebab-case.sh/ts` | `validate-conventions.sh` |
+| **Documentation** | `kebab-case.md` | `smart-filter-layer.md` |
+
+**Exceptions:**
+- Root-level docs: `README.md`, `CLAUDE.md`, `GOVERNANCE.md` (UPPERCASE allowed)
+- React/Vue components: `PascalCase.tsx/vue` (not used in this project)
+
+### Variable & Function Naming
+
+```typescript
+// ✅ CORRECT
+const componentAdapter = new ComponentAdapter();        // camelCase variables
+function selectEnrichments() { }                        // camelCase functions
+class EnrichmentFilter { }                              // PascalCase classes
+interface EnrichmentOptions { }                         // PascalCase interfaces
+type EnrichmentCategory = string;                       // PascalCase types
+const ENRICHMENT_PRESETS = { };                         // SCREAMING_SNAKE_CASE constants
+
+// ❌ WRONG
+const component_adapter = ...;                          // snake_case
+const ComponentAdapter = ...;                           // PascalCase for variables
+function SelectEnrichments() { }                        // PascalCase for functions
+```
+
+### TypeScript Rules
+
+**Always use strict TypeScript:**
+
+```typescript
+// ✅ CORRECT - Explicit types
+export function filterComponent(
+  component: Component,
+  categories: EnrichmentCategory[]
+): FilteredComponent {
+  return { ... };
+}
+
+// ✅ CORRECT - Type imports
+import type { Component, EnrichmentOptions } from '../types';
+
+// ✅ CORRECT - No 'any'
+const result: unknown = JSON.parse(data);
+if (typeof result === 'object') { ... }
+
+// ❌ WRONG - No types
+export function filterComponent(component, categories) {
+  return { ... };
+}
+
+// ❌ WRONG - Using 'any'
+const result: any = JSON.parse(data);
+```
+
+**Unused variables:**
+```typescript
+// ✅ CORRECT - Prefix with underscore
+function buildMetadata(
+  _original: Component,    // Not used, but required for signature
+  filtered: Component
+): Metadata {
+  return analyze(filtered);
+}
+
+// ❌ WRONG - TypeScript error
+function buildMetadata(
+  original: Component,     // Declared but never used
+  filtered: Component
+): Metadata { ... }
+```
+
+### File Organization
+
+**Where to create files:**
+
+```
+src/
+├── services/          # Business logic (adapters, filters, selectors)
+├── tools/             # MCP tool implementations
+├── types/             # TypeScript type definitions
+├── registry/          # Data loaders and enrichments
+└── index.ts           # Main entry point
+
+scripts/
+├── extraction/        # Data extraction scripts
+├── enrichment/        # Enrichment utilities
+└── utilities/         # Helper scripts
+
+docs/
+├── architecture/      # System design documents
+├── guides/            # How-to guides
+└── reference/         # API documentation
+
+archive/               # Historical documentation
+```
+
+**File structure conventions:**
+
+```typescript
+// ✅ CORRECT - Each file exports one main thing
+// src/services/enrichment-filter.ts
+import type { Component, EnrichmentOptions } from '../types';
+
+export class EnrichmentFilter {
+  filter(component: Component): Component {
+    // Implementation
+  }
+}
+
+// ✅ CORRECT - Barrel exports
+// src/services/index.ts
+export { ComponentAdapter } from './component-adapter';
+export { EnrichmentFilter } from './enrichment-filter';
+export { SmartEnrichmentSelector } from './smart-enrichment-selector';
+```
+
+### Documentation Requirements
+
+**Every new file needs:**
+
+```typescript
+/**
+ * Brief description of what this file does
+ *
+ * @example
+ * const filter = new EnrichmentFilter();
+ * const result = filter.filter(component, options);
+ */
+
+/**
+ * JSDoc for public functions/classes
+ *
+ * @param component - The component to filter
+ * @param options - Filtering options
+ * @returns Filtered component with metadata
+ */
+export function filterComponent(
+  component: Component,
+  options: EnrichmentOptions
+): FilteredResult {
+  // ...
+}
+```
+
+### README.md Rules
+
+**CRITICAL:** Only ONE `README.md` allowed at project root!
+
+```
+✅ CORRECT:
+./README.md                          # Only one
+./docs/index.md                      # Use index.md in subdirs
+./src/services/index.md              # Use index.md in subdirs
+
+❌ WRONG:
+./README.md
+./docs/README.md                     # NO! Use index.md
+./src/services/README.md             # NO! Use index.md
+```
+
+### Before Creating New Files
+
+1. **Check if file already exists** - Use Read/Grep to search
+2. **Follow naming convention** - kebab-case for source files
+3. **Put in correct directory** - See file organization above
+4. **Add JSDoc comments** - Document purpose and usage
+5. **Export from index.ts** - Make it discoverable
+
+### Before Committing
+
+**Always run these checks:**
+
+```bash
+npm run typecheck    # Must pass with no errors
+npm run build        # Must compile successfully
+./scripts/validate-conventions.sh  # Must follow conventions
+```
+
+**Don't commit if:**
+- TypeScript has errors
+- Build fails
+- Validation script shows errors (warnings are OK)
+
+### Common Mistakes to Avoid
+
+❌ Using snake_case for file names
+❌ Creating README.md in subdirectories
+❌ Using `any` type in TypeScript
+❌ Not prefixing unused parameters with `_`
+❌ Creating files in root directory
+❌ Not exporting from index.ts
+❌ Missing JSDoc on public APIs
+❌ Not running typecheck before committing
+
 ## Overview
 
 This MCP server provides tools and resources for working with the Insider Design System - a Vue 2.7 component library. Use this server to:
@@ -282,3 +486,93 @@ Focus enrichments on components with:
 - ❌ Skip simple String/Boolean/Number props
 
 **Recommended enrichments**: InTooltipV2, InMultiSelect, InCheckBoxV2, InModalV2, InDropdownMenu
+
+## 🔧 Claude Code Configuration
+
+This project uses `.claude/` directory for custom configuration, automation, and workflows.
+
+### Available Slash Commands
+
+Quick shortcuts for common tasks:
+
+| Command | Description | Usage |
+|---------|-------------|-------|
+| `/validate` | Run all project validation checks | When you want to verify conventions and TypeScript |
+| `/test-mcp` | Test MCP server in production mode | After making changes to tools/services |
+| `/clean-root` | Clean and organize root directory | When root gets cluttered |
+| `/enrichment-maker` | Generate enrichment for a component | For complex components needing metadata |
+| `/migrate-v1-v2` | Migrate V1 component to V2 | When upgrading components |
+
+**Example:**
+```
+User: "/validate"
+Assistant: [Runs validation and reports results]
+```
+
+### Project Permissions
+
+**Auto-approved actions** (no confirmation needed):
+- ✅ Read operations: `cat`, `ls`, `grep`, `find`
+- ✅ Build commands: `npm run build`, `npm run typecheck`
+- ✅ Test commands: `npm test`, `node test-*.js`
+- ✅ Extract commands: `npm run extract:*`
+- ✅ Validation scripts: `./scripts/*.sh`
+- ✅ MCP tools: `get-component`, `search-components`, `list-components`
+
+**Always ask for confirmation:**
+- ⚠️ `git push` - Pushing to remote
+- ⚠️ `git commit` - Creating commits
+- ⚠️ `npm install` - Installing dependencies
+
+**Explicitly denied:**
+- ❌ `rm -rf` - Destructive operations
+- ❌ `git push --force` - Force pushing
+- ❌ `npm publish` - Publishing packages
+
+### Automatic Hooks
+
+**After Write/Edit operations:**
+- Automatically runs `npm run typecheck` to catch TypeScript errors
+- Continues execution even if typecheck fails (non-blocking)
+- Helps catch issues early
+
+### Project Conventions
+
+This project follows strict conventions enforced by `.project-conventions.md`:
+
+**File Naming:**
+- Source files: `kebab-case.ts`
+- Documentation: `kebab-case.md`
+- React/Vue components: `PascalCase.tsx`
+- Only one `README.md` at root (use `index.md` in subdirectories)
+
+**Directory Structure:**
+```
+src/services/     # Business logic
+src/tools/        # MCP tools
+docs/             # Active documentation
+archive/          # Historical documentation
+scripts/          # Automation scripts
+```
+
+**Before committing, always:**
+1. Run validation: `./scripts/validate-conventions.sh`
+2. Check TypeScript: `npm run typecheck`
+3. Build successfully: `npm run build`
+
+### Learn More
+
+See [`.claude/README.md`](.claude/README.md) for:
+- Complete configuration guide
+- How to create custom slash commands
+- How to add new agents
+- Hook configuration examples
+- Permission management
+- Best practices
+
+See [`.project-conventions.md`](.project-conventions.md) for:
+- Complete governance strategy
+- Naming conventions
+- Testing requirements
+- Git workflow
+- Documentation standards
