@@ -8,8 +8,8 @@
 .
 ├── README.md                           # 📖 Main entry point (exception: UPPERCASE)
 ├── CLAUDE.md                           # 🤖 AI assistant guide (exception: UPPERCASE)
-├── documentation-summary.md            # 📚 Reorganization summary
-└── naming-convention-summary.md        # 📝 Naming convention changes
+├── GOVERNANCE.md                       # 🎯 Quick governance guide (exception: UPPERCASE)
+└── .project-conventions.md             # 📋 Complete conventions (hidden file)
 ```
 
 ## docs/ (Active Documentation)
@@ -17,6 +17,7 @@
 ```
 docs/
 ├── index.md                            # 📑 Documentation index (not README)
+├── documentation-structure.md          # 📁 Documentation structure guide
 ├── .doc-naming-convention.md           # 📏 Naming rules
 │
 ├── architecture/                       # 🏗️ System Design
@@ -50,7 +51,9 @@ archive/
 ├── completion-reports/                 # ✅ Milestone Reports
 │   ├── cleanup-summary.md
 │   ├── completion-report.md
-│   └── metadata-update-summary.md
+│   ├── metadata-update-summary.md
+│   ├── documentation-reorganization.md  # Doc reorganization summary
+│   └── naming-convention-update.md      # Naming convention changes
 │
 └── presentations/                      # 🎤 Presentations
     ├── figma-design-guidelines.md
@@ -86,11 +89,11 @@ archive/
 
 ## Statistics
 
-- **Total Docs:** 24 files
-- **Naming Compliance:** 100% (24/24)
-- **Root Docs:** 4 files (2 uppercase exceptions)
-- **Active Docs:** 10 files (100% kebab-case)
-- **Archived Docs:** 13 files (100% kebab-case)
+- **Total Docs:** 27 files
+- **Naming Compliance:** 100% (27/27)
+- **Root Docs:** 4 files (3 uppercase exceptions: README, CLAUDE, GOVERNANCE)
+- **Active Docs:** 12 files (100% kebab-case)
+- **Archived Docs:** 15 files (100% kebab-case)
 
 ---
 
