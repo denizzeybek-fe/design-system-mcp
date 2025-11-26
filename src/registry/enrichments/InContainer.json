@@ -1,147 +1,457 @@
 {
-  "componentName": "InContainer",
-  "version": "2.0.0",
-  "lastUpdated": "2024-11-24",
-
+  "component": "InContainer",
+  "_metadata": {
+    "lastUpdated": "2025-11-25T16:30:00Z",
+    "propsHash": "1bfa2b00a4fc",
+    "eventsHash": "4f53cda18c2b",
+    "propCount": 11,
+    "eventCount": 0
+  },
   "propEnrichments": {
-    "containerType": {
-      "description": "Visual type/spacing of the container",
+    "border": {
       "valueFormat": {
-        "structure": "string enum",
-        "possibleValues": ["default", "compact", "spacious"],
-        "example": "container-type=\"compact\""
+        "structure": "string (design system utility classes)",
+        "notes": "Border styling using design system utility classes for width, style, and color",
+        "examples": [
+          "bor-w-1 bor-s-s bor-c-6",
+          "bor-w-2 bor-s-s bor-c-primary",
+          ""
+        ],
+        "typescript": "string"
       },
+      "relatedProps": ["borderRadius", "borderTriangle"],
       "commonMistakes": [
         {
-          "mistake": "Using 'type' prop from V1",
-          "correction": "V2 uses containerType instead of type",
+          "mistake": "Using CSS values instead of utility classes",
+          "impact": "Styling not applied, inconsistent with design system",
+          "fix": "Use 'bor-w-1 bor-s-s bor-c-6' instead of '1px solid #ccc'",
+          "severity": "high"
+        },
+        {
+          "mistake": "Using border=\"true\" boolean value",
+          "impact": "Invalid styling, border may not render correctly",
+          "fix": "Use border=\"bor-w-1 bor-s-s bor-c-6\" with utility classes",
+          "severity": "medium"
+        }
+      ]
+    },
+    "borderRadius": {
+      "valueFormat": {
+        "structure": "string (design system utility class)",
+        "notes": "Border radius using design system utility class",
+        "examples": [
+          "bor-r-1",
+          "bor-r-2",
+          "bor-r-0"
+        ],
+        "typescript": "string"
+      },
+      "relatedProps": ["border"],
+      "commonMistakes": [
+        {
+          "mistake": "Using CSS values like '8px' or '1rem'",
+          "impact": "Styling not applied correctly",
+          "fix": "Use design system classes: bor-r-1, bor-r-2, etc.",
+          "severity": "medium"
+        }
+      ]
+    },
+    "borderTriangle": {
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "Shows a decorative triangle pointer on the container border. Must set borderTrianglePosition when true",
+        "typescript": "boolean"
+      },
+      "relatedProps": ["borderTrianglePosition", "borderTriangleAlign"],
+      "commonMistakes": [
+        {
+          "mistake": "Setting borderTriangle=true without borderTrianglePosition",
+          "impact": "Triangle may not appear or appear in unexpected location",
+          "fix": "Always specify both: :border-triangle=\"true\" border-triangle-position=\"top\"",
           "severity": "high"
         }
       ]
     },
-    "headerStatus": {
-      "description": "Whether to show the header slot area",
-      "valueFormat": {
-        "structure": "boolean",
-        "example": "header-status"
-      }
-    },
-    "footerStatus": {
-      "description": "Whether to show the footer slot area",
-      "valueFormat": {
-        "structure": "boolean",
-        "example": "footer-status"
-      }
-    },
-    "fullWidthContentStatus": {
-      "description": "Remove padding from content area for full-width content",
-      "valueFormat": {
-        "structure": "boolean",
-        "example": "full-width-content-status"
-      }
-    },
-    "colorIndicatorStatus": {
-      "description": "Show colored indicator bar on the container",
-      "valueFormat": {
-        "structure": "boolean",
-        "example": "color-indicator-status"
-      }
-    },
-    "colorIndicatorColor": {
-      "description": "Color of the indicator bar",
-      "valueFormat": {
-        "structure": "string (CSS color)",
-        "example": "color-indicator-color=\"#4CAF50\""
-      }
-    },
-    "border": {
-      "description": "Whether to show border around container",
-      "valueFormat": {
-        "structure": "boolean",
-        "example": "border"
-      }
-    },
-    "borderRadius": {
-      "description": "Border radius size",
-      "valueFormat": {
-        "structure": "string enum",
-        "possibleValues": ["none", "small", "medium", "large"],
-        "example": "border-radius=\"medium\""
-      }
-    },
-    "borderTriangle": {
-      "description": "Show triangle pointer on border",
-      "valueFormat": {
-        "structure": "boolean",
-        "example": "border-triangle"
-      }
-    },
     "borderTrianglePosition": {
-      "description": "Position of border triangle",
       "valueFormat": {
-        "structure": "string enum",
-        "possibleValues": ["top", "bottom", "left", "right"],
-        "example": "border-triangle-position=\"top\""
-      }
+        "structure": "string (enum)",
+        "validValues": ["top", "right", "bottom", "left"],
+        "notes": "Position of the border triangle decoration. Only works when borderTriangle is true",
+        "typescript": "'top' | 'right' | 'bottom' | 'left'"
+      },
+      "relatedProps": ["borderTriangle", "borderTriangleAlign"]
     },
     "borderTriangleAlign": {
-      "description": "Alignment of border triangle along its edge",
       "valueFormat": {
-        "structure": "string enum",
-        "possibleValues": ["start", "center", "end"],
-        "example": "border-triangle-align=\"center\""
-      }
+        "structure": "string (enum)",
+        "validValues": ["start", "center", "end"],
+        "notes": "Alignment of triangle along its edge (e.g., left/center/right for top position)",
+        "typescript": "'start' | 'center' | 'end'"
+      },
+      "relatedProps": ["borderTriangle", "borderTrianglePosition"]
+    },
+    "headerStatus": {
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "Enables the header section with slots for title, description, and action buttons",
+        "typescript": "boolean"
+      },
+      "relatedProps": ["footerStatus"],
+      "commonMistakes": [
+        {
+          "mistake": "Setting headerStatus=true but not using header slots",
+          "impact": "Empty header section takes up space",
+          "fix": "Use #headerTitle or other header slots when headerStatus is true",
+          "severity": "medium"
+        }
+      ]
+    },
+    "footerStatus": {
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "Enables the footer section with slots for footer content and actions",
+        "typescript": "boolean"
+      },
+      "relatedProps": ["headerStatus"]
+    },
+    "fullWidthContentStatus": {
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "When true (default), content area spans full width without padding. Set false for constrained, centered content",
+        "typescript": "boolean"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Expecting padding when fullWidthContentStatus=true",
+          "impact": "Content touches edges, no internal spacing",
+          "fix": "Set :full-width-content-status=\"false\" for automatic padding, or add manual padding to content",
+          "severity": "low"
+        }
+      ]
+    },
+    "containerType": {
+      "valueFormat": {
+        "structure": "string",
+        "notes": "Visual variant of the container. Affects spacing and appearance",
+        "examples": [
+          "default",
+          "card"
+        ],
+        "typescript": "string"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Using 'type' prop from V1 (InBox)",
+          "impact": "Prop not recognized, containerType defaults to 'default'",
+          "fix": "V2 uses container-type prop, not type",
+          "severity": "high"
+        }
+      ]
+    },
+    "colorIndicatorStatus": {
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "Shows a colored vertical bar on the left edge of the container. Requires colorIndicatorColor to be set",
+        "typescript": "boolean"
+      },
+      "relatedProps": ["colorIndicatorColor"],
+      "commonMistakes": [
+        {
+          "mistake": "Setting colorIndicatorStatus=true without colorIndicatorColor",
+          "impact": "Indicator bar appears but with no color or default color",
+          "fix": "Always provide both: :color-indicator-status=\"true\" color-indicator-color=\"#4CAF50\"",
+          "severity": "high"
+        }
+      ]
+    },
+    "colorIndicatorColor": {
+      "valueFormat": {
+        "structure": "string (CSS color)",
+        "notes": "CSS color value for the indicator bar. Supports hex, rgb, named colors",
+        "examples": [
+          "#4CAF50",
+          "rgb(76, 175, 80)",
+          "#F44336"
+        ],
+        "typescript": "string"
+      },
+      "relatedProps": ["colorIndicatorStatus"],
+      "commonMistakes": [
+        {
+          "mistake": "Using design system color names instead of CSS values",
+          "impact": "Color may not apply correctly",
+          "fix": "Use CSS colors: '#4CAF50' instead of 'success'",
+          "severity": "medium"
+        }
+      ]
     }
   },
-
-  "exampleEnrichments": [
+  "eventEnrichments": {},
+  "codeSnippets": {
+    "template": {
+      "basic": "<InContainer>\n  <template #contentArea>\n    <p>Container content goes here</p>\n  </template>\n</InContainer>",
+      "withHeader": "<InContainer :header-status=\"true\">\n  <template #headerTitle>\n    <h3>Section Title</h3>\n  </template>\n  <template #contentArea>\n    <p>Main content</p>\n  </template>\n</InContainer>",
+      "withFooter": "<InContainer :footer-status=\"true\">\n  <template #contentArea>\n    <p>Main content</p>\n  </template>\n  <template #footerTitle>\n    <span>Footer text</span>\n  </template>\n</InContainer>",
+      "complete": "<InContainer\n  :header-status=\"true\"\n  :footer-status=\"true\"\n  border=\"bor-w-1 bor-s-s bor-c-6\"\n  border-radius=\"bor-r-1\">\n  <template #headerTitle>\n    <h3>Dashboard</h3>\n  </template>\n  <template #headerRightSlot>\n    <InButtonV2 type=\"primary\" label-text=\"Export\" />\n  </template>\n  <template #contentArea>\n    <div>Main content</div>\n  </template>\n  <template #footerRightSlot>\n    <InButtonV2 type=\"secondary\" label-text=\"Refresh\" />\n  </template>\n</InContainer>",
+      "colorIndicator": "<InContainer\n  :color-indicator-status=\"true\"\n  color-indicator-color=\"#4CAF50\"\n  :header-status=\"true\">\n  <template #headerTitle>\n    <h3>Success Status</h3>\n  </template>\n  <template #contentArea>\n    <p>This container has a green indicator</p>\n  </template>\n</InContainer>",
+      "noBorder": "<InContainer border=\"\">\n  <template #contentArea>\n    <p>Borderless container</p>\n  </template>\n</InContainer>",
+      "constrainedWidth": "<InContainer :full-width-content-status=\"false\">\n  <template #contentArea>\n    <p>Constrained width content</p>\n  </template>\n</InContainer>",
+      "withTriangle": "<InContainer\n  :border-triangle=\"true\"\n  border-triangle-position=\"top\"\n  border-triangle-align=\"center\">\n  <template #contentArea>\n    <p>Container with top triangle pointer</p>\n  </template>\n</InContainer>",
+      "headerActions": "<InContainer :header-status=\"true\">\n  <template #headerTitle>\n    <h3>User Settings</h3>\n  </template>\n  <template #headerLeftSlot>\n    <InButtonV2 type=\"secondary\" label-text=\"Cancel\" @click=\"handleCancel\" />\n  </template>\n  <template #headerRightSlot>\n    <InButtonV2 type=\"primary\" label-text=\"Save\" @click=\"handleSave\" />\n  </template>\n  <template #contentArea>\n    <form><!-- Settings form --></form>\n  </template>\n</InContainer>"
+    },
+    "script": "import { ref } from 'vue';\nimport { InContainer, InButtonV2 } from '@useinsider/design-system-vue';\nimport '@useinsider/design-system-vue/dist/design-system-vue.css';\n\nconst showContainer = ref(true);\n\nconst handleCancel = () => {\n  console.log('Cancel clicked');\n};\n\nconst handleSave = () => {\n  console.log('Save clicked');\n};\n\nconst handleExport = () => {\n  console.log('Export clicked');\n};",
+    "style": "/* InContainer component base styling */\n\n/* Container wrapper */\n.in-container {\n  background: #fff;\n  display: flex;\n  flex-direction: column;\n}\n\n/* Header section */\n.in-container__header {\n  padding: 16px 24px;\n  border-bottom: 1px solid #e0e0e0;\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n\n/* Content area */\n.in-container__content {\n  padding: 24px; /* Only when fullWidthContentStatus=false */\n}\n\n.in-container__content--full-width {\n  padding: 0; /* When fullWidthContentStatus=true */\n}\n\n/* Footer section */\n.in-container__footer {\n  padding: 16px 24px;\n  border-top: 1px solid #e0e0e0;\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n\n/* Color indicator */\n.in-container--with-indicator::before {\n  content: '';\n  position: absolute;\n  left: 0;\n  top: 0;\n  bottom: 0;\n  width: 4px;\n  background-color: var(--indicator-color);\n}\n\n/* Card variant */\n.in-container--card {\n  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);\n}\n\n/* Border triangle decoration */\n.in-container--triangle-top::after {\n  content: '';\n  position: absolute;\n  top: -8px;\n  width: 0;\n  height: 0;\n  border-left: 8px solid transparent;\n  border-right: 8px solid transparent;\n  border-bottom: 8px solid #fff;\n}"
+  },
+  "styling": {
+    "positioning": "static",
+    "layout": "flex (column)",
+    "fullWidth": false,
+    "zIndex": null,
+    "customization": {
+      "cssClasses": [
+        "in-container",
+        "in-container__header",
+        "in-container__content",
+        "in-container__footer",
+        "in-container--with-indicator",
+        "in-container--card"
+      ],
+      "cssVariables": [],
+      "themeable": true,
+      "notes": "Uses border utility classes from design system for customization. Color indicator uses inline styles."
+    },
+    "responsive": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true,
+      "notes": "Responsive by default. Consider hiding headerLeftSlot or footerLeftSlot on mobile for space"
+    }
+  },
+  "examples": [
     {
       "title": "Basic Container",
-      "description": "Simple container with border",
-      "code": "<InContainer border border-radius=\"medium\">\n  <p>Container content</p>\n</InContainer>"
+      "description": "Simple container with default border and content",
+      "category": "basic",
+      "code": "<InContainer>\n  <template #contentArea>\n    <p>Container content goes here</p>\n  </template>\n</InContainer>",
+      "language": "vue"
     },
     {
-      "title": "Container with Header and Footer",
-      "description": "Full container with all sections",
-      "code": "<InContainer\n  border\n  border-radius=\"medium\"\n  header-status\n  footer-status\n>\n  <template #header>\n    <h3>Title</h3>\n  </template>\n  \n  <p>Main content</p>\n  \n  <template #footer>\n    <InButtonV2 label-text=\"Action\" />\n  </template>\n</InContainer>"
+      "title": "Container with Header",
+      "description": "Container with header title and description",
+      "category": "basic",
+      "code": "<InContainer :header-status=\"true\">\n  <template #headerTitle>\n    <h3>Section Title</h3>\n  </template>\n  <template #headerDescription>\n    <p>Section description text</p>\n  </template>\n  <template #contentArea>\n    <p>Main content</p>\n  </template>\n</InContainer>",
+      "language": "vue"
     },
     {
-      "title": "Container with Color Indicator",
-      "description": "Status indicator container",
-      "code": "<InContainer\n  border\n  color-indicator-status\n  color-indicator-color=\"#4CAF50\"\n>\n  <p>Success message content</p>\n</InContainer>"
+      "title": "Dashboard Card",
+      "description": "Complete card with header actions and footer",
+      "category": "advanced",
+      "code": "<template>\n  <InContainer\n    :header-status=\"true\"\n    :footer-status=\"true\"\n    border=\"bor-w-1 bor-s-s bor-c-6\"\n    border-radius=\"bor-r-1\">\n    <template #headerTitle>\n      <h3>Dashboard Overview</h3>\n    </template>\n    <template #headerDescription>\n      <p>View your key metrics</p>\n    </template>\n    <template #headerRightSlot>\n      <InButtonV2 type=\"primary\" label-text=\"Export\" @click=\"handleExport\" />\n    </template>\n\n    <template #contentArea>\n      <div class=\"dashboard-content\">\n        <!-- Dashboard widgets -->\n      </div>\n    </template>\n\n    <template #footerTitle>\n      <span>Last updated: 2 mins ago</span>\n    </template>\n    <template #footerRightSlot>\n      <InButtonV2 type=\"secondary\" label-text=\"Refresh\" @click=\"handleRefresh\" />\n    </template>\n  </InContainer>\n</template>\n\n<script setup>\nconst handleExport = () => {\n  console.log('Exporting data...');\n};\n\nconst handleRefresh = () => {\n  console.log('Refreshing data...');\n};\n</script>",
+      "language": "vue"
+    },
+    {
+      "title": "Status Card with Color Indicator",
+      "description": "Container with colored left border indicator",
+      "category": "variants",
+      "code": "<InContainer\n  :color-indicator-status=\"true\"\n  color-indicator-color=\"#4CAF50\"\n  :header-status=\"true\"\n  border=\"bor-w-1 bor-s-s bor-c-6\"\n  border-radius=\"bor-r-1\">\n  <template #headerTitle>\n    <h3>Success Status</h3>\n  </template>\n  <template #contentArea>\n    <p>Operation completed successfully</p>\n  </template>\n</InContainer>",
+      "language": "vue"
+    },
+    {
+      "title": "Form Container with Actions",
+      "description": "Container for forms with cancel and save buttons",
+      "category": "forms",
+      "code": "<template>\n  <InContainer\n    :header-status=\"true\"\n    :full-width-content-status=\"false\">\n    <template #headerTitle>\n      <h3>Edit Profile</h3>\n    </template>\n    <template #headerLeftSlot>\n      <InButtonV2\n        type=\"secondary\"\n        label-text=\"Cancel\"\n        @click=\"handleCancel\"\n      />\n    </template>\n    <template #headerRightSlot>\n      <InButtonV2\n        type=\"primary\"\n        label-text=\"Save Changes\"\n        :loading=\"isSaving\"\n        @click=\"handleSave\"\n      />\n    </template>\n\n    <template #contentArea>\n      <form @submit.prevent=\"handleSave\">\n        <!-- Form fields -->\n      </form>\n    </template>\n  </InContainer>\n</template>\n\n<script setup>\nimport { ref } from 'vue';\n\nconst isSaving = ref(false);\n\nconst handleCancel = () => {\n  console.log('Form cancelled');\n};\n\nconst handleSave = async () => {\n  isSaving.value = true;\n  try {\n    // Save logic\n  } finally {\n    isSaving.value = false;\n  }\n};\n</script>",
+      "language": "vue"
+    },
+    {
+      "title": "Borderless Content Section",
+      "description": "Container without border for seamless layouts",
+      "category": "variants",
+      "code": "<InContainer border=\"\">\n  <template #contentArea>\n    <div class=\"seamless-content\">\n      <p>Content without visible borders</p>\n    </div>\n  </template>\n</InContainer>",
+      "language": "vue"
+    },
+    {
+      "title": "Container with Triangle Pointer",
+      "description": "Decorative triangle pointer (useful for tooltips or popovers)",
+      "category": "advanced",
+      "code": "<InContainer\n  :border-triangle=\"true\"\n  border-triangle-position=\"top\"\n  border-triangle-align=\"center\"\n  border=\"bor-w-1 bor-s-s bor-c-6\"\n  border-radius=\"bor-r-1\">\n  <template #contentArea>\n    <p>This container has a triangle pointer at the top</p>\n  </template>\n</InContainer>",
+      "language": "vue"
+    },
+    {
+      "title": "Data Table Container with Filters",
+      "description": "Container with header bottom slot for filters",
+      "category": "advanced",
+      "code": "<template>\n  <InContainer :header-status=\"true\">\n    <template #headerTitle>\n      <h3>Data Table</h3>\n    </template>\n    <template #headerRightSlot>\n      <InButtonV2 type=\"primary\" label-text=\"Add New\" @click=\"handleAdd\" />\n    </template>\n    <template #headerBottomSlot>\n      <div class=\"filters\" style=\"padding: 12px 24px; border-top: 1px solid #e0e0e0;\">\n        <InSelect placeholder=\"Filter by status\" :options=\"statusOptions\" />\n      </div>\n    </template>\n\n    <template #contentArea>\n      <!-- Data table -->\n    </template>\n  </InContainer>\n</template>\n\n<script setup>\nconst statusOptions = [\n  { label: 'Active', value: 'active' },\n  { label: 'Inactive', value: 'inactive' }\n];\n\nconst handleAdd = () => {\n  console.log('Add new item');\n};\n</script>",
+      "language": "vue"
+    },
+    {
+      "title": "Nested Containers Layout",
+      "description": "Multiple containers for complex layouts",
+      "category": "layout",
+      "code": "<InContainer\n  :header-status=\"true\"\n  border=\"bor-w-1 bor-s-s bor-c-6\">\n  <template #headerTitle>\n    <h2>Main Container</h2>\n  </template>\n\n  <template #contentArea>\n    <div style=\"display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 16px;\">\n      <InContainer border=\"bor-w-1 bor-s-s bor-c-8\" border-radius=\"bor-r-1\">\n        <template #contentArea>\n          <p>Nested container 1</p>\n        </template>\n      </InContainer>\n\n      <InContainer border=\"bor-w-1 bor-s-s bor-c-8\" border-radius=\"bor-r-1\">\n        <template #contentArea>\n          <p>Nested container 2</p>\n        </template>\n      </InContainer>\n    </div>\n  </template>\n</InContainer>",
+      "language": "vue"
     }
   ],
-
-  "commonMistakes": [
+  "implementationPatterns": [
     {
-      "mistake": "Using type prop instead of containerType",
-      "issue": "V2 renamed type to containerType",
-      "solution": "Use container-type=\"default\" instead of type=\"default\"",
-      "severity": "high"
+      "pattern": "Dashboard card layout",
+      "when": "Creating dashboard widgets or metric cards",
+      "code": "const DashboardCard = () => {\n  return (\n    <InContainer\n      :header-status=\"true\"\n      :footer-status=\"true\"\n      border=\"bor-w-1 bor-s-s bor-c-6\"\n      border-radius=\"bor-r-1\">\n      <template #headerTitle>\n        <h3>{{ title }}</h3>\n      </template>\n      <template #headerRightSlot>\n        <InButtonV2 type=\"tertiary\" icon=\"line-more\" />\n      </template>\n      <template #contentArea>\n        <slot />\n      </template>\n      <template #footerTitle>\n        <span class=\"text-small\">{{ lastUpdated }}</span>\n      </template>\n    </InContainer>\n  );\n};",
+      "notes": "Consistent card structure for dashboard layouts"
     },
     {
-      "mistake": "Using boxSpacing prop from V1",
-      "issue": "boxSpacing removed in V2",
-      "solution": "Use containerType for spacing control or custom CSS",
-      "severity": "medium"
+      "pattern": "Status-based color indicators",
+      "when": "Visual status feedback (success, warning, error)",
+      "code": "const statusColors = {\n  success: '#4CAF50',\n  warning: '#FF9800',\n  error: '#F44336',\n  info: '#2196F3'\n};\n\nconst statusColor = computed(() => statusColors[props.status] || '');\n\n<InContainer\n  :color-indicator-status=\"!!statusColor\"\n  :color-indicator-color=\"statusColor\"\n  :header-status=\"true\">\n  <!-- Content -->\n</InContainer>",
+      "notes": "Color indicators provide quick visual feedback without changing entire container style"
+    },
+    {
+      "pattern": "Form container with validation",
+      "when": "Forms with save/cancel actions",
+      "code": "const formData = ref({ name: '', email: '' });\nconst errors = ref({});\nconst isSaving = ref(false);\n\nconst validateForm = () => {\n  errors.value = {};\n  if (!formData.value.name) errors.value.name = 'Name is required';\n  if (!formData.value.email) errors.value.email = 'Email is required';\n  return Object.keys(errors.value).length === 0;\n};\n\nconst handleSave = async () => {\n  if (!validateForm()) return;\n  \n  isSaving.value = true;\n  try {\n    await api.save(formData.value);\n  } finally {\n    isSaving.value = false;\n  }\n};\n\n<InContainer\n  :header-status=\"true\"\n  :full-width-content-status=\"false\">\n  <template #headerTitle>Edit Form</template>\n  <template #headerRightSlot>\n    <InButtonV2\n      type=\"primary\"\n      label-text=\"Save\"\n      :loading=\"isSaving\"\n      @click=\"handleSave\"\n    />\n  </template>\n  <template #contentArea>\n    <form><!-- Form fields --></form>\n  </template>\n</InContainer>",
+      "notes": "Use fullWidthContentStatus=false for better form layouts"
+    },
+    {
+      "pattern": "Collapsible sections",
+      "when": "Content sections that can be expanded/collapsed",
+      "code": "const isExpanded = ref(true);\n\nconst toggleExpand = () => {\n  isExpanded.value = !isExpanded.value;\n};\n\n<InContainer :header-status=\"true\">\n  <template #headerTitle>\n    <h3>{{ sectionTitle }}</h3>\n  </template>\n  <template #headerRightSlot>\n    <InButtonV2\n      type=\"tertiary\"\n      :icon=\"isExpanded ? 'line-chevron-up' : 'line-chevron-down'\"\n      @click=\"toggleExpand\"\n    />\n  </template>\n  <template #contentArea>\n    <div v-if=\"isExpanded\">\n      <!-- Collapsible content -->\n    </div>\n  </template>\n</InContainer>",
+      "notes": "Use v-if for content and icon change in header action"
     }
   ],
-
+  "useCases": [
+    {
+      "title": "Dashboard Widgets",
+      "description": "Use InContainer for individual dashboard cards/widgets with metrics and actions",
+      "example": "Analytics cards, KPI displays, chart containers"
+    },
+    {
+      "title": "Form Sections",
+      "description": "Group related form fields with headers and action buttons",
+      "example": "Profile editor, settings forms, multi-step wizards"
+    },
+    {
+      "title": "Content Sections",
+      "description": "Organize page content into logical, bordered sections",
+      "example": "Documentation sections, help articles, product details"
+    },
+    {
+      "title": "Status Notifications",
+      "description": "Display system status or alerts with color indicators",
+      "example": "Server status, deployment status, health checks"
+    },
+    {
+      "title": "Data Tables",
+      "description": "Wrap tables with headers for titles and filters",
+      "example": "User lists, transaction tables, inventory grids"
+    }
+  ],
   "bestPractices": [
     {
-      "practice": "Use semantic containerType for consistent spacing",
-      "description": "Choose type based on content density: compact for dense UI, spacious for breathing room",
-      "example": "container-type=\"compact\" for form sections"
+      "practice": "Use semantic slots for structure",
+      "why": "Named slots provide clear content organization",
+      "example": "Use #headerTitle, #contentArea, #footerTitle for semantic structure",
+      "antiPattern": "Putting everything in default slot without structure"
     },
     {
-      "practice": "Use color indicators for status",
-      "description": "Color indicators provide quick visual feedback without changing container style",
-      "example": "Green for success, red for error, yellow for warning"
+      "practice": "Use design system utility classes for borders",
+      "why": "Ensures consistent styling with design system",
+      "example": "border=\"bor-w-1 bor-s-s bor-c-6\" instead of CSS values",
+      "antiPattern": "border=\"1px solid #ccc\""
     },
     {
-      "practice": "Leverage header/footer slots for structured layout",
-      "description": "Use header-status and footer-status with named slots for consistent card-like layouts",
-      "example": "header-status with #header slot for titles"
+      "practice": "Place primary actions in headerRightSlot",
+      "why": "Consistent action placement across all containers",
+      "example": "<template #headerRightSlot><InButtonV2 type=\"primary\" /></template>",
+      "antiPattern": "Actions scattered in content area"
+    },
+    {
+      "practice": "Use color indicators for status, not entire container colors",
+      "why": "Subtle visual feedback without overwhelming the UI",
+      "example": ":color-indicator-status=\"true\" color-indicator-color=\"#4CAF50\"",
+      "antiPattern": "Changing entire container background color"
+    },
+    {
+      "practice": "Set fullWidthContentStatus=false for forms",
+      "why": "Provides better padding and centered layout for forms",
+      "example": ":full-width-content-status=\"false\" for form containers",
+      "antiPattern": "Manually adding padding to form content"
+    },
+    {
+      "practice": "Always provide colorIndicatorColor when colorIndicatorStatus is true",
+      "why": "Indicator needs explicit color to be visible",
+      "example": ":color-indicator-status=\"true\" color-indicator-color=\"#F44336\"",
+      "antiPattern": ":color-indicator-status=\"true\" without color"
+    },
+    {
+      "practice": "Use headerBottomSlot for filters and tabs",
+      "why": "Clean separation between title and functional elements",
+      "example": "<template #headerBottomSlot><InSelect /></template>",
+      "antiPattern": "Mixing filters with header title"
+    }
+  ],
+  "commonMistakes": [
+    {
+      "category": "migration",
+      "severity": "high",
+      "title": "Using V1 'type' prop instead of 'containerType'",
+      "description": "InBox V1 used 'type' prop, InContainer V2 uses 'containerType'",
+      "wrong": "<InContainer type=\"default\" />",
+      "correct": "<InContainer container-type=\"default\" />",
+      "impact": "Prop not recognized, defaults to 'default' type"
+    },
+    {
+      "category": "prop-usage",
+      "severity": "high",
+      "title": "Using CSS values instead of utility classes for border",
+      "description": "border prop expects design system utility classes, not CSS values",
+      "wrong": "<InContainer border=\"1px solid #ccc\" />",
+      "correct": "<InContainer border=\"bor-w-1 bor-s-s bor-c-6\" />",
+      "impact": "Styling not applied, inconsistent with design system"
+    },
+    {
+      "category": "prop-usage",
+      "severity": "high",
+      "title": "Setting borderTriangle without borderTrianglePosition",
+      "description": "Triangle decoration requires position to be specified",
+      "wrong": "<InContainer :border-triangle=\"true\" />",
+      "correct": "<InContainer :border-triangle=\"true\" border-triangle-position=\"top\" />",
+      "impact": "Triangle may not appear or appear in unexpected location"
+    },
+    {
+      "category": "prop-usage",
+      "severity": "high",
+      "title": "Setting colorIndicatorStatus without colorIndicatorColor",
+      "description": "Color indicator needs explicit color value to be visible",
+      "wrong": "<InContainer :color-indicator-status=\"true\" />",
+      "correct": "<InContainer :color-indicator-status=\"true\" color-indicator-color=\"#4CAF50\" />",
+      "impact": "Indicator appears but without color or with default color"
+    },
+    {
+      "category": "slot-usage",
+      "severity": "medium",
+      "title": "Not using contentArea slot",
+      "description": "Content should be placed in #contentArea slot for proper structure",
+      "wrong": "<InContainer><p>Content</p></InContainer>",
+      "correct": "<InContainer><template #contentArea><p>Content</p></template></InContainer>",
+      "impact": "Content may not render correctly or have unexpected styling"
+    },
+    {
+      "category": "slot-usage",
+      "severity": "medium",
+      "title": "Setting headerStatus=true but not using header slots",
+      "description": "Enabling header without content creates empty space",
+      "wrong": "<InContainer :header-status=\"true\"><template #contentArea>Content</template></InContainer>",
+      "correct": "<InContainer :header-status=\"true\"><template #headerTitle>Title</template><template #contentArea>Content</template></InContainer>",
+      "impact": "Empty header section takes up space, confusing layout"
+    },
+    {
+      "category": "styling",
+      "severity": "low",
+      "title": "Expecting padding when fullWidthContentStatus=true",
+      "description": "fullWidthContentStatus=true removes all content padding",
+      "wrong": "<InContainer :full-width-content-status=\"true\"><!-- Expecting padding --></InContainer>",
+      "correct": "<InContainer :full-width-content-status=\"false\"><!-- Has padding --></InContainer>",
+      "impact": "Content touches container edges, no spacing"
     }
   ]
 }

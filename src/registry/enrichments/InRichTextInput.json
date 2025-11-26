@@ -1,8 +1,14 @@
 {
+  "_metadata": {
+    "lastUpdated": "2025-11-25T14:48:39.823Z",
+    "propsHash": "0b2c0ec016be",
+    "eventsHash": "0de5e4df1f1d",
+    "propCount": 73,
+    "eventCount": 18
+  },
   "componentName": "InRichTextInput",
   "version": "2.0.0",
   "lastUpdated": "2024-11-24",
-
   "propEnrichments": {
     "value": {
       "description": "Input content with dynamic tags (v-model)",
@@ -68,7 +74,12 @@
       "description": "Validation state - replaces V1 invalid/warning",
       "valueFormat": {
         "structure": "string enum",
-        "possibleValues": ["default", "success", "warning", "error"],
+        "possibleValues": [
+          "default",
+          "success",
+          "warning",
+          "error"
+        ],
         "example": "states=\"error\""
       }
     },
@@ -218,7 +229,11 @@
       "description": "Control fallback UI visibility",
       "valueFormat": {
         "structure": "string enum",
-        "possibleValues": ["always", "onHover", "onClick"],
+        "possibleValues": [
+          "always",
+          "onHover",
+          "onClick"
+        ],
         "example": "fallback-visibility=\"onHover\""
       }
     },
@@ -238,7 +253,6 @@
       }
     }
   },
-
   "eventEnrichments": {
     "purify": {
       "description": "Emitted with sanitized string content",
@@ -286,7 +300,6 @@
       "usage": "@close-all-emoji-pickers=\"handleCloseEmoji\""
     }
   },
-
   "exampleEnrichments": [
     {
       "title": "Basic Rich Text Editor",
@@ -309,7 +322,6 @@
       "code": "<InRichTextInput\n  id=\"email\"\n  label-status\n  label-text=\"Email Content\"\n  v-model=\"emailContent\"\n  :dynamic-content-list=\"attributes\"\n  is-extended-dynamic-content\n  :dynamic-content-box-props=\"{ searchable: true, grouped: true }\"\n  fall-back-label=\"Default Value\"\n  fall-back-placeholder=\"Enter default...\"\n  is-upload-fallback\n  fallback-visibility=\"onHover\"\n  :error-tags=\"invalidAttributes\"\n  :warning-tags=\"deprecatedAttributes\"\n  @purify-object=\"handlePurifyObject\"\n  @save-fall-back-option=\"handleSaveFallback\"\n  @add-dynamic-attribute=\"handleAddAttribute\"\n/>"
     }
   ],
-
   "commonMistakes": [
     {
       "mistake": "Using attributeList instead of dynamicContentList",
@@ -348,7 +360,6 @@
       "severity": "high"
     }
   ],
-
   "bestPractices": [
     {
       "practice": "Use toolbarOptions to control available features",
@@ -371,7 +382,6 @@
       "example": "helper-text-validation-config-status :helper-text-validation-config=\"{ maxLength: 160 }\""
     }
   ],
-
   "performanceNotes": [
     {
       "note": "Large dynamicContentList can slow dropdown",

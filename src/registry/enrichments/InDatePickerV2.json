@@ -1,5 +1,12 @@
 {
   "component": "InDatePickerV2",
+  "_metadata": {
+    "lastUpdated": "2025-11-25T14:48:39.823Z",
+    "propsHash": "29c197a84335",
+    "eventsHash": "7db6af6c4a11",
+    "propCount": 41,
+    "eventCount": 7
+  },
   "propEnrichments": {
     "value": {
       "valueFormat": {
@@ -11,7 +18,12 @@
         "notes": "CRITICAL: Always pass an array of objects, even for single range. Second object is optional and used for comparison mode. Date format depends on locale (dd.mm.yyyy or mm/dd/yyyy).",
         "typescript": "Array<{ startDate: string; endDate: string }>"
       },
-      "relatedProps": ["comparisonStatus", "singleDatePickerStatus", "locale", "formatMapping"],
+      "relatedProps": [
+        "comparisonStatus",
+        "singleDatePickerStatus",
+        "locale",
+        "formatMapping"
+      ],
       "commonMistakes": [
         {
           "mistake": "Passing value as array of strings: [startDate, endDate]",
@@ -37,7 +49,11 @@
         "notes": "CRITICAL: Date format MUST be mm/dd/yyyy with SLASH delimiter, regardless of locale. 'name' must be unique identifier, 'title' is display text.",
         "typescript": "Array<{ name: string; title: string; startDate: string; endDate: string }>"
       },
-      "relatedProps": ["comparedCustomRanges", "quickRangeSelectionStatus", "defaultRanges"],
+      "relatedProps": [
+        "comparedCustomRanges",
+        "quickRangeSelectionStatus",
+        "defaultRanges"
+      ],
       "commonMistakes": [
         {
           "mistake": "Using 'label' property instead of 'title'",
@@ -77,7 +93,10 @@
         "notes": "CRITICAL: Same format as customRanges. Often calculated dynamically based on main period selection using @periodSelected event.",
         "typescript": "Array<{ name: string; title: string; startDate: string; endDate: string }>"
       },
-      "relatedProps": ["customRanges", "comparisonStatus"],
+      "relatedProps": [
+        "customRanges",
+        "comparisonStatus"
+      ],
       "commonMistakes": [
         {
           "mistake": "Not recalculating when main period changes",
@@ -94,8 +113,14 @@
         "notes": "CRITICAL: Controls visibility of comparison toggle button, NOT the comparison state itself. Keep this TRUE if you want comparison feature available.",
         "typescript": "boolean"
       },
-      "relatedProps": ["disabledComparisonStatus", "disabledComparisonTooltipText"],
-      "relatedEvents": ["openComparison", "closeComparison"],
+      "relatedProps": [
+        "disabledComparisonStatus",
+        "disabledComparisonTooltipText"
+      ],
+      "relatedEvents": [
+        "openComparison",
+        "closeComparison"
+      ],
       "commonMistakes": [
         {
           "mistake": "Binding to reactive state: :comparison-status=\"isComparisonOpen\"",
@@ -112,7 +137,10 @@
         "notes": "Shows quick range buttons (Today, Yesterday, Last 7 Days, etc.). Often forgotten but crucial for UX.",
         "typescript": "boolean"
       },
-      "relatedProps": ["defaultRanges", "customRanges"],
+      "relatedProps": [
+        "defaultRanges",
+        "customRanges"
+      ],
       "commonMistakes": [
         {
           "mistake": "Forgetting to set this to true",
@@ -154,7 +182,9 @@
         "notes": "Maps locale codes to date format strings. Used for display formatting.",
         "typescript": "Record<string, string>"
       },
-      "relatedProps": ["locale"],
+      "relatedProps": [
+        "locale"
+      ],
       "commonMistakes": []
     }
   },

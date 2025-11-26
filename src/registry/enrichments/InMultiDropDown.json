@@ -1,8 +1,14 @@
 {
+  "_metadata": {
+    "lastUpdated": "2025-11-25T14:48:39.823Z",
+    "propsHash": "7a84befceda1",
+    "eventsHash": "41c59fa49883",
+    "propCount": 35,
+    "eventCount": 5
+  },
   "componentName": "InMultiDropDown",
   "version": "1.0.0",
   "lastUpdated": "2024-11-24",
-
   "propEnrichments": {
     "options": {
       "description": "Array of selectable options",
@@ -101,7 +107,10 @@
       "description": "Visual type/variant of the dropdown",
       "valueFormat": {
         "structure": "string enum",
-        "possibleValues": ["default", "tags"],
+        "possibleValues": [
+          "default",
+          "tags"
+        ],
         "example": "type=\"tags\""
       }
     },
@@ -109,12 +118,14 @@
       "description": "Color theme of the dropdown",
       "valueFormat": {
         "structure": "string enum",
-        "possibleValues": ["light", "dark"],
+        "possibleValues": [
+          "light",
+          "dark"
+        ],
         "example": "theme=\"dark\""
       }
     }
   },
-
   "eventEnrichments": {
     "change": {
       "description": "Emitted when selection changes",
@@ -142,7 +153,6 @@
       "usage": "@click=\"handleClick\""
     }
   },
-
   "exampleEnrichments": [
     {
       "title": "Basic Multi-Select",
@@ -160,7 +170,6 @@
       "code": "<InMultiDropDown\n  id=\"tags\"\n  label=\"Tags\"\n  type=\"tags\"\n  :options=\"availableTags\"\n  v-model=\"selectedTags\"\n  add-new-tag-status\n  :minimum-new-tag-character-limit=\"2\"\n  :max-new-tag-character-limit=\"30\"\n  new-option-text=\"Create tag\"\n  @add-new-option=\"createTag\"\n/>"
     }
   ],
-
   "commonMistakes": [
     {
       "mistake": "Not setting responseKey for API fetch",
@@ -181,7 +190,6 @@
       "severity": "high"
     }
   ],
-
   "bestPractices": [
     {
       "practice": "Use searchStatus for large option lists",

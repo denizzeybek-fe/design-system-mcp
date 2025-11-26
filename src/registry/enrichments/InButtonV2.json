@@ -1,5 +1,12 @@
 {
   "component": "InButtonV2",
+  "_metadata": {
+    "lastUpdated": "2025-11-25T15:30:00Z",
+    "propsHash": "7f3cb0cd399c",
+    "eventsHash": "d827049039f8",
+    "propCount": 19,
+    "eventCount": 2
+  },
   "propEnrichments": {
     "styling": {
       "valueFormat": {
@@ -210,49 +217,24 @@
   },
   "eventEnrichments": {
     "click": {
-      "payloadTypes": [
-        {
-          "condition": "Single button (no buttonGroupOptions)",
-          "type": "Object (empty)",
-          "example": "{}",
-          "notes": "Empty object payload for simple button clicks"
-        },
-        {
-          "condition": "Button group (with buttonGroupOptions)",
-          "type": "Object (ButtonGroupOption)",
-          "example": "{ id: 'daily', type: 'secondary', styling: 'solid', labelText: 'Daily', selectedStatus: true }",
-          "notes": "Returns the entire button configuration object of the clicked button"
-        }
-      ],
-      "handlingPattern": "// Single button\n<InButtonV2 @click=\"handleSave\" />\n\nmethods: {\n  handleSave(payload) {\n    // payload = {}\n    console.log('Save clicked');\n  }\n}\n\n// Button group\n<InButtonV2 :button-group-options=\"tabOptions\" @click=\"handleTabClick\" />\n\nmethods: {\n  handleTabClick(payload) {\n    // payload = { id: 'daily', type: 'secondary', ... }\n    console.log('Tab clicked:', payload.id);\n    this.activeTab = payload.id;\n  }\n}",
-      "useCase": "Main button click handler. Payload structure varies based on single vs button group mode.",
+      "payloadFormat": {
+        "structure": "Object (empty) | ButtonGroupOption",
+        "notes": "Empty {} for single button, ButtonGroupOption object for button groups"
+      },
       "commonMistakes": [
         {
           "mistake": "Expecting payload.value in button group mode",
           "impact": "Cannot access clicked button data",
           "fix": "Use payload.id and payload.labelText - there's no payload.value",
           "severity": "high"
-        },
-        {
-          "mistake": "Not checking if buttonGroupOptions exists before accessing payload properties",
-          "impact": "Runtime errors when switching between modes",
-          "fix": "Check payload?.id before accessing: if (payload?.id) { ... }",
-          "severity": "medium"
         }
       ]
     },
     "clickIcon": {
-      "payloadTypes": [
-        {
-          "condition": "Always",
-          "type": "void",
-          "example": "undefined",
-          "notes": "No payload - icon click events don't carry data"
-        }
-      ],
-      "useCase": "Emitted when icon is clicked (ONLY when iconClick prop is true). Used for buttons with separate icon and label actions (e.g., removable tags).",
-      "relatedProps": ["iconClick", "leftIcon", "rightIcon"],
-      "handlingPattern": "<InButtonV2\n  :icon-click=\"true\"\n  left-icon=\"filled-close\"\n  label-text=\"Tag Name\"\n  @click=\"handleTagClick\"\n  @clickIcon=\"handleRemoveTag\"\n/>\n\nmethods: {\n  handleTagClick() {\n    console.log('Tag body clicked');\n  },\n  handleRemoveTag() {\n    console.log('Remove icon clicked');\n    this.removeTag();\n  }\n}",
+      "payloadFormat": {
+        "structure": "void",
+        "notes": "Emitted when icon is clicked (only when iconClick=true)"
+      },
       "commonMistakes": [
         {
           "mistake": "Forgetting to set iconClick=true",
@@ -263,54 +245,219 @@
       ]
     }
   },
-  "exampleEnrichments": [
+  "codeSnippets": {
+    "template": {
+      "basic": "<InButtonV2\n  id=\"submit-btn\"\n  type=\"primary\"\n  label-text=\"Submit\"\n  @click=\"handleSubmit\"\n/>",
+      "withIcon": "<InButtonV2\n  id=\"save-btn\"\n  type=\"primary\"\n  label-text=\"Save\"\n  left-icon=\"filled-save\"\n  icon-size=\"24\"\n  @click=\"handleSave\"\n/>",
+      "loading": "<InButtonV2\n  id=\"submit-btn\"\n  type=\"primary\"\n  label-text=\"Saving...\"\n  :loading-status=\"isLoading\"\n  @click=\"handleSubmit\"\n/>",
+      "ghost": "<InButtonV2\n  id=\"cancel-btn\"\n  type=\"secondary\"\n  styling=\"ghost\"\n  label-text=\"Cancel\"\n  @click=\"handleCancel\"\n/>",
+      "text": "<InButtonV2\n  id=\"learn-more-btn\"\n  type=\"primary\"\n  styling=\"text\"\n  label-text=\"Learn More\"\n  @click=\"handleLearnMore\"\n/>",
+      "danger": "<InButtonV2\n  id=\"delete-btn\"\n  type=\"danger\"\n  label-text=\"Delete\"\n  @click=\"handleDelete\"\n/>",
+      "small": "<InButtonV2\n  id=\"apply-btn\"\n  type=\"primary\"\n  size=\"small\"\n  label-text=\"Apply\"\n  @click=\"handleApply\"\n/>",
+      "iconOnly": "<InButtonV2\n  id=\"settings-btn\"\n  type=\"primary\"\n  styling=\"ghost\"\n  left-icon=\"filled-settings\"\n  :label-text-status=\"false\"\n  tooltip-text=\"Settings\"\n  @click=\"openSettings\"\n/>",
+      "buttonGroup": "<InButtonV2\n  id=\"period-selector\"\n  :button-group-options=\"[\n    { id: 'daily', type: 'secondary', styling: 'solid', labelText: 'Daily', selectedStatus: true },\n    { id: 'weekly', type: 'secondary', styling: 'ghost', labelText: 'Weekly' },\n    { id: 'monthly', type: 'secondary', styling: 'ghost', labelText: 'Monthly' }\n  ]\"\n  @click=\"handlePeriodChange\"\n/>",
+      "success": "<InButtonV2\n  id=\"save-btn\"\n  type=\"primary\"\n  label-text=\"Saved\"\n  :success-status=\"showSuccess\"\n  @click=\"handleSave\"\n/>"
+    },
+    "script": "import { ref } from 'vue';\nimport { InButtonV2, TYPES, STYLES, SIZES } from '@useinsider/design-system-vue';\nimport '@useinsider/design-system-vue/dist/design-system-vue.css';\n\nconst isLoading = ref(false);\nconst showSuccess = ref(false);\n\nconst handleSubmit = async () => {\n  isLoading.value = true;\n  try {\n    await api.submit();\n    showSuccess.value = true;\n    setTimeout(() => {\n      showSuccess.value = false;\n    }, 2000);\n  } catch (error) {\n    console.error('Submit failed:', error);\n  } finally {\n    isLoading.value = false;\n  }\n};\n\nconst handlePeriodChange = (payload) => {\n  // payload = { id: 'daily', type: 'secondary', ... }\n  console.log('Period changed to:', payload.id);\n  currentPeriod.value = payload.id;\n};",
+    "style": "/* Button V2 Component Styles */\n\n/* Solid styling (default) */\n.in-button-v2.solid {\n  border: 1px solid transparent;\n}\n\n.in-button-v2.solid.primary {\n  background-color: #1976D2;\n  color: #FFFFFF;\n}\n\n.in-button-v2.solid.danger {\n  background-color: #D32F2F;\n  color: #FFFFFF;\n}\n\n/* Ghost styling */\n.in-button-v2.ghost {\n  background-color: transparent;\n  border: 1px solid currentColor;\n}\n\n.in-button-v2.ghost.primary {\n  color: #1976D2;\n}\n\n.in-button-v2.ghost.primary:hover {\n  background-color: #E3F2FD;\n}\n\n/* Text styling */\n.in-button-v2.text {\n  background-color: transparent;\n  border: none;\n}\n\n.in-button-v2.text.primary {\n  color: #1976D2;\n}\n\n.in-button-v2.text.primary:hover {\n  text-decoration: underline;\n}\n\n/* Sizes */\n.in-button-v2.default {\n  height: 40px;\n  padding: 0 16px;\n  font-size: 14px;\n}\n\n.in-button-v2.small {\n  height: 32px;\n  padding: 0 12px;\n  font-size: 12px;\n}\n\n/* States */\n.in-button-v2:disabled,\n.in-button-v2.loading {\n  opacity: 0.5;\n  cursor: not-allowed;\n}\n\n.in-button-v2.success {\n  background-color: #4CAF50;\n}\n\n/* Responsive */\n@media (max-width: 768px) {\n  .in-button-v2 {\n    width: 100%; /* Full width on mobile */\n  }\n}"
+  },
+  "styling": {
+    "positioning": "static",
+    "layout": "inline-flex",
+    "fullWidth": false,
+    "zIndex": null,
+    "customization": {
+      "cssClasses": [
+        "in-button-v2",
+        "in-button-v2.solid",
+        "in-button-v2.ghost",
+        "in-button-v2.text",
+        "in-button-v2.primary",
+        "in-button-v2.secondary",
+        "in-button-v2.danger",
+        "in-button-v2.warning",
+        "in-button-v2.default",
+        "in-button-v2.small",
+        "in-button-v2:hover",
+        "in-button-v2:active",
+        "in-button-v2:disabled"
+      ],
+      "cssVariables": [],
+      "themeable": true,
+      "notes": "Button uses type and styling prop combination for theming. Override CSS classes to customize colors and appearance."
+    },
+    "responsive": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true,
+      "notes": "Buttons maintain their size across devices by default. Consider full-width buttons on mobile for better UX."
+    }
+  },
+  "examples": [
     {
-      "title": "Basic Button",
-      "description": "Simple primary button",
-      "complexity": "beginner",
-      "code": "<template>\n  <InButtonV2\n    id=\"submit-btn\"\n    styling=\"solid\"\n    type=\"primary\"\n    size=\"default\"\n    label-text=\"Submit\"\n    @click=\"handleSubmit\" />\n</template>\n\n<script>\nimport { InButtonV2 } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InButtonV2 },\n  methods: {\n    handleSubmit() {\n      console.log('Form submitted');\n    }\n  }\n};\n</script>"
+      "title": "Primary Button",
+      "description": "Most common button variant for primary call-to-action",
+      "category": "basic",
+      "code": "<InButtonV2\n  id=\"save-btn\"\n  type=\"primary\"\n  label-text=\"Save Changes\"\n  @click=\"handleSave\"\n/>",
+      "language": "vue"
     },
     {
-      "title": "Button with Icon and Loading State",
-      "description": "Button with left icon and loading indicator",
-      "complexity": "intermediate",
-      "code": "<template>\n  <InButtonV2\n    id=\"save-btn\"\n    styling=\"solid\"\n    type=\"primary\"\n    left-icon=\"save\"\n    icon-size=\"24\"\n    label-text=\"Save Changes\"\n    :loading-status=\"isSaving\"\n    :disabled-status=\"isSaving\"\n    @click=\"handleSave\" />\n</template>\n\n<script>\nimport { InButtonV2 } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InButtonV2 },\n  data() {\n    return {\n      isSaving: false\n    };\n  },\n  methods: {\n    async handleSave() {\n      this.isSaving = true;\n      try {\n        await this.saveData();\n        alert('Saved!');\n      } finally {\n        this.isSaving = false;\n      }\n    },\n    async saveData() {\n      return new Promise(resolve => setTimeout(resolve, 2000));\n    }\n  }\n};\n</script>"
+      "title": "Secondary Button",
+      "description": "For secondary actions or less prominent CTAs",
+      "category": "basic",
+      "code": "<InButtonV2\n  id=\"cancel-btn\"\n  type=\"secondary\"\n  label-text=\"Cancel\"\n  @click=\"handleCancel\"\n/>",
+      "language": "vue"
     },
     {
-      "title": "Button Group with Dropdown",
-      "description": "Button with dropdown menu options",
-      "complexity": "advanced",
-      "code": "<template>\n  <InButtonV2\n    id=\"export-btn\"\n    styling=\"ghost\"\n    type=\"primary\"\n    left-icon=\"export\"\n    label-text=\"Export\"\n    :button-group-options=\"exportOptions\"\n    @click=\"handleExport\" />\n</template>\n\n<script>\nimport { InButtonV2 } from '@useinsider/design-system-vue';\n\nexport default {\n  components: { InButtonV2 },\n  data() {\n    return {\n      exportOptions: [\n        { label: 'Export as CSV', value: 'csv', icon: 'file-csv' },\n        { label: 'Export as Excel', value: 'xlsx', icon: 'file-excel' },\n        { label: 'Export as PDF', value: 'pdf', icon: 'file-pdf' }\n      ]\n    };\n  },\n  methods: {\n    handleExport(payload) {\n      if (payload?.value) {\n        console.log('Exporting as:', payload.value);\n        this.performExport(payload.value);\n      }\n    },\n    performExport(format) {\n      // Export logic\n    }\n  }\n};\n</script>"
+      "title": "Danger Button",
+      "description": "For destructive actions like delete, remove",
+      "category": "basic",
+      "code": "<InButtonV2\n  id=\"delete-btn\"\n  type=\"danger\"\n  label-text=\"Delete\"\n  @click=\"confirmDelete\"\n/>",
+      "language": "vue"
+    },
+    {
+      "title": "Ghost Button",
+      "description": "Transparent background with border, lower visual weight",
+      "category": "variants",
+      "code": "<InButtonV2\n  id=\"learn-more-btn\"\n  type=\"primary\"\n  styling=\"ghost\"\n  label-text=\"Learn More\"\n  @click=\"showDetails\"\n/>",
+      "language": "vue"
+    },
+    {
+      "title": "Text Button",
+      "description": "No background or border, minimal visual weight",
+      "category": "variants",
+      "code": "<InButtonV2\n  id=\"details-btn\"\n  type=\"primary\"\n  styling=\"text\"\n  label-text=\"View Details\"\n  @click=\"showDetails\"\n/>",
+      "language": "vue"
+    },
+    {
+      "title": "Loading State",
+      "description": "Show async operations in progress with spinner",
+      "category": "states",
+      "code": "<template>\n  <InButtonV2\n    id=\"save-btn\"\n    type=\"primary\"\n    label-text=\"Save\"\n    :loading-status=\"isLoading\"\n    @click=\"handleSave\"\n  />\n</template>\n\n<script setup>\nimport { ref } from 'vue';\n\nconst isLoading = ref(false);\n\nconst handleSave = async () => {\n  isLoading.value = true;\n  try {\n    await api.save();\n  } finally {\n    isLoading.value = false;\n  }\n};\n</script>",
+      "language": "vue"
+    },
+    {
+      "title": "Button with Icon",
+      "description": "Add icon to the left of label text",
+      "category": "icons",
+      "code": "<InButtonV2\n  id=\"add-btn\"\n  type=\"primary\"\n  label-text=\"Add Item\"\n  left-icon=\"filled-plus\"\n  icon-size=\"24\"\n  @click=\"addItem\"\n/>",
+      "language": "vue"
+    },
+    {
+      "title": "Icon-Only Button",
+      "description": "Show only icon without label text",
+      "category": "icons",
+      "code": "<InButtonV2\n  id=\"settings-btn\"\n  type=\"primary\"\n  styling=\"ghost\"\n  left-icon=\"filled-settings\"\n  :label-text-status=\"false\"\n  tooltip-text=\"Settings\"\n  @click=\"openSettings\"\n/>",
+      "language": "vue"
+    },
+    {
+      "title": "Button Group",
+      "description": "Group related buttons together",
+      "category": "groups",
+      "code": "<template>\n  <InButtonV2\n    id=\"period-selector\"\n    :button-group-options=\"periodOptions\"\n    @click=\"handlePeriodChange\"\n  />\n</template>\n\n<script setup>\nimport { ref } from 'vue';\n\nconst periodOptions = [\n  { id: 'daily', type: 'secondary', styling: 'solid', labelText: 'Daily', selectedStatus: true },\n  { id: 'weekly', type: 'secondary', styling: 'ghost', labelText: 'Weekly' },\n  { id: 'monthly', type: 'secondary', styling: 'ghost', labelText: 'Monthly' }\n];\n\nconst handlePeriodChange = (payload) => {\n  console.log('Selected period:', payload.id);\n};\n</script>",
+      "language": "vue"
     }
   ],
-  "helperFunctions": [],
-  "performanceNotes": [
+  "implementationPatterns": [
     {
-      "issue": "Unnecessary re-renders with buttonGroupOptions",
-      "impact": "Dropdown menu re-creates on every render",
-      "solution": "Move buttonGroupOptions to data() or computed",
-      "example": "computed: { exportOptions() { return [...]; } }",
-      "severity": "low"
+      "pattern": "Form submission with loading state",
+      "when": "Submitting forms with async operations",
+      "code": "const isSubmitting = ref(false);\n\nconst handleSubmit = async () => {\n  isSubmitting.value = true;\n  try {\n    await api.submitForm(formData);\n    router.push('/success');\n  } catch (error) {\n    showNotification({ type: 'error', message: error.message });\n  } finally {\n    isSubmitting.value = false;\n  }\n};",
+      "notes": "Always use try-finally to reset loading state"
+    },
+    {
+      "pattern": "Success feedback with auto-reset",
+      "when": "Showing temporary success confirmation",
+      "code": "const showSuccess = ref(false);\n\nconst handleSave = async () => {\n  await api.save();\n  showSuccess.value = true;\n  setTimeout(() => {\n    showSuccess.value = false;\n  }, 2000);\n};",
+      "notes": "Reset success state after 2-3 seconds"
+    },
+    {
+      "pattern": "Button group state management",
+      "when": "Toggle buttons for view/filter selection",
+      "code": "const selectedPeriod = ref('daily');\n\nconst periodOptions = computed(() => [\n  { id: 'daily', type: 'secondary', styling: selectedPeriod.value === 'daily' ? 'solid' : 'ghost', labelText: 'Daily', selectedStatus: selectedPeriod.value === 'daily' },\n  { id: 'weekly', type: 'secondary', styling: selectedPeriod.value === 'weekly' ? 'solid' : 'ghost', labelText: 'Weekly', selectedStatus: selectedPeriod.value === 'weekly' },\n  { id: 'monthly', type: 'secondary', styling: selectedPeriod.value === 'monthly' ? 'solid' : 'ghost', labelText: 'Monthly', selectedStatus: selectedPeriod.value === 'monthly' }\n]);\n\nconst handlePeriodChange = (payload) => {\n  selectedPeriod.value = payload.id;\n};",
+      "notes": "Use computed for dynamic button group options"
+    },
+    {
+      "pattern": "Confirmation before destructive action",
+      "when": "Delete, remove, or other destructive actions",
+      "code": "const confirmDelete = async () => {\n  const confirmed = await showConfirmDialog({\n    title: 'Delete Item',\n    message: 'Are you sure you want to delete this item?',\n    confirmText: 'Delete',\n    confirmType: 'danger'\n  });\n\n  if (confirmed) {\n    await deleteItem();\n  }\n};",
+      "notes": "Never delete directly from button click"
     }
   ],
-  "accessibilityNotes": [
+  "useCases": [
     {
-      "requirement": "Always provide meaningful labelText",
-      "reason": "Screen readers need descriptive button text",
-      "severity": "high",
-      "example": "labelText=\"Delete User\" not \"Delete\" or \"OK\""
+      "useCase": "Primary CTA in forms",
+      "description": "Main submit button for forms",
+      "implementation": "<InButtonV2\n  id=\"submit-btn\"\n  type=\"primary\"\n  label-text=\"Submit\"\n  :loading-status=\"isSubmitting\"\n  :disabled-status=\"!isValid\"\n  @click=\"handleSubmit\"\n/>",
+      "notes": "Disable when form is invalid, show loading during submission"
     },
     {
-      "requirement": "Use disabledStatus instead of removing button",
-      "reason": "Disabled state maintains button in tab order with aria-disabled",
-      "severity": "medium",
-      "example": ":disabled-status=\"!canSubmit\" instead of v-if=\"canSubmit\""
+      "useCase": "Cancel/close actions",
+      "description": "Secondary button for dismissing modals or canceling operations",
+      "implementation": "<InButtonV2\n  id=\"cancel-btn\"\n  type=\"secondary\"\n  styling=\"ghost\"\n  label-text=\"Cancel\"\n  @click=\"closeModal\"\n/>",
+      "notes": "Use ghost styling for less prominent cancel buttons"
     },
     {
-      "requirement": "Avoid icon-only buttons without labelText",
-      "reason": "Screen readers won't know button purpose",
-      "severity": "high",
-      "fix": "Either keep labelText visible or add aria-label/tooltipText"
+      "useCase": "Delete confirmation",
+      "description": "Destructive action button with confirmation",
+      "implementation": "<InButtonV2\n  id=\"delete-btn\"\n  type=\"danger\"\n  label-text=\"Delete Account\"\n  @click=\"confirmDelete\"\n/>",
+      "notes": "Always show confirmation dialog before deleting"
+    },
+    {
+      "useCase": "View toggle buttons",
+      "description": "Switch between different views (list/grid, day/week/month)",
+      "implementation": "<InButtonV2\n  id=\"view-toggle\"\n  :button-group-options=\"viewOptions\"\n  @click=\"handleViewChange\"\n/>",
+      "notes": "Use button groups for 2-4 related options"
+    },
+    {
+      "useCase": "Action menu trigger",
+      "description": "Button that opens dropdown menu with actions",
+      "implementation": "<InButtonV2\n  id=\"actions-btn\"\n  type=\"secondary\"\n  styling=\"ghost\"\n  label-text=\"Actions\"\n  right-icon=\"filled-dropdown-down\"\n  @click=\"toggleActionsMenu\"\n/>",
+      "notes": "Use right-icon for dropdown indicators"
+    }
+  ],
+  "bestPractices": [
+    {
+      "practice": "Use constants for type and styling",
+      "why": "Provides autocomplete, prevents typos, and type safety",
+      "example": "import { TYPES, STYLES } from '@useinsider/design-system-vue';\n\n<InButtonV2 :type=\"TYPES.PRIMARY\" :styling=\"STYLES.SOLID\" />",
+      "antiPattern": "type=\"primary\" styling=\"solid\" (string literals)"
+    },
+    {
+      "practice": "Always use try-finally with loadingStatus",
+      "why": "Ensures loadingStatus is reset even if operation fails",
+      "example": "try { await api.save(); } finally { isLoading.value = false; }",
+      "antiPattern": "await api.save(); isLoading.value = false; // Never reached on error"
+    },
+    {
+      "practice": "Provide meaningful labelText",
+      "why": "Improves usability and accessibility",
+      "example": "label-text=\"Save Changes\" or \"Delete Account\"",
+      "antiPattern": "label-text=\"Submit\" or \"OK\" (too vague)"
+    },
+    {
+      "practice": "Match button type to action semantics",
+      "why": "Visual cues help users understand action importance",
+      "example": "type=\"danger\" for destructive actions, type=\"primary\" for main CTA",
+      "antiPattern": "Using type=\"primary\" for all actions"
+    },
+    {
+      "practice": "Show success feedback briefly",
+      "why": "Provides confirmation without permanent state change",
+      "example": "showSuccess.value = true; setTimeout(() => showSuccess.value = false, 2000);",
+      "antiPattern": "Leaving successStatus=true indefinitely"
+    },
+    {
+      "practice": "Always provide tooltip-text for icon-only buttons",
+      "why": "Screen readers and users benefit from descriptive tooltips",
+      "example": "<InButtonV2 :label-text-status=\"false\" left-icon=\"settings\" tooltip-text=\"Settings\" />",
+      "antiPattern": "Icon-only button without tooltip or aria-label"
+    },
+    {
+      "practice": "Confirm destructive actions",
+      "why": "Prevents accidental data loss",
+      "example": "@click=\"confirmDelete\" (shows dialog first)",
+      "antiPattern": "@click=\"deleteItem\" (deletes immediately)"
     }
   ],
   "commonMistakes": [
@@ -378,41 +525,29 @@
       "impact": "Component re-renders on every parent update"
     }
   ],
-  "bestPractices": [
+  "helperFunctions": [],
+  "performanceNotes": [
     {
-      "title": "Use constants for type and styling",
-      "description": "Import and use TYPES and STYLES constants instead of string literals",
-      "reason": "Provides autocomplete, prevents typos, and type safety",
-      "example": "import { TYPES, STYLES } from '@useinsider/design-system-vue';\n\n<InButtonV2\n  :type=\"TYPES.PRIMARY\"\n  :styling=\"STYLES.SOLID\"\n/>"
+      "note": "Unnecessary re-renders with buttonGroupOptions",
+      "recommendation": "Move buttonGroupOptions to data() or computed to avoid recreating array on every render"
     },
     {
-      "title": "Always use try-finally with loadingStatus",
-      "description": "Ensure loadingStatus is reset even if operation fails",
-      "reason": "Prevents button from being stuck in loading state",
-      "example": "async handleSave() {\n  this.loadingStatus = true;\n  try {\n    await this.api.save();\n    this.successStatus = true;\n    setTimeout(() => this.successStatus = false, 2000);\n  } catch (error) {\n    this.$notify.error(error.message);\n  } finally {\n    this.loadingStatus = false;\n  }\n}"
+      "note": "Button is lightweight component",
+      "recommendation": "No special performance considerations needed. Safe to use many instances."
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "note": "Always provide meaningful labelText",
+      "recommendation": "Screen readers need descriptive button text. Avoid generic labels like 'OK' or 'Submit'."
     },
     {
-      "title": "Provide meaningful labelText",
-      "description": "Button text should clearly describe the action",
-      "reason": "Improves usability and accessibility",
-      "good": ["Save Changes", "Delete Account", "Continue to Checkout"],
-      "bad": ["OK", "Submit", "Click Here"]
+      "note": "Use disabledStatus instead of removing button",
+      "recommendation": "Disabled state maintains button in tab order with aria-disabled for better keyboard navigation."
     },
     {
-      "title": "Use appropriate button types for actions",
-      "description": "Match button type to action semantics",
-      "patterns": [
-        { "action": "Primary CTA", "type": "primary", "styling": "solid" },
-        { "action": "Destructive action", "type": "danger", "styling": "solid" },
-        { "action": "Secondary action", "type": "secondary", "styling": "ghost" },
-        { "action": "Tertiary/cancel", "type": "secondary", "styling": "text" }
-      ]
-    },
-    {
-      "title": "Show success feedback briefly",
-      "description": "Use successStatus for 2-3 seconds then reset",
-      "reason": "Provides confirmation without permanent state change",
-      "example": "async handleSave() {\n  await this.save();\n  this.successStatus = true;\n  setTimeout(() => {\n    this.successStatus = false;\n  }, 2000);\n}"
+      "note": "Icon-only buttons must have tooltip-text",
+      "recommendation": "Provide tooltip-text for screen readers when labelTextStatus=false."
     }
   ],
   "figmaMapping": {

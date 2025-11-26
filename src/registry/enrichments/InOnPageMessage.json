@@ -1,19 +1,38 @@
 {
   "component": "InOnPageMessage",
+  "_metadata": {
+    "lastUpdated": "2025-11-25T14:48:39.823Z",
+    "propsHash": "93809f71daae",
+    "eventsHash": "4f53cda18c2b",
+    "propCount": 12,
+    "eventCount": 0
+  },
   "propEnrichments": {
     "type": {
       "valueFormat": {
         "structure": "string (enum)",
-        "validValues": ["error", "warning", "success", "info"],
+        "validValues": [
+          "error",
+          "warning",
+          "success",
+          "info"
+        ],
         "notes": "Message type determines icon and color scheme",
         "typescript": "'error' | 'warning' | 'success' | 'info'"
       },
-      "relatedProps": ["titleText", "descriptionText"]
+      "relatedProps": [
+        "titleText",
+        "descriptionText"
+      ]
     },
     "size": {
       "valueFormat": {
         "structure": "string (enum)",
-        "validValues": ["small", "medium", "large"],
+        "validValues": [
+          "small",
+          "medium",
+          "large"
+        ],
         "notes": "Controls overall component size and spacing",
         "typescript": "'small' | 'medium' | 'large'"
       }

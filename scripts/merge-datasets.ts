@@ -64,6 +64,24 @@ interface EnrichmentData {
   performanceNotes?: any[];
   accessibilityNotes?: any[];
   migrationNotes?: any;
+
+  // Enrichment Schema v2 fields
+  codeSnippets?: {
+    template?: Record<string, string> | string;
+    script?: string;
+    style?: string;
+  };
+  styling?: {
+    positioning?: string;
+    layout?: string;
+    fullWidth?: boolean;
+    zIndex?: number | null;
+    customization?: any;
+    responsive?: any;
+  };
+  implementationPatterns?: any[];
+  useCases?: any[];
+  examples?: any[];  // Direct examples in enrichment
 }
 
 interface MigrationData {
@@ -125,6 +143,23 @@ interface CombinedComponent {
   performanceNotes: any[];
   accessibilityNotes: any[];
   migrationNotes: any | null;
+
+  // Enrichment Schema v2 fields (always present)
+  codeSnippets: {
+    template?: Record<string, string> | string;
+    script?: string;
+    style?: string;
+  } | null;
+  styling: {
+    positioning?: string;
+    layout?: string;
+    fullWidth?: boolean;
+    zIndex?: number | null;
+    customization?: any;
+    responsive?: any;
+  } | null;
+  implementationPatterns: any[];
+  useCases: any[];
 
   // Migration info (always present)
   migrationAvailable: boolean;
@@ -280,6 +315,12 @@ function mergeComponentData(
     accessibilityNotes: [],
     migrationNotes: null,
 
+    // Enrichment Schema v2 fields (always present, default empty/null)
+    codeSnippets: null,
+    styling: null,
+    implementationPatterns: [],
+    useCases: [],
+
     // Migration data (always present, default false/null)
     migrationAvailable: false,
     migrationTo: null,
@@ -316,11 +357,25 @@ function mergeComponentData(
     combined.accessibilityNotes = enrichment.accessibilityNotes || [];
     combined.migrationNotes = enrichment.migrationNotes || null;
 
+    // Enrichment Schema v2 fields
+    combined.codeSnippets = enrichment.codeSnippets || null;
+    combined.styling = enrichment.styling || null;
+    combined.implementationPatterns = enrichment.implementationPatterns || [];
+    combined.useCases = enrichment.useCases || [];
+
     // Merge enrichment examples with storybook examples
     if (enrichment.exampleEnrichments) {
       combined.examples = [
         ...combined.examples,
         ...enrichment.exampleEnrichments
+      ];
+    }
+
+    // Merge direct examples from enrichment (Schema v2)
+    if (enrichment.examples) {
+      combined.examples = [
+        ...combined.examples,
+        ...enrichment.examples
       ];
     }
 

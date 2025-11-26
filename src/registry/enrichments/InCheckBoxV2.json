@@ -1,5 +1,12 @@
 {
   "component": "InCheckBoxV2",
+  "_metadata": {
+    "lastUpdated": "2025-11-25T16:00:00Z",
+    "propsHash": "959915b34bb6",
+    "eventsHash": "e10808d43975",
+    "propCount": 17,
+    "eventCount": 1
+  },
   "propEnrichments": {
     "options": {
       "valueFormat": {
@@ -25,8 +32,14 @@
         ],
         "typescript": "Array<{ id: string; label: string; value: any; disabled?: boolean; checked?: boolean }>"
       },
-      "relatedProps": ["modelValue", "disabled"],
-      "relatedEvents": ["change", "update:modelValue"],
+      "relatedProps": [
+        "modelValue",
+        "disabled"
+      ],
+      "relatedEvents": [
+        "click",
+        "update:modelValue"
+      ],
       "commonMistakes": [
         {
           "mistake": "Using simple array of strings ['Option 1', 'Option 2']",
@@ -47,9 +60,9 @@
           "severity": "high"
         },
         {
-          "mistake": "Not handling v-model with checkbox group",
+          "mistake": "Not handling click event with checkbox group",
           "impact": "Selected values not tracked, state not updated",
-          "fix": "Use v-model to bind selected values array: v-model=\"selectedOptions\"",
+          "fix": "Use @click handler or v-model to track selected values: @click=\"handleClick\"",
           "severity": "medium"
         }
       ]
@@ -73,7 +86,9 @@
         ],
         "typescript": "{ width: number; height: number }"
       },
-      "relatedProps": ["skeletonStatus"],
+      "relatedProps": [
+        "skeletonStatus"
+      ],
       "commonMistakes": [
         {
           "mistake": "Setting skeletonSizing without skeletonStatus",
@@ -82,8 +97,279 @@
           "severity": "low"
         }
       ]
+    },
+    "indeterminate": {
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "Shows dash/minus icon instead of checkmark. Used for \"select all\" pattern when some (but not all) items are selected.",
+        "typescript": "boolean"
+      },
+      "relatedProps": ["checked"],
+      "commonMistakes": [
+        {
+          "mistake": "Setting both indeterminate=true and checked=true",
+          "impact": "Indeterminate state takes precedence, checked is ignored",
+          "fix": "Use indeterminate for partial selection only: :indeterminate=\"someSelected && !allSelected\"",
+          "severity": "medium"
+        },
+        {
+          "mistake": "Not using computed property for indeterminate state",
+          "impact": "Manual state management is error-prone",
+          "fix": "Use computed: const indeterminate = computed(() => selected.length > 0 && selected.length < total)",
+          "severity": "low"
+        }
+      ]
+    },
+    "state": {
+      "valueFormat": {
+        "structure": "string (enum)",
+        "validValues": ["default", "danger", "warning"],
+        "notes": "Validation state that affects border and message styling",
+        "typescript": "'default' | 'danger' | 'warning'"
+      },
+      "relatedProps": ["stateMessage"],
+      "commonMistakes": [
+        {
+          "mistake": "Using 'error' instead of 'danger'",
+          "impact": "Falls back to default state",
+          "fix": "Use state=\"danger\" for error states",
+          "severity": "medium"
+        }
+      ]
     }
   },
+  "eventEnrichments": {
+    "click": {
+      "payloadFormat": {
+        "structure": "boolean | Array<string | number>",
+        "notes": "For single checkbox: boolean (checked state). For checkbox groups: array of selected values."
+      },
+      "when": "Fires when checkbox is toggled (clicked)",
+      "usagePattern": "Use with @click to handle checkbox changes. For single checkbox, receive boolean. For groups, receive array of selected values.",
+      "commonMistakes": [
+        {
+          "mistake": "Expecting single value from checkbox group",
+          "impact": "Type mismatch, handler receives array not string",
+          "fix": "For groups, handle array: @click=\"(selected) => selectedValues = selected\"",
+          "severity": "high"
+        },
+        {
+          "mistake": "Not handling click event at all",
+          "impact": "Checkbox state not tracked, selections lost",
+          "fix": "Always handle @click or use v-model: @click=\"handleClick\" or v-model=\"checked\"",
+          "severity": "high"
+        },
+        {
+          "mistake": "Using @change instead of @click",
+          "impact": "Event may not fire as expected, InCheckBoxV2 uses click event",
+          "fix": "Use @click for InCheckBoxV2 (not @change)",
+          "severity": "medium"
+        }
+      ]
+    }
+  },
+  "codeSnippets": {
+    "template": {
+      "basic": "<InCheckBoxV2\n  id=\"terms\"\n  name=\"terms\"\n  label-text=\"I accept the terms and conditions\"\n  :checked=\"accepted\"\n  @click=\"accepted = $event\"\n/>",
+      "withDescription": "<InCheckBoxV2\n  id=\"newsletter\"\n  name=\"newsletter\"\n  label-text=\"Subscribe to newsletter\"\n  description-text=\"Receive weekly updates\"\n  :description-status=\"true\"\n  :checked=\"subscribed\"\n  @click=\"subscribed = $event\"\n/>",
+      "withTooltip": "<InCheckBoxV2\n  id=\"analytics\"\n  label-text=\"Share analytics\"\n  :tooltip-status=\"true\"\n  tooltip-text=\"Help us improve by sharing anonymous data\"\n  :checked=\"analyticsEnabled\"\n  @click=\"analyticsEnabled = $event\"\n/>",
+      "indeterminate": "<InCheckBoxV2\n  id=\"select-all\"\n  label-text=\"Select all items\"\n  :checked=\"allSelected\"\n  :indeterminate=\"someSelected\"\n  @click=\"toggleAll\"\n/>",
+      "disabled": "<InCheckBoxV2\n  id=\"locked\"\n  label-text=\"This option is locked\"\n  :checked=\"true\"\n  :disabled-status=\"true\"\n/>",
+      "errorState": "<InCheckBoxV2\n  id=\"required\"\n  label-text=\"I accept the terms\"\n  state=\"danger\"\n  state-message=\"You must accept the terms to continue\"\n  :checked=\"termsAccepted\"\n  @click=\"termsAccepted = $event\"\n/>",
+      "skeleton": "<InCheckBoxV2\n  id=\"loading\"\n  :skeleton-status=\"isLoading\"\n  :skeleton-sizing=\"{ width: 120, height: 24 }\"\n  label-text=\"Loading...\"\n/>",
+      "group": "<InCheckBoxV2\n  id=\"interests\"\n  name=\"interests\"\n  label-text=\"Select your interests\"\n  :options=\"[\n    { id: 'tech', label: 'Technology', value: 'tech', checked: true },\n    { id: 'design', label: 'Design', value: 'design', checked: false },\n    { id: 'marketing', label: 'Marketing', value: 'marketing', checked: false }\n  ]\"\n  @click=\"handleSelection\"\n/>",
+      "boldLabel": "<InCheckBoxV2\n  id=\"important\"\n  label-text=\"Important notice\"\n  :bold-label=\"true\"\n  :checked=\"acknowledged\"\n  @click=\"acknowledged = $event\"\n/>"
+    },
+    "script": "import { ref, computed } from 'vue';\nimport { InCheckBoxV2 } from '@useinsider/design-system-vue';\n\n// Single checkbox\nconst accepted = ref(false);\n\n// Checkbox group\nconst selectedItems = ref([]);\nconst options = [\n  { id: 'opt1', label: 'Option 1', value: 'value1' },\n  { id: 'opt2', label: 'Option 2', value: 'value2' }\n];\n\n// Indeterminate state (select all)\nconst selectedRows = ref([1, 3]);\nconst totalRows = 5;\n\nconst allSelected = computed(() => \n  selectedRows.value.length === totalRows\n);\n\nconst someSelected = computed(() => \n  selectedRows.value.length > 0 && !allSelected.value\n);\n\nconst toggleAll = (checked) => {\n  selectedRows.value = checked ? [1, 2, 3, 4, 5] : [];\n};\n\n// Form validation\nconst formData = ref({ terms: false, privacy: false });\nconst errors = ref({});\n\nconst validateCheckbox = () => {\n  if (!formData.value.terms) {\n    errors.value.terms = 'You must accept the terms';\n  } else {\n    delete errors.value.terms;\n  }\n};",
+    "style": "/* Checkbox is styled by the design system */\n/* Custom wrapper spacing if needed */\n.checkbox-wrapper {\n  margin-bottom: 16px;\n}\n\n/* Group checkboxes */\n.checkbox-group {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n}\n\n/* Error state customization (if needed) */\n.checkbox-error {\n  border-color: var(--color-danger);\n}\n\n/* Custom label styling */\n.checkbox-label {\n  font-size: 14px;\n  line-height: 20px;\n  color: var(--color-text-primary);\n}"
+  },
+  "styling": {
+    "positioning": "static",
+    "layout": "inline-flex",
+    "fullWidth": false,
+    "zIndex": null,
+    "customization": {
+      "cssClasses": [
+        ".checkbox-container",
+        ".checkbox-input",
+        ".checkbox-label",
+        ".checkbox-description",
+        ".checkbox-state-message"
+      ],
+      "cssVariables": [],
+      "themeable": false,
+      "notes": "Checkbox uses design system styles. Limited customization available. Use wrapper div for layout control."
+    },
+    "responsive": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true,
+      "notes": "Checkbox scales appropriately on all devices. Touch-friendly on mobile."
+    },
+    "layoutNotes": "Use inline-flex for horizontal alignment. Wrap in flex container with flex-direction: column for vertical stacking. Checkbox groups automatically stack vertically."
+  },
+  "examples": [
+    {
+      "title": "Basic Single Checkbox",
+      "description": "Simple checkbox with label for terms acceptance",
+      "category": "basic",
+      "code": "<template>\n  <InCheckBoxV2\n    id=\"terms\"\n    name=\"terms\"\n    label-text=\"I accept the terms and conditions\"\n    :checked=\"accepted\"\n    @click=\"accepted = $event\"\n  />\n</template>\n\n<script setup>\nimport { ref } from 'vue';\n\nconst accepted = ref(false);\n</script>",
+      "language": "vue"
+    },
+    {
+      "title": "Checkbox with Description",
+      "description": "Checkbox with additional description text for context",
+      "category": "basic",
+      "code": "<template>\n  <InCheckBoxV2\n    id=\"newsletter\"\n    name=\"newsletter\"\n    label-text=\"Subscribe to newsletter\"\n    description-text=\"Receive weekly updates about new features and products\"\n    :description-status=\"true\"\n    :checked=\"subscribed\"\n    @click=\"subscribed = $event\"\n  />\n</template>\n\n<script setup>\nimport { ref } from 'vue';\n\nconst subscribed = ref(false);\n</script>",
+      "language": "vue"
+    },
+    {
+      "title": "Indeterminate State (Select All)",
+      "description": "Master checkbox showing partial selection state",
+      "category": "advanced",
+      "code": "<template>\n  <div>\n    <InCheckBoxV2\n      id=\"select-all\"\n      label-text=\"Select all items\"\n      :checked=\"allSelected\"\n      :indeterminate=\"someSelected\"\n      @click=\"toggleAll\"\n    />\n    \n    <div v-for=\"item in items\" :key=\"item.id\">\n      <InCheckBoxV2\n        :id=\"`item-${item.id}`\"\n        :label-text=\"item.name\"\n        :checked=\"selectedItems.includes(item.id)\"\n        @click=\"toggleItem(item.id, $event)\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup>\nimport { ref, computed } from 'vue';\n\nconst items = [\n  { id: 1, name: 'Item 1' },\n  { id: 2, name: 'Item 2' },\n  { id: 3, name: 'Item 3' }\n];\n\nconst selectedItems = ref([1]);\n\nconst allSelected = computed(() => \n  selectedItems.value.length === items.length\n);\n\nconst someSelected = computed(() => \n  selectedItems.value.length > 0 && !allSelected.value\n);\n\nconst toggleAll = (checked) => {\n  selectedItems.value = checked ? items.map(i => i.id) : [];\n};\n\nconst toggleItem = (id, checked) => {\n  if (checked) {\n    selectedItems.value.push(id);\n  } else {\n    selectedItems.value = selectedItems.value.filter(i => i !== id);\n  }\n};\n</script>",
+      "language": "vue"
+    },
+    {
+      "title": "Checkbox Group with Options",
+      "description": "Multiple checkboxes rendered from options array",
+      "category": "groups",
+      "code": "<template>\n  <InCheckBoxV2\n    id=\"preferences\"\n    name=\"preferences\"\n    label-text=\"Select your preferences\"\n    :options=\"preferences\"\n    @click=\"handlePreferences\"\n  />\n  \n  <p>Selected: {{ selectedPreferences }}</p>\n</template>\n\n<script setup>\nimport { ref } from 'vue';\n\nconst preferences = [\n  { id: 'email', label: 'Email notifications', value: 'email', checked: true },\n  { id: 'sms', label: 'SMS notifications', value: 'sms', checked: false },\n  { id: 'push', label: 'Push notifications', value: 'push', checked: false }\n];\n\nconst selectedPreferences = ref(['email']);\n\nconst handlePreferences = (selected) => {\n  selectedPreferences.value = selected;\n  console.log('Preferences updated:', selected);\n};\n</script>",
+      "language": "vue"
+    },
+    {
+      "title": "Form Validation with Error State",
+      "description": "Required checkbox with validation and error message",
+      "category": "validation",
+      "code": "<template>\n  <form @submit.prevent=\"handleSubmit\">\n    <InCheckBoxV2\n      id=\"terms\"\n      name=\"terms\"\n      label-text=\"I accept the terms and conditions\"\n      :checked=\"formData.termsAccepted\"\n      :state=\"errors.terms ? 'danger' : 'default'\"\n      :state-message=\"errors.terms\"\n      @click=\"formData.termsAccepted = $event; validateTerms();\"\n    />\n    \n    <button type=\"submit\" :disabled=\"!formData.termsAccepted\">\n      Continue\n    </button>\n  </form>\n</template>\n\n<script setup>\nimport { reactive, ref } from 'vue';\n\nconst formData = reactive({\n  termsAccepted: false\n});\n\nconst errors = ref({});\n\nconst validateTerms = () => {\n  if (!formData.termsAccepted) {\n    errors.value.terms = 'You must accept the terms to continue';\n  } else {\n    delete errors.value.terms;\n  }\n};\n\nconst handleSubmit = () => {\n  validateTerms();\n  if (Object.keys(errors.value).length === 0) {\n    console.log('Form submitted!');\n  }\n};\n</script>",
+      "language": "vue"
+    },
+    {
+      "title": "Disabled Checkbox",
+      "description": "Checkbox that cannot be interacted with",
+      "category": "states",
+      "code": "<template>\n  <InCheckBoxV2\n    id=\"locked\"\n    name=\"locked\"\n    label-text=\"This feature is locked\"\n    :checked=\"true\"\n    :disabled-status=\"true\"\n  />\n</template>",
+      "language": "vue"
+    },
+    {
+      "title": "Skeleton Loading State",
+      "description": "Shows skeleton loader while checkbox data loads",
+      "category": "states",
+      "code": "<template>\n  <InCheckBoxV2\n    id=\"loading\"\n    name=\"loading\"\n    :skeleton-status=\"isLoading\"\n    :skeleton-sizing=\"{ width: 120, height: 24 }\"\n    label-text=\"Loading option...\"\n    :checked=\"value\"\n  />\n</template>\n\n<script setup>\nimport { ref, onMounted } from 'vue';\n\nconst isLoading = ref(true);\nconst value = ref(false);\n\nonMounted(async () => {\n  // Simulate API call\n  await new Promise(resolve => setTimeout(resolve, 2000));\n  isLoading.value = false;\n});\n</script>",
+      "language": "vue"
+    },
+    {
+      "title": "Settings Panel",
+      "description": "Multiple checkboxes for user preferences",
+      "category": "forms",
+      "code": "<template>\n  <div class=\"settings-panel\">\n    <h3>Privacy Settings</h3>\n    \n    <InCheckBoxV2\n      id=\"public-profile\"\n      name=\"public-profile\"\n      label-text=\"Make profile public\"\n      description-text=\"Your profile will be visible to all users\"\n      :description-status=\"true\"\n      :checked=\"settings.publicProfile\"\n      @click=\"settings.publicProfile = $event\"\n    />\n    \n    <InCheckBoxV2\n      id=\"email-notifications\"\n      name=\"email-notifications\"\n      label-text=\"Email notifications\"\n      description-text=\"Receive updates via email\"\n      :description-status=\"true\"\n      :checked=\"settings.emailNotifications\"\n      @click=\"settings.emailNotifications = $event\"\n    />\n    \n    <InCheckBoxV2\n      id=\"show-activity\"\n      name=\"show-activity\"\n      label-text=\"Show activity status\"\n      description-text=\"Let others see when you're online\"\n      :description-status=\"true\"\n      :checked=\"settings.showActivity\"\n      @click=\"settings.showActivity = $event\"\n    />\n  </div>\n</template>\n\n<script setup>\nimport { reactive } from 'vue';\n\nconst settings = reactive({\n  publicProfile: true,\n  emailNotifications: false,\n  showActivity: true\n});\n</script>\n\n<style scoped>\n.settings-panel {\n  display: flex;\n  flex-direction: column;\n  gap: 16px;\n}\n</style>",
+      "language": "vue"
+    },
+    {
+      "title": "Data Table Row Selection",
+      "description": "Checkboxes for bulk row selection in tables",
+      "category": "advanced",
+      "code": "<template>\n  <div>\n    <InCheckBoxV2\n      id=\"select-all-rows\"\n      label-text=\"Select all\"\n      :checked=\"allRowsSelected\"\n      :indeterminate=\"someRowsSelected\"\n      @click=\"toggleAllRows\"\n    />\n    \n    <table>\n      <tr v-for=\"row in tableData\" :key=\"row.id\">\n        <td>\n          <InCheckBoxV2\n            :id=\"`row-${row.id}`\"\n            :label-text=\"row.name\"\n            :checked=\"selectedRows.includes(row.id)\"\n            @click=\"toggleRow(row.id, $event)\"\n          />\n        </td>\n      </tr>\n    </table>\n    \n    <p>Selected: {{ selectedRows.length }} / {{ tableData.length }}</p>\n  </div>\n</template>\n\n<script setup>\nimport { ref, computed } from 'vue';\n\nconst tableData = [\n  { id: 1, name: 'Item 1' },\n  { id: 2, name: 'Item 2' },\n  { id: 3, name: 'Item 3' },\n  { id: 4, name: 'Item 4' }\n];\n\nconst selectedRows = ref([1, 3]);\n\nconst allRowsSelected = computed(() => \n  selectedRows.value.length === tableData.length\n);\n\nconst someRowsSelected = computed(() => \n  selectedRows.value.length > 0 && !allRowsSelected.value\n);\n\nconst toggleAllRows = (checked) => {\n  selectedRows.value = checked \n    ? tableData.map(r => r.id) \n    : [];\n};\n\nconst toggleRow = (id, checked) => {\n  if (checked) {\n    selectedRows.value.push(id);\n  } else {\n    selectedRows.value = selectedRows.value.filter(r => r !== id);\n  }\n};\n</script>",
+      "language": "vue"
+    }
+  ],
+  "implementationPatterns": [
+    {
+      "pattern": "Form Integration",
+      "when": "Integrating checkbox in forms with validation",
+      "code": "<template>\n  <form @submit.prevent=\"handleSubmit\">\n    <InCheckBoxV2\n      id=\"terms\"\n      name=\"terms\"\n      label-text=\"I accept the terms\"\n      :checked=\"formData.terms\"\n      :state=\"errors.terms ? 'danger' : 'default'\"\n      :state-message=\"errors.terms\"\n      @click=\"updateField('terms', $event)\"\n    />\n    \n    <button type=\"submit\">Submit</button>\n  </form>\n</template>\n\n<script setup>\nimport { reactive, ref } from 'vue';\n\nconst formData = reactive({ terms: false });\nconst errors = ref({});\n\nconst updateField = (field, value) => {\n  formData[field] = value;\n  validateField(field);\n};\n\nconst validateField = (field) => {\n  if (field === 'terms' && !formData.terms) {\n    errors.value.terms = 'Required field';\n  } else {\n    delete errors.value.terms;\n  }\n};\n\nconst handleSubmit = () => {\n  Object.keys(formData).forEach(validateField);\n  if (Object.keys(errors.value).length === 0) {\n    // Submit form\n  }\n};\n</script>",
+      "notes": "Always validate on change for immediate feedback. Use state prop for visual error indication."
+    },
+    {
+      "pattern": "Select All with Indeterminate",
+      "when": "Implementing bulk selection with master checkbox",
+      "code": "<script setup>\nimport { ref, computed } from 'vue';\n\nconst items = ref([1, 2, 3, 4, 5]);\nconst selectedItems = ref([]);\n\nconst allSelected = computed(() => \n  selectedItems.value.length === items.value.length && items.value.length > 0\n);\n\nconst someSelected = computed(() => \n  selectedItems.value.length > 0 && !allSelected.value\n);\n\nconst toggleAll = (checked) => {\n  selectedItems.value = checked ? [...items.value] : [];\n};\n\nconst toggleItem = (item, checked) => {\n  if (checked) {\n    selectedItems.value.push(item);\n  } else {\n    selectedItems.value = selectedItems.value.filter(i => i !== item);\n  }\n};\n</script>\n\n<template>\n  <InCheckBoxV2\n    id=\"select-all\"\n    label-text=\"Select all\"\n    :checked=\"allSelected\"\n    :indeterminate=\"someSelected\"\n    @click=\"toggleAll\"\n  />\n  \n  <InCheckBoxV2\n    v-for=\"item in items\"\n    :key=\"item\"\n    :id=\"`item-${item}`\"\n    :label-text=\"`Item ${item}`\"\n    :checked=\"selectedItems.includes(item)\"\n    @click=\"(checked) => toggleItem(item, checked)\"\n  />\n</template>",
+      "notes": "Use computed properties for allSelected and someSelected states. Indeterminate only shows when some (but not all) items are selected."
+    },
+    {
+      "pattern": "Checkbox Group with Dynamic Options",
+      "when": "Rendering checkboxes from API data or dynamic lists",
+      "code": "<script setup>\nimport { ref, onMounted } from 'vue';\n\nconst options = ref([]);\nconst selectedValues = ref([]);\nconst isLoading = ref(true);\n\nonMounted(async () => {\n  // Fetch options from API\n  const response = await fetch('/api/options');\n  const data = await response.json();\n  \n  options.value = data.map(item => ({\n    id: item.id,\n    label: item.name,\n    value: item.id,\n    disabled: !item.available,\n    checked: item.defaultSelected\n  }));\n  \n  // Set initial selected values\n  selectedValues.value = options.value\n    .filter(opt => opt.checked)\n    .map(opt => opt.value);\n  \n  isLoading.value = false;\n});\n\nconst handleChange = (selected) => {\n  selectedValues.value = selected;\n  // Save to backend\n  savePreferences(selected);\n};\n</script>\n\n<template>\n  <div v-if=\"isLoading\">\n    <InCheckBoxV2 :skeleton-status=\"true\" />\n  </div>\n  <div v-else>\n    <InCheckBoxV2\n      id=\"dynamic-options\"\n      :options=\"options\"\n      @click=\"handleChange\"\n    />\n  </div>\n</template>",
+      "notes": "Show skeleton loader while fetching options. Handle disabled state based on API data. Sync selections with backend."
+    },
+    {
+      "pattern": "Accessibility with Keyboard Navigation",
+      "when": "Ensuring checkboxes are keyboard accessible",
+      "code": "<template>\n  <div \n    role=\"group\" \n    aria-labelledby=\"checkbox-group-label\"\n    @keydown=\"handleKeyNav\"\n  >\n    <h3 id=\"checkbox-group-label\">Select preferences</h3>\n    \n    <InCheckBoxV2\n      v-for=\"(option, index) in options\"\n      :key=\"option.id\"\n      :id=\"option.id\"\n      :ref=\"el => checkboxRefs[index] = el\"\n      :label-text=\"option.label\"\n      :checked=\"selectedOptions.includes(option.value)\"\n      @click=\"toggleOption(option.value, $event)\"\n    />\n  </div>\n</template>\n\n<script setup>\nimport { ref } from 'vue';\n\nconst options = [\n  { id: 'opt1', label: 'Option 1', value: 'val1' },\n  { id: 'opt2', label: 'Option 2', value: 'val2' },\n  { id: 'opt3', label: 'Option 3', value: 'val3' }\n];\n\nconst selectedOptions = ref([]);\nconst checkboxRefs = ref([]);\nlet currentFocus = 0;\n\nconst handleKeyNav = (event) => {\n  if (event.key === 'ArrowDown') {\n    event.preventDefault();\n    currentFocus = Math.min(currentFocus + 1, options.length - 1);\n    checkboxRefs.value[currentFocus]?.$el?.focus();\n  } else if (event.key === 'ArrowUp') {\n    event.preventDefault();\n    currentFocus = Math.max(currentFocus - 1, 0);\n    checkboxRefs.value[currentFocus]?.$el?.focus();\n  }\n};\n\nconst toggleOption = (value, checked) => {\n  if (checked) {\n    selectedOptions.value.push(value);\n  } else {\n    selectedOptions.value = selectedOptions.value.filter(v => v !== value);\n  }\n};\n</script>",
+      "notes": "Use role=\"group\" and aria-labelledby for checkbox groups. Support arrow key navigation. Ensure focus management."
+    }
+  ],
+  "useCases": [
+    {
+      "title": "Terms and Conditions Acceptance",
+      "description": "Required checkbox for legal agreement before proceeding",
+      "code": "<InCheckBoxV2\n  id=\"terms\"\n  label-text=\"I have read and agree to the Terms of Service and Privacy Policy\"\n  :checked=\"termsAccepted\"\n  state=\"danger\"\n  state-message=\"You must accept the terms to continue\"\n  @click=\"termsAccepted = $event\"\n/>"
+    },
+    {
+      "title": "Multi-Select Filters",
+      "description": "Checkbox group for filtering data by multiple criteria",
+      "code": "<InCheckBoxV2\n  id=\"category-filter\"\n  label-text=\"Filter by category\"\n  :options=\"categoryOptions\"\n  @click=\"applyFilters\"\n/>"
+    },
+    {
+      "title": "Bulk Actions in Data Tables",
+      "description": "Select multiple rows for bulk operations",
+      "code": "<InCheckBoxV2\n  id=\"select-all\"\n  :checked=\"allSelected\"\n  :indeterminate=\"someSelected\"\n  @click=\"toggleAll\"\n/>"
+    },
+    {
+      "title": "User Preferences / Settings",
+      "description": "Toggle multiple feature flags or notification settings",
+      "code": "<InCheckBoxV2\n  id=\"email-notifications\"\n  label-text=\"Email notifications\"\n  description-text=\"Receive email updates\"\n  :description-status=\"true\"\n  :checked=\"settings.emailNotifications\"\n  @click=\"savePreference('emailNotifications', $event)\"\n/>"
+    },
+    {
+      "title": "Feature Access Control",
+      "description": "Enable/disable features based on permissions",
+      "code": "<InCheckBoxV2\n  id=\"admin-access\"\n  label-text=\"Admin access\"\n  :disabled-status=\"!canGrantAdmin\"\n  :checked=\"hasAdminAccess\"\n  @click=\"updatePermissions\"\n/>"
+    }
+  ],
+  "bestPractices": [
+    {
+      "practice": "Always provide unique IDs for each checkbox",
+      "why": "Ensures proper label association and form submission",
+      "example": "<InCheckBoxV2\n  id=\"newsletter-subscription\"\n  name=\"newsletter\"\n  label-text=\"Subscribe to newsletter\"\n/>",
+      "antiPattern": "<InCheckBoxV2\n  id=\"checkbox\"\n  label-text=\"Subscribe\"\n/>"
+    },
+    {
+      "practice": "Use descriptive, action-oriented labels",
+      "why": "Improves accessibility and user understanding",
+      "example": "label-text=\"I want to receive marketing emails\"",
+      "antiPattern": "label-text=\"Marketing\""
+    },
+    {
+      "practice": "Handle the click event for state management",
+      "why": "Enables reactive state updates and validation",
+      "example": "@click=\"termsAccepted = $event\"",
+      "antiPattern": "<!-- No event handler, state not tracked -->"
+    },
+    {
+      "practice": "Use state and stateMessage props for validation",
+      "why": "Provides immediate visual feedback for errors",
+      "example": ":state=\"errors.terms ? 'danger' : 'default'\"\nstate-message=\"You must accept the terms\"",
+      "antiPattern": "<!-- Error shown elsewhere, not connected to checkbox -->"
+    },
+    {
+      "practice": "Use indeterminate state for \"select all\" checkboxes",
+      "why": "Shows partial selection state clearly",
+      "example": ":indeterminate=\"someSelected && !allSelected\"",
+      "antiPattern": "<!-- No visual indication of partial selection -->"
+    },
+    {
+      "practice": "Provide description text for complex options",
+      "why": "Helps users understand what they're agreeing to",
+      "example": "description-text=\"We'll send you weekly product updates\"\n:description-status=\"true\"",
+      "antiPattern": "label-text=\"Newsletter\" <!-- No context -->"
+    },
+    {
+      "practice": "Use computed properties for dynamic states",
+      "why": "Reduces manual state synchronization and errors",
+      "example": "const allSelected = computed(() => \n  selected.length === total.length\n);",
+      "antiPattern": "// Manually updating allSelected on every change"
+    }
+  ],
   "commonMistakes": [
     {
       "category": "prop-usage",
@@ -97,19 +383,19 @@
     {
       "category": "state-management",
       "severity": "high",
-      "title": "Not using v-model for checkbox group",
-      "description": "Checkbox group needs v-model to track selected values",
-      "wrong": "<InCheckBoxV2 :options=\"checkboxOptions\" />",
-      "correct": "<InCheckBoxV2 v-model=\"selectedValues\" :options=\"checkboxOptions\" />",
-      "impact": "Selected values not tracked, state not synchronized"
+      "title": "Not handling click event",
+      "description": "Checkbox state must be tracked with @click handler",
+      "wrong": "<InCheckBoxV2 id=\"checkbox\" label-text=\"Accept\" />",
+      "correct": "<InCheckBoxV2 id=\"checkbox\" label-text=\"Accept\" :checked=\"accepted\" @click=\"accepted = $event\" />",
+      "impact": "Checkbox state not tracked, selections lost"
     },
     {
       "category": "prop-combination",
       "severity": "high",
       "title": "Mixing single checkbox with options array",
       "description": "Either use single checkbox mode OR checkbox group mode, not both",
-      "wrong": "<InCheckBoxV2 label=\"Single\" :options=\"[...]\" />",
-      "correct": "<!-- Single: -->\n<InCheckBoxV2 label=\"Accept Terms\" />\n<!-- OR Group: -->\n<InCheckBoxV2 :options=\"[...]\" />",
+      "wrong": "<InCheckBoxV2 label-text=\"Single\" :options=\"[...]\" />",
+      "correct": "<!-- Single: -->\n<InCheckBoxV2 label-text=\"Accept Terms\" />\n<!-- OR Group: -->\n<InCheckBoxV2 :options=\"[...]\" />",
       "impact": "Unpredictable behavior, single checkbox props ignored when options provided"
     },
     {
@@ -117,97 +403,44 @@
       "severity": "medium",
       "title": "Not providing accessible labels",
       "description": "Each checkbox should have clear, descriptive label",
-      "wrong": ":options=\"[{ id: '1', label: 'Yes', value: true }]\"",
-      "correct": ":options=\"[{ id: 'terms', label: 'I agree to the Terms and Conditions', value: true }]\"",
+      "wrong": "label-text=\"Yes\"",
+      "correct": "label-text=\"I agree to the Terms and Conditions\"",
       "impact": "Poor accessibility for screen readers, unclear purpose"
     },
     {
       "category": "event-handling",
+      "severity": "high",
+      "title": "Using @change instead of @click",
+      "description": "InCheckBoxV2 uses click event, not change",
+      "wrong": "@change=\"handleChange\"",
+      "correct": "@click=\"handleClick\"",
+      "impact": "Event handler may not fire as expected"
+    },
+    {
+      "category": "indeterminate-state",
       "severity": "medium",
-      "title": "Not handling change events",
-      "description": "Checkbox selections should trigger appropriate actions",
-      "wrong": "<InCheckBoxV2 v-model=\"selected\" :options=\"opts\" />",
-      "correct": "<InCheckBoxV2 v-model=\"selected\" :options=\"opts\" @change=\"handleSelection\" />",
-      "impact": "User selections don't trigger expected behavior or validation"
-    }
-  ],
-  "bestPractices": [
-    {
-      "title": "Always Provide Unique IDs for Options",
-      "description": "Use meaningful, unique identifiers for each checkbox option",
-      "code": "const checkboxOptions = [\n  { id: 'email-marketing', label: 'Marketing Emails', value: 'marketing' },\n  { id: 'email-newsletter', label: 'Weekly Newsletter', value: 'newsletter' },\n  { id: 'email-updates', label: 'Product Updates', value: 'updates' }\n];",
-      "benefit": "Reliable state tracking, easier debugging, better event handling"
-    },
-    {
-      "title": "Use v-model for Reactive State",
-      "description": "Bind checkbox selections to reactive data for automatic state management",
-      "code": "<script setup>\nimport { ref } from 'vue';\n\nconst selectedPreferences = ref([]);\nconst preferences = [\n  { id: 'pref1', label: 'Email', value: 'email' },\n  { id: 'pref2', label: 'SMS', value: 'sms' }\n];\n</script>\n\n<template>\n  <InCheckBoxV2 \n    v-model=\"selectedPreferences\" \n    :options=\"preferences\"\n  />\n</template>",
-      "benefit": "Automatic state synchronization, reactive updates, easier form handling"
-    },
-    {
-      "title": "Disable Individual Options When Needed",
-      "description": "Use disabled property to prevent selection of unavailable options",
-      "code": "const subscriptionOptions = [\n  { id: 'free', label: 'Free Plan', value: 'free', disabled: false },\n  { id: 'pro', label: 'Pro Plan (Coming Soon)', value: 'pro', disabled: true },\n  { id: 'enterprise', label: 'Enterprise', value: 'ent', disabled: !hasEnterpriseAccess }\n];",
-      "benefit": "Clear visual feedback, prevents invalid selections, better UX"
-    },
-    {
-      "title": "Provide Clear, Descriptive Labels",
-      "description": "Use full sentences or clear descriptions for checkbox labels",
-      "code": "// ❌ Bad\nconst opts = [{ id: '1', label: 'Yes', value: true }];\n\n// ✅ Good\nconst opts = [\n  { id: 'terms', label: 'I have read and agree to the Terms of Service', value: 'terms' },\n  { id: 'privacy', label: 'I understand the Privacy Policy', value: 'privacy' }\n];",
-      "benefit": "Better accessibility, clearer user intent, reduced confusion"
-    },
-    {
-      "title": "Handle Change Events for Validation",
-      "description": "Validate selections and provide feedback",
-      "code": "<script setup>\nconst handleChange = (selectedValues) => {\n  if (!selectedValues.includes('terms')) {\n    showError('You must accept the terms to continue');\n  }\n  validateForm();\n};\n</script>\n\n<template>\n  <InCheckBoxV2 \n    v-model=\"selections\" \n    :options=\"options\"\n    @change=\"handleChange\"\n  />\n</template>",
-      "benefit": "Real-time validation, immediate user feedback, better form UX"
-    }
-  ],
-  "eventEnrichments": {
-    "change": {
-      "when": "Fires when any checkbox in the group is toggled",
-      "payload": "Array of selected values",
-      "commonMistakes": [
-        {
-          "mistake": "Expecting single value instead of array",
-          "fix": "Checkbox group always emits array of values: (values) => console.log(values)",
-          "severity": "medium"
-        }
-      ]
-    },
-    "update:modelValue": {
-      "when": "Fires when v-model needs updating (checkbox toggled)",
-      "payload": "Array of selected values",
-      "commonMistakes": []
-    }
-  },
-  "exampleEnrichments": [
-    {
-      "title": "Basic Checkbox Group with v-model",
-      "description": "Common use case: multiple selection checkbox group",
-      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InCheckBoxV2 } from '@useinsider/design-system-vue';\n\nconst selectedFeatures = ref([]);\nconst featureOptions = [\n  { id: 'analytics', label: 'Analytics Dashboard', value: 'analytics' },\n  { id: 'reports', label: 'Custom Reports', value: 'reports' },\n  { id: 'export', label: 'Data Export', value: 'export' }\n];\n</script>\n\n<template>\n  <InCheckBoxV2 \n    v-model=\"selectedFeatures\"\n    :options=\"featureOptions\"\n  />\n  <p>Selected: {{ selectedFeatures }}</p>\n</template>"
-    },
-    {
-      "title": "Checkbox Group with Validation",
-      "description": "Form with required checkbox and validation",
-      "code": "<script setup>\nimport { ref, computed } from 'vue';\n\nconst agreements = ref([]);\nconst options = [\n  { id: 'terms', label: 'I agree to Terms of Service *', value: 'terms' },\n  { id: 'privacy', label: 'I agree to Privacy Policy *', value: 'privacy' },\n  { id: 'marketing', label: 'I want to receive marketing emails', value: 'marketing' }\n];\n\nconst isValid = computed(() => \n  agreements.value.includes('terms') && \n  agreements.value.includes('privacy')\n);\n\nconst handleSubmit = () => {\n  if (!isValid.value) {\n    alert('Please accept required agreements');\n    return;\n  }\n  // Submit form\n};\n</script>\n\n<template>\n  <form @submit.prevent=\"handleSubmit\">\n    <InCheckBoxV2 \n      v-model=\"agreements\"\n      :options=\"options\"\n    />\n    <button :disabled=\"!isValid\">Submit</button>\n  </form>\n</template>"
-    },
-    {
-      "title": "Conditional Disabled Options",
-      "description": "Dynamically disable options based on user tier",
-      "code": "<script setup>\nimport { ref, computed } from 'vue';\n\nconst userTier = ref('free'); // 'free', 'pro', 'enterprise'\nconst selectedFeatures = ref([]);\n\nconst featureOptions = computed(() => [\n  { \n    id: 'basic', \n    label: 'Basic Features', \n    value: 'basic',\n    disabled: false \n  },\n  { \n    id: 'advanced', \n    label: 'Advanced Analytics (Pro+)', \n    value: 'advanced',\n    disabled: userTier.value === 'free'\n  },\n  { \n    id: 'enterprise', \n    label: 'Enterprise Support (Enterprise Only)', \n    value: 'enterprise',\n    disabled: userTier.value !== 'enterprise'\n  }\n]);\n</script>\n\n<template>\n  <InCheckBoxV2 \n    v-model=\"selectedFeatures\"\n    :options=\"featureOptions\"\n  />\n</template>"
+      "title": "Setting indeterminate without proper logic",
+      "description": "Indeterminate state should only show for partial selection",
+      "wrong": ":indeterminate=\"true\"",
+      "correct": ":indeterminate=\"selectedCount > 0 && selectedCount < totalCount\"",
+      "impact": "Confusing UX, indeterminate shown when it shouldn't be"
     }
   ],
   "helperFunctions": [],
   "performanceNotes": [
     "Large checkbox groups (50+ options) may impact render performance - consider virtualization",
     "Re-creating options array on every render causes unnecessary re-renders - use computed or ref",
-    "Checkbox group with many options should use key prop for efficient updates"
+    "Checkbox group with many options should use key prop for efficient updates",
+    "For very large lists, consider lazy loading or pagination instead of rendering all checkboxes"
   ],
   "accessibilityNotes": [
     "Each checkbox automatically gets proper ARIA attributes",
     "Ensure labels are descriptive and clear for screen readers",
-    "Required checkboxes should be marked visually (e.g., with asterisk)",
-    "Group related checkboxes with fieldset and legend for better context"
+    "Required checkboxes should be marked visually (e.g., with asterisk) and programmatically",
+    "Group related checkboxes with role=\"group\" and aria-labelledby for better context",
+    "Support keyboard navigation (Tab, Space, Arrow keys for groups)",
+    "Ensure sufficient color contrast for all states (checked, unchecked, disabled, error)",
+    "Announce state changes to screen readers (especially for indeterminate state)",
+    "Use :bold-label=\"true\" for visually emphasizing required or important checkboxes"
   ]
 }

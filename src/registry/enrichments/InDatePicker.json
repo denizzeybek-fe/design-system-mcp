@@ -1,5 +1,12 @@
 {
   "component": "InDatePicker",
+  "_metadata": {
+    "lastUpdated": "2025-11-25T14:48:39.823Z",
+    "propsHash": "4c002fa8a262",
+    "eventsHash": "e10808d43975",
+    "propCount": 23,
+    "eventCount": 1
+  },
   "propEnrichments": {
     "value": {
       "valueFormat": {
@@ -12,7 +19,11 @@
         "notes": "CRITICAL: V1 uses plain object, NOT array like V2. Date format depends on locale setting. Use mm/dd/yyyy for US locale, dd.mm.yyyy for EU/TR locales.",
         "typescript": "{ startDate: string; endDate: string }"
       },
-      "relatedProps": ["singleDatePicker", "locale", "formatMapping"],
+      "relatedProps": [
+        "singleDatePicker",
+        "locale",
+        "formatMapping"
+      ],
       "migrationToV2": {
         "v2Format": "Array<{ startDate: string, endDate: string }>",
         "transformation": "const v2Value = [v1Value];",
@@ -50,7 +61,10 @@
         "notes": "CRITICAL: V1 uses object with Date array values. Keys are display labels. Values MUST be native Date objects, NOT strings.",
         "typescript": "Record<string, [Date, Date]>"
       },
-      "relatedProps": ["customDateRange", "additionalRanges"],
+      "relatedProps": [
+        "customDateRange",
+        "additionalRanges"
+      ],
       "migrationToV2": {
         "v2Format": "Array<{ name: string, title: string, startDate: string, endDate: string }>",
         "transformation": "Object.entries(v1CustomRanges).map(([title, dates], i) => ({ name: `custom${i+1}`, title, startDate: formatDateToSlash(dates[0]), endDate: formatDateToSlash(dates[1]) }))",
@@ -88,7 +102,10 @@
         "notes": "CRITICAL: V1 uses Unix timestamps in SECONDS (not milliseconds). Array of two numbers: [start, end]. Dates in this range will be disabled.",
         "typescript": "[number, number]"
       },
-      "relatedProps": ["minDate", "maxDate"],
+      "relatedProps": [
+        "minDate",
+        "maxDate"
+      ],
       "migrationToV2": {
         "v2Format": "{ startDate: string, endDate: string }",
         "transformation": "{ startDate: formatDate(new Date(v1[0] * 1000)), endDate: formatDate(new Date(v1[1] * 1000)) }",
@@ -126,7 +143,9 @@
         "notes": "Maps locale codes to date format strings. Must match format used in value prop. Common formats: mm/dd/yyyy (US), dd.mm.yyyy (EU/TR), dd/mm/yyyy (GB).",
         "typescript": "Record<string, string>"
       },
-      "relatedProps": ["locale"],
+      "relatedProps": [
+        "locale"
+      ],
       "commonMistakes": [
         {
           "mistake": "Not providing 'default' fallback key",
@@ -145,7 +164,11 @@
     "openPosition": {
       "valueFormat": {
         "structure": "string (enum)",
-        "validValues": ["left", "right", "center"],
+        "validValues": [
+          "left",
+          "right",
+          "center"
+        ],
         "default": "right",
         "notes": "Controls calendar popover position. Renamed to 'calendarPopoverAlign' in V2.",
         "typescript": "'left' | 'right' | 'center'"
@@ -162,7 +185,10 @@
         "notes": "Shows extended set of quick ranges (Last 30 Days, This Month, Last Month, etc.). Replaced with more flexible 'defaultRanges' array in V2.",
         "typescript": "boolean"
       },
-      "relatedProps": ["customRanges", "customDateRange"],
+      "relatedProps": [
+        "customRanges",
+        "customDateRange"
+      ],
       "migrationToV2": {
         "v2Prop": "defaultRanges",
         "transformation": "additionalRanges ? ['Today', 'Yesterday', 'Last 7 Days', 'Last 30 Days', 'This Month', 'Last Month'] : ['Today', 'Yesterday']",
@@ -183,7 +209,9 @@
         "notes": "Enables single date selection mode. When true, only startDate is used. Renamed to 'singleDatePickerStatus' in V2.",
         "typescript": "boolean"
       },
-      "relatedProps": ["value"],
+      "relatedProps": [
+        "value"
+      ],
       "migrationToV2": {
         "v2Prop": "singleDatePickerStatus",
         "notes": "Renamed with 'Status' suffix for consistency"
@@ -257,21 +285,27 @@
       "description": "Convert Date object to Unix timestamp in seconds (for disabledRange)",
       "code": "convertToUnixTimestamp(date) {\n  return Math.floor(new Date(date).getTime() / 1000);\n}",
       "typescript": "convertToUnixTimestamp(date: Date | string): number",
-      "usedFor": ["disabledRange"]
+      "usedFor": [
+        "disabledRange"
+      ]
     },
     {
       "name": "convertToTurkishFormat",
       "description": "Convert mm/dd/yyyy to dd.mm.yyyy for Turkish locale",
       "code": "convertToTurkishFormat(usDateStr) {\n  const [month, day, year] = usDateStr.split('/');\n  return `${day}.${month}.${year}`;\n}",
       "typescript": "convertToTurkishFormat(usDateStr: string): string",
-      "usedFor": ["Turkish locale date conversion"]
+      "usedFor": [
+        "Turkish locale date conversion"
+      ]
     },
     {
       "name": "convertFromTurkishFormat",
       "description": "Convert dd.mm.yyyy to mm/dd/yyyy for component",
       "code": "convertFromTurkishFormat(trDateStr) {\n  const [day, month, year] = trDateStr.split('.');\n  return `${month}/${day}/${year}`;\n}",
       "typescript": "convertFromTurkishFormat(trDateStr: string): string",
-      "usedFor": ["Turkish locale date conversion"]
+      "usedFor": [
+        "Turkish locale date conversion"
+      ]
     }
   ],
   "performanceNotes": [

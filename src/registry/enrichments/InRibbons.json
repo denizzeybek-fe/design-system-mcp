@@ -1,0 +1,420 @@
+{
+  "component": "InRibbons",
+  "_metadata": {
+    "lastUpdated": "2025-11-25T14:41:10.491Z",
+    "propsHash": "a12a92604ea1",
+    "eventsHash": "e10808d43975",
+    "propCount": 8,
+    "eventCount": 1
+  },
+  "propEnrichments": {
+    "text": {
+      "valueFormat": {
+        "structure": "string",
+        "notes": "REQUIRED: The message text to display in the ribbon. Supports HTML when preventXss is false",
+        "typescript": "string"
+      },
+      "relatedProps": ["preventXss", "isClickableText"],
+      "commonMistakes": [
+        {
+          "mistake": "Not providing text prop",
+          "impact": "Component will throw error or not render",
+          "fix": "Always provide text prop: text=\"Your message here\"",
+          "severity": "critical"
+        },
+        {
+          "mistake": "Using v-html directly with user input",
+          "impact": "XSS vulnerability",
+          "fix": "Set :prevent-xss=\"true\" when displaying user-generated content",
+          "severity": "critical"
+        }
+      ]
+    },
+    "type": {
+      "valueFormat": {
+        "structure": "string (enum)",
+        "validValues": ["default", "success", "warning", "error"],
+        "notes": "Determines the ribbon color theme and default icon",
+        "typescript": "'default' | 'success' | 'warning' | 'error'"
+      },
+      "relatedProps": ["icon", "withIcon"],
+      "commonMistakes": [
+        {
+          "mistake": "Using 'info' instead of 'default' for blue ribbons",
+          "impact": "Falls back to default type",
+          "fix": "Use type=\"default\" for info/blue ribbons",
+          "severity": "medium"
+        }
+      ]
+    },
+    "status": {
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "Controls visibility of the ribbon. When false, ribbon is hidden",
+        "typescript": "boolean"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Using v-if instead of :status for conditional rendering",
+          "impact": "Unnecessary component unmount/remount",
+          "fix": "Use :status=\"condition\" instead of v-if",
+          "severity": "low"
+        }
+      ]
+    },
+    "icon": {
+      "valueFormat": {
+        "structure": "string",
+        "notes": "Custom icon name. If not provided, uses default icon based on type",
+        "examples": [
+          "filled-info-circle",
+          "filled-check-circle",
+          "filled-caution-triangle",
+          "line-notification"
+        ],
+        "typescript": "string"
+      },
+      "relatedProps": ["withIcon", "type"]
+    },
+    "withIcon": {
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "Show/hide icon. When false, only text is displayed",
+        "typescript": "boolean"
+      },
+      "relatedProps": ["icon"]
+    },
+    "isClickableText": {
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "Makes the text clickable with pointer cursor. Emits 'click' event",
+        "typescript": "boolean"
+      },
+      "relatedProps": ["text"],
+      "commonMistakes": [
+        {
+          "mistake": "Setting isClickableText=true but not handling @click event",
+          "impact": "Confusing UX - cursor changes but nothing happens",
+          "fix": "Always add @click handler when isClickableText is true",
+          "severity": "high"
+        }
+      ]
+    },
+    "preventXss": {
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "SECURITY: Sanitizes HTML in text prop to prevent XSS attacks",
+        "typescript": "boolean"
+      },
+      "relatedProps": ["text"],
+      "commonMistakes": [
+        {
+          "mistake": "Not enabling preventXss when displaying user-generated content",
+          "impact": "Critical XSS vulnerability",
+          "fix": "Always use :prevent-xss=\"true\" with user input",
+          "severity": "critical"
+        }
+      ]
+    },
+    "leftSpace": {
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "Adds left margin to offset for sidebar/menu. Use in layouts with fixed left navigation",
+        "typescript": "boolean"
+      }
+    }
+  },
+  "eventEnrichments": {
+    "close": {
+      "payloadFormat": {
+        "structure": "void",
+        "notes": "Emitted when user clicks the close (X) icon. No payload"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Not handling @close event",
+          "impact": "Ribbon shows close button but doesn't close",
+          "fix": "Add @close handler to set status=false or remove from list",
+          "severity": "high"
+        }
+      ]
+    },
+    "click": {
+      "payloadFormat": {
+        "structure": "void",
+        "notes": "Emitted when text is clicked (only when isClickableText=true)"
+      }
+    }
+  },
+  "codeSnippets": {
+    "template": {
+      "basic": "<InRibbons\n  text=\"This is an info message\"\n  type=\"default\"\n  :status=\"showRibbon\"\n  @close=\"showRibbon = false\"\n/>",
+      "success": "<InRibbons\n  text=\"Successfully saved!\"\n  type=\"success\"\n  :status=\"showSuccess\"\n  @close=\"showSuccess = false\"\n/>",
+      "warning": "<InRibbons\n  text=\"Please review your changes\"\n  type=\"warning\"\n  :status=\"showWarning\"\n  @close=\"showWarning = false\"\n/>",
+      "error": "<InRibbons\n  text=\"An error occurred. Please try again.\"\n  type=\"error\"\n  :status=\"showError\"\n  @close=\"showError = false\"\n/>",
+      "clickable": "<InRibbons\n  text=\"Click here to view details\"\n  :is-clickable-text=\"true\"\n  @click=\"handleRibbonClick\"\n  @close=\"showRibbon = false\"\n/>",
+      "customIcon": "<InRibbons\n  text=\"New notification\"\n  icon=\"line-notification\"\n  @close=\"dismissNotification\"\n/>",
+      "withoutIcon": "<InRibbons\n  text=\"Simple text message\"\n  :with-icon=\"false\"\n  @close=\"closeMessage\"\n/>",
+      "userContent": "<InRibbons\n  :text=\"userMessage\"\n  :prevent-xss=\"true\"\n  type=\"warning\"\n  @close=\"closeUserMessage\"\n/>",
+      "withMenu": "<InRibbons\n  text=\"Message with left menu offset\"\n  :left-space=\"true\"\n  @close=\"closeMessage\"\n/>"
+    },
+    "script": "import { ref } from 'vue';\nimport InRibbons from '@useinsider/design-system-vue';\n\nconst showRibbon = ref(true);\nconst showSuccess = ref(false);\nconst showWarning = ref(false);\nconst showError = ref(false);\n\nconst handleRibbonClick = () => {\n  console.log('Ribbon text clicked');\n  // Navigate or show more info\n};\n\nconst dismissNotification = () => {\n  showRibbon.value = false;\n  // Optionally mark as read in backend\n};\n\nconst closeMessage = () => {\n  showRibbon.value = false;\n};\n\nconst closeUserMessage = () => {\n  showRibbon.value = false;\n};",
+    "style": "/* Ribbon component uses absolute positioning */\n/* To use in a container, ensure parent has position: relative */\n\n.container {\n  position: relative; /* Required for ribbon positioning */\n}\n\n/* Ribbon wrapper styling */\n.in-ribbons-wrapper {\n  width: 100%;\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  padding: 12px 16px;\n  border-radius: 4px;\n}\n\n/* Type-specific colors */\n.in-ribbons-wrapper_default {\n  background-color: #E3F2FD; /* Light blue */\n  color: #1976D2;\n}\n\n.in-ribbons-wrapper_success {\n  background-color: #E8F5E9; /* Light green */\n  color: #388E3C;\n}\n\n.in-ribbons-wrapper_warning {\n  background-color: #FFF3E0; /* Light orange */\n  color: #F57C00;\n}\n\n.in-ribbons-wrapper_error {\n  background-color: #FFEBEE; /* Light red */\n  color: #D32F2F;\n}\n\n/* Left space for fixed sidebar */\n.in-ribbons-wrapper__menu-offset {\n  margin-left: 240px; /* Adjust based on sidebar width */\n}\n\n/* Clickable text styling */\n.cur-p {\n  cursor: pointer;\n}\n\n.cur-p:hover {\n  text-decoration: underline;\n}"
+  },
+  "styling": {
+    "positioning": "static",
+    "layout": "flex",
+    "fullWidth": true,
+    "zIndex": null,
+    "customization": {
+      "cssClasses": [
+        "in-ribbons-wrapper",
+        "in-ribbons-wrapper_default",
+        "in-ribbons-wrapper_success",
+        "in-ribbons-wrapper_warning",
+        "in-ribbons-wrapper_error",
+        "in-ribbons-wrapper__menu-offset",
+        "in-ribbons-wrapper__text",
+        "in-ribbons-wrapper__close"
+      ],
+      "cssVariables": [],
+      "themeable": true,
+      "notes": "Ribbon uses type-based CSS classes for theming. Override classes to customize colors"
+    },
+    "responsive": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true,
+      "notes": "Full-width by default, adjusts to container"
+    }
+  },
+  "examples": [
+    {
+      "title": "Basic Info Ribbon",
+      "description": "Default blue info ribbon with icon and close button",
+      "category": "basic",
+      "code": "<InRibbons\n  text=\"This is an information message\"\n  type=\"default\"\n  :status=\"showInfo\"\n  @close=\"showInfo = false\"\n/>",
+      "language": "vue"
+    },
+    {
+      "title": "Success Message",
+      "description": "Green success ribbon for operation confirmations",
+      "category": "basic",
+      "code": "<InRibbons\n  text=\"Your changes have been saved successfully\"\n  type=\"success\"\n  :status=\"showSuccess\"\n  @close=\"showSuccess = false\"\n/>",
+      "language": "vue"
+    },
+    {
+      "title": "Warning Alert",
+      "description": "Orange warning ribbon for cautionary messages",
+      "category": "basic",
+      "code": "<InRibbons\n  text=\"Please review your settings before proceeding\"\n  type=\"warning\"\n  :status=\"showWarning\"\n  @close=\"showWarning = false\"\n/>",
+      "language": "vue"
+    },
+    {
+      "title": "Error Notification",
+      "description": "Red error ribbon for error messages",
+      "category": "basic",
+      "code": "<InRibbons\n  text=\"An error occurred while processing your request\"\n  type=\"error\"\n  :status=\"showError\"\n  @close=\"showError = false\"\n/>",
+      "language": "vue"
+    },
+    {
+      "title": "Clickable Ribbon",
+      "description": "Ribbon with clickable text that triggers an action",
+      "category": "advanced",
+      "code": "<template>\n  <InRibbons\n    text=\"Click here to view details\"\n    :is-clickable-text=\"true\"\n    :status=\"showClickable\"\n    @click=\"handleRibbonClick\"\n    @close=\"showClickable = false\"\n  />\n</template>\n\n<script setup>\nimport { ref } from 'vue';\n\nconst showClickable = ref(true);\n\nconst handleRibbonClick = () => {\n  console.log('Navigating to details...');\n  // router.push('/details');\n};\n</script>",
+      "language": "vue"
+    },
+    {
+      "title": "Custom Icon Ribbon",
+      "description": "Override default icon with custom icon",
+      "category": "advanced",
+      "code": "<InRibbons\n  text=\"You have 3 new notifications\"\n  icon=\"line-notification\"\n  :status=\"hasNotifications\"\n  @close=\"dismissNotifications\"\n/>",
+      "language": "vue"
+    },
+    {
+      "title": "Text-Only Ribbon",
+      "description": "Ribbon without icon",
+      "category": "variants",
+      "code": "<InRibbons\n  text=\"Simple text message without icon\"\n  :with-icon=\"false\"\n  :status=\"showTextOnly\"\n  @close=\"showTextOnly = false\"\n/>",
+      "language": "vue"
+    },
+    {
+      "title": "User-Generated Content (XSS Safe)",
+      "description": "Displaying user input safely with XSS protection",
+      "category": "security",
+      "code": "<template>\n  <InRibbons\n    :text=\"userMessage\"\n    type=\"warning\"\n    :prevent-xss=\"true\"\n    :status=\"showUserMessage\"\n    @close=\"showUserMessage = false\"\n  />\n</template>\n\n<script setup>\nimport { ref } from 'vue';\n\nconst userMessage = ref('<script>alert(\"XSS\")</script>User message');\nconst showUserMessage = ref(true);\n</script>",
+      "language": "vue"
+    },
+    {
+      "title": "Ribbon with Sidebar Offset",
+      "description": "Ribbon with left margin for fixed sidebar layouts",
+      "category": "layout",
+      "code": "<InRibbons\n  text=\"This ribbon accounts for left sidebar width\"\n  :left-space=\"true\"\n  :status=\"showWithOffset\"\n  @close=\"showWithOffset = false\"\n/>",
+      "language": "vue"
+    }
+  ],
+  "implementationPatterns": [
+    {
+      "pattern": "Auto-dismiss after timeout",
+      "when": "Success messages that should disappear automatically",
+      "code": "const showSuccess = ref(false);\n\nconst saveData = async () => {\n  try {\n    await api.save();\n    showSuccess.value = true;\n    \n    // Auto-dismiss after 5 seconds\n    setTimeout(() => {\n      showSuccess.value = false;\n    }, 5000);\n  } catch (error) {\n    // Handle error\n  }\n};",
+      "notes": "Good for non-critical success messages"
+    },
+    {
+      "pattern": "Multiple ribbons with priority queue",
+      "when": "Showing multiple messages with priority order",
+      "code": "const ribbons = ref([\n  { id: 1, text: 'Error message', type: 'error', priority: 1 },\n  { id: 2, text: 'Warning message', type: 'warning', priority: 2 },\n  { id: 3, text: 'Info message', type: 'default', priority: 3 }\n]);\n\nconst sortedRibbons = computed(() => {\n  return ribbons.value.sort((a, b) => a.priority - b.priority);\n});\n\nconst closeRibbon = (id) => {\n  ribbons.value = ribbons.value.filter(r => r.id !== id);\n};",
+      "notes": "Errors shown first, then warnings, then info"
+    },
+    {
+      "pattern": "Persistent dismissal (localStorage)",
+      "when": "One-time announcements that stay dismissed",
+      "code": "const RIBBON_KEY = 'announcement_v1_dismissed';\nconst showAnnouncement = ref(!localStorage.getItem(RIBBON_KEY));\n\nconst dismissAnnouncement = () => {\n  showAnnouncement.value = false;\n  localStorage.setItem(RIBBON_KEY, 'true');\n};",
+      "notes": "Good for product updates, feature announcements"
+    },
+    {
+      "pattern": "Form validation errors",
+      "when": "Showing validation errors above forms",
+      "code": "const formErrors = ref([]);\nconst showErrorRibbon = computed(() => formErrors.value.length > 0);\nconst errorMessage = computed(() => {\n  if (formErrors.value.length === 1) {\n    return formErrors.value[0];\n  }\n  return `${formErrors.value.length} errors found. Please correct them.`;\n});\n\nconst validateForm = () => {\n  formErrors.value = [];\n  if (!email.value) formErrors.value.push('Email is required');\n  if (!password.value) formErrors.value.push('Password is required');\n};",
+      "notes": "Clear errors when user starts typing"
+    }
+  ],
+  "useCases": [
+    {
+      "useCase": "Success notification after save",
+      "description": "Show confirmation after successful data save",
+      "implementation": "<InRibbons\n  text=\"Changes saved successfully\"\n  type=\"success\"\n  :status=\"showSuccess\"\n  @close=\"showSuccess = false\"\n/>",
+      "notes": "Auto-dismiss after 3-5 seconds"
+    },
+    {
+      "useCase": "Form validation errors",
+      "description": "Display validation errors at top of form",
+      "implementation": "<InRibbons\n  :text=\"errorMessage\"\n  type=\"error\"\n  :status=\"hasErrors\"\n  @close=\"clearErrors\"\n/>",
+      "notes": "Keep visible until user fixes errors"
+    },
+    {
+      "useCase": "API connection issues",
+      "description": "Warn users about connectivity problems",
+      "implementation": "<InRibbons\n  text=\"Connection lost. Retrying...\"\n  type=\"warning\"\n  :status=\"isOffline\"\n  :with-icon=\"true\"\n/>",
+      "notes": "No close button for critical system messages"
+    },
+    {
+      "useCase": "Product updates/announcements",
+      "description": "Notify users about new features",
+      "implementation": "<InRibbons\n  text=\"New feature available! Click to learn more\"\n  type=\"default\"\n  :is-clickable-text=\"true\"\n  @click=\"router.push('/whats-new')\"\n  @close=\"dismissAnnouncement\"\n/>",
+      "notes": "Persist dismissal in localStorage"
+    },
+    {
+      "useCase": "Session timeout warning",
+      "description": "Alert before session expires",
+      "implementation": "<InRibbons\n  text=\"Your session will expire in 5 minutes\"\n  type=\"warning\"\n  :status=\"showTimeoutWarning\"\n  :is-clickable-text=\"true\"\n  @click=\"extendSession\"\n/>",
+      "notes": "Make text clickable to extend session"
+    }
+  ],
+  "bestPractices": [
+    {
+      "practice": "Always handle @close event",
+      "why": "Ribbon shows close button by default, users expect it to work",
+      "example": "@close=\"showRibbon = false\"",
+      "antiPattern": "Not providing @close handler"
+    },
+    {
+      "practice": "Use type prop to match message severity",
+      "why": "Colors should match message importance (error=red, warning=orange, etc.)",
+      "example": "type=\"error\" for errors, type=\"warning\" for warnings",
+      "antiPattern": "Using type=\"default\" for all messages"
+    },
+    {
+      "practice": "Enable preventXss for user-generated content",
+      "why": "Prevents XSS attacks when displaying user input",
+      "example": ":prevent-xss=\"true\" :text=\"userMessage\"",
+      "antiPattern": "Displaying user input without XSS protection"
+    },
+    {
+      "practice": "Provide @click handler when isClickableText is true",
+      "why": "Clickable text without action confuses users",
+      "example": ":is-clickable-text=\"true\" @click=\"handleClick\"",
+      "antiPattern": "isClickableText=true without @click"
+    },
+    {
+      "practice": "Auto-dismiss non-critical messages",
+      "why": "Reduces UI clutter for temporary notifications",
+      "example": "setTimeout(() => showSuccess.value = false, 5000)",
+      "antiPattern": "Requiring manual dismissal for all messages"
+    },
+    {
+      "practice": "Use descriptive, actionable text",
+      "why": "Clear messages help users understand what to do",
+      "example": "text=\"Email address is required. Please enter your email.\"",
+      "antiPattern": "text=\"Error\" (too vague)"
+    },
+    {
+      "practice": "One ribbon at a time (or priority queue)",
+      "why": "Multiple ribbons can overwhelm users",
+      "example": "Show most critical message first",
+      "antiPattern": "Stacking 5+ ribbons vertically"
+    }
+  ],
+  "commonMistakes": [
+    {
+      "category": "event-handling",
+      "severity": "high",
+      "title": "Not handling @close event",
+      "description": "Ribbon always shows close button, but clicking it does nothing",
+      "wrong": "<InRibbons text=\"Message\" />",
+      "correct": "<InRibbons text=\"Message\" @close=\"showRibbon = false\" />",
+      "impact": "Confusing UX, users can't dismiss messages"
+    },
+    {
+      "category": "security",
+      "severity": "critical",
+      "title": "XSS vulnerability with user content",
+      "description": "Not sanitizing user-generated content in text prop",
+      "wrong": "<InRibbons :text=\"userInput\" />",
+      "correct": "<InRibbons :text=\"userInput\" :prevent-xss=\"true\" />",
+      "impact": "XSS attack vector, security vulnerability"
+    },
+    {
+      "category": "ux",
+      "severity": "medium",
+      "title": "Clickable text without action",
+      "description": "Setting isClickableText=true but not handling click event",
+      "wrong": "<InRibbons text=\"Click here\" :is-clickable-text=\"true\" />",
+      "correct": "<InRibbons text=\"Click here\" :is-clickable-text=\"true\" @click=\"doAction\" />",
+      "impact": "Misleading UI, poor user experience"
+    },
+    {
+      "category": "type",
+      "severity": "medium",
+      "title": "Wrong type for message severity",
+      "description": "Using default type for error messages",
+      "wrong": "<InRibbons text=\"Error occurred\" type=\"default\" />",
+      "correct": "<InRibbons text=\"Error occurred\" type=\"error\" />",
+      "impact": "Visual mismatch with message severity"
+    }
+  ],
+  "performanceNotes": [
+    {
+      "note": "Use :status instead of v-if for toggling",
+      "recommendation": "Prefer :status=\"showRibbon\" over v-if=\"showRibbon\" to avoid component unmount/remount overhead"
+    },
+    {
+      "note": "Ribbon is lightweight component",
+      "recommendation": "No special performance considerations needed. Safe to use multiple instances."
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "note": "Ribbon text should be descriptive",
+      "recommendation": "Avoid vague messages like 'Error' or 'Success'. Provide context for screen readers."
+    },
+    {
+      "note": "Close button has icon only",
+      "recommendation": "Component handles aria-label internally. No action needed."
+    },
+    {
+      "note": "Color is not the only indicator",
+      "recommendation": "Always include icon and clear text. Don't rely on color alone for severity indication."
+    }
+  ]
+}

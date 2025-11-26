@@ -1,144 +1,501 @@
 {
-  "componentName": "InChips",
-  "version": "2.0.0",
-  "lastUpdated": "2024-11-24",
-
+  "component": "InChips",
+  "_metadata": {
+    "lastUpdated": "2025-11-25T16:15:00Z",
+    "propsHash": "b7bcee727040",
+    "eventsHash": "d827049039f8",
+    "propCount": 11,
+    "eventCount": 2
+  },
   "propEnrichments": {
     "type": {
-      "description": "Visual style type of the chip",
       "valueFormat": {
-        "structure": "string enum",
-        "possibleValues": ["default", "primary", "success", "warning", "danger", "info"],
-        "example": "type=\"primary\""
+        "structure": "string (enum)",
+        "validValues": ["default", "danger", "warning", "neutral", "smart", "information", "orange", "magenta"],
+        "notes": "Semantic color type for the chip. Determines background/border color",
+        "typescript": "'default' | 'danger' | 'warning' | 'neutral' | 'smart' | 'information' | 'orange' | 'magenta'"
       },
+      "relatedProps": ["styles"],
       "commonMistakes": [
         {
-          "mistake": "Using V1 type values like 'bordered' or 'pill'",
-          "correction": "V2 uses semantic types: default, primary, success, warning, danger, info",
+          "mistake": "Using invalid type value like 'primary' or 'success'",
+          "impact": "Falls back to 'default' type",
+          "fix": "Use valid types: default, danger, warning, neutral, smart, information, orange, magenta",
+          "severity": "medium"
+        },
+        {
+          "mistake": "Using V1 type values",
+          "impact": "Type not recognized, displays as default",
+          "fix": "Check InChips documentation for V1 vs V2 type mappings",
           "severity": "medium"
         }
       ]
     },
     "styles": {
-      "description": "Additional styling variant for the chip",
       "valueFormat": {
-        "structure": "string enum",
-        "possibleValues": ["solid", "soft", "outline"],
-        "example": "styles=\"soft\""
-      }
-    },
-    "disabledStatus": {
-      "description": "Whether the chip is disabled",
-      "valueFormat": {
-        "structure": "boolean",
-        "example": ":disabled-status=\"isDisabled\""
+        "structure": "string (enum)",
+        "validValues": ["stroke", "solid"],
+        "notes": "Visual style variant. 'stroke' shows border only, 'solid' has filled background",
+        "typescript": "'stroke' | 'solid'"
       },
+      "relatedProps": ["type"],
       "commonMistakes": [
         {
-          "mistake": "Using :disable instead of :disabled-status",
-          "correction": "V2 uses -status suffix pattern: disabled-status",
+          "mistake": "Using 'outline' instead of 'stroke'",
+          "impact": "Falls back to default 'stroke' style",
+          "fix": "Use styles=\"stroke\" for outlined chips",
+          "severity": "low"
+        }
+      ]
+    },
+    "text": {
+      "valueFormat": {
+        "structure": "string",
+        "notes": "REQUIRED: Display text for the chip. Visible label shown to users",
+        "typescript": "string"
+      },
+      "relatedProps": ["maxWidth"],
+      "commonMistakes": [
+        {
+          "mistake": "Not providing text prop",
+          "impact": "Component throws error or shows empty chip",
+          "fix": "Always provide text=\"Your label here\"",
+          "severity": "critical"
+        },
+        {
+          "mistake": "Using very long text without maxWidth",
+          "impact": "Layout breaks, chip stretches horizontally",
+          "fix": "Set :max-width=\"150\" for long text to enable truncation",
+          "severity": "medium"
+        }
+      ]
+    },
+    "value": {
+      "valueFormat": {
+        "structure": "string | number",
+        "notes": "REQUIRED: Unique identifier for the chip. Used in click events for tracking which chip was interacted with",
+        "typescript": "string | number"
+      },
+      "relatedEvents": ["click", "tagClick"],
+      "commonMistakes": [
+        {
+          "mistake": "Not providing value prop",
+          "impact": "Cannot track which chip was clicked, removal logic breaks",
+          "fix": "Always provide unique value: value=\"chip-1\" or :value=\"item.id\"",
+          "severity": "critical"
+        },
+        {
+          "mistake": "Using duplicate values in chip list",
+          "impact": "Cannot distinguish chips, wrong chips get removed",
+          "fix": "Ensure each chip has unique value: use item.id or index",
+          "severity": "high"
+        }
+      ]
+    },
+    "maxWidth": {
+      "valueFormat": {
+        "structure": "number",
+        "notes": "Maximum width in pixels. Text truncates with ellipsis when exceeded. Hover shows full text via title attribute",
+        "typescript": "number"
+      },
+      "relatedProps": ["text"],
+      "commonMistakes": [
+        {
+          "mistake": "Passing string '150px' instead of number 150",
+          "impact": "Type error, maxWidth not applied",
+          "fix": "Use number without unit: :max-width=\"150\" (not \"150px\")",
+          "severity": "medium"
+        }
+      ]
+    },
+    "actionableLabel": {
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "Makes the chip label clickable. When true, clicking label emits tagClick event (separate from close button click)",
+        "typescript": "boolean"
+      },
+      "relatedEvents": ["tagClick"],
+      "commonMistakes": [
+        {
+          "mistake": "Setting actionableLabel=true but not handling @tagClick",
+          "impact": "Cursor changes to pointer but nothing happens on click",
+          "fix": "Add @tagClick handler: @tagClick=\"handleLabelClick\"",
+          "severity": "high"
+        },
+        {
+          "mistake": "Confusing with @click event",
+          "impact": "Wrong handler called (click is for close button, tagClick is for label)",
+          "fix": "Use @tagClick for label clicks, @click for close button",
           "severity": "high"
         }
       ]
     },
     "interactive": {
-      "description": "Makes chip clickable with hover/active states",
       "valueFormat": {
         "structure": "boolean",
-        "example": "interactive"
-      }
-    },
-    "closeButton": {
-      "description": "Shows close/remove button on the chip",
-      "valueFormat": {
-        "structure": "boolean",
-        "example": "close-button"
-      }
+        "notes": "Enables hover and active states. When false, chip has no hover effects",
+        "typescript": "boolean"
+      },
+      "relatedProps": ["actionableLabel", "closeButton"],
+      "commonMistakes": [
+        {
+          "mistake": "Setting interactive=false with actionableLabel=true",
+          "impact": "Conflicting states, label won't be clickable",
+          "fix": "Set interactive=true when using actionableLabel",
+          "severity": "medium"
+        }
+      ]
     },
     "selectedStatus": {
-      "description": "Whether the chip is in selected state",
       "valueFormat": {
         "structure": "boolean",
-        "example": ":selected-status=\"isSelected\""
-      }
-    },
-    "actionableLabel": {
-      "description": "Accessible label for the actionable chip",
-      "valueFormat": {
-        "structure": "string",
-        "example": "actionable-label=\"Remove tag\""
-      }
-    },
-    "maxWidth": {
-      "description": "Maximum width of chip text before truncation",
-      "valueFormat": {
-        "structure": "string (CSS value)",
-        "example": "max-width=\"150px\""
-      }
+        "notes": "Shows chip as selected/active with highlighted styling",
+        "typescript": "boolean"
+      },
+      "relatedProps": ["interactive"],
+      "commonMistakes": [
+        {
+          "mistake": "Using selectedStatus without state management",
+          "impact": "Selection state not tracked, chips don't stay selected",
+          "fix": "Bind to reactive state: :selected-status=\"selectedChips.includes(chip.value)\"",
+          "severity": "medium"
+        }
+      ]
     }
   },
-
   "eventEnrichments": {
-    "tagClick": {
-      "description": "Emitted when chip is clicked (for interactive chips)",
-      "payload": "Event object",
-      "usage": "@tag-click=\"handleChipClick\""
-    },
     "click": {
-      "description": "Emitted when close button is clicked",
-      "payload": "Event object",
-      "usage": "@click=\"handleClose\""
+      "payloadFormat": {
+        "structure": "string | number (chip value)",
+        "notes": "Emitted when close button (X) is clicked. Payload is the chip's value prop"
+      },
+      "when": "User clicks the close/remove button on the chip",
+      "usagePattern": "Use @click to handle chip removal from list",
+      "commonMistakes": [
+        {
+          "mistake": "Confusing @click with @tagClick",
+          "impact": "Handler called for wrong interaction (click is close button, tagClick is label)",
+          "fix": "@click for removal, @tagClick for label interaction",
+          "severity": "high"
+        },
+        {
+          "mistake": "Not removing chip from list on @click",
+          "impact": "Chip visually remains after clicking close button",
+          "fix": "Filter chip from list: chips = chips.filter(c => c.value !== value)",
+          "severity": "high"
+        }
+      ]
+    },
+    "tagClick": {
+      "payloadFormat": {
+        "structure": "string | number (chip value)",
+        "notes": "Emitted when chip label is clicked (only when actionableLabel=true). Payload is the chip's value prop"
+      },
+      "when": "User clicks the chip label/text (not the close button)",
+      "usagePattern": "Use @tagClick for navigation or showing chip details. Requires actionableLabel=true",
+      "commonMistakes": [
+        {
+          "mistake": "Expecting tagClick without setting actionableLabel=true",
+          "impact": "Event never fires, clicking label does nothing",
+          "fix": "Set :actionable-label=\"true\" to enable label clicks",
+          "severity": "high"
+        },
+        {
+          "mistake": "Using @tag-click instead of @tagClick (camelCase)",
+          "impact": "Event handler not attached",
+          "fix": "Use camelCase in template: @tagClick (or kebab @tag-click if preferred)",
+          "severity": "medium"
+        }
+      ]
     }
   },
-
-  "exampleEnrichments": [
+  "codeSnippets": {
+    "template": {
+      "basic": "<InChips\n  text=\"Category\"\n  value=\"category-1\"\n  @click=\"handleRemove\"\n/>",
+      "withType": "<InChips\n  text=\"Error Tag\"\n  value=\"error-1\"\n  type=\"danger\"\n  @click=\"removeTag\"\n/>",
+      "solid": "<InChips\n  text=\"Solid Chip\"\n  value=\"solid-1\"\n  type=\"smart\"\n  styles=\"solid\"\n  @click=\"handleRemove\"\n/>",
+      "noCloseButton": "<InChips\n  text=\"Read Only\"\n  value=\"readonly-1\"\n  :close-button=\"false\"\n/>",
+      "clickableLabel": "<InChips\n  text=\"View Details\"\n  value=\"detail-1\"\n  :actionable-label=\"true\"\n  @tagClick=\"navigateToDetails\"\n  @click=\"removeChip\"\n/>",
+      "selected": "<InChips\n  text=\"Selected Tag\"\n  value=\"tag-1\"\n  :selected-status=\"isSelected\"\n  :actionable-label=\"true\"\n  @tagClick=\"toggleSelection\"\n/>",
+      "disabled": "<InChips\n  text=\"Disabled\"\n  value=\"disabled-1\"\n  :disabled-status=\"true\"\n/>",
+      "truncated": "<InChips\n  text=\"This is a very long chip text that will be truncated\"\n  value=\"long-1\"\n  :max-width=\"150\"\n  @click=\"handleRemove\"\n/>",
+      "allTypes": "<!-- All color types -->\n<InChips text=\"Default\" value=\"1\" type=\"default\" />\n<InChips text=\"Danger\" value=\"2\" type=\"danger\" />\n<InChips text=\"Warning\" value=\"3\" type=\"warning\" />\n<InChips text=\"Neutral\" value=\"4\" type=\"neutral\" />\n<InChips text=\"Smart\" value=\"5\" type=\"smart\" />\n<InChips text=\"Info\" value=\"6\" type=\"information\" />\n<InChips text=\"Orange\" value=\"7\" type=\"orange\" />\n<InChips text=\"Magenta\" value=\"8\" type=\"magenta\" />"
+    },
+    "script": "import { ref } from 'vue';\nimport { InChips } from '@useinsider/design-system-vue';\n\n// Basic removal\nconst chips = ref([\n  { text: 'Tag 1', value: '1' },\n  { text: 'Tag 2', value: '2' },\n  { text: 'Tag 3', value: '3' }\n]);\n\nconst handleRemove = (value) => {\n  chips.value = chips.value.filter(chip => chip.value !== value);\n};\n\n// Clickable label (navigation)\nconst navigateToDetails = (value) => {\n  console.log('Navigate to:', value);\n  // router.push(`/details/${value}`);\n};\n\n// Toggle selection\nconst selectedChips = ref(['1']);\n\nconst toggleSelection = (value) => {\n  const index = selectedChips.value.indexOf(value);\n  if (index > -1) {\n    selectedChips.value.splice(index, 1);\n  } else {\n    selectedChips.value.push(value);\n  }\n};\n\nconst isChipSelected = (value) => {\n  return selectedChips.value.includes(value);\n};\n\n// Filter chips by type\nconst filterChips = ref([\n  { text: 'Active', value: 'active', type: 'smart' },\n  { text: 'Inactive', value: 'inactive', type: 'neutral' },\n  { text: 'Error', value: 'error', type: 'danger' }\n]);\n\nconst activeFilters = ref(['active']);\n\nconst isFilterActive = (value) => {\n  return activeFilters.value.includes(value);\n};\n\nconst toggleFilter = (value) => {\n  const index = activeFilters.value.indexOf(value);\n  if (index > -1) {\n    activeFilters.value.splice(index, 1);\n  } else {\n    activeFilters.value.push(value);\n  }\n};",
+    "style": "/* Chip uses design system styles */\n/* Custom wrapper for chip lists */\n.chip-list {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 8px;\n  padding: 8px 0;\n}\n\n/* Vertical chip list */\n.chip-list--vertical {\n  flex-direction: column;\n  align-items: flex-start;\n}\n\n/* Chip container with max items */\n.chip-container {\n  max-width: 600px;\n}\n\n/* Scrollable chip list */\n.chip-list--scrollable {\n  overflow-x: auto;\n  flex-wrap: nowrap;\n  padding-bottom: 8px;\n}\n\n/* Custom chip spacing */\n.chip-list--compact {\n  gap: 4px;\n}\n\n.chip-list--spacious {\n  gap: 12px;\n}"
+  },
+  "styling": {
+    "positioning": "static",
+    "layout": "inline-flex",
+    "fullWidth": false,
+    "zIndex": null,
+    "customization": {
+      "cssClasses": [
+        ".in-chips",
+        ".in-chips--default",
+        ".in-chips--danger",
+        ".in-chips--warning",
+        ".in-chips--stroke",
+        ".in-chips--solid",
+        ".in-chips--selected",
+        ".in-chips--disabled",
+        ".in-chips__text",
+        ".in-chips__close"
+      ],
+      "cssVariables": [],
+      "themeable": true,
+      "notes": "Chips use type and style-based CSS classes. Override .in-chips--{type} classes to customize colors"
+    },
+    "responsive": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true,
+      "notes": "Chips scale appropriately on all devices. Consider using max-width on mobile for long text"
+    },
+    "layoutNotes": "Chips are inline-flex by default. Wrap in flex container with gap for spacing. Use flex-wrap: wrap for multi-line chip lists."
+  },
+  "examples": [
     {
-      "title": "Basic Chip",
-      "description": "Simple chip with text",
-      "code": "<InChips text=\"Label\" type=\"default\" />"
+      "title": "Basic Removable Chip",
+      "description": "Simple chip with close button for tag removal",
+      "category": "basic",
+      "code": "<template>\n  <div class=\"chip-list\">\n    <InChips\n      v-for=\"tag in tags\"\n      :key=\"tag.value\"\n      :text=\"tag.text\"\n      :value=\"tag.value\"\n      @click=\"removeTag\"\n    />\n  </div>\n</template>\n\n<script setup>\nimport { ref } from 'vue';\n\nconst tags = ref([\n  { text: 'JavaScript', value: 'js' },\n  { text: 'Vue.js', value: 'vue' },\n  { text: 'TypeScript', value: 'ts' }\n]);\n\nconst removeTag = (value) => {\n  tags.value = tags.value.filter(tag => tag.value !== value);\n};\n</script>\n\n<style scoped>\n.chip-list {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 8px;\n}\n</style>",
+      "language": "vue"
     },
     {
-      "title": "Interactive Chip with Selection",
-      "description": "Clickable chip that can be selected",
-      "code": "<InChips\n  text=\"Category\"\n  type=\"primary\"\n  styles=\"soft\"\n  interactive\n  :selected-status=\"isSelected\"\n  @tag-click=\"toggleSelection\"\n/>"
+      "title": "Chip Color Types",
+      "description": "Different semantic color types for chips",
+      "category": "variants",
+      "code": "<template>\n  <div class=\"chip-list\">\n    <InChips text=\"Default\" value=\"1\" type=\"default\" />\n    <InChips text=\"Danger\" value=\"2\" type=\"danger\" />\n    <InChips text=\"Warning\" value=\"3\" type=\"warning\" />\n    <InChips text=\"Smart\" value=\"4\" type=\"smart\" />\n    <InChips text=\"Info\" value=\"5\" type=\"information\" />\n  </div>\n</template>",
+      "language": "vue"
     },
     {
-      "title": "Removable Chip",
-      "description": "Chip with close button for removal",
-      "code": "<InChips\n  text=\"Tag Name\"\n  type=\"info\"\n  close-button\n  actionable-label=\"Remove tag\"\n  @click=\"handleRemove\"\n/>"
+      "title": "Solid vs Stroke Styles",
+      "description": "Compare stroke (outlined) and solid (filled) chip styles",
+      "category": "variants",
+      "code": "<template>\n  <div>\n    <div class=\"chip-list\">\n      <h4>Stroke Style (default)</h4>\n      <InChips text=\"Stroke\" value=\"1\" type=\"smart\" styles=\"stroke\" />\n      <InChips text=\"Danger\" value=\"2\" type=\"danger\" styles=\"stroke\" />\n    </div>\n    \n    <div class=\"chip-list\">\n      <h4>Solid Style</h4>\n      <InChips text=\"Solid\" value=\"3\" type=\"smart\" styles=\"solid\" />\n      <InChips text=\"Danger\" value=\"4\" type=\"danger\" styles=\"solid\" />\n    </div>\n  </div>\n</template>",
+      "language": "vue"
+    },
+    {
+      "title": "Clickable Chip Label",
+      "description": "Chip with clickable label for navigation, separate from removal",
+      "category": "advanced",
+      "code": "<template>\n  <div class=\"chip-list\">\n    <InChips\n      v-for=\"category in categories\"\n      :key=\"category.id\"\n      :text=\"category.name\"\n      :value=\"category.id\"\n      :actionable-label=\"true\"\n      @tagClick=\"viewCategory\"\n      @click=\"removeCategory\"\n    />\n  </div>\n</template>\n\n<script setup>\nimport { ref } from 'vue';\nimport { useRouter } from 'vue-router';\n\nconst router = useRouter();\n\nconst categories = ref([\n  { id: '1', name: 'Electronics' },\n  { id: '2', name: 'Clothing' },\n  { id: '3', name: 'Books' }\n]);\n\nconst viewCategory = (id) => {\n  router.push(`/category/${id}`);\n};\n\nconst removeCategory = (id) => {\n  categories.value = categories.value.filter(cat => cat.id !== id);\n};\n</script>",
+      "language": "vue"
+    },
+    {
+      "title": "Selectable Filter Chips",
+      "description": "Toggle selection state for filter chips",
+      "category": "advanced",
+      "code": "<template>\n  <div class=\"filter-chips\">\n    <InChips\n      v-for=\"filter in filters\"\n      :key=\"filter.value\"\n      :text=\"filter.label\"\n      :value=\"filter.value\"\n      :selected-status=\"isFilterActive(filter.value)\"\n      :actionable-label=\"true\"\n      :close-button=\"false\"\n      @tagClick=\"toggleFilter\"\n    />\n  </div>\n  \n  <p>Active filters: {{ activeFilters }}</p>\n</template>\n\n<script setup>\nimport { ref } from 'vue';\n\nconst filters = [\n  { label: 'Electronics', value: 'electronics' },\n  { label: 'Books', value: 'books' },\n  { label: 'Clothing', value: 'clothing' }\n];\n\nconst activeFilters = ref(['electronics']);\n\nconst isFilterActive = (value) => {\n  return activeFilters.value.includes(value);\n};\n\nconst toggleFilter = (value) => {\n  const index = activeFilters.value.indexOf(value);\n  if (index > -1) {\n    activeFilters.value.splice(index, 1);\n  } else {\n    activeFilters.value.push(value);\n  }\n};\n</script>\n\n<style scoped>\n.filter-chips {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 8px;\n  margin-bottom: 16px;\n}\n</style>",
+      "language": "vue"
+    },
+    {
+      "title": "Truncated Long Text",
+      "description": "Handle long chip text with truncation",
+      "category": "variants",
+      "code": "<template>\n  <div class=\"chip-list\">\n    <InChips\n      text=\"This is a very long chip label that will be truncated\"\n      value=\"long-1\"\n      :max-width=\"150\"\n      type=\"default\"\n      @click=\"removeChip\"\n    />\n  </div>\n</template>\n\n<script setup>\nconst removeChip = (value) => {\n  console.log('Remove:', value);\n};\n</script>",
+      "language": "vue"
+    },
+    {
+      "title": "Read-Only Chips (No Close Button)",
+      "description": "Display-only chips without removal functionality",
+      "category": "variants",
+      "code": "<template>\n  <div class=\"chip-list\">\n    <InChips\n      v-for=\"skill in skills\"\n      :key=\"skill\"\n      :text=\"skill\"\n      :value=\"skill\"\n      :close-button=\"false\"\n      type=\"smart\"\n    />\n  </div>\n</template>\n\n<script setup>\nconst skills = ['JavaScript', 'Vue.js', 'TypeScript', 'Node.js'];\n</script>",
+      "language": "vue"
+    },
+    {
+      "title": "Disabled Chip",
+      "description": "Non-interactive disabled chip state",
+      "category": "states",
+      "code": "<template>\n  <InChips\n    text=\"Disabled Tag\"\n    value=\"disabled-1\"\n    :disabled-status=\"true\"\n    type=\"neutral\"\n  />\n</template>",
+      "language": "vue"
+    },
+    {
+      "title": "Status Tags with Color Coding",
+      "description": "Use semantic colors for status indication",
+      "category": "advanced",
+      "code": "<template>\n  <div class=\"status-tags\">\n    <div class=\"status-item\">\n      <span>Order Status:</span>\n      <InChips\n        :text=\"orderStatus.label\"\n        :value=\"orderStatus.value\"\n        :type=\"orderStatus.type\"\n        styles=\"solid\"\n        :close-button=\"false\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup>\nimport { computed } from 'vue';\n\nconst status = ref('delivered');\n\nconst orderStatus = computed(() => {\n  const statusMap = {\n    pending: { label: 'Pending', type: 'warning', value: 'pending' },\n    processing: { label: 'Processing', type: 'information', value: 'processing' },\n    delivered: { label: 'Delivered', type: 'smart', value: 'delivered' },\n    cancelled: { label: 'Cancelled', type: 'danger', value: 'cancelled' }\n  };\n  return statusMap[status.value];\n});\n</script>\n\n<style scoped>\n.status-item {\n  display: flex;\n  align-items: center;\n  gap: 12px;\n}\n</style>",
+      "language": "vue"
     }
   ],
-
-  "commonMistakes": [
+  "implementationPatterns": [
     {
-      "mistake": "Using withIcon prop from V1",
-      "issue": "V2 doesn't have withIcon prop",
-      "solution": "InChips V2 handles icons differently, check documentation for icon usage",
-      "severity": "medium"
+      "pattern": "Dynamic Tag List with Removal",
+      "when": "Managing a list of removable tags/filters",
+      "code": "<template>\n  <div class=\"tag-manager\">\n    <div class=\"tag-list\">\n      <InChips\n        v-for=\"tag in tags\"\n        :key=\"tag.id\"\n        :text=\"tag.label\"\n        :value=\"tag.id\"\n        :type=\"tag.type || 'default'\"\n        @click=\"removeTag\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup>\nimport { ref } from 'vue';\n\nconst tags = ref([\n  { id: '1', label: 'JavaScript', type: 'smart' },\n  { id: '2', label: 'Vue.js', type: 'smart' },\n  { id: '3', label: 'TypeScript', type: 'information' }\n]);\n\nconst removeTag = (id) => {\n  tags.value = tags.value.filter(tag => tag.id !== id);\n  // Optionally sync with backend\n  // await api.removeTag(id);\n};\n</script>\n\n<style scoped>\n.tag-list {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 8px;\n}\n</style>",
+      "notes": "Use unique IDs for value prop. Filter array on removal. Optionally sync with backend."
     },
     {
-      "mistake": "Confusing @click and @tag-click events",
-      "issue": "@click is for close button, @tag-click is for chip body click",
-      "solution": "Use @tag-click for interactive chips, @click for close button action",
-      "severity": "high"
+      "pattern": "Multi-Select Filter Chips",
+      "when": "Creating filter UI with toggleable chips",
+      "code": "<template>\n  <div class=\"filters\">\n    <InChips\n      v-for=\"filter in availableFilters\"\n      :key=\"filter.id\"\n      :text=\"filter.label\"\n      :value=\"filter.id\"\n      :selected-status=\"activeFilters.includes(filter.id)\"\n      :actionable-label=\"true\"\n      :close-button=\"false\"\n      type=\"smart\"\n      @tagClick=\"toggleFilter\"\n    />\n  </div>\n  \n  <div class=\"results\">\n    <!-- Filtered results based on activeFilters -->\n  </div>\n</template>\n\n<script setup>\nimport { ref, computed } from 'vue';\n\nconst availableFilters = [\n  { id: 'electronics', label: 'Electronics' },\n  { id: 'books', label: 'Books' },\n  { id: 'clothing', label: 'Clothing' }\n];\n\nconst activeFilters = ref([]);\n\nconst toggleFilter = (id) => {\n  const index = activeFilters.value.indexOf(id);\n  if (index > -1) {\n    activeFilters.value.splice(index, 1);\n  } else {\n    activeFilters.value.push(id);\n  }\n};\n\nconst filteredResults = computed(() => {\n  // Filter logic based on activeFilters\n  return results.value.filter(item => \n    activeFilters.value.length === 0 || \n    activeFilters.value.includes(item.category)\n  );\n});\n</script>",
+      "notes": "Use selectedStatus for visual feedback. Toggle selection in array. closeButton=false for filter chips."
+    },
+    {
+      "pattern": "Chip Navigation with Details",
+      "when": "Chips represent items with detail pages",
+      "code": "<template>\n  <div class=\"chip-navigation\">\n    <InChips\n      v-for=\"item in items\"\n      :key=\"item.id\"\n      :text=\"item.name\"\n      :value=\"item.id\"\n      :actionable-label=\"true\"\n      type=\"information\"\n      @tagClick=\"navigateToDetails\"\n      @click=\"removeItem\"\n    />\n  </div>\n</template>\n\n<script setup>\nimport { ref } from 'vue';\nimport { useRouter } from 'vue-router';\n\nconst router = useRouter();\n\nconst items = ref([\n  { id: '1', name: 'Project Alpha' },\n  { id: '2', name: 'Project Beta' }\n]);\n\nconst navigateToDetails = (id) => {\n  router.push(`/project/${id}`);\n};\n\nconst removeItem = (id) => {\n  items.value = items.value.filter(item => item.id !== id);\n};\n</script>",
+      "notes": "Use actionableLabel=true. @tagClick for navigation, @click for removal. Separate concerns."
+    },
+    {
+      "pattern": "Status Badge Chips",
+      "when": "Displaying status with color-coded chips",
+      "code": "<template>\n  <div class=\"status-display\">\n    <InChips\n      :text=\"statusLabel\"\n      :value=\"status\"\n      :type=\"statusType\"\n      styles=\"solid\"\n      :close-button=\"false\"\n      :interactive=\"false\"\n    />\n  </div>\n</template>\n\n<script setup>\nimport { computed } from 'vue';\n\nconst status = ref('active');\n\nconst statusLabel = computed(() => {\n  const labels = {\n    active: 'Active',\n    inactive: 'Inactive',\n    pending: 'Pending',\n    error: 'Error'\n  };\n  return labels[status.value];\n});\n\nconst statusType = computed(() => {\n  const types = {\n    active: 'smart',\n    inactive: 'neutral',\n    pending: 'warning',\n    error: 'danger'\n  };\n  return types[status.value];\n});\n</script>",
+      "notes": "Use computed for dynamic type/label. closeButton=false and interactive=false for read-only badges."
     }
   ],
-
+  "useCases": [
+    {
+      "title": "Selected Tags/Filters Display",
+      "description": "Show active filters with removal option",
+      "code": "<InChips\n  v-for=\"tag in selectedTags\"\n  :text=\"tag.label\"\n  :value=\"tag.id\"\n  @click=\"removeTag\"\n/>"
+    },
+    {
+      "title": "Skill/Category Tags",
+      "description": "Display non-removable skill or category tags",
+      "code": "<InChips\n  :text=\"skill\"\n  :value=\"skill\"\n  :close-button=\"false\"\n  type=\"smart\"\n/>"
+    },
+    {
+      "title": "Multi-Select Filters",
+      "description": "Toggleable filter chips for search/filtering",
+      "code": "<InChips\n  :text=\"filter.label\"\n  :value=\"filter.id\"\n  :selected-status=\"isActive\"\n  :actionable-label=\"true\"\n  :close-button=\"false\"\n  @tagClick=\"toggleFilter\"\n/>"
+    },
+    {
+      "title": "Status Indicators",
+      "description": "Color-coded status badges",
+      "code": "<InChips\n  text=\"Active\"\n  value=\"active\"\n  type=\"smart\"\n  styles=\"solid\"\n  :close-button=\"false\"\n/>"
+    },
+    {
+      "title": "Navigable Items",
+      "description": "Chips that link to detail pages",
+      "code": "<InChips\n  :text=\"project.name\"\n  :value=\"project.id\"\n  :actionable-label=\"true\"\n  @tagClick=\"viewProject\"\n  @click=\"removeProject\"\n/>"
+    }
+  ],
   "bestPractices": [
     {
-      "practice": "Use semantic types for status indication",
-      "description": "Choose type based on meaning: success for positive, danger for negative, etc.",
-      "example": "type=\"success\" for confirmed items, type=\"danger\" for errors"
+      "practice": "Always provide unique values",
+      "why": "Enables proper tracking and removal of specific chips",
+      "example": "<InChips\n  :text=\"tag.label\"\n  :value=\"tag.id\"\n  @click=\"removeTag\"\n/>",
+      "antiPattern": "<InChips\n  :text=\"tag.label\"\n  value=\"tag\"\n  @click=\"removeTag\"\n/>"
     },
     {
-      "practice": "Always provide actionableLabel for accessibility",
-      "description": "When using close-button, provide actionableLabel for screen readers",
-      "example": "actionable-label=\"Remove filter: Category\""
+      "practice": "Use semantic types for meaning",
+      "why": "Provides visual cues about chip purpose/status",
+      "example": "type=\"danger\" for errors, type=\"smart\" for success, type=\"warning\" for alerts",
+      "antiPattern": "Using 'default' type for everything"
     },
     {
-      "practice": "Use styles prop for visual hierarchy",
-      "description": "solid for primary actions, soft for secondary, outline for subtle",
-      "example": "styles=\"soft\" for less prominent chips"
+      "practice": "Set maxWidth for long text",
+      "why": "Prevents layout breaks with long chip labels",
+      "example": ":max-width=\"150\" for variable-length text",
+      "antiPattern": "Allowing unlimited width, breaking responsive layouts"
+    },
+    {
+      "practice": "Use actionableLabel for navigation",
+      "why": "Separates navigation from removal interactions",
+      "example": ":actionable-label=\"true\" @tagClick=\"navigate\" @click=\"remove\"",
+      "antiPattern": "Using @click for both navigation and removal"
+    },
+    {
+      "practice": "Disable closeButton for read-only chips",
+      "why": "Makes it clear chips cannot be removed",
+      "example": ":close-button=\"false\" for skill tags or categories",
+      "antiPattern": "Showing close button on non-removable chips"
+    },
+    {
+      "practice": "Use selectedStatus for filters",
+      "why": "Shows active/selected state visually",
+      "example": ":selected-status=\"activeFilters.includes(filter.id)\"",
+      "antiPattern": "No visual indication of selected filters"
+    },
+    {
+      "practice": "Wrap chips in flex container with gap",
+      "why": "Provides consistent spacing and wrapping",
+      "example": "<div style=\"display: flex; flex-wrap: wrap; gap: 8px;\">",
+      "antiPattern": "Using margins on individual chips"
     }
+  ],
+  "commonMistakes": [
+    {
+      "category": "prop-usage",
+      "severity": "critical",
+      "title": "Missing required value prop",
+      "description": "value prop is required for tracking chip interactions",
+      "wrong": "<InChips text=\"Tag\" @click=\"remove\" />",
+      "correct": "<InChips text=\"Tag\" value=\"tag-1\" @click=\"remove\" />",
+      "impact": "Cannot identify which chip was clicked, removal logic breaks"
+    },
+    {
+      "category": "prop-usage",
+      "severity": "critical",
+      "title": "Missing required text prop",
+      "description": "text prop is required for display",
+      "wrong": "<InChips value=\"1\" @click=\"remove\" />",
+      "correct": "<InChips text=\"Label\" value=\"1\" @click=\"remove\" />",
+      "impact": "Component throws error or shows empty chip"
+    },
+    {
+      "category": "event-handling",
+      "severity": "high",
+      "title": "Confusing @click and @tagClick events",
+      "description": "@click is for close button, @tagClick is for label",
+      "wrong": "<InChips text=\"Tag\" value=\"1\" @click=\"navigate\" />",
+      "correct": "<InChips text=\"Tag\" value=\"1\" :actionable-label=\"true\" @tagClick=\"navigate\" @click=\"remove\" />",
+      "impact": "Wrong handler called for user interaction"
+    },
+    {
+      "category": "state-management",
+      "severity": "high",
+      "title": "Not removing chip from list on @click",
+      "description": "Chip should be removed from data array",
+      "wrong": "@click=\"() => {}\"",
+      "correct": "@click=\"(value) => chips = chips.filter(c => c.value !== value)\"",
+      "impact": "Chip visually remains after clicking close button"
+    },
+    {
+      "category": "prop-usage",
+      "severity": "medium",
+      "title": "Using duplicate values in chip list",
+      "description": "Each chip must have unique value",
+      "wrong": "chips.map((c, i) => ({ text: c, value: 'chip' }))",
+      "correct": "chips.map((c, i) => ({ text: c, value: i }))",
+      "impact": "Cannot distinguish chips, wrong chips removed"
+    },
+    {
+      "category": "prop-usage",
+      "severity": "medium",
+      "title": "Setting actionableLabel without @tagClick",
+      "description": "actionableLabel requires event handler",
+      "wrong": "<InChips :actionable-label=\"true\" />",
+      "correct": "<InChips :actionable-label=\"true\" @tagClick=\"handleClick\" />",
+      "impact": "Cursor changes but nothing happens on click"
+    },
+    {
+      "category": "layout",
+      "severity": "medium",
+      "title": "Not using maxWidth for long text",
+      "description": "Long text breaks layout without truncation",
+      "wrong": "<InChips text=\"Very long chip text here\" value=\"1\" />",
+      "correct": "<InChips text=\"Very long chip text\" value=\"1\" :max-width=\"150\" />",
+      "impact": "Layout breaks, chips stretch too wide"
+    }
+  ],
+  "helperFunctions": [],
+  "performanceNotes": [
+    "Large chip lists (100+ chips) should use virtual scrolling",
+    "Re-creating chip array on every render causes unnecessary re-renders - use stable references",
+    "For chip lists, use computed properties to derive display state",
+    "Avoid inline event handlers - define methods in setup() for better performance"
+  ],
+  "accessibilityNotes": [
+    "Each chip has proper ARIA attributes for assistive technologies",
+    "Close button has aria-label for screen readers",
+    "Use descriptive text labels, not generic 'Tag 1', 'Tag 2'",
+    "Selected chips should have aria-pressed or aria-selected state",
+    "Ensure sufficient color contrast for all chip types",
+    "Support keyboard navigation (Tab to focus, Enter/Space to activate, Delete to remove)",
+    "Announce chip removal to screen readers",
+    "Group related chips with aria-labelledby for context"
   ]
 }

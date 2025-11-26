@@ -1,5 +1,12 @@
 {
   "component": "InSelect",
+  "_metadata": {
+    "lastUpdated": "2025-11-25T14:48:39.823Z",
+    "propsHash": "f63c4768d755",
+    "eventsHash": "c7cf003aa202",
+    "propCount": 47,
+    "eventCount": 8
+  },
   "propEnrichments": {
     "options": {
       "valueFormat": {
@@ -11,12 +18,24 @@
           "[{ text: 'Active', value: 'active', icon: 'check' }]",
           "[{ groupLabel: 'Group 1', options: [{ text: 'Opt 1', value: 1 }] }]"
         ],
-        "requiredKeys": ["text", "value"],
-        "optionalKeys": ["disabled", "description", "icon", "groupLabel"],
+        "requiredKeys": [
+          "text",
+          "value"
+        ],
+        "optionalKeys": [
+          "disabled",
+          "description",
+          "icon",
+          "groupLabel"
+        ],
         "notes": "CRITICAL: Property is 'text' not 'label'! Supports both flat and grouped options.",
         "typescript": "Array<{ text: string; value: any; disabled?: boolean; description?: string; icon?: string }> | Array<{ groupLabel: string; options: Array<{ text: string; value: any }> }>"
       },
-      "relatedProps": ["value", "searchStatus", "lazyLoad"],
+      "relatedProps": [
+        "value",
+        "searchStatus",
+        "lazyLoad"
+      ],
       "commonMistakes": [
         {
           "mistake": "Using 'label' instead of 'text' property",
@@ -51,7 +70,9 @@
         "notes": "CRITICAL: Always array, even for single selection. Empty array = no selection. Contains selected option object(s).",
         "typescript": "Array<{ text: string; value: any }>"
       },
-      "relatedEvents": ["optionClick"],
+      "relatedEvents": [
+        "optionClick"
+      ],
       "commonMistakes": [
         {
           "mistake": "Passing single object instead of array",
@@ -76,17 +97,29 @@
     "staticPosition": {
       "valueFormat": {
         "structure": "string (enum)",
-        "validValues": ["bottom left", "bottom right", "top left", "top right"],
+        "validValues": [
+          "bottom left",
+          "bottom right",
+          "top left",
+          "top right"
+        ],
         "default": "bottom left",
         "notes": "Dropdown menu position relative to button",
         "typescript": "'bottom left' | 'bottom right' | 'top left' | 'top right'"
       },
-      "relatedProps": ["dynamicPosition"]
+      "relatedProps": [
+        "dynamicPosition"
+      ]
     },
     "staticChildPosition": {
       "valueFormat": {
         "structure": "string (enum)",
-        "validValues": ["bottom left", "bottom right", "top left", "top right"],
+        "validValues": [
+          "bottom left",
+          "bottom right",
+          "top left",
+          "top right"
+        ],
         "default": "bottom right",
         "notes": "Child dropdown position for grouped options",
         "typescript": "'bottom left' | 'bottom right' | 'top left' | 'top right'"
@@ -95,21 +128,34 @@
     "optionValidationType": {
       "valueFormat": {
         "structure": "string | RegExp",
-        "validValues": ["all", "number", "text"],
+        "validValues": [
+          "all",
+          "number",
+          "text"
+        ],
         "notes": "Validation type for create new option feature",
         "typescript": "'all' | 'number' | 'text' | RegExp"
       },
-      "relatedProps": ["createOptionStatus"]
+      "relatedProps": [
+        "createOptionStatus"
+      ]
     },
     "state": {
       "valueFormat": {
         "structure": "string (enum)",
-        "validValues": ["default", "success", "warning", "error"],
+        "validValues": [
+          "default",
+          "success",
+          "warning",
+          "error"
+        ],
         "default": "default",
         "notes": "Visual state for validation feedback",
         "typescript": "'default' | 'success' | 'warning' | 'error'"
       },
-      "relatedProps": ["stateMessage"]
+      "relatedProps": [
+        "stateMessage"
+      ]
     }
   },
   "eventEnrichments": {
@@ -142,7 +188,10 @@
         }
       ],
       "useCase": "Emitted when user types in search box. Use to filter options or lazy load",
-      "relatedProps": ["searchStatus", "lazyLoadSearch"]
+      "relatedProps": [
+        "searchStatus",
+        "lazyLoadSearch"
+      ]
     },
     "endScroll": {
       "payloadTypes": [
@@ -154,7 +203,10 @@
       ],
       "useCase": "Infinite scroll support. Load more options when emitted",
       "handlingPattern": "@endScroll=\"loadMore\"\n\ndata() {\n  return { page: 1, allOptions: [] };\n},\nmethods: {\n  loadMore() {\n    this.page++;\n    this.fetchOptions(this.page).then(newOptions => {\n      this.allOptions = [...this.allOptions, ...newOptions];\n    });\n  }\n}",
-      "relatedProps": ["lazyLoad", "fetchPage"]
+      "relatedProps": [
+        "lazyLoad",
+        "fetchPage"
+      ]
     },
     "addOption": {
       "payloadTypes": [
@@ -167,7 +219,10 @@
       ],
       "useCase": "User created a new option via 'create' button",
       "handlingPattern": "@addOption=\"handleAddOption\"\n\nhandleAddOption(newOption) {\n  // Add to options array\n  this.options = [...this.options, newOption];\n  // Select it\n  this.selectedValue = [newOption];\n}",
-      "relatedProps": ["createOptionStatus", "createButtonLabel"]
+      "relatedProps": [
+        "createOptionStatus",
+        "createButtonLabel"
+      ]
     },
     "secondaryButtonClick": {
       "payloadTypes": [
@@ -177,7 +232,11 @@
         }
       ],
       "useCase": "Secondary action button clicked (shown in dropdown footer)",
-      "relatedProps": ["buttonStatus", "buttonLabel", "buttonIcon"]
+      "relatedProps": [
+        "buttonStatus",
+        "buttonLabel",
+        "buttonIcon"
+      ]
     }
   },
   "exampleEnrichments": [
@@ -212,14 +271,18 @@
       "description": "Transform API data to InSelect format",
       "code": "transformToSelectOptions(items, textKey = 'name', valueKey = 'id') {\n  return items.map(item => ({\n    text: item[textKey],\n    value: item[valueKey]\n  }));\n}",
       "typescript": "transformToSelectOptions<T>(items: T[], textKey: keyof T, valueKey: keyof T): Array<{ text: string; value: any }>",
-      "usedFor": ["options transformation"]
+      "usedFor": [
+        "options transformation"
+      ]
     },
     {
       "name": "getSelectedValue",
       "description": "Extract value from InSelect value prop",
       "code": "getSelectedValue(selectValue) {\n  return selectValue[0]?.value || null;\n}",
       "typescript": "getSelectedValue(selectValue: Array<{ text: string; value: any }>): any | null",
-      "usedFor": ["extracting selected value"]
+      "usedFor": [
+        "extracting selected value"
+      ]
     }
   ],
   "performanceNotes": [

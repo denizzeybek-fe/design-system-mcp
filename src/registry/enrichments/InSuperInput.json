@@ -1,8 +1,14 @@
 {
+  "_metadata": {
+    "lastUpdated": "2025-11-25T14:48:39.823Z",
+    "propsHash": "eceb9f5b9cc3",
+    "eventsHash": "e10808d43975",
+    "propCount": 49,
+    "eventCount": 1
+  },
   "componentName": "InSuperInput",
   "version": "1.0.0",
   "lastUpdated": "2024-11-24",
-
   "propEnrichments": {
     "value": {
       "description": "Input content with dynamic tags (v-model)",
@@ -109,7 +115,11 @@
       "description": "Type of attribute dropdown",
       "valueFormat": {
         "structure": "string enum",
-        "possibleValues": ["default", "grouped", "searchable"],
+        "possibleValues": [
+          "default",
+          "grouped",
+          "searchable"
+        ],
         "example": "drop-down-type=\"searchable\""
       }
     },
@@ -135,7 +145,6 @@
       }
     }
   },
-
   "eventEnrichments": {
     "purify": {
       "description": "Emitted with sanitized content",
@@ -143,7 +152,6 @@
       "usage": "@purify=\"handlePurify\""
     }
   },
-
   "exampleEnrichments": [
     {
       "title": "Basic Rich Text with Dynamic Content",
@@ -161,7 +169,6 @@
       "code": "<InSuperInput\n  id=\"tags\"\n  label=\"Tags\"\n  v-model=\"tagContent\"\n  is-tag-container\n  :tags-limit=\"10\"\n  :attribute-list=\"tagOptions\"\n  create-new-option-status\n  create-new-option-text=\"Add new tag\"\n  disable-duplicate-tags\n/>"
     }
   ],
-
   "commonMistakes": [
     {
       "mistake": "Not providing attributeList with dynamicContentSupport",
@@ -188,7 +195,6 @@
       "severity": "high"
     }
   ],
-
   "bestPractices": [
     {
       "practice": "Use textValidateConfig for validation",

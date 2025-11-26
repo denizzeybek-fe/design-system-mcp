@@ -1,5 +1,12 @@
 {
   "component": "InMultiSelect",
+  "_metadata": {
+    "lastUpdated": "2025-11-25T14:48:39.823Z",
+    "propsHash": "345f121c122c",
+    "eventsHash": "67b68754bcb3",
+    "propCount": 49,
+    "eventCount": 10
+  },
   "propEnrichments": {
     "options": {
       "valueFormat": {
@@ -10,12 +17,24 @@
           "[{ text: 'Active', value: 'active', icon: 'check' }, { text: 'Pending', value: 'pending', disabled: true }]",
           "[{ text: 'Turkey', value: 'TR', description: 'Turkey region' }, { text: 'USA', value: 'US' }]"
         ],
-        "requiredKeys": ["text", "value"],
-        "optionalKeys": ["disabled", "description", "icon"],
+        "requiredKeys": [
+          "text",
+          "value"
+        ],
+        "optionalKeys": [
+          "disabled",
+          "description",
+          "icon"
+        ],
         "notes": "CRITICAL: Property is 'text' not 'label'! Each option must have unique value for proper multi-selection tracking.",
         "typescript": "Array<{ text: string; value: any; disabled?: boolean; description?: string; icon?: string }>"
       },
-      "relatedProps": ["value", "searchStatus", "lazyLoad", "selectAllOptionStatus"],
+      "relatedProps": [
+        "value",
+        "searchStatus",
+        "lazyLoad",
+        "selectAllOptionStatus"
+      ],
       "commonMistakes": [
         {
           "mistake": "Using 'label' instead of 'text' property",
@@ -56,8 +75,13 @@
         "notes": "CRITICAL: Always array for multi-selection. Empty array = no selection. Can contain MULTIPLE selected option objects.",
         "typescript": "Array<{ text: string; value: any }>"
       },
-      "relatedEvents": ["change", "select"],
-      "relatedProps": ["maxSelectableItem"],
+      "relatedEvents": [
+        "change",
+        "select"
+      ],
+      "relatedProps": [
+        "maxSelectableItem"
+      ],
       "commonMistakes": [
         {
           "mistake": "Passing single object instead of array",
@@ -88,11 +112,17 @@
     "maxSelectableItem": {
       "valueFormat": {
         "structure": "Number",
-        "examples": ["3", "5", "10"],
+        "examples": [
+          "3",
+          "5",
+          "10"
+        ],
         "notes": "Maximum number of items user can select. Unlimited if not set.",
         "typescript": "number"
       },
-      "relatedProps": ["value"],
+      "relatedProps": [
+        "value"
+      ],
       "commonMistakes": [
         {
           "mistake": "Setting to 0 or negative number",
@@ -109,8 +139,12 @@
         "notes": "Enable search/filter functionality within dropdown",
         "typescript": "boolean"
       },
-      "relatedEvents": ["search"],
-      "relatedProps": ["lazyLoadSearch"]
+      "relatedEvents": [
+        "search"
+      ],
+      "relatedProps": [
+        "lazyLoadSearch"
+      ]
     },
     "selectAllOptionStatus": {
       "valueFormat": {
@@ -119,7 +153,10 @@
         "notes": "Show 'Select All' option at top of dropdown for multi-select",
         "typescript": "boolean"
       },
-      "relatedEvents": ["selectAllOptions", "resetAllOptions"]
+      "relatedEvents": [
+        "selectAllOptions",
+        "resetAllOptions"
+      ]
     },
     "createOptionStatus": {
       "valueFormat": {
@@ -128,7 +165,10 @@
         "notes": "Allow creating new options on the fly",
         "typescript": "boolean"
       },
-      "relatedProps": ["optionValidationType", "optionValidationText"],
+      "relatedProps": [
+        "optionValidationType",
+        "optionValidationText"
+      ],
       "commonMistakes": [
         {
           "mistake": "Enabling without optionValidationType",
@@ -141,12 +181,19 @@
     "state": {
       "valueFormat": {
         "structure": "string (enum)",
-        "validValues": ["default", "success", "warning", "error"],
+        "validValues": [
+          "default",
+          "success",
+          "warning",
+          "error"
+        ],
         "default": "default",
         "notes": "Visual state for validation feedback",
         "typescript": "'default' | 'success' | 'warning' | 'error'"
       },
-      "relatedProps": ["stateMessage"]
+      "relatedProps": [
+        "stateMessage"
+      ]
     }
   },
   "eventEnrichments": {
@@ -199,7 +246,9 @@
         }
       ],
       "useCase": "Emitted when user clicks 'Select All'. Payload contains all available options",
-      "relatedProps": ["selectAllOptionStatus"]
+      "relatedProps": [
+        "selectAllOptionStatus"
+      ]
     },
     "resetAllOptions": {
       "payloadTypes": [
@@ -211,7 +260,9 @@
         }
       ],
       "useCase": "Emitted when user clears all selections. Payload is empty array",
-      "relatedProps": ["selectAllOptionStatus"]
+      "relatedProps": [
+        "selectAllOptionStatus"
+      ]
     },
     "search": {
       "payloadTypes": [
@@ -222,7 +273,10 @@
         }
       ],
       "useCase": "Emitted when user types in search box. Use to filter options or lazy load",
-      "relatedProps": ["searchStatus", "lazyLoadSearch"]
+      "relatedProps": [
+        "searchStatus",
+        "lazyLoadSearch"
+      ]
     },
     "onRemoveTag": {
       "payloadTypes": [

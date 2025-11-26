@@ -1,280 +1,584 @@
 {
-  "componentName": "InDataTable",
-  "version": "1.0.0",
-  "lastUpdated": "2024-11-24",
-
+  "component": "InDataTable",
+  "_metadata": {
+    "lastUpdated": "2025-11-25T16:45:00Z",
+    "propsHash": "b81668415884",
+    "eventsHash": "41c59fa49883",
+    "propCount": 43,
+    "eventCount": 5
+  },
   "propEnrichments": {
     "tableFields": {
-      "description": "Column definitions array for the table",
       "valueFormat": {
-        "structure": "Array of column objects",
-        "typescript": "Array<{ field: string; label: string; sortable?: boolean; width?: number; renderer?: string; }>",
-        "example": ":table-fields=\"[{ field: 'name', label: 'Name', sortable: true }, { field: 'email', label: 'Email' }]\""
+        "structure": "Array<Object>",
+        "notes": "REQUIRED: Array of column definition objects. Each must have 'field' and 'label' properties",
+        "examples": [
+          "[{ field: 'name', label: 'Name', sortable: true }]",
+          "[{ field: 'id', label: 'ID', width: 80 }, { field: 'email', label: 'Email', sortable: true, renderer: 'email' }]"
+        ],
+        "typescript": "Array<{ field: string; label: string; sortable?: boolean; width?: number; renderer?: string; formatter?: Function; }>"
       },
+      "relatedProps": ["data", "formatMapping"],
       "commonMistakes": [
         {
-          "mistake": "Not providing field property in column definition",
-          "correction": "Each column must have a 'field' property matching data key",
-          "severity": "high"
+          "mistake": "Not providing 'field' property in column definition",
+          "impact": "Column shows undefined or doesn't render",
+          "fix": "Each column must have: { field: 'propertyName', label: 'Display Name' }",
+          "severity": "critical"
         },
         {
           "mistake": "Using 'title' instead of 'label' for column header",
-          "correction": "V1 uses 'label' for column headers",
+          "impact": "Column header doesn't display",
+          "fix": "V1 uses 'label' property, not 'title'",
+          "severity": "high"
+        },
+        {
+          "mistake": "Field name doesn't match data object keys",
+          "impact": "Column shows empty values",
+          "fix": "Ensure field: 'email' matches data object key: { email: 'test@example.com' }",
+          "severity": "high"
+        }
+      ]
+    },
+    "httpFetch": {
+      "valueFormat": {
+        "structure": "Function",
+        "notes": "CRITICAL: Custom HTTP client function for API requests. Use when you need custom auth, interceptors, or error handling. Replaces default fetch behavior",
+        "examples": [
+          "async (url, options) => await axios.get(url, options)",
+          "(url, options) => customFetchWithRetry(url, options)"
+        ],
+        "typescript": "(url: string, options?: RequestInit) => Promise<Response>"
+      },
+      "relatedProps": ["fetchUrl", "apiMode", "httpOptions"],
+      "commonMistakes": [
+        {
+          "mistake": "Not returning a Promise from httpFetch",
+          "impact": "Table loading fails silently or throws errors",
+          "fix": "httpFetch must return Promise<Response>: async (url, options) => await fetch(url, options)",
+          "severity": "critical"
+        },
+        {
+          "mistake": "Using httpFetch without setting apiMode=true",
+          "impact": "Custom fetch function never gets called",
+          "fix": "Always set api-mode when providing :http-fetch",
+          "severity": "high"
+        },
+        {
+          "mistake": "Not handling errors in custom httpFetch",
+          "impact": "Unhandled promise rejections, poor error UX",
+          "fix": "Wrap in try-catch and return proper Response: try { return await axios(...) } catch (e) { throw new Error(...) }",
+          "severity": "high"
+        },
+        {
+          "mistake": "Forgetting to merge httpOptions into custom fetch",
+          "impact": "Headers and credentials from httpOptions prop are ignored",
+          "fix": "Merge options: httpFetch: (url, opts) => fetch(url, { ...opts, ...httpOptions.value })",
           "severity": "medium"
         }
       ]
     },
     "data": {
-      "description": "Table data array for client-side mode",
       "valueFormat": {
-        "structure": "Array of row objects",
-        "typescript": "Array<Record<string, any>>",
-        "example": ":data=\"[{ id: 1, name: 'John', email: 'john@example.com' }]\""
-      }
-    },
-    "fetchUrl": {
-      "description": "API endpoint URL for server-side data fetching",
-      "valueFormat": {
-        "structure": "string (URL)",
-        "example": "fetch-url=\"/api/users\""
+        "structure": "Array<Object>",
+        "notes": "Table data array for client-side mode (when apiMode=false). Each object represents a row",
+        "typescript": "Array<Record<string, any>>"
       },
+      "relatedProps": ["apiMode", "fetchUrl"],
       "commonMistakes": [
         {
-          "mistake": "Using fetchUrl without setting apiMode to true",
-          "correction": "Set api-mode=\"true\" when using fetchUrl",
+          "mistake": "Providing both :data and fetch-url",
+          "impact": "Confusing behavior - which data source is used depends on apiMode",
+          "fix": "Use :data for client-side OR fetch-url for server-side, not both",
+          "severity": "medium"
+        }
+      ]
+    },
+    "fetchUrl": {
+      "valueFormat": {
+        "structure": "string (URL)",
+        "notes": "API endpoint for server-side data fetching. Requires apiMode=true",
+        "examples": [
+          "/api/users",
+          "https://api.example.com/v1/customers"
+        ],
+        "typescript": "string"
+      },
+      "relatedProps": ["apiMode", "httpFetch", "httpOptions", "tableSearchParams"],
+      "commonMistakes": [
+        {
+          "mistake": "Using fetchUrl without setting apiMode=true",
+          "impact": "Table doesn't fetch data, shows empty state",
+          "fix": "Always set api-mode when using fetch-url",
+          "severity": "critical"
+        },
+        {
+          "mistake": "Not handling CORS for external APIs",
+          "impact": "API requests fail with CORS errors",
+          "fix": "Ensure API has proper CORS headers or use proxy",
           "severity": "high"
         }
       ]
     },
     "apiMode": {
-      "description": "Enable server-side data fetching mode",
       "valueFormat": {
         "structure": "boolean",
-        "example": "api-mode"
-      }
+        "notes": "Enable server-side data fetching. When true, uses fetchUrl instead of local data",
+        "typescript": "boolean"
+      },
+      "relatedProps": ["fetchUrl", "data"]
     },
     "tableSearchParams": {
-      "description": "Additional query parameters for API requests",
       "valueFormat": {
-        "structure": "Object with key-value pairs",
-        "typescript": "Record<string, string | number | boolean>",
-        "example": ":table-search-params=\"{ status: 'active', type: 'user' }\""
-      }
+        "structure": "Object",
+        "notes": "Additional query parameters sent with API requests. Merged with pagination/sort/filter params",
+        "examples": [
+          "{ status: 'active', type: 'user' }",
+          "{ tenant_id: tenantId, role: 'admin' }"
+        ],
+        "typescript": "Record<string, string | number | boolean>"
+      },
+      "relatedProps": ["fetchUrl", "apiMode"]
     },
     "actions": {
-      "description": "Row action buttons configuration",
       "valueFormat": {
-        "structure": "Array of action objects",
-        "typescript": "Array<{ name: string; icon?: string; label?: string; handler?: Function; }>",
-        "example": ":actions=\"[{ name: 'edit', icon: 'edit', label: 'Edit' }, { name: 'delete', icon: 'trash', label: 'Delete' }]\""
+        "structure": "Array<Object>",
+        "notes": "Row action buttons configuration. Creates action column with buttons for each row",
+        "examples": [
+          "[{ name: 'edit', icon: 'edit', label: 'Edit' }]",
+          "[{ name: 'delete', icon: 'trash', label: 'Delete', handler: deleteRow }]"
+        ],
+        "typescript": "Array<{ name: string; icon?: string; label?: string; handler?: (row: any) => void; }>"
       }
     },
     "perPage": {
-      "description": "Number of rows per page",
       "valueFormat": {
         "structure": "number",
-        "example": ":per-page=\"25\""
-      }
+        "notes": "Number of rows per page. Default: 10",
+        "typescript": "number"
+      },
+      "relatedProps": ["paginationStatus"]
     },
     "sortOrder": {
-      "description": "Default sort configuration",
       "valueFormat": {
-        "structure": "Object with field and direction",
-        "typescript": "{ field: string; direction: 'asc' | 'desc' }",
-        "example": ":sort-order=\"{ field: 'createdAt', direction: 'desc' }\""
+        "structure": "Object",
+        "notes": "Default sort configuration applied on initial load",
+        "examples": [
+          "{ field: 'createdAt', direction: 'desc' }",
+          "{ field: 'name', direction: 'asc' }"
+        ],
+        "typescript": "{ field: string; direction: 'asc' | 'desc' }"
       }
     },
     "paginationPath": {
-      "description": "JSON path to pagination data in API response",
       "valueFormat": {
-        "structure": "string (dot notation path)",
-        "example": "pagination-path=\"meta.pagination\""
-      }
-    },
-    "statusList": {
-      "description": "Status filter options for the table",
-      "valueFormat": {
-        "structure": "Array of status objects",
-        "typescript": "Array<{ label: string; value: string | number; }>",
-        "example": ":status-list=\"[{ label: 'Active', value: 'active' }, { label: 'Inactive', value: 'inactive' }]\""
-      }
-    },
-    "pinnedRows": {
-      "description": "Rows to pin at top/bottom of table",
-      "valueFormat": {
-        "structure": "Object with top and bottom arrays",
-        "typescript": "{ top?: Array<any>; bottom?: Array<any> }",
-        "example": ":pinned-rows=\"{ top: [summaryRow] }\""
-      }
+        "structure": "string",
+        "notes": "JSON path to pagination data in API response. Uses dot notation for nested objects",
+        "examples": [
+          "meta.pagination",
+          "data.pagination",
+          "pagination"
+        ],
+        "typescript": "string"
+      },
+      "relatedProps": ["apiMode", "fetchUrl"],
+      "commonMistakes": [
+        {
+          "mistake": "Wrong pagination path for API response structure",
+          "impact": "Pagination doesn't work, shows wrong page count",
+          "fix": "Inspect API response and set correct path: pagination-path=\"meta.pagination\"",
+          "severity": "high"
+        }
+      ]
     },
     "httpOptions": {
-      "description": "HTTP request configuration for API calls",
       "valueFormat": {
-        "structure": "Object with fetch options",
-        "typescript": "{ headers?: Record<string, string>; credentials?: string; }",
-        "example": ":http-options=\"{ headers: { 'Authorization': 'Bearer token' } }\""
-      }
-    },
-    "detailRow": {
-      "description": "Expandable row detail component",
-      "valueFormat": {
-        "structure": "Vue component or template",
-        "example": ":detail-row=\"DetailRowComponent\""
-      }
+        "structure": "Object",
+        "notes": "HTTP request configuration for API calls (headers, credentials, etc.)",
+        "examples": [
+          "{ headers: { 'Authorization': 'Bearer token' } }",
+          "{ headers: { 'X-API-Key': apiKey }, credentials: 'include' }"
+        ],
+        "typescript": "{ headers?: Record<string, string>; credentials?: 'include' | 'same-origin' | 'omit'; }"
+      },
+      "relatedProps": ["fetchUrl", "httpFetch"],
+      "commonMistakes": [
+        {
+          "mistake": "Not providing Authorization header for authenticated APIs",
+          "impact": "API requests fail with 401 Unauthorized",
+          "fix": "Pass auth header: :http-options=\"{ headers: { 'Authorization': `Bearer ${token}` } }\"",
+          "severity": "critical"
+        }
+      ]
     },
     "trackBy": {
-      "description": "Unique identifier field for row tracking",
       "valueFormat": {
-        "structure": "string (field name)",
-        "example": "track-by=\"id\""
-      }
+        "structure": "string",
+        "notes": "Unique identifier field for row tracking. Critical for selection and detail rows. Default: 'id'",
+        "examples": [
+          "id",
+          "userId",
+          "uuid"
+        ],
+        "typescript": "string"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Using non-unique field for trackBy",
+          "impact": "Row selection breaks, detail rows don't work properly",
+          "fix": "Use truly unique field: track-by=\"id\" or track-by=\"uuid\"",
+          "severity": "high"
+        }
+      ]
     },
     "formatMapping": {
-      "description": "Custom formatters for cell values",
       "valueFormat": {
-        "structure": "Object mapping field names to formatter functions",
-        "typescript": "Record<string, (value: any) => string>",
-        "example": ":format-mapping=\"{ date: formatDate, price: formatCurrency }\""
-      }
-    },
-    "fixFirstColumn": {
-      "description": "Fix first column when scrolling horizontally",
-      "valueFormat": {
-        "structure": "boolean",
-        "example": "fix-first-column"
-      }
-    },
-    "fixLastColumn": {
-      "description": "Fix last column when scrolling horizontally",
-      "valueFormat": {
-        "structure": "boolean",
-        "example": "fix-last-column"
+        "structure": "Object",
+        "notes": "Custom formatter functions for specific fields. Maps field names to formatter functions",
+        "examples": [
+          "{ createdAt: (val) => formatDate(val), price: (val) => `$${val.toFixed(2)}` }",
+          "{ status: (val) => val.toUpperCase() }"
+        ],
+        "typescript": "Record<string, (value: any, row?: any) => string>"
       }
     },
     "rowClass": {
-      "description": "Dynamic row class based on row data",
       "valueFormat": {
-        "structure": "Function returning class string",
-        "typescript": "(row: any) => string",
-        "example": ":row-class=\"row => row.status === 'error' ? 'error-row' : ''\""
-      }
+        "structure": "Function | string",
+        "notes": "Dynamic class applied to rows based on row data. Can be string or function",
+        "examples": [
+          "(row) => row.status === 'error' ? 'bg-red-50' : ''",
+          "(row) => row.isPinned ? 'font-bold' : ''"
+        ],
+        "typescript": "string | ((row: any) => string)"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Complex logic in rowClass function",
+          "impact": "Performance issues - function called for every row on every render",
+          "fix": "Keep function simple or memoize results",
+          "severity": "medium"
+        }
+      ]
     },
     "loadingType": {
-      "description": "Type of loading indicator",
       "valueFormat": {
-        "structure": "string enum",
-        "possibleValues": ["spinner", "skeleton", "overlay"],
-        "example": "loading-type=\"skeleton\""
+        "structure": "string (enum)",
+        "validValues": ["spinner", "skeleton", "overlay"],
+        "notes": "Type of loading indicator shown during data fetch",
+        "typescript": "'spinner' | 'skeleton' | 'overlay'"
+      },
+      "relatedProps": ["loadingStatus"]
+    }
+  },
+  "eventEnrichments": {
+    "onLoad": {
+      "payloadFormat": {
+        "structure": "{ data: Array, total: number }",
+        "notes": "Emitted when table data is loaded (both initial and refreshes)"
+      }
+    },
+    "setPaginationObject": {
+      "payloadFormat": {
+        "structure": "{ page: number, perPage: number, total: number }",
+        "notes": "Emitted when pagination state changes (page change, perPage change)"
+      }
+    },
+    "paginationCount": {
+      "payloadFormat": {
+        "structure": "number",
+        "notes": "Emitted with total record count from API response"
+      }
+    },
+    "perPage": {
+      "payloadFormat": {
+        "structure": "number",
+        "notes": "Emitted when user changes per-page selection in pagination dropdown"
+      }
+    },
+    "selectStatus": {
+      "payloadFormat": {
+        "structure": "{ selectedRows: Array, allSelected: boolean }",
+        "notes": "Emitted when row selection changes. selectedRows contains full row objects"
       }
     }
   },
-
-  "eventEnrichments": {
-    "onLoad": {
-      "description": "Emitted when table data is loaded",
-      "payload": "{ data: Array, total: number }",
-      "usage": "@on-load=\"handleDataLoaded\""
+  "codeSnippets": {
+    "template": {
+      "clientSide": "<InDataTable\n  name=\"users-table\"\n  :data=\"users\"\n  :table-fields=\"[\n    { field: 'name', label: 'Name', sortable: true },\n    { field: 'email', label: 'Email' },\n    { field: 'status', label: 'Status' }\n  ]\"\n  :per-page=\"10\"\n  pagination-status\n  track-by=\"id\"\n/>",
+      "serverSide": "<InDataTable\n  name=\"api-table\"\n  api-mode\n  fetch-url=\"/api/users\"\n  :table-search-params=\"{ tenant: tenantId }\"\n  :table-fields=\"columns\"\n  :http-options=\"{ headers: { 'Authorization': authToken } }\"\n  pagination-path=\"meta.pagination\"\n  :per-page=\"25\"\n  with-search-filter\n  @on-load=\"handleLoad\"\n/>",
+      "customFetch": "<InDataTable\n  name=\"custom-fetch-table\"\n  api-mode\n  fetch-url=\"/api/data\"\n  :http-fetch=\"customHttpClient\"\n  :table-fields=\"columns\"\n  :per-page=\"20\"\n/>",
+      "withActions": "<InDataTable\n  name=\"actions-table\"\n  :data=\"data\"\n  :table-fields=\"columns\"\n  :actions=\"[\n    { name: 'edit', icon: 'line-edit', label: 'Edit', handler: handleEdit },\n    { name: 'delete', icon: 'line-trash', label: 'Delete', handler: handleDelete }\n  ]\"\n  track-by=\"id\"\n/>",
+      "fixedColumns": "<InDataTable\n  name=\"wide-table\"\n  :data=\"data\"\n  :table-fields=\"manyColumns\"\n  horizontal-scroll\n  fix-first-column\n  fix-last-column\n/>",
+      "formatted": "<InDataTable\n  name=\"formatted-table\"\n  :data=\"data\"\n  :table-fields=\"columns\"\n  :format-mapping=\"{\n    createdAt: formatDate,\n    price: formatCurrency,\n    status: formatStatus\n  }\"\n/>",
+      "withFilters": "<InDataTable\n  name=\"filtered-table\"\n  api-mode\n  fetch-url=\"/api/items\"\n  :table-fields=\"columns\"\n  with-search-filter\n  with-status-filter\n  :status-list=\"[\n    { label: 'Active', value: 'active' },\n    { label: 'Inactive', value: 'inactive' }\n  ]\"\n/>",
+      "rowStyling": "<InDataTable\n  name=\"styled-table\"\n  :data=\"data\"\n  :table-fields=\"columns\"\n  :row-class=\"row => row.status === 'error' ? 'bg-red-50' : ''\"\n/>",
+      "loading": "<InDataTable\n  name=\"loading-table\"\n  api-mode\n  fetch-url=\"/api/data\"\n  :table-fields=\"columns\"\n  :loading-status=\"isLoading\"\n  loading-type=\"skeleton\"\n/>"
     },
-    "setPaginationObject": {
-      "description": "Emitted when pagination changes",
-      "payload": "{ page: number, perPage: number, total: number }",
-      "usage": "@set-pagination-object=\"handlePagination\""
+    "script": "import { ref, computed } from 'vue';\nimport { InDataTable } from '@useinsider/design-system-vue';\nimport '@useinsider/design-system-vue/dist/design-system-vue.css';\nimport axios from 'axios';\n\nconst users = ref([]);\nconst isLoading = ref(false);\nconst authToken = ref('Bearer your-token-here');\n\nconst columns = ref([\n  { field: 'id', label: 'ID', width: 80 },\n  { field: 'name', label: 'Name', sortable: true },\n  { field: 'email', label: 'Email', sortable: true },\n  { field: 'createdAt', label: 'Created', sortable: true },\n  { field: 'status', label: 'Status' }\n]);\n\n// Custom HTTP client with axios\nconst customHttpClient = async (url, options) => {\n  try {\n    const response = await axios.get(url, {\n      params: options?.params,\n      headers: options?.headers\n    });\n    // Convert axios response to fetch-like Response\n    return new Response(JSON.stringify(response.data), {\n      status: response.status,\n      headers: response.headers\n    });\n  } catch (error) {\n    throw new Error(`API Error: ${error.message}`);\n  }\n};\n\n// Format functions\nconst formatDate = (value) => {\n  if (!value) return '-';\n  return new Date(value).toLocaleDateString();\n};\n\nconst formatCurrency = (value) => {\n  if (!value) return '$0.00';\n  return `$${parseFloat(value).toFixed(2)}`;\n};\n\nconst formatStatus = (value) => {\n  const statusMap = {\n    active: 'Active',\n    inactive: 'Inactive',\n    pending: 'Pending'\n  };\n  return statusMap[value] || value;\n};\n\n// Event handlers\nconst handleLoad = (payload) => {\n  console.log('Data loaded:', payload.data.length, 'rows');\n  console.log('Total:', payload.total);\n};\n\nconst handleEdit = (row) => {\n  console.log('Edit row:', row.id);\n  // router.push(`/edit/${row.id}`);\n};\n\nconst handleDelete = async (row) => {\n  if (confirm(`Delete ${row.name}?`)) {\n    // await api.delete(`/users/${row.id}`);\n    console.log('Deleted:', row.id);\n  }\n};\n\nconst handleSelection = (payload) => {\n  console.log('Selected rows:', payload.selectedRows);\n  console.log('All selected:', payload.allSelected);\n};",
+    "style": "/* InDataTable component styling */\n\n/* Table wrapper */\n.in-data-table {\n  width: 100%;\n  overflow-x: auto;\n}\n\n/* Table header */\n.in-data-table__header {\n  background-color: #f5f5f5;\n  border-bottom: 2px solid #e0e0e0;\n}\n\n/* Table rows */\n.in-data-table__row {\n  border-bottom: 1px solid #e0e0e0;\n  transition: background-color 0.2s;\n}\n\n.in-data-table__row:hover {\n  background-color: #f9f9f9;\n}\n\n/* Custom row classes */\n.bg-red-50 {\n  background-color: #ffebee;\n}\n\n.error-row {\n  background-color: #ffebee;\n  color: #c62828;\n}\n\n.success-row {\n  background-color: #e8f5e9;\n}\n\n/* Fixed columns */\n.in-data-table--fixed-first .in-data-table__cell:first-child {\n  position: sticky;\n  left: 0;\n  background-color: #fff;\n  z-index: 10;\n}\n\n.in-data-table--fixed-last .in-data-table__cell:last-child {\n  position: sticky;\n  right: 0;\n  background-color: #fff;\n  z-index: 10;\n}\n\n/* Horizontal scroll */\n.in-data-table--scroll {\n  overflow-x: auto;\n  max-width: 100%;\n}\n\n/* Pagination */\n.in-data-table__pagination {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 16px;\n  border-top: 1px solid #e0e0e0;\n}\n\n/* Loading skeleton */\n.in-data-table__skeleton {\n  animation: pulse 1.5s ease-in-out infinite;\n}\n\n@keyframes pulse {\n  0%, 100% { opacity: 1; }\n  50% { opacity: 0.5; }\n}"
+  },
+  "styling": {
+    "positioning": "static",
+    "layout": "block",
+    "fullWidth": true,
+    "zIndex": null,
+    "customization": {
+      "cssClasses": [
+        "in-data-table",
+        "in-data-table__header",
+        "in-data-table__row",
+        "in-data-table__cell",
+        "in-data-table__pagination",
+        "in-data-table--fixed-first",
+        "in-data-table--fixed-last",
+        "in-data-table--scroll"
+      ],
+      "cssVariables": [],
+      "themeable": false,
+      "notes": "Use rowClass prop for dynamic row styling. Fixed columns use position: sticky"
     },
-    "paginationCount": {
-      "description": "Emitted with total record count",
-      "payload": "number",
-      "usage": "@pagination-count=\"updateCount\""
-    },
-    "perPage": {
-      "description": "Emitted when per-page selection changes",
-      "payload": "number",
-      "usage": "@per-page=\"handlePerPageChange\""
-    },
-    "selectStatus": {
-      "description": "Emitted when row selection changes",
-      "payload": "{ selectedRows: Array, allSelected: boolean }",
-      "usage": "@select-status=\"handleSelection\""
+    "responsive": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true,
+      "notes": "Use horizontal-scroll on mobile for wide tables. Consider hiding less important columns on mobile"
     }
   },
-
-  "exampleEnrichments": [
+  "examples": [
     {
       "title": "Basic Client-Side Table",
-      "description": "Simple table with local data",
-      "code": "<InDataTable\n  name=\"users-table\"\n  :data=\"users\"\n  :table-fields=\"[\n    { field: 'name', label: 'Name', sortable: true },\n    { field: 'email', label: 'Email' },\n    { field: 'status', label: 'Status' }\n  ]\"\n  :per-page=\"10\"\n  pagination-status\n/>"
+      "description": "Simple table with local data and pagination",
+      "category": "basic",
+      "code": "<template>\n  <InDataTable\n    name=\"users-table\"\n    :data=\"users\"\n    :table-fields=\"columns\"\n    :per-page=\"10\"\n    pagination-status\n    track-by=\"id\"\n  />\n</template>\n\n<script setup>\nimport { ref } from 'vue';\n\nconst users = ref([\n  { id: 1, name: 'John Doe', email: 'john@example.com', status: 'active' },\n  { id: 2, name: 'Jane Smith', email: 'jane@example.com', status: 'inactive' }\n]);\n\nconst columns = ref([\n  { field: 'name', label: 'Name', sortable: true },\n  { field: 'email', label: 'Email' },\n  { field: 'status', label: 'Status' }\n]);\n</script>",
+      "language": "vue"
     },
     {
       "title": "Server-Side Table with API",
-      "description": "Table fetching data from API endpoint",
-      "code": "<InDataTable\n  name=\"api-table\"\n  api-mode\n  fetch-url=\"/api/users\"\n  :table-search-params=\"{ tenant: tenantId }\"\n  :table-fields=\"tableColumns\"\n  :http-options=\"{ headers: { 'Authorization': authToken } }\"\n  pagination-path=\"meta.pagination\"\n  :per-page=\"25\"\n  with-search-filter\n  with-status-filter\n  :status-list=\"statusOptions\"\n  @on-load=\"handleLoad\"\n  @select-status=\"handleSelection\"\n/>"
+      "description": "Table fetching data from API endpoint with authentication",
+      "category": "advanced",
+      "code": "<template>\n  <InDataTable\n    name=\"api-table\"\n    api-mode\n    fetch-url=\"/api/users\"\n    :table-search-params=\"searchParams\"\n    :table-fields=\"columns\"\n    :http-options=\"httpOptions\"\n    pagination-path=\"meta.pagination\"\n    :per-page=\"25\"\n    with-search-filter\n    with-status-filter\n    :status-list=\"statusOptions\"\n    @on-load=\"handleLoad\"\n  />\n</template>\n\n<script setup>\nimport { ref, computed } from 'vue';\n\nconst authToken = ref('Bearer your-token-here');\nconst tenantId = ref('tenant-123');\n\nconst httpOptions = computed(() => ({\n  headers: {\n    'Authorization': authToken.value,\n    'X-Tenant-ID': tenantId.value\n  }\n}));\n\nconst searchParams = computed(() => ({\n  tenant: tenantId.value\n}));\n\nconst columns = ref([\n  { field: 'id', label: 'ID', width: 80 },\n  { field: 'name', label: 'Name', sortable: true },\n  { field: 'email', label: 'Email', sortable: true },\n  { field: 'status', label: 'Status' }\n]);\n\nconst statusOptions = ref([\n  { label: 'Active', value: 'active' },\n  { label: 'Inactive', value: 'inactive' },\n  { label: 'Pending', value: 'pending' }\n]);\n\nconst handleLoad = (payload) => {\n  console.log(`Loaded ${payload.data.length} rows`);\n};\n</script>",
+      "language": "vue"
     },
     {
-      "title": "Table with Actions and Fixed Columns",
-      "description": "Advanced table with row actions",
-      "code": "<InDataTable\n  name=\"actions-table\"\n  :data=\"data\"\n  :table-fields=\"columns\"\n  :actions=\"[\n    { name: 'edit', icon: 'edit', label: 'Edit' },\n    { name: 'delete', icon: 'trash', label: 'Delete' }\n  ]\"\n  horizontal-scroll\n  fix-first-column\n  fix-last-column\n  :row-class=\"getRowClass\"\n/>"
+      "title": "Custom HTTP Client with Axios",
+      "description": "Using custom HTTP client for advanced request handling",
+      "category": "advanced",
+      "code": "<template>\n  <InDataTable\n    name=\"axios-table\"\n    api-mode\n    fetch-url=\"/api/data\"\n    :http-fetch=\"axiosClient\"\n    :table-fields=\"columns\"\n    :per-page=\"20\"\n  />\n</template>\n\n<script setup>\nimport axios from 'axios';\n\nconst axiosClient = async (url, options) => {\n  try {\n    const response = await axios.get(url, {\n      params: options?.params,\n      headers: options?.headers,\n      timeout: 10000 // 10 second timeout\n    });\n    \n    // Convert axios response to fetch Response\n    return new Response(JSON.stringify(response.data), {\n      status: response.status,\n      statusText: response.statusText,\n      headers: new Headers(response.headers)\n    });\n  } catch (error) {\n    console.error('API Error:', error);\n    throw error;\n  }\n};\n\nconst columns = ref([\n  { field: 'id', label: 'ID' },\n  { field: 'name', label: 'Name', sortable: true }\n]);\n</script>",
+      "language": "vue"
+    },
+    {
+      "title": "Table with Row Actions",
+      "description": "Action buttons for each row with handlers",
+      "category": "actions",
+      "code": "<template>\n  <InDataTable\n    name=\"actions-table\"\n    :data=\"items\"\n    :table-fields=\"columns\"\n    :actions=\"rowActions\"\n    track-by=\"id\"\n  />\n</template>\n\n<script setup>\nimport { ref } from 'vue';\n\nconst items = ref([\n  { id: 1, name: 'Item 1', status: 'active' },\n  { id: 2, name: 'Item 2', status: 'inactive' }\n]);\n\nconst columns = ref([\n  { field: 'id', label: 'ID', width: 80 },\n  { field: 'name', label: 'Name' },\n  { field: 'status', label: 'Status' }\n]);\n\nconst rowActions = ref([\n  {\n    name: 'edit',\n    icon: 'line-edit',\n    label: 'Edit',\n    handler: (row) => {\n      console.log('Edit:', row.id);\n      // Navigate to edit page\n    }\n  },\n  {\n    name: 'delete',\n    icon: 'line-trash',\n    label: 'Delete',\n    handler: async (row) => {\n      if (confirm(`Delete ${row.name}?`)) {\n        // await deleteItem(row.id);\n        console.log('Deleted:', row.id);\n      }\n    }\n  }\n]);\n</script>",
+      "language": "vue"
+    },
+    {
+      "title": "Wide Table with Fixed Columns",
+      "description": "Horizontal scrolling with fixed first and last columns",
+      "category": "layout",
+      "code": "<InDataTable\n  name=\"wide-table\"\n  :data=\"data\"\n  :table-fields=\"manyColumns\"\n  horizontal-scroll\n  fix-first-column\n  fix-last-column\n  :per-page=\"15\"\n/>",
+      "language": "vue"
+    },
+    {
+      "title": "Formatted Values",
+      "description": "Custom formatting for dates, currency, and status",
+      "category": "formatting",
+      "code": "<template>\n  <InDataTable\n    name=\"formatted-table\"\n    :data=\"transactions\"\n    :table-fields=\"columns\"\n    :format-mapping=\"formatters\"\n  />\n</template>\n\n<script setup>\nimport { ref } from 'vue';\n\nconst transactions = ref([\n  { id: 1, amount: 1234.56, createdAt: '2025-01-15T10:30:00Z', status: 'completed' }\n]);\n\nconst columns = ref([\n  { field: 'id', label: 'ID' },\n  { field: 'amount', label: 'Amount' },\n  { field: 'createdAt', label: 'Date' },\n  { field: 'status', label: 'Status' }\n]);\n\nconst formatters = ref({\n  amount: (value) => `$${parseFloat(value).toFixed(2)}`,\n  createdAt: (value) => new Date(value).toLocaleDateString('en-US', {\n    year: 'numeric',\n    month: 'short',\n    day: 'numeric'\n  }),\n  status: (value) => value.charAt(0).toUpperCase() + value.slice(1)\n});\n</script>",
+      "language": "vue"
+    },
+    {
+      "title": "Conditional Row Styling",
+      "description": "Dynamic row classes based on row data",
+      "category": "styling",
+      "code": "<template>\n  <InDataTable\n    name=\"styled-table\"\n    :data=\"items\"\n    :table-fields=\"columns\"\n    :row-class=\"getRowClass\"\n  />\n</template>\n\n<script setup>\nimport { ref } from 'vue';\n\nconst items = ref([\n  { id: 1, name: 'Item 1', status: 'error', priority: 'high' },\n  { id: 2, name: 'Item 2', status: 'success', priority: 'low' }\n]);\n\nconst columns = ref([\n  { field: 'name', label: 'Name' },\n  { field: 'status', label: 'Status' },\n  { field: 'priority', label: 'Priority' }\n]);\n\nconst getRowClass = (row) => {\n  if (row.status === 'error') return 'bg-red-50 text-red-900';\n  if (row.status === 'success') return 'bg-green-50';\n  if (row.priority === 'high') return 'font-bold';\n  return '';\n};\n</script>\n\n<style scoped>\n.bg-red-50 { background-color: #ffebee; }\n.text-red-900 { color: #b71c1c; }\n.bg-green-50 { background-color: #e8f5e9; }\n</style>",
+      "language": "vue"
+    },
+    {
+      "title": "Loading States",
+      "description": "Skeleton loading for better UX",
+      "category": "states",
+      "code": "<template>\n  <InDataTable\n    name=\"loading-table\"\n    api-mode\n    fetch-url=\"/api/data\"\n    :table-fields=\"columns\"\n    :loading-status=\"isLoading\"\n    loading-type=\"skeleton\"\n    @on-load=\"handleLoad\"\n  />\n</template>\n\n<script setup>\nimport { ref } from 'vue';\n\nconst isLoading = ref(false);\n\nconst columns = ref([\n  { field: 'id', label: 'ID' },\n  { field: 'name', label: 'Name' }\n]);\n\nconst handleLoad = () => {\n  isLoading.value = false;\n};\n</script>",
+      "language": "vue"
+    },
+    {
+      "title": "Table with Search and Status Filters",
+      "description": "Built-in search and dropdown filters",
+      "category": "filters",
+      "code": "<InDataTable\n  name=\"filtered-table\"\n  api-mode\n  fetch-url=\"/api/items\"\n  :table-fields=\"columns\"\n  with-search-filter\n  placeholder=\"Search items...\"\n  with-status-filter\n  :status-list=\"[\n    { label: 'All', value: '' },\n    { label: 'Active', value: 'active' },\n    { label: 'Inactive', value: 'inactive' }\n  ]\"\n/>",
+      "language": "vue"
     }
   ],
-
-  "commonMistakes": [
+  "implementationPatterns": [
     {
-      "mistake": "Not setting api-mode when using fetchUrl",
-      "issue": "Table tries to render empty local data instead of fetching",
-      "solution": "Always set api-mode=\"true\" or api-mode when using fetchUrl",
-      "severity": "high"
+      "pattern": "API integration with auth",
+      "when": "Fetching data from authenticated API endpoints",
+      "code": "const authToken = ref('');\nconst httpOptions = computed(() => ({\n  headers: {\n    'Authorization': `Bearer ${authToken.value}`,\n    'Content-Type': 'application/json'\n  },\n  credentials: 'include'\n}));\n\n<InDataTable\n  api-mode\n  fetch-url=\"/api/protected/users\"\n  :http-options=\"httpOptions\"\n  :table-fields=\"columns\"\n/>",
+      "notes": "Use computed for httpOptions to react to auth token changes"
     },
     {
-      "mistake": "Missing field property in tableFields columns",
-      "issue": "Columns don't render or show undefined",
-      "solution": "Each column object must have 'field' matching a data property",
-      "severity": "high"
+      "pattern": "Custom fetch with retry logic",
+      "when": "Need resilient API calls with automatic retries",
+      "code": "const fetchWithRetry = async (url, options, retries = 3) => {\n  for (let i = 0; i < retries; i++) {\n    try {\n      const response = await fetch(url, options);\n      if (response.ok) return response;\n      if (i === retries - 1) throw new Error('Max retries reached');\n    } catch (error) {\n      if (i === retries - 1) throw error;\n      await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));\n    }\n  }\n};\n\n<InDataTable\n  api-mode\n  fetch-url=\"/api/data\"\n  :http-fetch=\"fetchWithRetry\"\n  :table-fields=\"columns\"\n/>",
+      "notes": "Exponential backoff: 1s, 2s, 3s delays between retries"
     },
     {
-      "mistake": "Using wrong pagination path for API response",
-      "issue": "Pagination doesn't work correctly",
-      "solution": "Set pagination-path to match your API response structure",
-      "severity": "medium"
+      "pattern": "Real-time data with polling",
+      "when": "Table needs to auto-refresh with latest data",
+      "code": "const tableRef = ref(null);\nconst pollInterval = ref(null);\n\nonMounted(() => {\n  // Refresh table every 30 seconds\n  pollInterval.value = setInterval(() => {\n    if (tableRef.value) {\n      tableRef.value.refresh(); // Call refresh method\n    }\n  }, 30000);\n});\n\nonUnmounted(() => {\n  if (pollInterval.value) {\n    clearInterval(pollInterval.value);\n  }\n});\n\n<InDataTable\n  ref=\"tableRef\"\n  api-mode\n  fetch-url=\"/api/live-data\"\n  :table-fields=\"columns\"\n/>",
+      "notes": "Clear interval on component unmount to prevent memory leaks"
     },
     {
-      "mistake": "Not providing httpOptions for authenticated APIs",
-      "issue": "API requests fail with 401",
-      "solution": "Pass Authorization header in http-options",
-      "severity": "high"
+      "pattern": "Export selected rows",
+      "when": "Users need to export selected table data",
+      "code": "const selectedRows = ref([]);\n\nconst exportToCSV = () => {\n  if (selectedRows.value.length === 0) {\n    alert('No rows selected');\n    return;\n  }\n  \n  const headers = columns.value.map(col => col.label);\n  const rows = selectedRows.value.map(row => \n    columns.value.map(col => row[col.field])\n  );\n  \n  const csv = [\n    headers.join(','),\n    ...rows.map(row => row.join(','))\n  ].join('\\n');\n  \n  const blob = new Blob([csv], { type: 'text/csv' });\n  const url = URL.createObjectURL(blob);\n  const a = document.createElement('a');\n  a.href = url;\n  a.download = 'export.csv';\n  a.click();\n};\n\n<InDataTable\n  :data=\"data\"\n  :table-fields=\"columns\"\n  @select-status=\"handleSelection\"\n/>\n<InButtonV2 @click=\"exportToCSV\" label-text=\"Export Selected\" />",
+      "notes": "Store selected rows from selectStatus event"
     }
   ],
-
+  "useCases": [
+    {
+      "title": "User Management Dashboard",
+      "description": "Display and manage users with search, filters, and actions",
+      "example": "Admin panel with user list, role filtering, edit/delete actions"
+    },
+    {
+      "title": "Transaction History",
+      "description": "Show financial transactions with formatted currency and dates",
+      "example": "Payment history, invoice list with amount formatting"
+    },
+    {
+      "title": "Content Management",
+      "description": "List blog posts, products, or content items with status filters",
+      "example": "CMS article list with draft/published filters"
+    },
+    {
+      "title": "Analytics Reports",
+      "description": "Display metrics and KPIs in tabular format with custom formatting",
+      "example": "Sales reports, performance dashboards with percentage formatters"
+    },
+    {
+      "title": "Inventory Management",
+      "description": "Product listings with stock levels and actions",
+      "example": "Warehouse inventory with low-stock highlighting via rowClass"
+    }
+  ],
   "bestPractices": [
     {
-      "practice": "Use trackBy for row identification",
-      "description": "Always set trackBy to unique field for proper row tracking and selection",
-      "example": "track-by=\"id\""
+      "practice": "Always set trackBy for tables with selection or detail rows",
+      "why": "Ensures proper row identification and prevents selection bugs",
+      "example": "track-by=\"id\" or track-by=\"uuid\"",
+      "antiPattern": "Omitting trackBy with non-unique default 'id' field"
     },
     {
-      "practice": "Implement proper loading states",
-      "description": "Use loadingStatus and loadingType for better UX during data fetches",
-      "example": ":loading-status=\"isLoading\" loading-type=\"skeleton\""
+      "practice": "Use apiMode for datasets > 100 rows",
+      "why": "Client-side rendering of large datasets causes performance issues",
+      "example": "api-mode fetch-url=\"/api/users\" for large user lists",
+      "antiPattern": "Loading 10,000 rows into :data prop"
     },
     {
-      "practice": "Use formatMapping for consistent formatting",
-      "description": "Centralize value formatting logic in formatMapping object",
-      "example": ":format-mapping=\"{ date: formatDate, currency: formatMoney }\""
+      "practice": "Provide httpOptions for all authenticated API calls",
+      "why": "Without auth headers, API requests will fail",
+      "example": ":http-options=\"{ headers: { 'Authorization': `Bearer ${token}` } }\"",
+      "antiPattern": "Expecting table to inherit global axios interceptors"
     },
     {
-      "practice": "Enable horizontal scroll for many columns",
-      "description": "Use horizontal-scroll with fix-first-column for wide tables",
-      "example": "horizontal-scroll fix-first-column"
+      "practice": "Use formatMapping for consistent value formatting",
+      "why": "Centralizes formatting logic, easier to maintain",
+      "example": ":format-mapping=\"{ date: formatDate, price: formatCurrency }\"",
+      "antiPattern": "Custom renderer components for simple formatting"
+    },
+    {
+      "practice": "Set proper paginationPath for your API response structure",
+      "why": "Incorrect path causes pagination to break",
+      "example": "pagination-path=\"meta.pagination\" to match { meta: { pagination: {...} } }",
+      "antiPattern": "Guessing pagination path without inspecting API response"
+    },
+    {
+      "practice": "Keep rowClass functions simple",
+      "why": "Complex functions hurt performance (called for every row on every render)",
+      "example": "row => row.status === 'error' ? 'error-row' : ''",
+      "antiPattern": "row => expensiveCalculation(row) + nestedLogic(row.data)"
+    },
+    {
+      "practice": "Use loading states for better UX",
+      "why": "Users need feedback during data fetches",
+      "example": ":loading-status=\"isLoading\" loading-type=\"skeleton\"",
+      "antiPattern": "No loading indicator, users see empty table during fetch"
     }
   ],
-
-  "performanceNotes": [
+  "commonMistakes": [
     {
-      "note": "Use server-side pagination for large datasets",
-      "description": "For datasets > 1000 rows, use api-mode with server-side pagination",
-      "recommendation": "Set api-mode and implement proper backend pagination"
+      "category": "prop-usage",
+      "severity": "critical",
+      "title": "Using fetchUrl without apiMode=true",
+      "description": "Table needs apiMode enabled to fetch from URL",
+      "wrong": "<InDataTable fetch-url=\"/api/users\" :table-fields=\"columns\" />",
+      "correct": "<InDataTable api-mode fetch-url=\"/api/users\" :table-fields=\"columns\" />",
+      "impact": "Table shows empty state, no data fetched"
     },
     {
-      "note": "Avoid complex rowClass functions",
-      "description": "rowClass is called for every row on every render",
-      "recommendation": "Keep rowClass function simple or memoize results"
+      "category": "prop-usage",
+      "severity": "critical",
+      "title": "Missing 'field' property in tableFields",
+      "description": "Each column definition must have 'field' matching data key",
+      "wrong": ":table-fields=\"[{ label: 'Name' }]\"",
+      "correct": ":table-fields=\"[{ field: 'name', label: 'Name' }]\"",
+      "impact": "Columns show undefined values or don't render"
+    },
+    {
+      "category": "prop-usage",
+      "severity": "critical",
+      "title": "httpFetch not returning Promise<Response>",
+      "description": "Custom HTTP client must return proper Response object",
+      "wrong": ":http-fetch=\"(url) => axios.get(url)\"",
+      "correct": ":http-fetch=\"async (url, opts) => { const res = await axios.get(url); return new Response(JSON.stringify(res.data), { status: res.status }); }\"",
+      "impact": "Table loading fails with type errors"
+    },
+    {
+      "category": "authentication",
+      "severity": "critical",
+      "title": "Missing Authorization header for protected APIs",
+      "description": "Authenticated endpoints require auth headers in httpOptions",
+      "wrong": "<InDataTable api-mode fetch-url=\"/api/protected\" />",
+      "correct": "<InDataTable api-mode fetch-url=\"/api/protected\" :http-options=\"{ headers: { 'Authorization': authToken } }\" />",
+      "impact": "API requests fail with 401 Unauthorized"
+    },
+    {
+      "category": "prop-usage",
+      "severity": "high",
+      "title": "Wrong paginationPath for API response",
+      "description": "Path must match your API's pagination data location",
+      "wrong": "pagination-path=\"pagination\" for API response { meta: { pagination: {...} } }",
+      "correct": "pagination-path=\"meta.pagination\"",
+      "impact": "Pagination broken, wrong page counts"
+    },
+    {
+      "category": "prop-usage",
+      "severity": "high",
+      "title": "Using 'title' instead of 'label' in tableFields",
+      "description": "V1 uses 'label' property for column headers",
+      "wrong": ":table-fields=\"[{ field: 'name', title: 'Name' }]\"",
+      "correct": ":table-fields=\"[{ field: 'name', label: 'Name' }]\"",
+      "impact": "Column headers don't display"
+    },
+    {
+      "category": "performance",
+      "severity": "medium",
+      "title": "Loading large datasets client-side",
+      "description": "Client-side mode not suitable for > 1000 rows",
+      "wrong": ":data=\"tenThousandRows\"",
+      "correct": "api-mode fetch-url=\"/api/data\" with server-side pagination",
+      "impact": "Page freezes, poor performance"
+    },
+    {
+      "category": "prop-usage",
+      "severity": "medium",
+      "title": "Complex logic in rowClass function",
+      "description": "rowClass called for every row on every render",
+      "wrong": ":row-class=\"row => expensiveCalculation(row)\"",
+      "correct": ":row-class=\"row => row.status === 'error' ? 'error-row' : ''\"",
+      "impact": "Table re-renders slowly, performance issues"
     }
   ]
 }

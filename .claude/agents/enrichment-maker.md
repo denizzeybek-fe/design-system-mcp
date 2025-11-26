@@ -35,16 +35,18 @@ mcp__design-system__get-component("InTooltipV2")
 ### `mcp__design-system__search-components`
 Search for related components to learn patterns.
 
-## Enrichment Structure
+## Enrichment Structure (v2 - Updated 2025-11-25)
 
-Your enrichment file should follow this structure:
+Your enrichment file should follow this structure (based on InRibbons.json gold standard):
 
 ```json
 {
+  "component": "ComponentName",
   "propEnrichments": {
     "propName": {
       "valueFormat": {
         "structure": "Type signature (e.g., Array<{ key: value }>)",
+        "validValues": ["option1", "option2"],  // Only for enums
         "examples": [
           "Example 1 with real values",
           "Example 2 showing edge case"
@@ -57,7 +59,7 @@ Your enrichment file should follow this structure:
         {
           "mistake": "Description of common error",
           "impact": "What happens when this mistake is made",
-          "fix": "How to fix it",
+          "fix": "How to fix it (with code example)",
           "severity": "critical | high | medium | low"
         }
       ]
@@ -67,49 +69,133 @@ Your enrichment file should follow this structure:
     "eventName": {
       "payloadFormat": {
         "structure": "Event payload structure",
-        "examples": ["{ id: 'btn-1', value: true }"],
-        "notes": "When this event fires"
-      }
+        "notes": "When this event fires and why"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Not handling this event",
+          "impact": "What breaks",
+          "fix": "How to handle it",
+          "severity": "high"
+        }
+      ]
+    }
+  },
+  "codeSnippets": {
+    "template": {
+      "basic": "<Component\n  prop=\"value\"\n/>",
+      "advanced": "<Component\n  :complex=\"true\"\n  @event=\"handler\"\n/>",
+      "withSlots": "// Example with slots",
+      "conditional": "// v-if/v-show patterns",
+      "looped": "// v-for patterns"
+    },
+    "script": "import { ref } from 'vue';\nimport Component from '@useinsider/design-system-vue';\n\nconst value = ref('initial');\n\nconst handleEvent = () => {\n  // Event handler\n};",
+    "style": "/* Component-specific styling */\n.component-wrapper {\n  position: relative;\n  display: flex;\n}\n\n/* Type-specific classes */\n.component--primary {\n  background: blue;\n}\n\n/* Responsive */\n@media (max-width: 768px) {\n  .component-wrapper {\n    /* Mobile adjustments */\n  }\n}"
+  },
+  "styling": {
+    "positioning": "static|absolute|fixed|relative",
+    "layout": "flex|grid|block",
+    "fullWidth": true|false,
+    "zIndex": null|number,
+    "customization": {
+      "cssClasses": [
+        "component-wrapper",
+        "component__element",
+        "component--modifier"
+      ],
+      "cssVariables": ["--component-color"],
+      "themeable": true|false,
+      "notes": "How to customize/override"
+    },
+    "responsive": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true,
+      "notes": "Breakpoints, mobile behavior"
     }
   },
   "examples": [
     {
-      "title": "Example title",
-      "description": "What this example demonstrates",
-      "code": "<ComponentV2\n  id=\"example\"\n  prop=\"value\"\n/>",
+      "title": "Basic Usage",
+      "description": "Simplest implementation",
+      "category": "basic",
+      "code": "<Component />",
+      "language": "vue"
+    },
+    {
+      "title": "Advanced Pattern",
+      "description": "Complex real-world scenario",
+      "category": "advanced",
+      "code": "<template>\n  <Component\n    v-model=\"data\"\n    @event=\"handler\"\n  />\n</template>\n\n<script setup>\nimport { ref } from 'vue';\nconst data = ref(null);\n</script>",
       "language": "vue"
     }
   ],
-  "helperFunctions": [
+  "implementationPatterns": [
     {
-      "name": "formatDate",
-      "description": "Converts Date to dd.mm.yyyy format",
-      "usage": "formatDate(new Date())",
-      "code": "const formatDate = (date) => {\n  const d = new Date(date);\n  return `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()}`;\n};"
+      "pattern": "Pattern name",
+      "when": "When to use this pattern",
+      "code": "const example = ref(true);",
+      "notes": "Additional tips"
+    }
+  ],
+  "useCases": [
+    {
+      "useCase": "Use case title",
+      "description": "What it's for",
+      "implementation": "<Component />",
+      "notes": "Tips and gotchas"
+    }
+  ],
+  "bestPractices": [
+    {
+      "practice": "What to do",
+      "why": "Reasoning",
+      "example": "Good code",
+      "antiPattern": "What to avoid"
     }
   ],
   "commonMistakes": [
     {
-      "mistake": "Component-level common mistake",
-      "impact": "Impact on functionality",
-      "fix": "How to fix",
-      "severity": "critical | high | medium | low"
+      "category": "security|ux|performance|api|type",
+      "severity": "critical|high|medium|low",
+      "title": "Short mistake title",
+      "description": "Detailed explanation",
+      "wrong": "// Bad code",
+      "correct": "// Good code",
+      "impact": "What breaks"
     }
   ],
   "performanceNotes": [
     {
       "note": "Performance consideration",
-      "recommendation": "Best practice for performance"
+      "recommendation": "Best practice"
     }
   ],
   "accessibilityNotes": [
     {
-      "note": "Accessibility requirement",
-      "recommendation": "How to ensure accessibility"
+      "note": "A11y requirement",
+      "recommendation": "How to ensure it"
+    }
+  ],
+  "helperFunctions": [
+    {
+      "name": "helperName",
+      "purpose": "What it does",
+      "code": "const helper = () => {};",
+      "usage": "helper()"
     }
   ]
 }
 ```
+
+**NEW SECTIONS (Critical for Claude's feedback):**
+- ⭐ `codeSnippets` - Template, script, style code (solves "no source code" issue)
+- ⭐ `styling` - CSS classes, positioning, layout (solves "no CSS details" issue)
+- ⭐ `implementationPatterns` - Common integration patterns (solves "no implementation details" issue)
+- ⭐ `useCases` - Real-world scenarios
+- ⭐ `bestPractices` - With anti-patterns (solves "no best practices" issue)
+
+**Reference:** See `src/registry/enrichments/InRibbons.json` for gold standard example.
 
 ## Workflow
 

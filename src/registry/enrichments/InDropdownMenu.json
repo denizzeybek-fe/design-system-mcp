@@ -1,5 +1,12 @@
 {
   "component": "InDropdownMenu",
+  "_metadata": {
+    "lastUpdated": "2025-11-25T14:48:39.823Z",
+    "propsHash": "405ec2061e6b",
+    "eventsHash": "d9b44726d530",
+    "propCount": 40,
+    "eventCount": 9
+  },
   "propEnrichments": {
     "options": {
       "valueFormat": {
@@ -10,12 +17,24 @@
           "[{ text: 'Delete', value: 'delete', icon: 'trash', description: 'Remove permanently' }]",
           "[{ text: 'Export', value: 'export', secondaryButton: { icon: 'download', action: 'download-csv' } }]"
         ],
-        "requiredKeys": ["text", "value"],
-        "optionalKeys": ["icon", "description", "disabled", "secondaryButton"],
+        "requiredKeys": [
+          "text",
+          "value"
+        ],
+        "optionalKeys": [
+          "icon",
+          "description",
+          "disabled",
+          "secondaryButton"
+        ],
         "notes": "CRITICAL: Property is 'text' not 'label'! secondaryButton adds extra action button to menu item.",
         "typescript": "Array<{ text: string; value: any; icon?: string; description?: string; disabled?: boolean; secondaryButton?: { icon: string; action: string } }>"
       },
-      "relatedProps": ["selectionType", "preSelectedValues", "searchStatus"],
+      "relatedProps": [
+        "selectionType",
+        "preSelectedValues",
+        "searchStatus"
+      ],
       "commonMistakes": [
         {
           "mistake": "Using 'label' instead of 'text' property",
@@ -56,7 +75,10 @@
         "notes": "Array of option values (not objects!) to pre-select. Used when selectionType='multiple' to show checkmarks.",
         "typescript": "Array<any>"
       },
-      "relatedProps": ["selectionType", "options"],
+      "relatedProps": [
+        "selectionType",
+        "options"
+      ],
       "commonMistakes": [
         {
           "mistake": "Passing array of objects instead of values",
@@ -75,12 +97,18 @@
     "selectionType": {
       "valueFormat": {
         "structure": "string (enum)",
-        "validValues": ["single", "multiple"],
+        "validValues": [
+          "single",
+          "multiple"
+        ],
         "default": "single",
         "notes": "Controls selection behavior. 'single' closes menu on click, 'multiple' keeps open with checkboxes.",
         "typescript": "'single' | 'multiple'"
       },
-      "relatedProps": ["preSelectedValues", "selectAllOptionStatus"],
+      "relatedProps": [
+        "preSelectedValues",
+        "selectAllOptionStatus"
+      ],
       "commonMistakes": [
         {
           "mistake": "Using 'multi' or 'checkbox' instead of 'multiple'",
@@ -103,8 +131,13 @@
         "notes": "Enable search/filter functionality within dropdown menu",
         "typescript": "boolean"
       },
-      "relatedEvents": ["search"],
-      "relatedProps": ["lazyLoadSearch", "externalSearch"]
+      "relatedEvents": [
+        "search"
+      ],
+      "relatedProps": [
+        "lazyLoadSearch",
+        "externalSearch"
+      ]
     },
     "selectAllOptionStatus": {
       "valueFormat": {
@@ -113,8 +146,13 @@
         "notes": "Show 'Select All' option at top when selectionType='multiple'",
         "typescript": "boolean"
       },
-      "relatedProps": ["selectionType"],
-      "relatedEvents": ["selectAllOptions", "resetAllOptions"]
+      "relatedProps": [
+        "selectionType"
+      ],
+      "relatedEvents": [
+        "selectAllOptions",
+        "resetAllOptions"
+      ]
     },
     "createOptionStatus": {
       "valueFormat": {
@@ -123,28 +161,47 @@
         "notes": "Allow creating new menu items on the fly",
         "typescript": "boolean"
       },
-      "relatedProps": ["optionValidationType", "optionValidationText"],
-      "relatedEvents": ["addOption"]
+      "relatedProps": [
+        "optionValidationType",
+        "optionValidationText"
+      ],
+      "relatedEvents": [
+        "addOption"
+      ]
     },
     "staticPosition": {
       "valueFormat": {
         "structure": "string (enum)",
-        "validValues": ["bottom left", "bottom right", "top left", "top right"],
+        "validValues": [
+          "bottom left",
+          "bottom right",
+          "top left",
+          "top right"
+        ],
         "default": "bottom left",
         "notes": "Dropdown menu position relative to trigger button",
         "typescript": "'bottom left' | 'bottom right' | 'top left' | 'top right'"
       },
-      "relatedProps": ["dynamicPosition"]
+      "relatedProps": [
+        "dynamicPosition"
+      ]
     },
     "state": {
       "valueFormat": {
         "structure": "string (enum)",
-        "validValues": ["default", "success", "warning", "error"],
+        "validValues": [
+          "default",
+          "success",
+          "warning",
+          "error"
+        ],
         "default": "default",
         "notes": "Visual state for validation feedback",
         "typescript": "'default' | 'success' | 'warning' | 'error'"
       },
-      "relatedProps": ["stateMessage"]
+      "relatedProps": [
+        "stateMessage"
+      ]
     }
   },
   "eventEnrichments": {
@@ -179,7 +236,9 @@
       ],
       "useCase": "Emitted when secondary action button clicked. Different from main optionClick",
       "handlingPattern": "@secondaryButtonClick=\"handleSecondary\"\n\nhandleSecondary({ option, action }) {\n  if (action === 'download-csv') {\n    this.downloadCSV(option.value);\n  }\n}",
-      "relatedProps": ["options.secondaryButton"]
+      "relatedProps": [
+        "options.secondaryButton"
+      ]
     },
     "selectAllOptions": {
       "payloadTypes": [
@@ -191,7 +250,10 @@
         }
       ],
       "useCase": "Emitted when user clicks 'Select All'. Payload contains all available options",
-      "relatedProps": ["selectAllOptionStatus", "selectionType"]
+      "relatedProps": [
+        "selectAllOptionStatus",
+        "selectionType"
+      ]
     },
     "resetAllOptions": {
       "payloadTypes": [
@@ -203,7 +265,9 @@
         }
       ],
       "useCase": "Emitted when user clears all selections. Payload is empty array",
-      "relatedProps": ["selectAllOptionStatus"]
+      "relatedProps": [
+        "selectAllOptionStatus"
+      ]
     },
     "search": {
       "payloadTypes": [
@@ -214,7 +278,10 @@
         }
       ],
       "useCase": "Emitted when user types in search box. Use to filter options",
-      "relatedProps": ["searchStatus", "lazyLoadSearch"]
+      "relatedProps": [
+        "searchStatus",
+        "lazyLoadSearch"
+      ]
     },
     "addOption": {
       "payloadTypes": [
@@ -225,7 +292,9 @@
         }
       ],
       "useCase": "Emitted when user creates a new option. Add to options array",
-      "relatedProps": ["createOptionStatus"]
+      "relatedProps": [
+        "createOptionStatus"
+      ]
     }
   },
   "examples": [

@@ -1,5 +1,12 @@
 {
   "component": "InSidebarV2",
+  "_metadata": {
+    "lastUpdated": "2025-11-25T14:48:39.823Z",
+    "propsHash": "fd53edc29c4b",
+    "eventsHash": "41c59fa49883",
+    "propCount": 7,
+    "eventCount": 5
+  },
   "propEnrichments": {
     "routes": {
       "valueFormat": {
@@ -30,8 +37,14 @@
         ],
         "typescript": "Array<{ id: string; label: string; path: string; icon?: string; badge?: number; children?: Array<Route>; disabled?: boolean; active?: boolean }>"
       },
-      "relatedProps": ["recentSearches", "searchResults"],
-      "relatedEvents": ["navigate", "route-click"],
+      "relatedProps": [
+        "recentSearches",
+        "searchResults"
+      ],
+      "relatedEvents": [
+        "navigate",
+        "route-click"
+      ],
       "commonMistakes": [
         {
           "mistake": "Missing required 'id' property in route objects",
@@ -79,8 +92,13 @@
         ],
         "typescript": "Array<string> | Array<{ query: string; timestamp?: number; count?: number }>"
       },
-      "relatedProps": ["searchResults"],
-      "relatedEvents": ["search", "recent-search-click"],
+      "relatedProps": [
+        "searchResults"
+      ],
+      "relatedEvents": [
+        "search",
+        "recent-search-click"
+      ],
       "commonMistakes": [
         {
           "mistake": "Storing too many recent searches (>20)",
@@ -120,8 +138,13 @@
         ],
         "typescript": "Array<{ id: string; title: string; type?: string; path?: string; icon?: string; description?: string }>"
       },
-      "relatedProps": ["recentSearches"],
-      "relatedEvents": ["search-result-click", "search"],
+      "relatedProps": [
+        "recentSearches"
+      ],
+      "relatedEvents": [
+        "search-result-click",
+        "search"
+      ],
       "commonMistakes": [
         {
           "mistake": "Not limiting search results (showing 100+ results)",

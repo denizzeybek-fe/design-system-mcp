@@ -1,8 +1,12 @@
 {
-  "componentName": "InDataTableV2",
-  "version": "2.0.0",
-  "lastUpdated": "2024-11-24",
-
+  "component": "InDataTableV2",
+  "_metadata": {
+    "lastUpdated": "2025-11-26T08:45:00.000Z",
+    "propsHash": "99623a75db10",
+    "eventsHash": "90ff4592ef03",
+    "propCount": 58,
+    "eventCount": 30
+  },
   "propEnrichments": {
     "columnOptions": {
       "description": "Column definitions array - replaces V1 tableFields",
@@ -43,7 +47,11 @@
       "description": "Data loading mode - replaces V1 apiMode",
       "valueFormat": {
         "structure": "string enum",
-        "possibleValues": ["clientSide", "serverSide", "infinite"],
+        "possibleValues": [
+          "clientSide",
+          "serverSide",
+          "infinite"
+        ],
         "example": "row-model-type=\"serverSide\""
       },
       "commonMistakes": [
@@ -65,7 +73,10 @@
       "description": "HTTP method for API requests",
       "valueFormat": {
         "structure": "string enum",
-        "possibleValues": ["GET", "POST"],
+        "possibleValues": [
+          "GET",
+          "POST"
+        ],
         "example": "http-method=\"POST\""
       }
     },
@@ -88,7 +99,10 @@
       "description": "Row selection mode",
       "valueFormat": {
         "structure": "string enum",
-        "possibleValues": ["single", "multiple"],
+        "possibleValues": [
+          "single",
+          "multiple"
+        ],
         "example": "rows-selection=\"multiple\""
       }
     },
@@ -103,7 +117,11 @@
       "description": "Height of each row in pixels",
       "valueFormat": {
         "structure": "string enum or number",
-        "possibleValues": ["small (48px)", "medium (64px)", "custom number"],
+        "possibleValues": [
+          "small (48px)",
+          "medium (64px)",
+          "custom number"
+        ],
         "example": "row-height=\"medium\""
       }
     },
@@ -254,7 +272,10 @@
       "description": "Type of loading indicator",
       "valueFormat": {
         "structure": "string enum",
-        "possibleValues": ["spinner", "skeleton"],
+        "possibleValues": [
+          "spinner",
+          "skeleton"
+        ],
         "example": "loading-type=\"skeleton\""
       }
     },
@@ -357,9 +378,30 @@
         "structure": "boolean",
         "example": "is-responsive"
       }
+    },
+    "tableSearchParams": {
+      "description": "Additional parameters to send with search/filter requests in server-side mode",
+      "valueFormat": {
+        "structure": "Object with custom search parameters",
+        "typescript": "Record<string, any>",
+        "example": ":table-search-params=\"{ teamId: currentTeam.id, status: 'active' }\"",
+        "notes": "Only used in serverSide row model. Merged with pagination/filter params in API requests"
+      },
+      "relatedProps": ["rowModelType", "fetchUrl", "httpMethod"],
+      "commonMistakes": [
+        {
+          "mistake": "Using tableSearchParams in clientSide mode",
+          "correction": "tableSearchParams only works with row-model-type=\"serverSide\"",
+          "severity": "medium"
+        },
+        {
+          "mistake": "Not reactively updating tableSearchParams",
+          "correction": "Use ref/reactive for dynamic params: const params = ref({ status: 'active' })",
+          "severity": "low"
+        }
+      ]
     }
   },
-
   "eventEnrichments": {
     "dataLoaded": {
       "description": "Emitted when table data is loaded",
@@ -480,10 +522,45 @@
       "description": "Emitted when grid size changes",
       "payload": "{ width: number, height: number }",
       "usage": "@grid-size-changed=\"handleResize\""
+    },
+    "loadingStatus": {
+      "description": "Emitted when loading state changes",
+      "payload": "boolean",
+      "usage": "@loading-status=\"handleLoadingChange\"",
+      "notes": "Emitted when table starts/stops loading data. Useful for showing global loading indicators"
+    },
+    "rowDragEnter": {
+      "description": "Emitted when dragged row enters a drop zone",
+      "payload": "{ node: RowNode, overNode: RowNode, event: DragEvent }",
+      "usage": "@row-drag-enter=\"handleDragEnter\"",
+      "notes": "Fires when dragging row over another row. Use with row-drag-managed prop"
+    },
+    "rowDragMove": {
+      "description": "Emitted during row drag movement",
+      "payload": "{ node: RowNode, overNode: RowNode, event: DragEvent }",
+      "usage": "@row-drag-move=\"handleDragMove\"",
+      "notes": "Fires continuously while dragging. Use for visual feedback during drag"
+    },
+    "rowDragLeave": {
+      "description": "Emitted when dragged row leaves a drop zone",
+      "payload": "{ node: RowNode, overNode: RowNode, event: DragEvent }",
+      "usage": "@row-drag-leave=\"handleDragLeave\"",
+      "notes": "Fires when drag exits a row area. Use to clear hover states"
+    },
+    "rowDragCancel": {
+      "description": "Emitted when row drag operation is cancelled",
+      "payload": "{ node: RowNode, event: DragEvent }",
+      "usage": "@row-drag-cancel=\"handleDragCancel\"",
+      "notes": "Fires when user cancels drag (ESC key or invalid drop). Use to reset UI state"
+    },
+    "rowDragStopped": {
+      "description": "Emitted when row drag operation stops (successful or not)",
+      "payload": "{ node: RowNode, event: DragEvent }",
+      "usage": "@row-drag-stopped=\"handleDragStopped\"",
+      "notes": "Always fires at end of drag operation. Use for cleanup regardless of success/failure"
     }
   },
-
-  "exampleEnrichments": [
+  "examples": [
     {
       "title": "Basic Client-Side Table",
       "description": "Simple table with local data",
@@ -515,7 +592,6 @@
       "code": "<InDataTableV2\n  :data=\"orders\"\n  :column-options=\"orderColumns\"\n  nested-table-status\n  :nested-table-fields=\"orderItemColumns\"\n  @nested-data-ready=\"loadNestedData\"\n/>"
     }
   ],
-
   "commonMistakes": [
     {
       "mistake": "Using tableFields instead of columnOptions",
@@ -560,7 +636,6 @@
       "severity": "medium"
     }
   ],
-
   "bestPractices": [
     {
       "practice": "Use AG Grid column definition format",
@@ -588,7 +663,6 @@
       "example": "row-model-type=\"serverSide\" for paginated API data"
     }
   ],
-
   "performanceNotes": [
     {
       "note": "AG Grid virtualization",
@@ -606,7 +680,6 @@
       "recommendation": "Memoize or pre-compute formatted values"
     }
   ],
-
   "accessibilityNotes": [
     {
       "note": "Keyboard navigation",
@@ -617,6 +690,107 @@
       "note": "Screen reader support",
       "description": "Use proper headerName for screen reader announcements",
       "recommendation": "Provide descriptive headerName for each column"
+    }
+  ],
+  "codeSnippets": {
+    "template": {
+      "basic": "<InDataTableV2\n  :data=\"users\"\n  :column-options=\"columns\"\n  :default-item-per-page=\"10\"\n  pagination-status\n/>",
+      "serverSide": "<InDataTableV2\n  row-model-type=\"serverSide\"\n  fetch-url=\"/api/users\"\n  http-method=\"POST\"\n  :column-options=\"columns\"\n  :total-data=\"totalCount\"\n  :table-search-params=\"searchParams\"\n  @data-loaded=\"handleDataLoaded\"\n  @pagination-changed=\"handlePaginationChange\"\n/>",
+      "withSearch": "<InDataTableV2\n  :data=\"users\"\n  :column-options=\"columns\"\n  search-filter-status\n  search-filter-placeholder=\"Search users...\"\n  @set-search-value=\"handleSearch\"\n/>",
+      "withBulkActions": "<InDataTableV2\n  :data=\"users\"\n  :column-options=\"columns\"\n  rows-selection=\"multiple\"\n  has-bulk-actions\n  :bulk-actions-options=\"bulkActions\"\n  @bulk-action=\"handleBulkAction\"\n/>",
+      "dragAndDrop": "<InDataTableV2\n  :data=\"tasks\"\n  :column-options=\"columns\"\n  row-drag-managed\n  @row-drag-end=\"handleRowReorder\"\n  @row-drag-stopped=\"saveDraggedOrder\"\n/>"
+    },
+    "script": "import { ref, computed } from 'vue';\nimport InDataTableV2 from '@useinsider/design-system-vue';\n\n// Column definitions\nconst columns = [\n  {\n    field: 'name',\n    headerName: 'Name',\n    sortable: true,\n    filter: true,\n    width: 200\n  },\n  {\n    field: 'email',\n    headerName: 'Email',\n    sortable: true,\n    filter: 'agTextColumnFilter',\n    width: 250\n  },\n  {\n    field: 'role',\n    headerName: 'Role',\n    width: 120\n  },\n  {\n    field: 'status',\n    headerName: 'Status',\n    cellRenderer: 'InStatus',\n    cellRendererParams: {\n      statusMap: {\n        active: { text: 'Active', type: 'success' },\n        inactive: { text: 'Inactive', type: 'default' }\n      }\n    },\n    width: 120\n  },\n  {\n    field: 'actions',\n    headerName: 'Actions',\n    pinned: 'right',\n    cellRenderer: 'InActions',\n    cellRendererParams: {\n      actions: [\n        { label: 'Edit', icon: 'edit', onClick: handleEdit },\n        { label: 'Delete', icon: 'trash', onClick: handleDelete }\n      ]\n    },\n    width: 120\n  }\n];\n\n// Data\nconst users = ref([]);\nconst totalCount = ref(0);\nconst isLoading = ref(false);\n\n// Server-side params\nconst searchParams = ref({\n  teamId: 123,\n  includeInactive: false\n});\n\n// Bulk actions\nconst bulkActions = [\n  { id: 'export', label: 'Export', icon: 'download' },\n  { id: 'delete', label: 'Delete', icon: 'trash', variant: 'danger' }\n];\n\n// Event handlers\nconst handleDataLoaded = (event) => {\n  console.log('Data loaded:', event.data);\n};\n\nconst handlePaginationChange = ({ page, perPage }) => {\n  console.log(`Page ${page}, ${perPage} per page`);\n};\n\nconst handleBulkAction = ({ actionId, selectedRows }) => {\n  if (actionId === 'delete') {\n    console.log('Deleting rows:', selectedRows);\n  }\n};\n\nconst handleRowReorder = (event) => {\n  const { node, overNode } = event;\n  console.log('Moved', node.data, 'over', overNode?.data);\n};\n\nconst handleEdit = (rowData) => {\n  console.log('Edit:', rowData);\n};\n\nconst handleDelete = (rowData) => {\n  console.log('Delete:', rowData);\n};",
+    "style": "/* AG Grid table styling */\n.ag-theme-alpine {\n  --ag-header-height: 56px;\n  --ag-row-height: 48px;\n  --ag-border-color: #e0e0e0;\n  --ag-header-background-color: #f5f5f5;\n  --ag-odd-row-background-color: #fafafa;\n}\n\n/* Custom cell styles */\n.ag-cell {\n  display: flex;\n  align-items: center;\n  padding: 0 12px;\n}\n\n/* Pinned column styling */\n.ag-pinned-left-header,\n.ag-pinned-left-cols-container {\n  border-right: 2px solid #e0e0e0;\n}\n\n.ag-pinned-right-header,\n.ag-pinned-right-cols-container {\n  border-left: 2px solid #e0e0e0;\n}\n\n/* Row drag handle */\n.ag-row-drag {\n  cursor: move;\n  padding: 4px;\n}\n\n/* Loading overlay */\n.ag-overlay-loading-wrapper {\n  background-color: rgba(255, 255, 255, 0.8);\n}"
+  },
+  "styling": {
+    "positioning": "static",
+    "layout": "block",
+    "fullWidth": true,
+    "zIndex": null,
+    "customization": {
+      "cssClasses": [
+        "ag-theme-alpine",
+        "ag-header",
+        "ag-row",
+        "ag-cell",
+        "ag-pinned-left-header",
+        "ag-pinned-right-header",
+        "ag-row-drag"
+      ],
+      "cssVariables": [
+        "--ag-header-height",
+        "--ag-row-height",
+        "--ag-border-color",
+        "--ag-header-background-color",
+        "--ag-odd-row-background-color"
+      ],
+      "themeable": true,
+      "notes": "Uses AG Grid theming system. Override CSS variables for customization"
+    },
+    "responsive": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true,
+      "notes": "Set is-responsive prop for mobile-optimized layout"
+    }
+  },
+  "implementationPatterns": [
+    {
+      "pattern": "Server-side data fetching with custom params",
+      "when": "Large datasets with filtering/search",
+      "code": "const searchParams = ref({\n  teamId: currentTeam.value.id,\n  status: selectedStatus.value\n});\n\nconst handlePaginationChange = async ({ page, perPage }) => {\n  // Table automatically fetches with updated params\n  console.log('Fetching page', page);\n};\n\n// Update params reactively\nwatch([currentTeam, selectedStatus], () => {\n  searchParams.value = {\n    teamId: currentTeam.value.id,\n    status: selectedStatus.value\n  };\n});",
+      "notes": "Table refetches automatically when tableSearchParams changes"
+    },
+    {
+      "pattern": "Row drag and drop reordering",
+      "when": "Priority lists, task ordering",
+      "code": "const tasks = ref([...]);\n\nconst handleRowReorder = (event) => {\n  const { node, overNode } = event;\n  \n  // Update local data\n  const movedItem = node.data;\n  const targetIndex = overNode.rowIndex;\n  \n  const newData = [...tasks.value];\n  const oldIndex = newData.findIndex(item => item.id === movedItem.id);\n  \n  newData.splice(oldIndex, 1);\n  newData.splice(targetIndex, 0, movedItem);\n  \n  tasks.value = newData;\n};\n\nconst saveDraggedOrder = async () => {\n  // Save new order to backend\n  await api.updateTaskOrder(tasks.value.map((t, i) => ({\n    id: t.id,\n    order: i\n  })));\n};",
+      "notes": "Use @row-drag-end for reordering, @row-drag-stopped for persistence"
+    },
+    {
+      "pattern": "Bulk actions with confirmation",
+      "when": "Destructive operations on multiple rows",
+      "code": "const selectedRows = ref([]);\n\nconst handleSelection = (event) => {\n  selectedRows.value = event.selectedRows;\n};\n\nconst handleBulkAction = async ({ actionId, selectedRows }) => {\n  if (actionId === 'delete') {\n    const confirmed = await showConfirmDialog({\n      title: 'Delete Items',\n      message: `Delete ${selectedRows.length} items?`\n    });\n    \n    if (confirmed) {\n      await api.bulkDelete(selectedRows.map(r => r.id));\n      // Refresh table\n    }\n  } else if (actionId === 'export') {\n    exportToCSV(selectedRows);\n  }\n};",
+      "notes": "Always confirm destructive bulk actions"
+    },
+    {
+      "pattern": "Custom cell renderers with events",
+      "when": "Interactive cells (buttons, toggles, dropdowns)",
+      "code": "const columns = [\n  {\n    field: 'status',\n    headerName: 'Status',\n    cellRenderer: 'InToggle',\n    cellRendererParams: {\n      onToggle: async (rowData, newValue) => {\n        await api.updateStatus(rowData.id, newValue);\n        // Update local data\n        const row = data.value.find(r => r.id === rowData.id);\n        if (row) row.status = newValue;\n      }\n    }\n  }\n];",
+      "notes": "Pass event handlers via cellRendererParams for interactive cells"
+    }
+  ],
+  "useCases": [
+    {
+      "useCase": "User management dashboard",
+      "description": "Display users with filtering, search, and bulk actions",
+      "implementation": "<InDataTableV2\n  :data=\"users\"\n  :column-options=\"userColumns\"\n  search-filter-status\n  status-filter-status\n  :status-filter-list=\"statusOptions\"\n  rows-selection=\"multiple\"\n  has-bulk-actions\n  :bulk-actions-options=\"bulkActions\"\n  pagination-status\n  :default-item-per-page=\"25\"\n/>",
+      "notes": "Combine search, filters, and bulk actions for admin panels"
+    },
+    {
+      "useCase": "API data with server-side pagination",
+      "description": "Large datasets fetched from backend API",
+      "implementation": "<InDataTableV2\n  row-model-type=\"serverSide\"\n  fetch-url=\"/api/orders\"\n  http-method=\"POST\"\n  :column-options=\"orderColumns\"\n  :total-data=\"totalOrders\"\n  :table-search-params=\"{ companyId: company.id }\"\n  pagination-status\n  :default-item-per-page=\"50\"\n  @data-loaded=\"handleLoad\"\n/>",
+      "notes": "Use serverSide for 10K+ records"
+    },
+    {
+      "useCase": "Task priority reordering",
+      "description": "Drag and drop to reorder tasks by priority",
+      "implementation": "<InDataTableV2\n  :data=\"tasks\"\n  :column-options=\"taskColumns\"\n  row-drag-managed\n  @row-drag-end=\"handleReorder\"\n  @row-drag-stopped=\"saveOrder\"\n  auto-height\n/>",
+      "notes": "Perfect for kanban-style task management"
+    },
+    {
+      "useCase": "Nested/hierarchical data",
+      "description": "Organization chart or category tree",
+      "implementation": "<InDataTableV2\n  :data=\"orgData\"\n  :column-options=\"orgColumns\"\n  is-tree-data\n  :group-data-path=\"data => data.orgHierarchy\"\n  :group-default-expanded=\"2\"\n  auto-height\n/>",
+      "notes": "Use for org charts, file trees, category hierarchies"
+    },
+    {
+      "useCase": "Order details with expandable rows",
+      "description": "Master-detail view with nested order items",
+      "implementation": "<InDataTableV2\n  :data=\"orders\"\n  :column-options=\"orderColumns\"\n  nested-table-status\n  :nested-table-fields=\"orderItemColumns\"\n  @nested-data-ready=\"loadOrderItems\"\n  pagination-status\n/>",
+      "notes": "Expand rows to show related data (order items, sub-tasks, etc.)"
     }
   ]
 }

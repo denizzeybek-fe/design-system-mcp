@@ -1,5 +1,12 @@
 {
   "component": "InTooltipV2",
+  "_metadata": {
+    "lastUpdated": "2025-11-25T14:48:39.823Z",
+    "propsHash": "b4ef99145505",
+    "eventsHash": "4f53cda18c2b",
+    "propCount": 14,
+    "eventCount": 0
+  },
   "propEnrichments": {
     "offset": {
       "valueFormat": {
@@ -25,7 +32,11 @@
         ],
         "typescript": "{ x: number; y: number }"
       },
-      "relatedProps": ["dynamicPosition", "staticPosition", "absolutePosition"],
+      "relatedProps": [
+        "dynamicPosition",
+        "staticPosition",
+        "absolutePosition"
+      ],
       "commonMistakes": [
         {
           "mistake": "Using string values instead of numbers",
@@ -65,7 +76,11 @@
         ],
         "typescript": "{ top?: number; left?: number; bottom?: number; right?: number }"
       },
-      "relatedProps": ["dynamicPosition", "staticPosition", "offset"],
+      "relatedProps": [
+        "dynamicPosition",
+        "staticPosition",
+        "offset"
+      ],
       "commonMistakes": [
         {
           "mistake": "Using absolutePosition with dynamicPosition=true",
@@ -93,7 +108,11 @@
         "notes": "When true, tooltip automatically positions itself to stay within viewport bounds. When false, uses staticPosition or absolutePosition.",
         "typescript": "boolean"
       },
-      "relatedProps": ["staticPosition", "absolutePosition", "offset"],
+      "relatedProps": [
+        "staticPosition",
+        "absolutePosition",
+        "offset"
+      ],
       "commonMistakes": [
         {
           "mistake": "Setting dynamicPosition=true with absolutePosition",
@@ -126,7 +145,10 @@
         ],
         "typescript": "string"
       },
-      "relatedProps": ["dynamicPosition", "absolutePosition"],
+      "relatedProps": [
+        "dynamicPosition",
+        "absolutePosition"
+      ],
       "commonMistakes": [
         {
           "mistake": "Using invalid position keywords",

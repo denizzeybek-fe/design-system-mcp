@@ -1,8 +1,14 @@
 {
+  "_metadata": {
+    "lastUpdated": "2025-11-25T14:48:39.823Z",
+    "propsHash": "5af3ca16ac82",
+    "eventsHash": "c7cf003aa202",
+    "propCount": 33,
+    "eventCount": 8
+  },
   "componentName": "InDropDown",
   "version": "1.0.0",
   "lastUpdated": "2024-11-24",
-
   "propEnrichments": {
     "options": {
       "description": "Array of selectable options",
@@ -51,7 +57,10 @@
       "description": "Override dropdown position",
       "valueFormat": {
         "structure": "string enum",
-        "possibleValues": ["top", "bottom"],
+        "possibleValues": [
+          "top",
+          "bottom"
+        ],
         "example": "overridden-list-position=\"top\""
       }
     },
@@ -59,7 +68,10 @@
       "description": "Dropdown type/variant",
       "valueFormat": {
         "structure": "string enum",
-        "possibleValues": ["default", "nested"],
+        "possibleValues": [
+          "default",
+          "nested"
+        ],
         "example": "type=\"nested\""
       }
     },
@@ -67,7 +79,11 @@
       "description": "Button style variant",
       "valueFormat": {
         "structure": "string enum",
-        "possibleValues": ["primary", "secondary", "ghost"],
+        "possibleValues": [
+          "primary",
+          "secondary",
+          "ghost"
+        ],
         "example": "button-type=\"secondary\""
       }
     },
@@ -75,7 +91,11 @@
       "description": "Button size",
       "valueFormat": {
         "structure": "string enum",
-        "possibleValues": ["small", "medium", "large"],
+        "possibleValues": [
+          "small",
+          "medium",
+          "large"
+        ],
         "example": "button-size=\"small\""
       }
     },
@@ -83,7 +103,10 @@
       "description": "Position of nested child options",
       "valueFormat": {
         "structure": "string enum",
-        "possibleValues": ["left", "right"],
+        "possibleValues": [
+          "left",
+          "right"
+        ],
         "example": "child-options-left-position=\"right\""
       }
     },
@@ -102,7 +125,6 @@
       }
     }
   },
-
   "eventEnrichments": {
     "change": {
       "description": "Emitted when selection changes",
@@ -135,7 +157,6 @@
       "usage": "@add-new-option=\"handleNewOption\""
     }
   },
-
   "exampleEnrichments": [
     {
       "title": "Basic Select",
@@ -153,7 +174,6 @@
       "code": "<InDropDown\n  id=\"category\"\n  label=\"Category\"\n  :options=\"categories\"\n  v-model=\"selectedCategory\"\n  visible-label\n  invalid\n  invalid-message=\"Please select a category\"\n  can-remove-selected-item\n/>"
     }
   ],
-
   "commonMistakes": [
     {
       "mistake": "Not setting responseKey for API fetch",
@@ -174,7 +194,6 @@
       "severity": "high"
     }
   ],
-
   "bestPractices": [
     {
       "practice": "Use searchStatus for large option lists",

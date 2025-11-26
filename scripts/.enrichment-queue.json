@@ -1,0 +1,15 @@
+[
+  {
+    "component": "InDataTableV2",
+    "priority": "low",
+    "reason": "Event count changed: 29 → 30 | Missing sections: examples",
+    "prompt": "Update enrichment for InDataTableV2.\n\nAdd missing v2 sections: examples\n\nFollow the enrichment-maker agent workflow:\n1. Use mcp__design-system__get-component to get full component details\n2. Read InRibbons.json as gold standard template\n3. Focus on codeSnippets, styling, examples, implementationPatterns, bestPractices\n4. Update or create enrichment file with new v2 schema\n5. IMPORTANT: Add _metadata section with current props/events hash",
+    "metadata": {
+      "lastUpdated": "2025-11-26T09:05:15.805Z",
+      "propsHash": "99623a75db10",
+      "eventsHash": "90ff4592ef03",
+      "propCount": 58,
+      "eventCount": 30
+    }
+  }
+]
