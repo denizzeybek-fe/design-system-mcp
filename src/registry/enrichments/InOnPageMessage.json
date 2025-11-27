@@ -72,7 +72,7 @@
       "benefit": "Consistent messaging improves user understanding"
     }
   ],
-  "exampleEnrichments": [
+  "examples": [
     {
       "title": "Error Message with Action",
       "description": "Show error with helpful link",
@@ -84,41 +84,6 @@
       "code": "<InOnPageMessage\n  type=\"success\"\n  size=\"medium\"\n  title-status\n  title-text=\"Changes saved\"\n  description-text=\"Your profile has been updated successfully.\"\n/>"
     }
   ],
-  "figmaMapping": {
-    "componentName": "InOnPageMessage",
-    "storybookUrl": "InOnPageMessage",
-    "propertyOverrides": {},
-    "propertyTypes": {
-      "Type": "enum",
-      "Size": "enum",
-      "Link Button": "boolean",
-      "Title Status": "boolean",
-      "Title Text": "string",
-      "Description Text": "string",
-      "Content Slot Status": "boolean"
-    },
-    "valueMapping": {
-      "Type": {
-        "Error": "error",
-        "Warning": "warning",
-        "Success": "success",
-        "Info": "info"
-      },
-      "Size": {
-        "Small": "small",
-        "Medium": "medium",
-        "Large": "large"
-      }
-    },
-    "stateProps": [],
-    "notes": [
-      "No property overrides needed - all props follow convention",
-      "Type, Size → lowercase (generic rule)",
-      "'xxx Text' → xxxText (text-suffix rule)",
-      "'xxx Status' → xxxStatus (status-suffix rule)",
-      "Boolean 'Link Button' → linkButtonStatus (boolean-status rule)"
-    ]
-  },
   "helperFunctions": [],
   "performanceNotes": [
     "Component is lightweight, no performance concerns",

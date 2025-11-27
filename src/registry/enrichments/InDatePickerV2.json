@@ -262,7 +262,7 @@
       "handlingPattern": "handleCloseComparison() {\n  this.isComparisonActive = false;\n  this.comparisonStartDate = '';\n  this.comparisonEndDate = '';\n}"
     }
   },
-  "exampleEnrichments": [
+  "examples": [
     {
       "title": "Basic Date Range Picker",
       "description": "Simple date range picker without comparison",

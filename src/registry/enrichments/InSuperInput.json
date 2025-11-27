@@ -6,14 +6,14 @@
     "propCount": 49,
     "eventCount": 1
   },
-  "componentName": "InSuperInput",
-  "version": "1.0.0",
-  "lastUpdated": "2024-11-24",
+  "component": "InSuperInput",
   "propEnrichments": {
     "value": {
       "description": "Input content with dynamic tags (v-model)",
       "valueFormat": {
         "structure": "string with tag placeholders",
+        "notes": "Text content including dynamic attribute tags. Tags are wrapped in delimiters (default: {{attribute}}). Use v-model for two-way binding. Example: 'Hello {{first_name}}, welcome!' becomes 'Hello John, welcome!' when rendered. Listen to @purify event for sanitized output.",
+        "typescript": "string",
         "example": "v-model=\"content\" // 'Hello {{name}}, welcome!'"
       }
     },
@@ -21,13 +21,15 @@
       "description": "Available dynamic content/attributes for insertion",
       "valueFormat": {
         "structure": "Array of attribute objects",
+        "notes": "CRITICAL: Defines insertable dynamic attributes (like merge tags). Each attribute needs 'label' (shown in dropdown) and 'value' (inserted into text). Optional 'category' for grouping. Used with dynamicContentSupport=true. Example: user selects 'First Name' from dropdown, {{first_name}} gets inserted into text.",
         "typescript": "Array<{ label: string; value: string; category?: string; }>",
         "example": ":attribute-list=\"[{ label: 'First Name', value: 'first_name' }, { label: 'Email', value: 'email' }]\""
       },
       "commonMistakes": [
         {
           "mistake": "Not providing attributeList when dynamicContentSupport is true",
-          "correction": "Always provide attributeList with available attributes",
+          "impact": "No attributes available in dropdown, users can't insert dynamic content",
+          "fix": "Always provide :attribute-list with available attributes when dynamic-content-support is enabled",
           "severity": "high"
         }
       ]
@@ -36,13 +38,16 @@
       "description": "Enable dynamic content/attribute insertion",
       "valueFormat": {
         "structure": "boolean",
-        "example": "dynamic-content-support"
+        "notes": "Master switch for dynamic attribute functionality. When true, shows attribute dropdown button and allows inserting dynamic tags into text. Requires attributeList to be provided. Used for personalized messages, email templates, SMS campaigns with merge fields.",
+        "typescript": "boolean",
+        "example": ":dynamic-content-support=\"true\""
       }
     },
     "textValidateConfig": {
       "description": "Text validation configuration object",
       "valueFormat": {
         "structure": "Object with validation rules",
+        "notes": "Centralized validation rules object. maxLength enforces character limit (shows counter), minLength requires minimum text, pattern validates format (regex), required makes field mandatory. Validation errors trigger invalid state and messages.",
         "typescript": "{ maxLength?: number; minLength?: number; pattern?: RegExp; required?: boolean; }",
         "example": ":text-validate-config=\"{ maxLength: 160, minLength: 10 }\""
       }
@@ -51,6 +56,8 @@
       "description": "Default fallback text for dynamic attributes",
       "valueFormat": {
         "structure": "string",
+        "notes": "Default value shown when dynamic attribute is empty/undefined. Critical for email/SMS where missing data shouldn't break templates. Example: if {{first_name}} is empty and fallBackText='Customer', message shows 'Hello Customer' instead of 'Hello '.",
+        "typescript": "string",
         "example": "fall-back-text=\"Customer\""
       }
     },
@@ -58,6 +65,8 @@
       "description": "Label for fallback input field",
       "valueFormat": {
         "structure": "string",
+        "notes": "Label text shown above fallback input field when user clicks on dynamic attribute tag. Helps users understand they're setting a default value. Example: 'Default value if empty' or 'Fallback text'.",
+        "typescript": "string",
         "example": "fall-back-label=\"Default Value\""
       }
     },
@@ -65,6 +74,8 @@
       "description": "Characters not allowed in fallback text",
       "valueFormat": {
         "structure": "Array of characters",
+        "notes": "Blacklist of characters that cannot be used in fallback values. Useful for preventing XSS attacks or enforcing data format. Example: ['<', '>', '&'] prevents HTML injection. Shows validation error if user types forbidden character.",
+        "typescript": "Array<string>",
         "example": ":fall-back-disabled-characters=\"['<', '>', '&']\""
       }
     },
@@ -72,6 +83,7 @@
       "description": "Tag delimiters for dynamic content",
       "valueFormat": {
         "structure": "Array with start and end delimiter",
+        "notes": "Defines how dynamic attributes are wrapped in text. Default is ['{{', '}}'] for {{attribute}}. Can customize for different templating syntaxes like ['<<', '>>'] or ['${', '}']. MUST be 2-element array [opening, closing].",
         "typescript": "[string, string]",
         "example": ":delimiters=\"['{{', '}}']\""
       }
@@ -80,27 +92,35 @@
       "description": "Enable emoji picker",
       "valueFormat": {
         "structure": "boolean",
-        "example": "has-emoji"
+        "notes": "Shows emoji picker button that allows users to insert emojis into text. Useful for social media posts, marketing messages, or casual communication. Emoji picker includes categories and search functionality.",
+        "typescript": "boolean",
+        "example": ":has-emoji=\"true\""
       }
     },
     "isTagContainer": {
       "description": "Display as tag container mode",
       "valueFormat": {
         "structure": "boolean",
-        "example": "is-tag-container"
+        "notes": "Changes input to tag-based interface where each entry becomes a removable chip/tag. Instead of free text, users add discrete tags. Useful for categories, keywords, or multiple selections. Works with tagsLimit to restrict count.",
+        "typescript": "boolean",
+        "example": ":is-tag-container=\"true\""
       }
     },
     "isCounter": {
       "description": "Show character counter",
       "valueFormat": {
         "structure": "boolean",
-        "example": "is-counter"
+        "notes": "Displays character count below input (e.g., '45/160'). Count respects textValidateConfig.maxLength. Use countDynamicContentForValidation to decide if dynamic tags count toward limit. Essential for SMS (160 char) or Twitter-like interfaces.",
+        "typescript": "boolean",
+        "example": ":is-counter=\"true\""
       }
     },
     "tagsLimit": {
       "description": "Maximum number of tags allowed",
       "valueFormat": {
         "structure": "number",
+        "notes": "Maximum tags when isTagContainer=true. 0 (default) means unlimited. When limit reached, users cannot add more tags and get warning message. Useful for enforcing business rules like 'max 5 categories'.",
+        "typescript": "number",
         "example": ":tags-limit=\"5\""
       }
     },
@@ -108,6 +128,8 @@
       "description": "Number of visible text rows",
       "valueFormat": {
         "structure": "number",
+        "notes": "Textarea height in rows (visible lines). Default is 1 (single line). Use 3-5 for multi-line text like descriptions, 1 for compact inputs. Actual textarea height = rowLength * line-height.",
+        "typescript": "number",
         "example": ":row-length=\"3\""
       }
     },
@@ -115,8 +137,10 @@
       "description": "Type of attribute dropdown",
       "valueFormat": {
         "structure": "string enum",
+        "notes": "Style/behavior of attribute selector dropdown. 'text' (default) for simple list, 'grouped' organizes by category, 'searchable' adds search box. Use 'searchable' when attributeList has 10+ items for better UX.",
+        "typescript": "'text' | 'grouped' | 'searchable'",
         "possibleValues": [
-          "default",
+          "text",
           "grouped",
           "searchable"
         ],
@@ -127,21 +151,27 @@
       "description": "Allow creating new attributes",
       "valueFormat": {
         "structure": "boolean",
-        "example": "create-new-option-status"
+        "notes": "Enables adding custom attributes not in attributeList. Shows 'Create new' option in dropdown when user types unknown attribute. New attributes can be saved dynamically. Use with caution - consider strictAddMode for controlled environments.",
+        "typescript": "boolean",
+        "example": ":create-new-option-status=\"true\""
       }
     },
     "strictAddMode": {
       "description": "Only allow predefined attributes",
       "valueFormat": {
         "structure": "boolean",
-        "example": "strict-add-mode"
+        "notes": "When true, users can ONLY select from attributeList - no free text or new attributes allowed. Enforces strict data integrity. Use for production email templates where only validated attributes are safe. Default true for security.",
+        "typescript": "boolean",
+        "example": ":strict-add-mode=\"true\""
       }
     },
     "countDynamicContentForValidation": {
       "description": "Include dynamic content in character count",
       "valueFormat": {
         "structure": "boolean",
-        "example": "count-dynamic-content-for-validation"
+        "notes": "When true, dynamic tags like {{first_name}} count as their placeholder length (e.g., 12 chars). When false, tags count as their rendered value length. Critical for SMS: if counting rendered values, 'Hi {{first_name}}' might exceed 160 chars after rendering.",
+        "typescript": "boolean",
+        "example": ":count-dynamic-content-for-validation=\"true\""
       }
     }
   },
@@ -152,7 +182,7 @@
       "usage": "@purify=\"handlePurify\""
     }
   },
-  "exampleEnrichments": [
+  "examples": [
     {
       "title": "Basic Rich Text with Dynamic Content",
       "description": "Text input with attribute insertion",

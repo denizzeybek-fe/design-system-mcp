@@ -11,12 +11,18 @@
     "styling": {
       "valueFormat": {
         "structure": "string (enum)",
-        "validValues": ["solid", "ghost", "text"],
+        "validValues": [
+          "solid",
+          "ghost",
+          "text"
+        ],
         "enumReference": "STYLES.SOLID | STYLES.GHOST | STYLES.TEXT",
         "notes": "Button visual style variant. Use enum constants STYLES.* from component",
         "typescript": "'solid' | 'ghost' | 'text'"
       },
-      "relatedProps": ["type"],
+      "relatedProps": [
+        "type"
+      ],
       "commonMistakes": [
         {
           "mistake": "Using string literal 'SOLID' instead of constant value 'solid'",
@@ -29,12 +35,23 @@
     "type": {
       "valueFormat": {
         "structure": "string (enum)",
-        "validValues": ["primary", "subtle-primary", "secondary", "danger", "warning", "smart", "subtle-smart", "inverse"],
+        "validValues": [
+          "primary",
+          "subtle-primary",
+          "secondary",
+          "danger",
+          "warning",
+          "smart",
+          "subtle-smart",
+          "inverse"
+        ],
         "enumReference": "TYPES.PRIMARY | TYPES.SUBTLE_PRIMARY | TYPES.SECONDARY | TYPES.DANGER | TYPES.WARNING | TYPES.SMART | TYPES.SUBTLE_SMART | TYPES.INVERSE",
         "notes": "Button color theme. Determines background/text colors based on styling",
         "typescript": "'primary' | 'subtle-primary' | 'secondary' | 'danger' | 'warning' | 'smart' | 'subtle-smart' | 'inverse'"
       },
-      "relatedProps": ["styling"],
+      "relatedProps": [
+        "styling"
+      ],
       "commonMistakes": [
         {
           "mistake": "Using camelCase 'subtlePrimary' instead of kebab-case 'subtle-primary'",
@@ -47,7 +64,10 @@
     "size": {
       "valueFormat": {
         "structure": "string (enum)",
-        "validValues": ["default", "small"],
+        "validValues": [
+          "default",
+          "small"
+        ],
         "enumReference": "SIZES.DEFAULT | SIZES.SMALL",
         "notes": "Button size variant",
         "typescript": "'default' | 'small'"
@@ -56,7 +76,11 @@
     "iconSize": {
       "valueFormat": {
         "structure": "string (enum) - NOT NUMBER!",
-        "validValues": ["40", "24", "20"],
+        "validValues": [
+          "40",
+          "24",
+          "20"
+        ],
         "notes": "CRITICAL: iconSize is STRING not number. '24' not 24",
         "typescript": "'40' | '24' | '20'"
       },
@@ -75,7 +99,9 @@
         "notes": "Button text content. Shown when labelTextStatus=true",
         "typescript": "string | number"
       },
-      "relatedProps": ["labelTextStatus"],
+      "relatedProps": [
+        "labelTextStatus"
+      ],
       "commonMistakes": [
         {
           "mistake": "Not providing labelText when labelTextStatus=true",
@@ -93,7 +119,9 @@
         "typescript": "Array<{ id: string; type: string; styling: string; labelText: string; selectedStatus?: boolean; tooltipText?: string }>",
         "realWorldExample": "[{ id: 'daily', type: 'secondary', styling: 'solid', labelText: 'Daily', selectedStatus: true }, { id: 'weekly', type: 'secondary', styling: 'ghost', labelText: 'Weekly', selectedStatus: false }]"
       },
-      "relatedEvents": ["click"],
+      "relatedEvents": [
+        "click"
+      ],
       "commonMistakes": [
         {
           "mistake": "Expecting simple array of strings ['Option 1', 'Option 2']",
@@ -120,9 +148,19 @@
         "structure": "string",
         "notes": "Icon name from InIcons component set. See InIcons documentation for available icons.",
         "typescript": "string",
-        "commonValues": ["filled-plus", "filled-trash", "filled-save", "line-search", "line-edit"]
+        "commonValues": [
+          "filled-plus",
+          "filled-trash",
+          "filled-save",
+          "line-search",
+          "line-edit"
+        ]
       },
-      "relatedProps": ["rightIcon", "iconSize", "iconClick"],
+      "relatedProps": [
+        "rightIcon",
+        "iconSize",
+        "iconClick"
+      ],
       "commonMistakes": [
         {
           "mistake": "Using icon names that don't exist in InIcons",
@@ -137,9 +175,17 @@
         "structure": "string",
         "notes": "Icon name from InIcons component set. Commonly used for dropdowns or external links.",
         "typescript": "string",
-        "commonValues": ["filled-dropdown-down", "line-external-link", "line-chevron-right"]
+        "commonValues": [
+          "filled-dropdown-down",
+          "line-external-link",
+          "line-chevron-right"
+        ]
       },
-      "relatedProps": ["leftIcon", "iconSize", "iconClick"]
+      "relatedProps": [
+        "leftIcon",
+        "iconSize",
+        "iconClick"
+      ]
     },
     "iconClick": {
       "valueFormat": {
@@ -147,8 +193,13 @@
         "notes": "ADVANCED: When true, clicking the icon emits 'clickIcon' event instead of 'click'. Used for buttons with separate icon and button actions.",
         "typescript": "boolean"
       },
-      "relatedProps": ["leftIcon", "rightIcon"],
-      "relatedEvents": ["clickIcon"],
+      "relatedProps": [
+        "leftIcon",
+        "rightIcon"
+      ],
+      "relatedEvents": [
+        "clickIcon"
+      ],
       "commonMistakes": [
         {
           "mistake": "Setting iconClick=true but not listening to @clickIcon event",
@@ -164,7 +215,9 @@
         "notes": "Shows loading spinner and automatically disables button. Use during async operations.",
         "typescript": "boolean"
       },
-      "relatedProps": ["disabledStatus"],
+      "relatedProps": [
+        "disabledStatus"
+      ],
       "commonMistakes": [
         {
           "mistake": "Not resetting loadingStatus after operation completes (especially on error)",
@@ -212,7 +265,9 @@
         "notes": "Skeleton loader dimensions in pixels",
         "typescript": "{ width: number; height: number }"
       },
-      "relatedProps": ["skeletonStatus"]
+      "relatedProps": [
+        "skeletonStatus"
+      ]
     }
   },
   "eventEnrichments": {
@@ -549,57 +604,5 @@
       "note": "Icon-only buttons must have tooltip-text",
       "recommendation": "Provide tooltip-text for screen readers when labelTextStatus=false."
     }
-  ],
-  "figmaMapping": {
-    "componentName": "InButtonV2",
-    "storybookUrl": "InButtonV2",
-    "propertyOverrides": {
-      "Label": "labelText",
-      "Style": "styling"
-    },
-    "propertyTypes": {
-      "Label": "string",
-      "Style": "enum",
-      "Type": "enum",
-      "Size": "enum",
-      "Disabled": "boolean",
-      "Loading": "boolean",
-      "Loading Status": "boolean",
-      "Success Status": "boolean",
-      "Hover": "boolean",
-      "Pressed": "boolean",
-      "Selected": "boolean",
-      "Right Icon Status": "boolean",
-      "Left Icon Status": "boolean",
-      "Label Status": "boolean"
-    },
-    "valueMapping": {
-      "Style": {
-        "Solid": "solid",
-        "Ghost": "ghost",
-        "Text": "text"
-      },
-      "Type": {
-        "Primary": "primary",
-        "Subtle Primary": "subtle-primary",
-        "Secondary": "secondary",
-        "Danger": "danger",
-        "Warning": "warning",
-        "Smart": "smart",
-        "Subtle Smart": "subtle-smart",
-        "Inverse": "inverse"
-      },
-      "Size": {
-        "Default": "default",
-        "Small": "small"
-      }
-    },
-    "stateProps": ["Hover", "Pressed", "Selected"],
-    "notes": [
-      "State props (Hover, Pressed, Selected) are for Figma preview only",
-      "Don't include state props in generated code unless explicitly needed",
-      "Label property maps to labelText (not just 'label')",
-      "Style property maps to styling (not 'style')"
-    ]
-  }
+  ]
 }

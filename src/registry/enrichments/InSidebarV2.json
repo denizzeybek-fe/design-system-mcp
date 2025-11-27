@@ -289,7 +289,7 @@
       "commonMistakes": []
     }
   },
-  "exampleEnrichments": [
+  "examples": [
     {
       "title": "Complete Sidebar with Navigation",
       "description": "Full example with routes, search, and navigation",

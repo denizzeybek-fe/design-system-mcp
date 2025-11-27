@@ -6,21 +6,23 @@
     "propCount": 73,
     "eventCount": 18
   },
-  "componentName": "InRichTextInput",
-  "version": "2.0.0",
-  "lastUpdated": "2024-11-24",
+  "component": "InRichTextInput",
   "propEnrichments": {
     "value": {
       "description": "Input content with dynamic tags (v-model)",
       "valueFormat": {
         "structure": "string with tag placeholders",
-        "example": "v-model=\"content\""
+        "notes": "HTML/rich text content with embedded dynamic content tags. Use v-model for two-way binding. Content can include toolbar formatting (bold, italic, links), dynamic tags ({{attribute}}), and WhatsApp styling (*bold*, _italic_) if enabled. Listen to @purify event to get sanitized output for saving.",
+        "typescript": "string",
+        "example": "v-model=\"content\" // '<p>Hello {{first_name}}, welcome!</p>'"
       }
     },
     "labelText": {
       "description": "Label text for the input",
       "valueFormat": {
         "structure": "string",
+        "notes": "Label text displayed above the rich text editor. Shown when labelStatus=true. Use clear, descriptive labels to help users understand the field purpose (e.g., 'Message Content', 'Email Body', 'SMS Text').",
+        "typescript": "string",
         "example": "label-text=\"Message Content\""
       }
     },
@@ -28,13 +30,15 @@
       "description": "Available dynamic content attributes - replaces V1 attributeList",
       "valueFormat": {
         "structure": "Array of attribute objects",
+        "notes": "CRITICAL: Defines insertable dynamic content/merge tags for personalized messages. Each attribute needs 'label' (shown in dropdown) and 'value' (inserted as {{value}}). Optional: 'category' for grouping, 'icon' for visual distinction. Used for email templates, SMS campaigns, push notifications with user data. Example: user selects 'First Name', {{first_name}} gets inserted and later replaced with actual name.",
         "typescript": "Array<{ label: string; value: string; category?: string; icon?: string; }>",
         "example": ":dynamic-content-list=\"[{ label: 'First Name', value: 'first_name', category: 'User' }]\""
       },
       "commonMistakes": [
         {
           "mistake": "Using attributeList from V1",
-          "correction": "V2 uses dynamicContentList instead of attributeList",
+          "impact": "Prop not recognized - no dynamic content available in dropdown",
+          "fix": "Change to dynamicContentList: :dynamic-content-list=\"attributes\"",
           "severity": "high"
         }
       ]
@@ -43,6 +47,7 @@
       "description": "Configure visible toolbar buttons",
       "valueFormat": {
         "structure": "Array of toolbar option strings",
+        "notes": "Defines which formatting tools appear in the editor toolbar. Common options: 'bold', 'italic', 'underline' for text styling, 'link' for URLs, 'emoji' for emoji picker, 'dynamicContent' for merge tags. Customize based on use case: SMS uses minimal ['bold', 'italic', 'dynamicContent'], email uses full formatting. Order in array determines button order.",
         "typescript": "Array<'bold' | 'italic' | 'underline' | 'link' | 'emoji' | 'dynamicContent'>",
         "example": ":toolbar-options=\"['bold', 'italic', 'link', 'emoji', 'dynamicContent']\""
       }
@@ -51,6 +56,7 @@
       "description": "Configure footer elements",
       "valueFormat": {
         "structure": "Array of footer option strings",
+        "notes": "Controls what appears in the editor footer area. 'counter' shows character/word count (requires characterCounterStatus=true), 'label' displays footerLabel text, 'tags' shows list of used dynamic content tags. Useful for giving users real-time feedback on message length and dynamic content usage.",
         "typescript": "Array<'counter' | 'label' | 'tags'>",
         "example": ":footer-options=\"['counter', 'tags']\""
       }
@@ -59,6 +65,7 @@
       "description": "Validation configuration - replaces V1 textValidateConfig",
       "valueFormat": {
         "structure": "Object with validation rules",
+        "notes": "Validation rules for rich text content. maxLength enforces character limit (critical for SMS 160 chars), minLength requires minimum content, segmentLength shows message segmentation for SMS (each segment = 160 chars). Validation messages appear via states/stateMessage props. Essential for channels with strict length limits.",
         "typescript": "{ maxLength?: number; minLength?: number; segmentLength?: number; }",
         "example": ":helper-text-validation-config=\"{ maxLength: 160, segmentLength: 160 }\""
       }
@@ -67,6 +74,8 @@
       "description": "Enable helper text validation display",
       "valueFormat": {
         "structure": "boolean",
+        "notes": "When true, enables validation feedback based on helperTextValidationConfig rules. Shows warning/error states when limits are approached or exceeded. Use with states and stateMessage props to provide user feedback. Essential for enforcing content constraints.",
+        "typescript": "boolean",
         "example": "helper-text-validation-config-status"
       }
     },
@@ -74,61 +83,76 @@
       "description": "Validation state - replaces V1 invalid/warning",
       "valueFormat": {
         "structure": "string enum",
+        "notes": "Visual validation state for the editor. 'default' for normal, 'success' for valid, 'warning' for approaching limits (e.g., 150/160 chars), 'error' for invalid/exceeded limits. Replaces V1's separate invalid and warning boolean props. Use with stateMessage to explain the validation issue.",
+        "typescript": "'default' | 'success' | 'warning' | 'error'",
         "possibleValues": [
           "default",
           "success",
           "warning",
           "error"
         ],
-        "example": "states=\"error\""
+        "example": "states=\"warning\" // When approaching SMS limit"
       }
     },
     "stateMessage": {
       "description": "Message for validation state",
       "valueFormat": {
         "structure": "string",
-        "example": "state-message=\"This field is required\""
+        "notes": "Explanatory message shown with validation state. Appears below editor when states is set to warning/error. Provide clear, actionable feedback: 'Required field', 'Maximum 160 characters', 'Message will be split into 2 SMS'. Critical for user understanding of validation rules.",
+        "typescript": "string",
+        "example": "state-message=\"Message exceeds SMS limit and will be split into multiple messages\""
       }
     },
     "characterCounterStatus": {
       "description": "Show character counter - replaces V1 isCounter",
       "valueFormat": {
         "structure": "boolean",
-        "example": "character-counter-status"
+        "notes": "Shows character/word count in footer. Requires footerOptions to include 'counter'. Count respects helperTextValidationConfig.maxLength (e.g., '45/160'). Essential for SMS (160 char limit), Twitter-like interfaces, or any character-limited content. Use customCounter for custom counting logic.",
+        "typescript": "boolean",
+        "example": "character-counter-status :footer-options=\"['counter']\""
       }
     },
     "maxSelectableDynamicContent": {
       "description": "Maximum dynamic content tags allowed",
       "valueFormat": {
         "structure": "number",
-        "example": ":max-selectable-dynamic-content=\"5\""
+        "notes": "Limits how many dynamic content tags can be inserted into the message. 0 (default) means unlimited. When limit reached, dynamic content button becomes disabled. Useful for enforcing business rules like 'max 5 personalization fields per SMS' or preventing over-personalization that hurts deliverability.",
+        "typescript": "number",
+        "example": ":max-selectable-dynamic-content=\"5\" // Max 5 dynamic tags"
       }
     },
     "isDynamicContentOnly": {
       "description": "Only allow dynamic content (no free text)",
       "valueFormat": {
         "structure": "boolean",
-        "example": "is-dynamic-content-only"
+        "notes": "When true, users can ONLY insert dynamic content tags - no free text allowed. Useful for strict templating scenarios where content must be entirely composed of predefined attributes. Example: webhook payload builder where only valid field names are allowed.",
+        "typescript": "boolean",
+        "example": "is-dynamic-content-only // Only {{tags}} allowed, no free text"
       }
     },
     "canOnlyReplaceDynamicContent": {
       "description": "Only allow replacing existing dynamic content",
       "valueFormat": {
         "structure": "boolean",
-        "example": "can-only-replace-dynamic-content"
+        "notes": "When true, users cannot add NEW dynamic content tags, only replace/edit existing ones. Useful for locked templates where tag structure is fixed but tag selection can change. Example: pre-defined email template where placeholders exist but sender can swap which attributes fill them.",
+        "typescript": "boolean",
+        "example": "can-only-replace-dynamic-content // Edit existing tags only"
       }
     },
     "tipStatus": {
       "description": "Show usage tips",
       "valueFormat": {
         "structure": "boolean",
-        "example": "tip-status"
+        "notes": "Displays helpful usage tips/hints to users within the editor interface. Tips can explain keyboard shortcuts, formatting syntax (WhatsApp *bold*), or dynamic content usage. Use slot 'tipOptions' to provide custom tip content. Helpful for first-time users or complex features.",
+        "typescript": "boolean",
+        "example": "tip-status // Shows usage tips in UI"
       }
     },
     "specialCharacters": {
       "description": "Special characters configuration",
       "valueFormat": {
         "structure": "Object with character settings",
+        "notes": "Configures special character support (©, ®, ™, etc). When enabled=true, shows special character picker. Provide optional 'list' array to customize available characters. Useful for legal/marketing content requiring trademark symbols. Characters can be highlighted with isHighlightCharactersEnabled.",
         "typescript": "{ enabled: boolean; list?: string[]; }",
         "example": ":special-characters=\"{ enabled: true, list: ['©', '®', '™'] }\""
       }
@@ -137,6 +161,8 @@
       "description": "Highlight special characters in text",
       "valueFormat": {
         "structure": "boolean",
+        "notes": "When true, visually highlights special characters (from specialCharacters.list) in the editor. Helps users identify non-standard characters that might cause encoding issues in SMS or affect character count. Essential for multi-language or SMS campaigns where special chars consume extra space.",
+        "typescript": "boolean",
         "example": "is-highlight-characters-enabled"
       }
     },
@@ -144,6 +170,8 @@
       "description": "Highlight URLs in text",
       "valueFormat": {
         "structure": "boolean",
+        "notes": "Automatically detects and highlights URLs in the text content. URLs become clickable and visually distinct. Detection uses urlPatternRegex if provided. Useful for email/SMS editors where link tracking or shortening is needed. Combine with @onShortenUrlClick event for URL shortening workflows.",
+        "typescript": "boolean",
         "example": "is-highlight-url-enabled"
       }
     },
@@ -151,20 +179,26 @@
       "description": "Enable WhatsApp text formatting (*bold*, _italic_)",
       "valueFormat": {
         "structure": "boolean",
-        "example": "whatsapp-styling-support"
+        "notes": "Enables WhatsApp markdown-style formatting: *bold*, _italic_, ~strikethrough~, ```monospace```. When enabled, text wrapped in these symbols will be formatted in WhatsApp messages. Critical for WhatsApp Business API campaigns where formatting must match WhatsApp's syntax. Shows formatting hints to users.",
+        "typescript": "boolean",
+        "example": "whatsapp-styling-support // Enables *bold*, _italic_ syntax"
       }
     },
     "emojiButtonStatus": {
       "description": "Show emoji picker button - replaces V1 hasEmoji",
       "valueFormat": {
         "structure": "boolean",
-        "example": "emoji-button-status"
+        "notes": "Shows emoji picker button in toolbar. Replaces V1's hasEmoji prop. When clicked, opens emoji selector allowing users to insert emojis into content. Essential for social media posts, WhatsApp messages, or casual communication channels. Emojis can affect character count in SMS.",
+        "typescript": "boolean",
+        "example": "emoji-button-status // Shows emoji picker in toolbar"
       }
     },
     "isExtendedDynamicContent": {
       "description": "Enable extended dynamic content features",
       "valueFormat": {
         "structure": "boolean",
+        "notes": "Enables advanced dynamic content features like nested attributes, conditional rendering, or complex data structures. When true, dynamic content picker shows extended UI with more options. Use dynamicContentBoxProps to configure the extended picker. For enterprise-level templating with complex data models.",
+        "typescript": "boolean",
         "example": "is-extended-dynamic-content"
       }
     },
@@ -172,6 +206,7 @@
       "description": "Props for dynamic content selection box",
       "valueFormat": {
         "structure": "Object with box configuration",
+        "notes": "Configuration for the dynamic content selection dropdown/modal. searchable=true adds search box (use when >20 attributes), grouped=true shows category groups, maxHeight limits dropdown height. Essential for large attribute lists to maintain usability. Works with isExtendedDynamicContent for advanced features.",
         "typescript": "{ searchable?: boolean; grouped?: boolean; maxHeight?: number; }",
         "example": ":dynamic-content-box-props=\"{ searchable: true, grouped: true }\""
       }
@@ -180,41 +215,53 @@
       "description": "Track which dynamic content is used",
       "valueFormat": {
         "structure": "Array of used attribute values",
-        "example": ":used-dynamic-content=\"usedAttributes\""
+        "notes": "Array tracking which dynamic content tags are currently in the message. Updates automatically as tags are added/removed. Use to show 'used attributes' list in UI, validate required attributes are present, or analyze attribute usage patterns. Emitted via @markedTags event.",
+        "typescript": "Array<string>",
+        "example": ":used-dynamic-content=\"['first_name', 'email']\" // Currently used tags"
       }
     },
     "errorTags": {
       "description": "Tags to highlight as errors",
       "valueFormat": {
         "structure": "Array of tag values",
-        "example": ":error-tags=\"['invalid_attr']\""
+        "notes": "Array of attribute values to mark as errors in the editor. Tags in this list will be visually highlighted with error styling. Use for invalid/undefined attributes, deprecated fields, or tags that failed validation. Critical for preventing message delivery failures from bad attribute references.",
+        "typescript": "Array<string>",
+        "example": ":error-tags=\"['invalid_attr', 'deleted_field']\" // Show as errors"
       }
     },
     "warningTags": {
       "description": "Tags to highlight as warnings",
       "valueFormat": {
         "structure": "Array of tag values",
-        "example": ":warning-tags=\"['deprecated_attr']\""
+        "notes": "Array of attribute values to mark with warning styling. Use for deprecated but still functional attributes, optional fields that might be empty, or attributes with potential issues. Warns users without blocking submission. Softer than errorTags.",
+        "typescript": "Array<string>",
+        "example": ":warning-tags=\"['deprecated_attr', 'beta_field']\" // Show warnings"
       }
     },
     "customCounter": {
       "description": "Custom counter component/logic",
       "valueFormat": {
         "structure": "Object or component",
-        "example": ":custom-counter=\"customCounterConfig\""
+        "notes": "Custom character counting logic or component to replace default counter. Use when standard counting doesn't fit your needs (e.g., Unicode normalization, special character weighting, GSM-7 encoding for SMS). Provide component or config object with counting function.",
+        "typescript": "Object | Component",
+        "example": ":custom-counter=\"smsGsmCounter\" // Custom SMS character counter"
       }
     },
     "footerLabel": {
       "description": "Label text in footer",
       "valueFormat": {
         "structure": "string",
-        "example": "footer-label=\"Characters remaining\""
+        "notes": "Custom label text displayed in the editor footer. Appears when footerOptions includes 'label'. Use to provide context-specific information: 'SMS segments used', 'Characters remaining', 'Estimated send cost'. Shown alongside counter if both are enabled.",
+        "typescript": "string",
+        "example": "footer-label=\"SMS segments\""
       }
     },
     "urlPatternRegex": {
       "description": "Custom regex for URL detection",
       "valueFormat": {
         "structure": "RegExp",
+        "notes": "Custom regular expression for detecting URLs in text. Default regex catches http/https URLs. Override to match custom URL formats, internal links, or specific domains. Used with isHighlightUrlEnabled to identify clickable links. Affects URL shortening and tracking features.",
+        "typescript": "RegExp",
         "example": ":url-pattern-regex=\"/https?:\\/\\/[^\\s]+/g\""
       }
     },
@@ -222,13 +269,17 @@
       "description": "Enable image upload for fallback",
       "valueFormat": {
         "structure": "boolean",
-        "example": "is-upload-fallback"
+        "notes": "Allows uploading images as fallback values for dynamic content. When user clicks on a dynamic tag, they can upload an image instead of text. Useful for personalized product images, profile pictures, or visual content in templates. Image URLs become fallback values.",
+        "typescript": "boolean",
+        "example": "is-upload-fallback // Allow image uploads for fallbacks"
       }
     },
     "fallbackVisibility": {
       "description": "Control fallback UI visibility",
       "valueFormat": {
         "structure": "string enum",
+        "notes": "Controls when fallback editor UI is shown. 'always' shows fallback input permanently, 'onHover' reveals it when hovering over dynamic tags, 'onClick' shows modal when tag is clicked. Choose based on UX: onClick is cleaner for many tags, always is better for visibility.",
+        "typescript": "'always' | 'onHover' | 'onClick'",
         "possibleValues": [
           "always",
           "onHover",
@@ -241,15 +292,18 @@
       "description": "Disable specific toolbar buttons",
       "valueFormat": {
         "structure": "Array of option strings",
-        "example": ":disabled-toolbar-options=\"['link', 'emoji']\""
+        "notes": "Array of toolbar button names to disable (greyed out, not clickable). Use to restrict certain formatting based on context: disable 'link' for SMS, disable 'emoji' for formal emails. More granular than omitting from toolbarOptions - buttons still visible but disabled.",
+        "typescript": "Array<string>",
+        "example": ":disabled-toolbar-options=\"['link', 'emoji']\" // Show but disable"
       }
     },
     "dynamicContentStates": {
       "description": "State configuration for dynamic content tags",
       "valueFormat": {
         "structure": "Object mapping tags to states",
+        "notes": "Maps each dynamic content tag to a visual state (default/warning/error). More flexible than errorTags/warningTags arrays. Use for per-tag validation states: show 'email' as warning if optional, 'deleted_field' as error. State affects tag styling in editor.",
         "typescript": "Record<string, 'default' | 'warning' | 'error'>",
-        "example": ":dynamic-content-states=\"{ 'old_attr': 'warning' }\""
+        "example": ":dynamic-content-states=\"{ 'old_attr': 'warning', 'invalid': 'error' }\""
       }
     }
   },
@@ -300,7 +354,7 @@
       "usage": "@close-all-emoji-pickers=\"handleCloseEmoji\""
     }
   },
-  "exampleEnrichments": [
+  "examples": [
     {
       "title": "Basic Rich Text Editor",
       "description": "Simple editor with toolbar and dynamic content",

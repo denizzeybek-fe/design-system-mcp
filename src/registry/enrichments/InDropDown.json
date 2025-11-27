@@ -6,43 +6,50 @@
     "propCount": 33,
     "eventCount": 8
   },
-  "componentName": "InDropDown",
-  "version": "1.0.0",
-  "lastUpdated": "2024-11-24",
+  "component": "InDropDown",
   "propEnrichments": {
     "options": {
       "description": "Array of selectable options",
       "valueFormat": {
         "structure": "Array of option objects",
-        "typescript": "Array<{ label: string; value: string | number; disabled?: boolean; description?: string; }>",
+        "notes": "Defines the dropdown items. Each option must have 'label' (display text) and 'value' (selected value). Optional: 'disabled' to prevent selection, 'description' for tooltips. For nested dropdowns, include 'children' array.",
+        "typescript": "Array<{ label: string; value: string | number; disabled?: boolean; description?: string; children?: Array<DropdownOption> }>",
         "example": ":options=\"[{ label: 'Option 1', value: '1' }, { label: 'Option 2', value: '2' }]\""
       }
     },
     "value": {
       "description": "Selected value (v-model)",
       "valueFormat": {
-        "structure": "string | number",
+        "structure": "string | number | boolean",
+        "notes": "Current selected value that matches the 'value' property of an option. Use v-model for two-way binding. Can be string, number, or boolean depending on your option values. Empty string means no selection.",
+        "typescript": "string | number | boolean",
         "example": "v-model=\"selectedValue\""
       }
     },
     "customOptionsKey": {
       "description": "Custom property name for option label",
       "valueFormat": {
-        "structure": "string",
-        "example": "custom-options-key=\"name\""
+        "structure": "Array<string>",
+        "notes": "Maps custom property names from your data to dropdown's expected format. Use when your API returns objects with different property names than 'label' and 'value'. Example: if API returns [{name: 'John', id: 1}], use ['name', 'id'] to map name→label and id→value.",
+        "typescript": "Array<string>",
+        "example": ":custom-options-key=\"['name', 'id']\""
       }
     },
     "fetchUrl": {
       "description": "API endpoint for fetching options",
       "valueFormat": {
         "structure": "string (URL)",
-        "example": "fetch-url=\"/api/options\""
+        "notes": "API endpoint URL to fetch dropdown options dynamically. When set, component will fetch options from this endpoint on mount or when search query changes. Use with 'responseKey' to extract data from nested responses and 'queryString' for search parameter name.",
+        "typescript": "string",
+        "example": "fetch-url=\"/api/users\""
       }
     },
     "responseKey": {
       "description": "JSON path to options in API response",
       "valueFormat": {
         "structure": "string (dot notation)",
+        "notes": "Dot-notation path to extract options array from API response. CRITICAL for API fetching. If API returns {data: {items: [...]}}, use 'data.items'. If response is flat array at root, leave empty or use 'data' if responseHasData=true.",
+        "typescript": "string",
         "example": "response-key=\"data.items\""
       }
     },
@@ -50,13 +57,17 @@
       "description": "Query parameter name for search",
       "valueFormat": {
         "structure": "string",
-        "example": "query-string=\"q\""
+        "notes": "Name of the query parameter for search functionality when using API fetch. The search input value will be sent as this parameter. Example: if queryString='search', API will be called with ?search=userInput. Requires searchStatus=true and fetchUrl to be set.",
+        "typescript": "string",
+        "example": "query-string=\"search\""
       }
     },
     "overriddenListPosition": {
       "description": "Override dropdown position",
       "valueFormat": {
-        "structure": "string enum",
+        "structure": "string (enum from LIST_POSITION)",
+        "notes": "Forces dropdown menu to open in specific direction, overriding automatic positioning. Use 'top' to open above the button (useful when dropdown is near bottom of viewport), 'bottom' to open below. If not set, component auto-positions based on available space.",
+        "typescript": "'top' | 'bottom' | ''",
         "possibleValues": [
           "top",
           "bottom"
@@ -68,6 +79,8 @@
       "description": "Dropdown type/variant",
       "valueFormat": {
         "structure": "string enum",
+        "notes": "Dropdown behavior variant. 'default' for standard single-level dropdown. 'nested' enables hierarchical options with child menus (requires options with 'children' property). Use nested type for category/subcategory structures.",
+        "typescript": "'default' | 'nested'",
         "possibleValues": [
           "default",
           "nested"
@@ -79,7 +92,10 @@
       "description": "Button style variant",
       "valueFormat": {
         "structure": "string enum",
+        "notes": "Visual style of the dropdown trigger button. 'dropdown' (default) for standard dropdown appearance, 'primary' for prominent actions, 'secondary' for less emphasis, 'ghost' for minimal styling. Affects button colors and borders.",
+        "typescript": "'dropdown' | 'primary' | 'secondary' | 'ghost'",
         "possibleValues": [
+          "dropdown",
           "primary",
           "secondary",
           "ghost"
@@ -91,9 +107,11 @@
       "description": "Button size",
       "valueFormat": {
         "structure": "string enum",
+        "notes": "Size of the dropdown trigger button. 'default' (40px height), 'small' (32px), 'large' (48px). Affects button height, padding, and font size. Use 'small' in compact UIs, 'large' for emphasis or touch-friendly interfaces.",
+        "typescript": "'default' | 'small' | 'large'",
         "possibleValues": [
+          "default",
           "small",
-          "medium",
           "large"
         ],
         "example": "button-size=\"small\""
@@ -102,7 +120,9 @@
     "childOptionsLeftPosition": {
       "description": "Position of nested child options",
       "valueFormat": {
-        "structure": "string enum",
+        "structure": "string | number",
+        "notes": "Horizontal position (in pixels) of child dropdown menu for nested options. Only applies when type='nested'. Use string value ('left' or 'right') for relative positioning, or number for absolute pixel offset. Controls where nested submenu appears relative to parent menu.",
+        "typescript": "string | number",
         "possibleValues": [
           "left",
           "right"
@@ -114,14 +134,18 @@
       "description": "Allow clearing selection",
       "valueFormat": {
         "structure": "boolean",
-        "example": "can-remove-selected-item"
+        "notes": "When true, shows an 'X' button to clear the current selection and reset dropdown to empty state. Useful for optional fields where user might want to unselect. When false, selection is permanent until user picks another option.",
+        "typescript": "boolean",
+        "example": ":can-remove-selected-item=\"true\""
       }
     },
     "createOptionStatus": {
       "description": "Allow creating new options",
       "valueFormat": {
         "structure": "boolean",
-        "example": "create-option-status"
+        "notes": "Enables adding new options on-the-fly when user types value not in the options list. Shows 'Add new option' button in dropdown. When clicked, emits 'addNewOption' event with the typed value. Useful for tags, categories, or dynamic lists where user can create entries.",
+        "typescript": "boolean",
+        "example": ":create-option-status=\"true\""
       }
     }
   },
@@ -157,7 +181,7 @@
       "usage": "@add-new-option=\"handleNewOption\""
     }
   },
-  "exampleEnrichments": [
+  "examples": [
     {
       "title": "Basic Select",
       "description": "Simple dropdown with static options",

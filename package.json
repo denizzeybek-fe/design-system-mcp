@@ -17,7 +17,7 @@
     "extract:storybook": "tsx scripts/extract-storybook.ts",
     "extract:usage": "tsx scripts/extract-usage.ts",
     "generate:markdown": "tsx scripts/generate-markdown.ts",
-    "extract:all": "npm run extract:components && npm run extract:enrich && npm run extract:merge && npm run generate:markdown && npm run build",
+    "extract:all":  "npm run extract:components && npm run extract:enrich && npm run extract:merge && npm run generate:markdown && npm run build",
     "extract:full": "npm run extract:components && npm run extract:storybook && npm run extract:usage && npm run extract:merge && npm run generate:markdown",
     "validate:docs": "tsx scripts/validate-docs.ts",
     "validate:docs:component": "tsx scripts/validate-docs.ts",

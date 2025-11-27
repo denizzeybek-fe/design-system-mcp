@@ -12,18 +12,21 @@
       "description": "Column definitions array - replaces V1 tableFields",
       "valueFormat": {
         "structure": "Array of AG Grid column definitions",
+        "notes": "CRITICAL: Defines table structure using AG Grid format (not V1 format!). Each column needs 'field' (data property) and 'headerName' (column title). Optional: sortable, filter, width, pinned ('left'/'right'), cellRenderer for custom rendering. V2 is built on AG Grid - use AG Grid column definition format with all its features (valueFormatter, cellClass, cellStyle, etc.).",
         "typescript": "Array<{ field: string; headerName: string; sortable?: boolean; filter?: boolean; width?: number; pinned?: 'left' | 'right'; cellRenderer?: string; valueFormatter?: Function; }>",
         "example": ":column-options=\"[{ field: 'name', headerName: 'Name', sortable: true, filter: true }, { field: 'email', headerName: 'Email', width: 200 }]\""
       },
       "commonMistakes": [
         {
           "mistake": "Using 'label' instead of 'headerName' from V1",
-          "correction": "V2 uses AG Grid format: headerName instead of label",
+          "impact": "Column headers display as undefined or blank",
+          "fix": "Change all 'label' to 'headerName' in column definitions",
           "severity": "high"
         },
         {
           "mistake": "Using V1 renderer names",
-          "correction": "V2 uses AG Grid cellRenderer with different component mappings",
+          "impact": "Custom cell renderers don't work, cells show raw data",
+          "fix": "Use AG Grid cellRenderer format with component name strings",
           "severity": "medium"
         }
       ]
@@ -32,32 +35,38 @@
       "description": "Table data array for client-side mode",
       "valueFormat": {
         "structure": "Array of row objects",
+        "notes": "Array of data objects to display in the table. Each object represents one row, with properties matching column 'field' values. Only used in clientSide rowModelType. For serverSide mode, data is fetched from API via fetchUrl. Update this array to refresh table content (reactive).",
         "typescript": "Array<Record<string, any>>",
-        "example": ":data=\"tableData\""
+        "example": ":data=\"users\" // [{ name: 'John', email: 'john@ex.com' }, ...]"
       }
     },
     "totalData": {
       "description": "Total number of records (for server-side pagination display)",
       "valueFormat": {
         "structure": "number",
-        "example": ":total-data=\"1000\""
+        "notes": "Total record count for server-side pagination. Used to calculate total pages and show 'X of Y' items. Only relevant in serverSide rowModelType - in clientSide mode, total is auto-calculated from data array length. Backend should return this in API response.",
+        "typescript": "number",
+        "example": ":total-data=\"1523\" // Total users in database"
       }
     },
     "rowModelType": {
       "description": "Data loading mode - replaces V1 apiMode",
       "valueFormat": {
         "structure": "string enum",
+        "notes": "Determines how table loads data. 'clientSide' (default) loads all data upfront into browser - use for <1000 rows. 'serverSide' fetches data paginated from API via fetchUrl - use for large datasets (10K+ rows). 'infinite' enables infinite scroll. CRITICAL V1 CHANGE: V1 used boolean api-mode, V2 uses string row-model-type.",
+        "typescript": "'clientSide' | 'serverSide' | 'infinite'",
         "possibleValues": [
           "clientSide",
           "serverSide",
           "infinite"
         ],
-        "example": "row-model-type=\"serverSide\""
+        "example": "row-model-type=\"serverSide\" // For API-fetched data"
       },
       "commonMistakes": [
         {
           "mistake": "Using api-mode boolean from V1",
-          "correction": "V2 uses row-model-type=\"serverSide\" instead of api-mode",
+          "impact": "Prop not recognized, table doesn't fetch from API",
+          "fix": "Change :api-mode=\"true\" to row-model-type=\"serverSide\"",
           "severity": "high"
         }
       ]
@@ -66,24 +75,29 @@
       "description": "API endpoint URL for server-side data fetching",
       "valueFormat": {
         "structure": "string (URL)",
-        "example": "fetch-url=\"/api/users\""
+        "notes": "API endpoint URL for fetching table data in serverSide mode. Table will POST/GET (based on httpMethod) to this URL with pagination/filter/sort params. Requires rowModelType=\"serverSide\". Backend should return data array and totalData count. Use tableSearchParams for additional custom params.",
+        "typescript": "string",
+        "example": "fetch-url=\"/api/users\" // Backend endpoint"
       }
     },
     "httpMethod": {
       "description": "HTTP method for API requests",
       "valueFormat": {
         "structure": "string enum",
+        "notes": "HTTP method used when fetching data from fetchUrl. GET sends params in query string, POST sends in request body. Use POST for complex filters or when URL length might exceed limits. Only relevant in serverSide rowModelType.",
+        "typescript": "'GET' | 'POST'",
         "possibleValues": [
           "GET",
           "POST"
         ],
-        "example": "http-method=\"POST\""
+        "example": "http-method=\"POST\" // For complex filter params"
       }
     },
     "bulkActionsOptions": {
       "description": "Bulk action buttons for selected rows",
       "valueFormat": {
         "structure": "Array of action objects",
+        "notes": "Defines bulk action buttons shown when rows are selected. Each action needs id (unique identifier), label (button text). Optional: icon, variant ('danger' for destructive actions), disabled. Actions trigger @bulk-action event with actionId and selectedRows. Use for operations like export, delete, archive on multiple rows.",
         "typescript": "Array<{ id: string; label: string; icon?: string; variant?: string; disabled?: boolean; }>",
         "example": ":bulk-actions-options=\"[{ id: 'delete', label: 'Delete Selected', icon: 'trash', variant: 'danger' }]\""
       }
@@ -92,50 +106,61 @@
       "description": "Enable bulk actions toolbar",
       "valueFormat": {
         "structure": "boolean",
-        "example": "has-bulk-actions"
+        "notes": "Shows bulk actions toolbar when rows are selected. Requires rowsSelection to be enabled and bulkActionsOptions to be provided. When true, toolbar appears above table showing action buttons and selected count. Essential for multi-row operations.",
+        "typescript": "boolean",
+        "example": "has-bulk-actions // Enable bulk operations UI"
       }
     },
     "rowsSelection": {
       "description": "Row selection mode",
       "valueFormat": {
         "structure": "string enum",
+        "notes": "'multiple' allows selecting many rows with checkboxes, 'single' allows only one row selected at a time. Checkboxes appear in first column. Use with @select-status/@row-selected events to track selections. Essential for bulk operations or row-based actions.",
+        "typescript": "'single' | 'multiple' | boolean",
         "possibleValues": [
           "single",
           "multiple"
         ],
-        "example": "rows-selection=\"multiple\""
+        "example": "rows-selection=\"multiple\" // Multi-select with checkboxes"
       }
     },
     "canSelectAllRows": {
       "description": "Enable select all checkbox in header",
       "valueFormat": {
         "structure": "boolean",
-        "example": "can-select-all-rows"
+        "notes": "Shows 'select all' checkbox in table header for selecting all rows at once. Only works with rowsSelection=\"multiple\". When clicked, selects all visible rows (respects pagination). Use for bulk operations where users might want to select entire page.",
+        "typescript": "boolean",
+        "example": "can-select-all-rows // Add select-all checkbox"
       }
     },
     "rowHeight": {
       "description": "Height of each row in pixels",
       "valueFormat": {
         "structure": "string enum or number",
+        "notes": "Row height preset or custom pixel value. 'small' (48px) for compact tables, 'medium' (64px) default for comfortable viewing, or custom number for specific height. Fixed row height improves scroll performance in large tables. AG Grid uses this for virtualization calculations.",
+        "typescript": "'small' | 'medium' | number",
         "possibleValues": [
           "small (48px)",
           "medium (64px)",
           "custom number"
         ],
-        "example": "row-height=\"medium\""
+        "example": "row-height=\"small\" // Compact 48px rows"
       }
     },
     "inContainerLayout": {
       "description": "Wrap table in InContainer component",
       "valueFormat": {
         "structure": "boolean",
-        "example": "in-container-layout"
+        "notes": "Wraps entire table in InContainer component for consistent styling with headers, borders, shadows. Use inContainerLayoutOptions to configure container appearance (title, borders, etc.). Essential for matching Design System container patterns across application.",
+        "typescript": "boolean",
+        "example": "in-container-layout // Wrap in styled container"
       }
     },
     "inContainerLayoutOptions": {
       "description": "Options for the container wrapper",
       "valueFormat": {
         "structure": "Object with container props",
+        "notes": "Configuration for InContainer wrapper when inContainerLayout=true. headerStatus adds header section, title sets header text, border adds container borders. Passes props directly to InContainer component. Use for consistent table presentation.",
         "typescript": "{ headerStatus?: boolean; title?: string; border?: boolean; }",
         "example": ":in-container-layout-options=\"{ headerStatus: true, title: 'Users' }\""
       }
@@ -144,42 +169,53 @@
       "description": "Enable nested/expandable tables",
       "valueFormat": {
         "structure": "boolean",
-        "example": "nested-table-status"
+        "notes": "Enables master-detail pattern with expandable rows showing nested tables. When row is expanded, shows child table with data from nestedTableFields columns. Perfect for orders→order items, users→permissions, invoices→line items. Emit @nested-data-ready to load nested data.",
+        "typescript": "boolean",
+        "example": "nested-table-status // Enable expandable rows"
       }
     },
     "nestedTableFields": {
       "description": "Column definitions for nested table",
       "valueFormat": {
         "structure": "Array of column definitions (same as columnOptions)",
-        "example": ":nested-table-fields=\"nestedColumns\""
+        "notes": "Column definitions for the nested/child table shown when row expands. Same format as columnOptions - AG Grid column definitions. Used with nestedTableStatus. Define columns for child data structure (e.g., order items have product, quantity, price columns).",
+        "typescript": "Array<{ field: string; headerName: string; width?: number; }>",
+        "example": ":nested-table-fields=\"orderItemColumns\""
       }
     },
     "isTreeData": {
       "description": "Enable tree/hierarchical data display",
       "valueFormat": {
         "structure": "boolean",
-        "example": "is-tree-data"
+        "notes": "Displays hierarchical/tree data with expand/collapse functionality. Rows can have child rows creating tree structure (org charts, file systems, category hierarchies). Use groupDataPath to define how to access child nodes. Rows show expand/collapse icons automatically.",
+        "typescript": "boolean",
+        "example": "is-tree-data // Enable tree view"
       }
     },
     "groupDataPath": {
       "description": "Path to child nodes in tree data",
       "valueFormat": {
         "structure": "Function returning path array",
+        "notes": "Function that returns path to child nodes in tree data structure. Used with isTreeData. Function receives row data and should return array of property names leading to children. Example: for org hierarchy stored in row.children, return ['children']. For nested like row.org.children, return ['org', 'children'].",
         "typescript": "(data: any) => string[]",
-        "example": ":group-data-path=\"data => data.hierarchy\""
+        "example": ":group-data-path=\"data => data.orgHierarchy\""
       }
     },
     "searchFilterStatus": {
       "description": "Show search input - replaces V1 withSearchFilter",
       "valueFormat": {
         "structure": "boolean",
-        "example": "search-filter-status"
+        "notes": "Shows global search input above table for filtering rows. Searches across all columns (client-side) or sends search param to API (server-side). V1 CHANGE: V1 used withSearchFilter, V2 uses searchFilterStatus. Emits @set-search-value event with search query.",
+        "typescript": "boolean",
+        "example": "search-filter-status // Show search input"
       }
     },
     "searchFilterPlaceholder": {
       "description": "Placeholder text for search input",
       "valueFormat": {
         "structure": "string",
+        "notes": "Placeholder text shown in search input when empty. Use descriptive text like 'Search users...', 'Find orders...'. Helps users understand what they can search for. Only relevant when searchFilterStatus=true.",
+        "typescript": "string",
         "example": "search-filter-placeholder=\"Search users...\""
       }
     },
@@ -187,130 +223,164 @@
       "description": "Show status filter dropdown - replaces V1 withStatusFilter",
       "valueFormat": {
         "structure": "boolean",
-        "example": "status-filter-status"
+        "notes": "Shows status filter dropdown above table for filtering by predefined statuses. Options come from statusFilterList. Common for filtering by Active/Inactive, Published/Draft, etc. V1 CHANGE: V1 used withStatusFilter, V2 uses statusFilterStatus.",
+        "typescript": "boolean",
+        "example": "status-filter-status // Show status dropdown"
       }
     },
     "statusFilterList": {
       "description": "Options for status filter - replaces V1 statusList",
       "valueFormat": {
         "structure": "Array of status objects",
+        "notes": "Status options for the filter dropdown. Each option needs label (display text) and value (filter value sent to API). Used with statusFilterStatus. V1 CHANGE: V1 used statusList, V2 uses statusFilterList. Common values: Active/Inactive, All statuses, Published/Draft.",
         "typescript": "Array<{ label: string; value: string | number; }>",
-        "example": ":status-filter-list=\"[{ label: 'Active', value: 'active' }]\""
+        "example": ":status-filter-list=\"[{ label: 'Active', value: 'active' }, { label: 'All', value: '' }]\""
       }
     },
     "paginationStatus": {
       "description": "Show pagination controls",
       "valueFormat": {
         "structure": "boolean",
-        "example": "pagination-status"
+        "notes": "Shows pagination controls below table (page numbers, prev/next buttons). Essential for large datasets. Works in both clientSide (splits data array) and serverSide (fetches pages from API) modes. Emits @pagination-changed when page changes.",
+        "typescript": "boolean",
+        "example": "pagination-status // Enable pagination"
       }
     },
     "itemsPerPageStatus": {
       "description": "Show items per page selector",
       "valueFormat": {
         "structure": "boolean",
-        "example": "items-per-page-status"
+        "notes": "Shows dropdown to change items per page (10, 25, 50, 100). Options range from minItemPerPage to maxItemPerPage. Allows users to control page size. Emits @per-page-selected when changed. Use with paginationStatus.",
+        "typescript": "boolean",
+        "example": "items-per-page-status // Show page size selector"
       }
     },
     "defaultItemPerPage": {
       "description": "Default number of items per page - replaces V1 perPage",
       "valueFormat": {
         "structure": "number",
-        "example": ":default-item-per-page=\"25\""
+        "notes": "Initial/default page size when table loads. V1 CHANGE: V1 used perPage, V2 uses defaultItemPerPage. Common values: 10 (default), 25, 50, 100. Choose based on data density and user needs. Smaller for detailed rows, larger for simple data.",
+        "typescript": "number",
+        "example": ":default-item-per-page=\"25\" // Start with 25 rows"
       }
     },
     "minItemPerPage": {
       "description": "Minimum items per page option",
       "valueFormat": {
         "structure": "number",
-        "example": ":min-item-per-page=\"10\""
+        "notes": "Minimum page size option in items-per-page dropdown. Usually 10 or 25. Prevents users from selecting too small page sizes that require excessive clicking. Used to generate dropdown options.",
+        "typescript": "number",
+        "example": ":min-item-per-page=\"10\" // Minimum 10 rows per page"
       }
     },
     "maxItemPerPage": {
       "description": "Maximum items per page option",
       "valueFormat": {
         "structure": "number",
-        "example": ":max-item-per-page=\"100\""
+        "notes": "Maximum page size option in items-per-page dropdown. Usually 100 or 200. Prevents performance issues from rendering too many rows at once. Used to generate dropdown options (min, default, max, etc.).",
+        "typescript": "number",
+        "example": ":max-item-per-page=\"100\" // Maximum 100 rows per page"
       }
     },
     "showingItemsStatus": {
       "description": "Show 'Showing X of Y items' text",
       "valueFormat": {
         "structure": "boolean",
-        "example": "showing-items-status"
+        "notes": "Shows text like 'Showing 1-25 of 1,523 items' below table. Helps users understand current view and total data size. Especially useful in serverSide mode to show total from backend. Part of pagination information section.",
+        "typescript": "boolean",
+        "example": "showing-items-status // Show item count text"
       }
     },
     "paginationInformationStatus": {
       "description": "Show pagination information section",
       "valueFormat": {
         "structure": "boolean",
-        "example": "pagination-information-status"
+        "notes": "Shows entire pagination info section (page count text, page size selector). Master toggle for pagination UI elements. When false, hides all pagination info except page number buttons. Use to simplify UI for small datasets.",
+        "typescript": "boolean",
+        "example": "pagination-information-status // Show full pagination info"
       }
     },
     "loadingStatus": {
       "description": "Show loading state",
       "valueFormat": {
         "structure": "boolean",
-        "example": ":loading-status=\"isLoading\""
+        "notes": "Triggers loading state overlay on table. Shows spinner or skeleton based on loadingType. Use while fetching data (initial load or refresh). Prevents user interaction during load. Emits @loading-status event when changed.",
+        "typescript": "boolean",
+        "example": ":loading-status=\"isLoading\" // Show loading overlay"
       }
     },
     "skeletonStatus": {
       "description": "Show skeleton loading state",
       "valueFormat": {
         "structure": "boolean",
-        "example": "skeleton-status"
+        "notes": "Shows skeleton placeholder rows instead of spinner during loading. Better UX for initial load - users see table structure. Number of skeleton columns from horizontalSkeletonsCount. Use for first load, loadingStatus for refreshes.",
+        "typescript": "boolean",
+        "example": "skeleton-status // Show skeleton during initial load"
       }
     },
     "horizontalSkeletonsCount": {
       "description": "Number of skeleton columns to show",
       "valueFormat": {
         "structure": "number",
-        "example": ":horizontal-skeletons-count=\"5\""
+        "notes": "Number of skeleton columns to render during skeleton loading. Should match actual column count for best visual effect. Default is 6. Used only when skeletonStatus=true or loadingType='skeleton'.",
+        "typescript": "number",
+        "example": ":horizontal-skeletons-count=\"5\" // 5 skeleton columns"
       }
     },
     "loadingType": {
       "description": "Type of loading indicator",
       "valueFormat": {
         "structure": "string enum",
+        "notes": "'skeleton' shows placeholder rows (better for initial load), 'spinner' shows loading spinner (better for refreshes). Determines loading UI when loadingStatus=true. Skeleton provides better perceived performance.",
+        "typescript": "'spinner' | 'skeleton'",
         "possibleValues": [
           "spinner",
           "skeleton"
         ],
-        "example": "loading-type=\"skeleton\""
+        "example": "loading-type=\"skeleton\" // Use skeleton loader"
       }
     },
     "loadingTitleText": {
       "description": "Title text during loading",
       "valueFormat": {
         "structure": "string",
-        "example": "loading-title-text=\"Loading data...\""
+        "notes": "Title text shown in loading overlay. Appears above spinner/skeleton. Use descriptive text like 'Loading data...', 'Fetching users...'. Provides context during wait. Only shows when loadingStatus=true.",
+        "typescript": "string",
+        "example": "loading-title-text=\"Loading data...\" // Loading message"
       }
     },
     "loadingDescriptionText": {
       "description": "Description text during loading",
       "valueFormat": {
         "structure": "string",
-        "example": "loading-description-text=\"Please wait\""
+        "notes": "Subtitle/description text in loading overlay. Appears below title. Use for additional context like 'Please wait', 'This may take a moment'. Optional, can be empty for minimal UI.",
+        "typescript": "string",
+        "example": "loading-description-text=\"Please wait\" // Loading subtitle"
       }
     },
     "noDataTitleText": {
       "description": "Title when no data - replaces V1 noDataTitle",
       "valueFormat": {
         "structure": "string",
-        "example": "no-data-title-text=\"No results found\""
+        "notes": "Title text shown in empty state when table has no data. V1 CHANGE: V1 used noDataTitle, V2 uses noDataTitleText. Use clear messages like 'No results found', 'No users yet'. Helps users understand empty table.",
+        "typescript": "string",
+        "example": "no-data-title-text=\"No results found\" // Empty state title"
       }
     },
     "noDataDescriptionText": {
       "description": "Description when no data - replaces V1 noDataDescription",
       "valueFormat": {
         "structure": "string",
-        "example": "no-data-description-text=\"Try adjusting your filters\""
+        "notes": "Description text shown below title in empty state. V1 CHANGE: V1 used noDataDescription, V2 uses noDataDescriptionText. Provide helpful guidance like 'Try adjusting filters', 'Click + to add first item'. Actionable suggestions improve UX.",
+        "typescript": "string",
+        "example": "no-data-description-text=\"Try adjusting your filters\" // Empty state hint"
       }
     },
     "noDataOptions": {
       "description": "Custom no-data display options",
       "valueFormat": {
         "structure": "Object with display options",
+        "notes": "Customization options for empty state. icon sets empty state icon, buttonText shows action button, buttonAction defines click handler. Use to add 'Clear Filters', 'Add First Item' buttons in empty state. Makes empty state actionable.",
         "typescript": "{ icon?: string; buttonText?: string; buttonAction?: Function; }",
         "example": ":no-data-options=\"{ icon: 'search', buttonText: 'Clear Filters', buttonAction: clearFilters }\""
       }
@@ -319,55 +389,70 @@
       "description": "Auto-adjust table height based on content",
       "valueFormat": {
         "structure": "boolean",
-        "example": "auto-height"
+        "notes": "Table height automatically fits content (no vertical scroll). Grows/shrinks with row count. Use for small, variable datasets. DON'T use with large datasets - causes performance issues. Conflicts with fixedHeight. AG Grid disables virtualization with autoHeight.",
+        "typescript": "boolean",
+        "example": "auto-height // Table height matches content"
       }
     },
     "fixedHeight": {
       "description": "Fixed table height in pixels",
       "valueFormat": {
         "structure": "number",
-        "example": ":fixed-height=\"400\""
+        "notes": "Sets fixed table height in pixels. Table scrolls vertically when content exceeds height. Use for large datasets to maintain consistent UI. Enables AG Grid virtualization for performance. Conflicts with autoHeight. Common values: 400, 500, 600px.",
+        "typescript": "number",
+        "example": ":fixed-height=\"500\" // 500px tall table"
       }
     },
     "horizontalScroll": {
       "description": "Enable horizontal scrolling",
       "valueFormat": {
         "structure": "boolean",
-        "example": "horizontal-scroll"
+        "notes": "Enables horizontal scrolling when columns exceed table width. Essential for tables with many columns. Use with pinned columns to keep important columns visible while scrolling. AG Grid handles scroll virtualization automatically.",
+        "typescript": "boolean",
+        "example": "horizontal-scroll // Enable horizontal scroll"
       }
     },
     "maxPinnedColumns": {
       "description": "Maximum number of pinnable columns",
       "valueFormat": {
         "structure": "number",
-        "example": ":max-pinned-columns=\"3\""
+        "notes": "Limits how many columns can be pinned (fixed left/right). Prevents users from pinning too many columns which hurts UX. When limit reached, emits @max-columns-pinned event. Common limit: 2-3 columns. Use to balance flexibility with usability.",
+        "typescript": "number",
+        "example": ":max-pinned-columns=\"3\" // Max 3 pinned columns"
       }
     },
     "enableRangeSelection": {
       "description": "Enable cell range selection (Excel-like)",
       "valueFormat": {
         "structure": "boolean",
-        "example": "enable-range-selection"
+        "notes": "Enables Excel-like cell range selection with mouse drag or Shift+Click. Users can select rectangular cell ranges. Useful for copy-paste operations or bulk cell editing. AG Grid provides built-in range selection UI and keyboard shortcuts.",
+        "typescript": "boolean",
+        "example": "enable-range-selection // Excel-like cell selection"
       }
     },
     "enableCellTextSelection": {
       "description": "Allow text selection within cells",
       "valueFormat": {
         "structure": "boolean",
-        "example": "enable-cell-text-selection"
+        "notes": "Allows selecting and copying text inside cells. When false, prevents text selection (better for row selection UX). When true, users can select cell content for copying. Trade-off: easier copy vs cleaner row selection interaction.",
+        "typescript": "boolean",
+        "example": "enable-cell-text-selection // Allow copying cell text"
       }
     },
     "rowDragManaged": {
       "description": "Enable row drag and drop reordering",
       "valueFormat": {
         "structure": "boolean",
-        "example": "row-drag-managed"
+        "notes": "Enables dragging rows to reorder them. Shows drag handle in first column. Emits @row-drag-end/@row-drag-stopped events with new order. Perfect for priority lists, task ordering, manual sorting. Use @row-drag-stopped to persist new order to backend.",
+        "typescript": "boolean",
+        "example": "row-drag-managed // Enable row reordering"
       }
     },
     "customColumnMenuItems": {
       "description": "Custom items for column context menu",
       "valueFormat": {
         "structure": "Array of menu item objects",
+        "notes": "Adds custom items to column header context menu (right-click menu). Each item needs name (label) and action (click handler). Optional icon. Use for column-specific operations like 'Export Column', 'Hide Column', 'Pin Column'. Extends default AG Grid menu.",
         "typescript": "Array<{ name: string; action: Function; icon?: string; }>",
         "example": ":custom-column-menu-items=\"[{ name: 'Export Column', action: exportColumn }]\""
       }
@@ -376,7 +461,9 @@
       "description": "Enable responsive behavior for mobile",
       "valueFormat": {
         "structure": "boolean",
-        "example": "is-responsive"
+        "notes": "Enables mobile-optimized responsive behavior. Table adapts layout for small screens - columns may stack, simplified interactions. Use for mobile-first or responsive applications. May hide some columns on small screens automatically.",
+        "typescript": "boolean",
+        "example": "is-responsive // Mobile-friendly table"
       }
     },
     "tableSearchParams": {
@@ -391,12 +478,14 @@
       "commonMistakes": [
         {
           "mistake": "Using tableSearchParams in clientSide mode",
-          "correction": "tableSearchParams only works with row-model-type=\"serverSide\"",
+          "impact": "Params are ignored, not sent to API (no API calls in clientSide)",
+          "fix": "Only use with row-model-type=\"serverSide\" for API fetching",
           "severity": "medium"
         },
         {
           "mistake": "Not reactively updating tableSearchParams",
-          "correction": "Use ref/reactive for dynamic params: const params = ref({ status: 'active' })",
+          "impact": "Param changes don't trigger table refresh",
+          "fix": "Use ref/reactive: const params = ref({ status: 'active' })",
           "severity": "low"
         }
       ]

@@ -245,7 +245,7 @@
     }
   ],
   "eventEnrichments": {},
-  "exampleEnrichments": [
+  "examples": [
     {
       "title": "Basic Tooltip with Dynamic Positioning",
       "description": "Common use case: tooltip that adjusts position automatically",

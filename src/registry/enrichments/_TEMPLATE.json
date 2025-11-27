@@ -1,0 +1,132 @@
+{
+  "component": "ComponentName",
+  "_metadata": {
+    "lastUpdated": "ISO 8601 timestamp",
+    "propsHash": "hash of props for change detection",
+    "eventsHash": "hash of events for change detection",
+    "propCount": 0,
+    "eventCount": 0
+  },
+  "propEnrichments": {
+    "propName": {
+      "valueFormat": {
+        "structure": "Type description (e.g., 'string', 'Object', 'Array<string>')",
+        "validValues": ["value1", "value2"],
+        "notes": "Detailed explanation of what this prop does",
+        "examples": ["example1", "example2"],
+        "typescript": "TypeScript type definition"
+      },
+      "relatedProps": ["prop1", "prop2"],
+      "commonMistakes": [
+        {
+          "mistake": "Description of the mistake",
+          "impact": "What happens when this mistake is made",
+          "fix": "How to fix it",
+          "severity": "critical|high|medium|low"
+        }
+      ]
+    }
+  },
+  "eventEnrichments": {
+    "eventName": {
+      "payload": {
+        "structure": "Type description",
+        "notes": "What data is emitted",
+        "typescript": "TypeScript type"
+      },
+      "when": "When this event is triggered",
+      "commonMistakes": [
+        {
+          "mistake": "Description",
+          "impact": "Impact",
+          "fix": "Solution",
+          "severity": "critical|high|medium|low"
+        }
+      ]
+    }
+  },
+  "codeSnippets": {
+    "basic": {
+      "title": "Basic Usage",
+      "description": "Minimal working example",
+      "code": "Vue template code here"
+    },
+    "advanced": {
+      "title": "Advanced Usage",
+      "description": "Complex example with multiple features",
+      "code": "Vue template code here"
+    }
+  },
+  "styling": {
+    "cssVariables": {
+      "--variable-name": "Description and default value"
+    },
+    "classes": {
+      "className": "Description and usage"
+    },
+    "notes": "Additional styling information"
+  },
+  "examples": [
+    {
+      "title": "Example Title",
+      "description": "What this example demonstrates",
+      "code": "Complete Vue SFC code",
+      "notes": "Additional context or explanation"
+    }
+  ],
+  "implementationPatterns": [
+    {
+      "name": "Pattern Name",
+      "description": "What problem this pattern solves",
+      "code": "Implementation code",
+      "when": "When to use this pattern",
+      "pros": ["Advantage 1", "Advantage 2"],
+      "cons": ["Disadvantage 1"]
+    }
+  ],
+  "useCases": [
+    {
+      "title": "Use Case Title",
+      "description": "Real-world scenario",
+      "example": "Code example for this use case"
+    }
+  ],
+  "bestPractices": [
+    {
+      "title": "Practice Title",
+      "description": "Explanation",
+      "code": "Example code (optional)",
+      "reasoning": "Why this is a best practice"
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Common error description",
+      "why": "Why people make this mistake",
+      "impact": "What goes wrong",
+      "fix": "How to fix it",
+      "severity": "critical|high|medium|low",
+      "example": {
+        "wrong": "Code showing the mistake",
+        "correct": "Code showing the fix"
+      }
+    }
+  ],
+  "performanceNotes": [
+    {
+      "topic": "Performance aspect",
+      "description": "Explanation",
+      "recommendation": "What to do",
+      "impact": "Performance impact (e.g., 'High', 'Medium', 'Low')"
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "topic": "A11y aspect",
+      "description": "Accessibility consideration",
+      "wcagLevel": "A|AA|AAA",
+      "recommendation": "How to ensure accessibility",
+      "example": "Code example (optional)"
+    }
+  ]
+}

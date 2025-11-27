@@ -6,21 +6,21 @@
     "propCount": 35,
     "eventCount": 5
   },
-  "componentName": "InMultiDropDown",
-  "version": "1.0.0",
-  "lastUpdated": "2024-11-24",
+  "component": "InMultiDropDown",
   "propEnrichments": {
     "options": {
       "description": "Array of selectable options",
       "valueFormat": {
         "structure": "Array of option objects",
+        "notes": "Defines the multi-select items. Each option must have 'label' (display text) and 'value' (selected value). Optional: 'disabled' to prevent selection. For type='checkbox', checkboxes appear next to each option. For type='tags', options show as removable tags when selected.",
         "typescript": "Array<{ label: string; value: string | number; disabled?: boolean; }>",
         "example": ":options=\"[{ label: 'Option 1', value: '1' }, { label: 'Option 2', value: '2', disabled: true }]\""
       },
       "commonMistakes": [
         {
           "mistake": "Using 'text' instead of 'label' for option display",
-          "correction": "V1 uses 'label' property for option text",
+          "impact": "Options won't display - component expects 'label' property",
+          "fix": "Use 'label' property: { label: 'Text', value: 'val' }",
           "severity": "high"
         }
       ]
@@ -29,6 +29,7 @@
       "description": "Selected values array (v-model)",
       "valueFormat": {
         "structure": "Array of selected values",
+        "notes": "Array of currently selected values that match the 'value' properties of selected options. Use v-model for two-way binding. Empty array means no selection. Component automatically adds/removes values when user selects/deselects options.",
         "typescript": "Array<string | number>",
         "example": "v-model=\"selectedValues\""
       }
@@ -36,13 +37,16 @@
     "customOptionsKey": {
       "description": "Custom property name for option label",
       "valueFormat": {
-        "structure": "string",
-        "example": "custom-options-key=\"name\""
+        "structure": "Array<string>",
+        "notes": "Maps custom property names from your data to dropdown's expected format. Use when your API returns objects with different property names than 'label' and 'value'. Example: if API returns [{name: 'John', id: 1}], use ['name', 'id'] to map name→label and id→value. Same as InDropDown.",
+        "typescript": "Array<string>",
+        "example": ":custom-options-key=\"['name', 'id']\""
       },
       "commonMistakes": [
         {
           "mistake": "Not setting when options have different label key",
-          "correction": "Set customOptionsKey when options use 'name' or other key instead of 'label'",
+          "impact": "Options don't display correctly - shows undefined or [Object object]",
+          "fix": "Map your property names: :custom-options-key=\"['yourLabelKey', 'yourValueKey']\"",
           "severity": "medium"
         }
       ]
@@ -51,13 +55,17 @@
       "description": "API endpoint for fetching options dynamically",
       "valueFormat": {
         "structure": "string (URL)",
-        "example": "fetch-url=\"/api/options\""
+        "notes": "API endpoint URL to fetch dropdown options dynamically. When set, component will fetch options from this endpoint on mount or when search query changes. Use with 'responseKey' to extract data from nested responses and 'queryString' for search parameter name.",
+        "typescript": "string",
+        "example": "fetch-url=\"/api/users\""
       }
     },
     "responseKey": {
       "description": "JSON path to options array in API response",
       "valueFormat": {
         "structure": "string (dot notation)",
+        "notes": "Dot-notation path to extract options array from API response. CRITICAL for API fetching. If API returns {data: {items: [...]}}, use 'data.items'. If response is flat array at root, leave empty or use 'data' if responseHasData=true.",
+        "typescript": "string",
         "example": "response-key=\"data.items\""
       }
     },
@@ -65,13 +73,17 @@
       "description": "Query parameter name for search",
       "valueFormat": {
         "structure": "string",
-        "example": "query-string=\"q\""
+        "notes": "Name of the query parameter for search functionality when using API fetch. The search input value will be sent as this parameter. Example: if queryString='search', API will be called with ?search=userInput. Requires searchStatus=true and fetchUrl to be set.",
+        "typescript": "string",
+        "example": "query-string=\"search\""
       }
     },
     "maxSelectableItem": {
       "description": "Maximum number of items that can be selected",
       "valueFormat": {
         "structure": "number",
+        "notes": "Limits the number of options that can be selected. When limit is reached, remaining options become disabled and warningMessage is displayed. Use 0 (default) for unlimited selection. Useful for enforcing business rules like 'select up to 5 categories'.",
+        "typescript": "number",
         "example": ":max-selectable-item=\"5\""
       }
     },
@@ -79,20 +91,26 @@
       "description": "Allow creating new options by typing",
       "valueFormat": {
         "structure": "boolean",
-        "example": "add-new-tag-status"
+        "notes": "Enables adding new options on-the-fly when user types value not in the options list. Shows 'Create new' button in dropdown. When clicked, emits 'addNewOption' event with the typed value. Subject to character limits (minimumNewTagCharacterLimit, maxNewTagCharacterLimit).",
+        "typescript": "boolean",
+        "example": ":add-new-tag-status=\"true\""
       }
     },
     "minimumNewTagCharacterLimit": {
       "description": "Minimum characters required for new tag",
       "valueFormat": {
         "structure": "number",
+        "notes": "Minimum length required for creating new tags. Default is 2. 'Create new' option only appears when typed text length >= this value. Prevents accidentally creating single-character or empty tags.",
+        "typescript": "number",
         "example": ":minimum-new-tag-character-limit=\"2\""
       }
     },
     "maxNewTagCharacterLimit": {
       "description": "Maximum characters allowed for new tag",
       "valueFormat": {
-        "structure": "number",
+        "structure": "number | string",
+        "notes": "Maximum length allowed for creating new tags. Empty string ('') means no limit. When limit is reached, user cannot type more characters. Use to enforce tag naming standards or database constraints.",
+        "typescript": "number | string",
         "example": ":max-new-tag-character-limit=\"50\""
       }
     },
@@ -100,15 +118,19 @@
       "description": "Allow temporary options that aren't persisted",
       "valueFormat": {
         "structure": "boolean",
-        "example": "has-temporary-options"
+        "notes": "When true, newly created options are marked as temporary and may not be persisted to backend. Useful for client-side filtering or preview functionality where new options shouldn't be saved to database immediately.",
+        "typescript": "boolean",
+        "example": ":has-temporary-options=\"true\""
       }
     },
     "type": {
       "description": "Visual type/variant of the dropdown",
       "valueFormat": {
         "structure": "string enum",
+        "notes": "Controls visual representation of selections. 'checkbox' (default) shows checkboxes next to options, useful for traditional multi-select. 'tags' displays selected items as removable tag chips above dropdown, better for space-constrained UIs.",
+        "typescript": "'checkbox' | 'tags'",
         "possibleValues": [
-          "default",
+          "checkbox",
           "tags"
         ],
         "example": "type=\"tags\""
@@ -118,7 +140,10 @@
       "description": "Color theme of the dropdown",
       "valueFormat": {
         "structure": "string enum",
+        "notes": "Visual color theme. 'grey' (default) for standard gray styling, 'light' for lighter background, 'dark' for dark mode. Affects dropdown background, borders, and text colors.",
+        "typescript": "'grey' | 'light' | 'dark'",
         "possibleValues": [
+          "grey",
           "light",
           "dark"
         ],
@@ -153,7 +178,7 @@
       "usage": "@click=\"handleClick\""
     }
   },
-  "exampleEnrichments": [
+  "examples": [
     {
       "title": "Basic Multi-Select",
       "description": "Simple multi-select with static options",

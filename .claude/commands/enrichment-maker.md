@@ -15,12 +15,21 @@ Use MCP to analyze the component:
 mcp__design-system__get-component("{{arg1}}")
 ```
 
-## Step 2: Learn from Existing Enrichments
+## Step 2: Learn the Standard Schema and Patterns
 
-Read these files to understand patterns:
-- `src/registry/enrichments/InButtonV2.json` (simple type mistakes)
-- `src/registry/enrichments/InDatePickerV2.json` (complex structures)
-- `src/registry/enrichments/InSelect.json` (options/value patterns)
+**First, understand the structure:**
+1. `src/registry/enrichments/_TEMPLATE.json` - Canonical schema (MUST follow)
+2. `src/registry/enrichments/InRibbons.json` - Gold standard implementation
+3. `src/types/enrichment-schema.ts` - TypeScript type definitions
+
+**Then, learn from real examples:**
+- `InButtonV2.json` - Simple props with severity levels
+- `InDatePickerV2.json` - Complex Object/Array props
+- `InSelect.json` - Options and value patterns
+- `InCheckBoxV2.json` - Boolean props and related states
+
+**CRITICAL**: All enrichments MUST match _TEMPLATE.json structure.
+Use examples only for content patterns, not structure.
 
 ## Step 3: Identify Critical Props
 
@@ -80,23 +89,46 @@ Include:
 }
 ```
 
-## Step 5: Merge and Build
+## Step 5: Merge, Generate Markdown, and Build
 
-After creating the file:
+After creating the enrichment file, run these commands in order:
 
 ```bash
+# 1. Merge enrichment into combined.json
 npm run extract:merge
+
+# 2. Generate Markdown format (77% token savings!)
+npm run generate:markdown
+
+# 3. Build MCP server
 npm run build
 ```
 
-## Step 6: Verify
+**Why this order matters:**
+1. `extract:merge` - Combines enrichment with component metadata
+2. `generate:markdown` - Creates optimized Markdown docs from merged data
+3. `build` - Packages everything for MCP server
 
-Check that enrichment is loaded:
+## Step 6: Test the MCP Server
+
+After building, test that the enrichment works:
 
 ```bash
-cat data/combined.json | jq '.components.{{arg1}}.enriched'
-# Should output: true
+# Quick test with MCP tool
+mcp__design-system__get-component("{{arg1}}")
+
+# Should return Markdown format with:
+# - Your enriched prop descriptions
+# - Common mistakes you added
+# - Code examples
+# - Token savings displayed
 ```
+
+**Expected output:**
+- Format: Markdown (not JSON)
+- Contains your propEnrichments
+- Shows token savings percentage
+- All enrichments visible in readable format
 
 ## Guidelines
 

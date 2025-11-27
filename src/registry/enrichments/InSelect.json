@@ -239,7 +239,7 @@
       ]
     }
   },
-  "exampleEnrichments": [
+  "examples": [
     {
       "title": "Basic Single Select",
       "description": "Simple dropdown with static options",

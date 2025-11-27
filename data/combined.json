@@ -1,7 +1,7 @@
 {
   "_metadata": {
     "version": "1.0.0",
-    "generatedAt": "2025-11-26T09:05:41.337Z",
+    "generatedAt": "2025-11-27T10:47:42.029Z",
     "sources": [
       "components",
       "storybook",
@@ -5894,18 +5894,21 @@
           "description": "Column definitions array - replaces V1 tableFields",
           "valueFormat": {
             "structure": "Array of AG Grid column definitions",
+            "notes": "CRITICAL: Defines table structure using AG Grid format (not V1 format!). Each column needs 'field' (data property) and 'headerName' (column title). Optional: sortable, filter, width, pinned ('left'/'right'), cellRenderer for custom rendering. V2 is built on AG Grid - use AG Grid column definition format with all its features (valueFormatter, cellClass, cellStyle, etc.).",
             "typescript": "Array<{ field: string; headerName: string; sortable?: boolean; filter?: boolean; width?: number; pinned?: 'left' | 'right'; cellRenderer?: string; valueFormatter?: Function; }>",
             "example": ":column-options=\"[{ field: 'name', headerName: 'Name', sortable: true, filter: true }, { field: 'email', headerName: 'Email', width: 200 }]\""
           },
           "commonMistakes": [
             {
               "mistake": "Using 'label' instead of 'headerName' from V1",
-              "correction": "V2 uses AG Grid format: headerName instead of label",
+              "impact": "Column headers display as undefined or blank",
+              "fix": "Change all 'label' to 'headerName' in column definitions",
               "severity": "high"
             },
             {
               "mistake": "Using V1 renderer names",
-              "correction": "V2 uses AG Grid cellRenderer with different component mappings",
+              "impact": "Custom cell renderers don't work, cells show raw data",
+              "fix": "Use AG Grid cellRenderer format with component name strings",
               "severity": "medium"
             }
           ]
@@ -5914,32 +5917,38 @@
           "description": "Table data array for client-side mode",
           "valueFormat": {
             "structure": "Array of row objects",
+            "notes": "Array of data objects to display in the table. Each object represents one row, with properties matching column 'field' values. Only used in clientSide rowModelType. For serverSide mode, data is fetched from API via fetchUrl. Update this array to refresh table content (reactive).",
             "typescript": "Array<Record<string, any>>",
-            "example": ":data=\"tableData\""
+            "example": ":data=\"users\" // [{ name: 'John', email: 'john@ex.com' }, ...]"
           }
         },
         "totalData": {
           "description": "Total number of records (for server-side pagination display)",
           "valueFormat": {
             "structure": "number",
-            "example": ":total-data=\"1000\""
+            "notes": "Total record count for server-side pagination. Used to calculate total pages and show 'X of Y' items. Only relevant in serverSide rowModelType - in clientSide mode, total is auto-calculated from data array length. Backend should return this in API response.",
+            "typescript": "number",
+            "example": ":total-data=\"1523\" // Total users in database"
           }
         },
         "rowModelType": {
           "description": "Data loading mode - replaces V1 apiMode",
           "valueFormat": {
             "structure": "string enum",
+            "notes": "Determines how table loads data. 'clientSide' (default) loads all data upfront into browser - use for <1000 rows. 'serverSide' fetches data paginated from API via fetchUrl - use for large datasets (10K+ rows). 'infinite' enables infinite scroll. CRITICAL V1 CHANGE: V1 used boolean api-mode, V2 uses string row-model-type.",
+            "typescript": "'clientSide' | 'serverSide' | 'infinite'",
             "possibleValues": [
               "clientSide",
               "serverSide",
               "infinite"
             ],
-            "example": "row-model-type=\"serverSide\""
+            "example": "row-model-type=\"serverSide\" // For API-fetched data"
           },
           "commonMistakes": [
             {
               "mistake": "Using api-mode boolean from V1",
-              "correction": "V2 uses row-model-type=\"serverSide\" instead of api-mode",
+              "impact": "Prop not recognized, table doesn't fetch from API",
+              "fix": "Change :api-mode=\"true\" to row-model-type=\"serverSide\"",
               "severity": "high"
             }
           ]
@@ -5948,24 +5957,29 @@
           "description": "API endpoint URL for server-side data fetching",
           "valueFormat": {
             "structure": "string (URL)",
-            "example": "fetch-url=\"/api/users\""
+            "notes": "API endpoint URL for fetching table data in serverSide mode. Table will POST/GET (based on httpMethod) to this URL with pagination/filter/sort params. Requires rowModelType=\"serverSide\". Backend should return data array and totalData count. Use tableSearchParams for additional custom params.",
+            "typescript": "string",
+            "example": "fetch-url=\"/api/users\" // Backend endpoint"
           }
         },
         "httpMethod": {
           "description": "HTTP method for API requests",
           "valueFormat": {
             "structure": "string enum",
+            "notes": "HTTP method used when fetching data from fetchUrl. GET sends params in query string, POST sends in request body. Use POST for complex filters or when URL length might exceed limits. Only relevant in serverSide rowModelType.",
+            "typescript": "'GET' | 'POST'",
             "possibleValues": [
               "GET",
               "POST"
             ],
-            "example": "http-method=\"POST\""
+            "example": "http-method=\"POST\" // For complex filter params"
           }
         },
         "bulkActionsOptions": {
           "description": "Bulk action buttons for selected rows",
           "valueFormat": {
             "structure": "Array of action objects",
+            "notes": "Defines bulk action buttons shown when rows are selected. Each action needs id (unique identifier), label (button text). Optional: icon, variant ('danger' for destructive actions), disabled. Actions trigger @bulk-action event with actionId and selectedRows. Use for operations like export, delete, archive on multiple rows.",
             "typescript": "Array<{ id: string; label: string; icon?: string; variant?: string; disabled?: boolean; }>",
             "example": ":bulk-actions-options=\"[{ id: 'delete', label: 'Delete Selected', icon: 'trash', variant: 'danger' }]\""
           }
@@ -5974,50 +5988,61 @@
           "description": "Enable bulk actions toolbar",
           "valueFormat": {
             "structure": "boolean",
-            "example": "has-bulk-actions"
+            "notes": "Shows bulk actions toolbar when rows are selected. Requires rowsSelection to be enabled and bulkActionsOptions to be provided. When true, toolbar appears above table showing action buttons and selected count. Essential for multi-row operations.",
+            "typescript": "boolean",
+            "example": "has-bulk-actions // Enable bulk operations UI"
           }
         },
         "rowsSelection": {
           "description": "Row selection mode",
           "valueFormat": {
             "structure": "string enum",
+            "notes": "'multiple' allows selecting many rows with checkboxes, 'single' allows only one row selected at a time. Checkboxes appear in first column. Use with @select-status/@row-selected events to track selections. Essential for bulk operations or row-based actions.",
+            "typescript": "'single' | 'multiple' | boolean",
             "possibleValues": [
               "single",
               "multiple"
             ],
-            "example": "rows-selection=\"multiple\""
+            "example": "rows-selection=\"multiple\" // Multi-select with checkboxes"
           }
         },
         "canSelectAllRows": {
           "description": "Enable select all checkbox in header",
           "valueFormat": {
             "structure": "boolean",
-            "example": "can-select-all-rows"
+            "notes": "Shows 'select all' checkbox in table header for selecting all rows at once. Only works with rowsSelection=\"multiple\". When clicked, selects all visible rows (respects pagination). Use for bulk operations where users might want to select entire page.",
+            "typescript": "boolean",
+            "example": "can-select-all-rows // Add select-all checkbox"
           }
         },
         "rowHeight": {
           "description": "Height of each row in pixels",
           "valueFormat": {
             "structure": "string enum or number",
+            "notes": "Row height preset or custom pixel value. 'small' (48px) for compact tables, 'medium' (64px) default for comfortable viewing, or custom number for specific height. Fixed row height improves scroll performance in large tables. AG Grid uses this for virtualization calculations.",
+            "typescript": "'small' | 'medium' | number",
             "possibleValues": [
               "small (48px)",
               "medium (64px)",
               "custom number"
             ],
-            "example": "row-height=\"medium\""
+            "example": "row-height=\"small\" // Compact 48px rows"
           }
         },
         "inContainerLayout": {
           "description": "Wrap table in InContainer component",
           "valueFormat": {
             "structure": "boolean",
-            "example": "in-container-layout"
+            "notes": "Wraps entire table in InContainer component for consistent styling with headers, borders, shadows. Use inContainerLayoutOptions to configure container appearance (title, borders, etc.). Essential for matching Design System container patterns across application.",
+            "typescript": "boolean",
+            "example": "in-container-layout // Wrap in styled container"
           }
         },
         "inContainerLayoutOptions": {
           "description": "Options for the container wrapper",
           "valueFormat": {
             "structure": "Object with container props",
+            "notes": "Configuration for InContainer wrapper when inContainerLayout=true. headerStatus adds header section, title sets header text, border adds container borders. Passes props directly to InContainer component. Use for consistent table presentation.",
             "typescript": "{ headerStatus?: boolean; title?: string; border?: boolean; }",
             "example": ":in-container-layout-options=\"{ headerStatus: true, title: 'Users' }\""
           }
@@ -6026,42 +6051,53 @@
           "description": "Enable nested/expandable tables",
           "valueFormat": {
             "structure": "boolean",
-            "example": "nested-table-status"
+            "notes": "Enables master-detail pattern with expandable rows showing nested tables. When row is expanded, shows child table with data from nestedTableFields columns. Perfect for orders→order items, users→permissions, invoices→line items. Emit @nested-data-ready to load nested data.",
+            "typescript": "boolean",
+            "example": "nested-table-status // Enable expandable rows"
           }
         },
         "nestedTableFields": {
           "description": "Column definitions for nested table",
           "valueFormat": {
             "structure": "Array of column definitions (same as columnOptions)",
-            "example": ":nested-table-fields=\"nestedColumns\""
+            "notes": "Column definitions for the nested/child table shown when row expands. Same format as columnOptions - AG Grid column definitions. Used with nestedTableStatus. Define columns for child data structure (e.g., order items have product, quantity, price columns).",
+            "typescript": "Array<{ field: string; headerName: string; width?: number; }>",
+            "example": ":nested-table-fields=\"orderItemColumns\""
           }
         },
         "isTreeData": {
           "description": "Enable tree/hierarchical data display",
           "valueFormat": {
             "structure": "boolean",
-            "example": "is-tree-data"
+            "notes": "Displays hierarchical/tree data with expand/collapse functionality. Rows can have child rows creating tree structure (org charts, file systems, category hierarchies). Use groupDataPath to define how to access child nodes. Rows show expand/collapse icons automatically.",
+            "typescript": "boolean",
+            "example": "is-tree-data // Enable tree view"
           }
         },
         "groupDataPath": {
           "description": "Path to child nodes in tree data",
           "valueFormat": {
             "structure": "Function returning path array",
+            "notes": "Function that returns path to child nodes in tree data structure. Used with isTreeData. Function receives row data and should return array of property names leading to children. Example: for org hierarchy stored in row.children, return ['children']. For nested like row.org.children, return ['org', 'children'].",
             "typescript": "(data: any) => string[]",
-            "example": ":group-data-path=\"data => data.hierarchy\""
+            "example": ":group-data-path=\"data => data.orgHierarchy\""
           }
         },
         "searchFilterStatus": {
           "description": "Show search input - replaces V1 withSearchFilter",
           "valueFormat": {
             "structure": "boolean",
-            "example": "search-filter-status"
+            "notes": "Shows global search input above table for filtering rows. Searches across all columns (client-side) or sends search param to API (server-side). V1 CHANGE: V1 used withSearchFilter, V2 uses searchFilterStatus. Emits @set-search-value event with search query.",
+            "typescript": "boolean",
+            "example": "search-filter-status // Show search input"
           }
         },
         "searchFilterPlaceholder": {
           "description": "Placeholder text for search input",
           "valueFormat": {
             "structure": "string",
+            "notes": "Placeholder text shown in search input when empty. Use descriptive text like 'Search users...', 'Find orders...'. Helps users understand what they can search for. Only relevant when searchFilterStatus=true.",
+            "typescript": "string",
             "example": "search-filter-placeholder=\"Search users...\""
           }
         },
@@ -6069,130 +6105,164 @@
           "description": "Show status filter dropdown - replaces V1 withStatusFilter",
           "valueFormat": {
             "structure": "boolean",
-            "example": "status-filter-status"
+            "notes": "Shows status filter dropdown above table for filtering by predefined statuses. Options come from statusFilterList. Common for filtering by Active/Inactive, Published/Draft, etc. V1 CHANGE: V1 used withStatusFilter, V2 uses statusFilterStatus.",
+            "typescript": "boolean",
+            "example": "status-filter-status // Show status dropdown"
           }
         },
         "statusFilterList": {
           "description": "Options for status filter - replaces V1 statusList",
           "valueFormat": {
             "structure": "Array of status objects",
+            "notes": "Status options for the filter dropdown. Each option needs label (display text) and value (filter value sent to API). Used with statusFilterStatus. V1 CHANGE: V1 used statusList, V2 uses statusFilterList. Common values: Active/Inactive, All statuses, Published/Draft.",
             "typescript": "Array<{ label: string; value: string | number; }>",
-            "example": ":status-filter-list=\"[{ label: 'Active', value: 'active' }]\""
+            "example": ":status-filter-list=\"[{ label: 'Active', value: 'active' }, { label: 'All', value: '' }]\""
           }
         },
         "paginationStatus": {
           "description": "Show pagination controls",
           "valueFormat": {
             "structure": "boolean",
-            "example": "pagination-status"
+            "notes": "Shows pagination controls below table (page numbers, prev/next buttons). Essential for large datasets. Works in both clientSide (splits data array) and serverSide (fetches pages from API) modes. Emits @pagination-changed when page changes.",
+            "typescript": "boolean",
+            "example": "pagination-status // Enable pagination"
           }
         },
         "itemsPerPageStatus": {
           "description": "Show items per page selector",
           "valueFormat": {
             "structure": "boolean",
-            "example": "items-per-page-status"
+            "notes": "Shows dropdown to change items per page (10, 25, 50, 100). Options range from minItemPerPage to maxItemPerPage. Allows users to control page size. Emits @per-page-selected when changed. Use with paginationStatus.",
+            "typescript": "boolean",
+            "example": "items-per-page-status // Show page size selector"
           }
         },
         "defaultItemPerPage": {
           "description": "Default number of items per page - replaces V1 perPage",
           "valueFormat": {
             "structure": "number",
-            "example": ":default-item-per-page=\"25\""
+            "notes": "Initial/default page size when table loads. V1 CHANGE: V1 used perPage, V2 uses defaultItemPerPage. Common values: 10 (default), 25, 50, 100. Choose based on data density and user needs. Smaller for detailed rows, larger for simple data.",
+            "typescript": "number",
+            "example": ":default-item-per-page=\"25\" // Start with 25 rows"
           }
         },
         "minItemPerPage": {
           "description": "Minimum items per page option",
           "valueFormat": {
             "structure": "number",
-            "example": ":min-item-per-page=\"10\""
+            "notes": "Minimum page size option in items-per-page dropdown. Usually 10 or 25. Prevents users from selecting too small page sizes that require excessive clicking. Used to generate dropdown options.",
+            "typescript": "number",
+            "example": ":min-item-per-page=\"10\" // Minimum 10 rows per page"
           }
         },
         "maxItemPerPage": {
           "description": "Maximum items per page option",
           "valueFormat": {
             "structure": "number",
-            "example": ":max-item-per-page=\"100\""
+            "notes": "Maximum page size option in items-per-page dropdown. Usually 100 or 200. Prevents performance issues from rendering too many rows at once. Used to generate dropdown options (min, default, max, etc.).",
+            "typescript": "number",
+            "example": ":max-item-per-page=\"100\" // Maximum 100 rows per page"
           }
         },
         "showingItemsStatus": {
           "description": "Show 'Showing X of Y items' text",
           "valueFormat": {
             "structure": "boolean",
-            "example": "showing-items-status"
+            "notes": "Shows text like 'Showing 1-25 of 1,523 items' below table. Helps users understand current view and total data size. Especially useful in serverSide mode to show total from backend. Part of pagination information section.",
+            "typescript": "boolean",
+            "example": "showing-items-status // Show item count text"
           }
         },
         "paginationInformationStatus": {
           "description": "Show pagination information section",
           "valueFormat": {
             "structure": "boolean",
-            "example": "pagination-information-status"
+            "notes": "Shows entire pagination info section (page count text, page size selector). Master toggle for pagination UI elements. When false, hides all pagination info except page number buttons. Use to simplify UI for small datasets.",
+            "typescript": "boolean",
+            "example": "pagination-information-status // Show full pagination info"
           }
         },
         "loadingStatus": {
           "description": "Show loading state",
           "valueFormat": {
             "structure": "boolean",
-            "example": ":loading-status=\"isLoading\""
+            "notes": "Triggers loading state overlay on table. Shows spinner or skeleton based on loadingType. Use while fetching data (initial load or refresh). Prevents user interaction during load. Emits @loading-status event when changed.",
+            "typescript": "boolean",
+            "example": ":loading-status=\"isLoading\" // Show loading overlay"
           }
         },
         "skeletonStatus": {
           "description": "Show skeleton loading state",
           "valueFormat": {
             "structure": "boolean",
-            "example": "skeleton-status"
+            "notes": "Shows skeleton placeholder rows instead of spinner during loading. Better UX for initial load - users see table structure. Number of skeleton columns from horizontalSkeletonsCount. Use for first load, loadingStatus for refreshes.",
+            "typescript": "boolean",
+            "example": "skeleton-status // Show skeleton during initial load"
           }
         },
         "horizontalSkeletonsCount": {
           "description": "Number of skeleton columns to show",
           "valueFormat": {
             "structure": "number",
-            "example": ":horizontal-skeletons-count=\"5\""
+            "notes": "Number of skeleton columns to render during skeleton loading. Should match actual column count for best visual effect. Default is 6. Used only when skeletonStatus=true or loadingType='skeleton'.",
+            "typescript": "number",
+            "example": ":horizontal-skeletons-count=\"5\" // 5 skeleton columns"
           }
         },
         "loadingType": {
           "description": "Type of loading indicator",
           "valueFormat": {
             "structure": "string enum",
+            "notes": "'skeleton' shows placeholder rows (better for initial load), 'spinner' shows loading spinner (better for refreshes). Determines loading UI when loadingStatus=true. Skeleton provides better perceived performance.",
+            "typescript": "'spinner' | 'skeleton'",
             "possibleValues": [
               "spinner",
               "skeleton"
             ],
-            "example": "loading-type=\"skeleton\""
+            "example": "loading-type=\"skeleton\" // Use skeleton loader"
           }
         },
         "loadingTitleText": {
           "description": "Title text during loading",
           "valueFormat": {
             "structure": "string",
-            "example": "loading-title-text=\"Loading data...\""
+            "notes": "Title text shown in loading overlay. Appears above spinner/skeleton. Use descriptive text like 'Loading data...', 'Fetching users...'. Provides context during wait. Only shows when loadingStatus=true.",
+            "typescript": "string",
+            "example": "loading-title-text=\"Loading data...\" // Loading message"
           }
         },
         "loadingDescriptionText": {
           "description": "Description text during loading",
           "valueFormat": {
             "structure": "string",
-            "example": "loading-description-text=\"Please wait\""
+            "notes": "Subtitle/description text in loading overlay. Appears below title. Use for additional context like 'Please wait', 'This may take a moment'. Optional, can be empty for minimal UI.",
+            "typescript": "string",
+            "example": "loading-description-text=\"Please wait\" // Loading subtitle"
           }
         },
         "noDataTitleText": {
           "description": "Title when no data - replaces V1 noDataTitle",
           "valueFormat": {
             "structure": "string",
-            "example": "no-data-title-text=\"No results found\""
+            "notes": "Title text shown in empty state when table has no data. V1 CHANGE: V1 used noDataTitle, V2 uses noDataTitleText. Use clear messages like 'No results found', 'No users yet'. Helps users understand empty table.",
+            "typescript": "string",
+            "example": "no-data-title-text=\"No results found\" // Empty state title"
           }
         },
         "noDataDescriptionText": {
           "description": "Description when no data - replaces V1 noDataDescription",
           "valueFormat": {
             "structure": "string",
-            "example": "no-data-description-text=\"Try adjusting your filters\""
+            "notes": "Description text shown below title in empty state. V1 CHANGE: V1 used noDataDescription, V2 uses noDataDescriptionText. Provide helpful guidance like 'Try adjusting filters', 'Click + to add first item'. Actionable suggestions improve UX.",
+            "typescript": "string",
+            "example": "no-data-description-text=\"Try adjusting your filters\" // Empty state hint"
           }
         },
         "noDataOptions": {
           "description": "Custom no-data display options",
           "valueFormat": {
             "structure": "Object with display options",
+            "notes": "Customization options for empty state. icon sets empty state icon, buttonText shows action button, buttonAction defines click handler. Use to add 'Clear Filters', 'Add First Item' buttons in empty state. Makes empty state actionable.",
             "typescript": "{ icon?: string; buttonText?: string; buttonAction?: Function; }",
             "example": ":no-data-options=\"{ icon: 'search', buttonText: 'Clear Filters', buttonAction: clearFilters }\""
           }
@@ -6201,55 +6271,70 @@
           "description": "Auto-adjust table height based on content",
           "valueFormat": {
             "structure": "boolean",
-            "example": "auto-height"
+            "notes": "Table height automatically fits content (no vertical scroll). Grows/shrinks with row count. Use for small, variable datasets. DON'T use with large datasets - causes performance issues. Conflicts with fixedHeight. AG Grid disables virtualization with autoHeight.",
+            "typescript": "boolean",
+            "example": "auto-height // Table height matches content"
           }
         },
         "fixedHeight": {
           "description": "Fixed table height in pixels",
           "valueFormat": {
             "structure": "number",
-            "example": ":fixed-height=\"400\""
+            "notes": "Sets fixed table height in pixels. Table scrolls vertically when content exceeds height. Use for large datasets to maintain consistent UI. Enables AG Grid virtualization for performance. Conflicts with autoHeight. Common values: 400, 500, 600px.",
+            "typescript": "number",
+            "example": ":fixed-height=\"500\" // 500px tall table"
           }
         },
         "horizontalScroll": {
           "description": "Enable horizontal scrolling",
           "valueFormat": {
             "structure": "boolean",
-            "example": "horizontal-scroll"
+            "notes": "Enables horizontal scrolling when columns exceed table width. Essential for tables with many columns. Use with pinned columns to keep important columns visible while scrolling. AG Grid handles scroll virtualization automatically.",
+            "typescript": "boolean",
+            "example": "horizontal-scroll // Enable horizontal scroll"
           }
         },
         "maxPinnedColumns": {
           "description": "Maximum number of pinnable columns",
           "valueFormat": {
             "structure": "number",
-            "example": ":max-pinned-columns=\"3\""
+            "notes": "Limits how many columns can be pinned (fixed left/right). Prevents users from pinning too many columns which hurts UX. When limit reached, emits @max-columns-pinned event. Common limit: 2-3 columns. Use to balance flexibility with usability.",
+            "typescript": "number",
+            "example": ":max-pinned-columns=\"3\" // Max 3 pinned columns"
           }
         },
         "enableRangeSelection": {
           "description": "Enable cell range selection (Excel-like)",
           "valueFormat": {
             "structure": "boolean",
-            "example": "enable-range-selection"
+            "notes": "Enables Excel-like cell range selection with mouse drag or Shift+Click. Users can select rectangular cell ranges. Useful for copy-paste operations or bulk cell editing. AG Grid provides built-in range selection UI and keyboard shortcuts.",
+            "typescript": "boolean",
+            "example": "enable-range-selection // Excel-like cell selection"
           }
         },
         "enableCellTextSelection": {
           "description": "Allow text selection within cells",
           "valueFormat": {
             "structure": "boolean",
-            "example": "enable-cell-text-selection"
+            "notes": "Allows selecting and copying text inside cells. When false, prevents text selection (better for row selection UX). When true, users can select cell content for copying. Trade-off: easier copy vs cleaner row selection interaction.",
+            "typescript": "boolean",
+            "example": "enable-cell-text-selection // Allow copying cell text"
           }
         },
         "rowDragManaged": {
           "description": "Enable row drag and drop reordering",
           "valueFormat": {
             "structure": "boolean",
-            "example": "row-drag-managed"
+            "notes": "Enables dragging rows to reorder them. Shows drag handle in first column. Emits @row-drag-end/@row-drag-stopped events with new order. Perfect for priority lists, task ordering, manual sorting. Use @row-drag-stopped to persist new order to backend.",
+            "typescript": "boolean",
+            "example": "row-drag-managed // Enable row reordering"
           }
         },
         "customColumnMenuItems": {
           "description": "Custom items for column context menu",
           "valueFormat": {
             "structure": "Array of menu item objects",
+            "notes": "Adds custom items to column header context menu (right-click menu). Each item needs name (label) and action (click handler). Optional icon. Use for column-specific operations like 'Export Column', 'Hide Column', 'Pin Column'. Extends default AG Grid menu.",
             "typescript": "Array<{ name: string; action: Function; icon?: string; }>",
             "example": ":custom-column-menu-items=\"[{ name: 'Export Column', action: exportColumn }]\""
           }
@@ -6258,7 +6343,9 @@
           "description": "Enable responsive behavior for mobile",
           "valueFormat": {
             "structure": "boolean",
-            "example": "is-responsive"
+            "notes": "Enables mobile-optimized responsive behavior. Table adapts layout for small screens - columns may stack, simplified interactions. Use for mobile-first or responsive applications. May hide some columns on small screens automatically.",
+            "typescript": "boolean",
+            "example": "is-responsive // Mobile-friendly table"
           }
         },
         "tableSearchParams": {
@@ -6277,12 +6364,14 @@
           "commonMistakes": [
             {
               "mistake": "Using tableSearchParams in clientSide mode",
-              "correction": "tableSearchParams only works with row-model-type=\"serverSide\"",
+              "impact": "Params are ignored, not sent to API (no API calls in clientSide)",
+              "fix": "Only use with row-model-type=\"serverSide\" for API fetching",
               "severity": "medium"
             },
             {
               "mistake": "Not reactively updating tableSearchParams",
-              "correction": "Use ref/reactive for dynamic params: const params = ref({ status: 'active' })",
+              "impact": "Param changes don't trigger table refresh",
+              "fix": "Use ref/reactive: const params = ref({ status: 'active' })",
               "severity": "low"
             }
           ]
@@ -7079,23 +7168,7 @@
           "severity": "medium"
         }
       ],
-      "migrationNotes": {
-        "considerV2": "InDatePicker (V1) is deprecated. Consider migrating to InDatePickerV2 for new features like comparison mode, better validation, and consistent API. Migration is medium effort but provides significant UX improvements.",
-        "v2Component": "InDatePickerV2",
-        "migrationGuide": "InDatePicker-to-V2",
-        "breakingChanges": [
-          "value prop format: Object → Array<Object>",
-          "customRanges format: Object with Date arrays → Array with string dates",
-          "disabledRange format: Array of Unix timestamps → Object with date strings",
-          "@update event → @apply event (with different payload handling)"
-        ],
-        "newFeaturesInV2": [
-          "Comparison mode with side-by-side date ranges",
-          "Dynamic comparison range calculation",
-          "Better validation and error messages",
-          "More flexible quick range configuration"
-        ]
-      },
+      "migrationNotes": null,
       "codeSnippets": null,
       "styling": null,
       "implementationPatterns": [],
@@ -8278,35 +8351,44 @@
           "description": "Array of selectable options",
           "valueFormat": {
             "structure": "Array of option objects",
-            "typescript": "Array<{ label: string; value: string | number; disabled?: boolean; description?: string; }>",
+            "notes": "Defines the dropdown items. Each option must have 'label' (display text) and 'value' (selected value). Optional: 'disabled' to prevent selection, 'description' for tooltips. For nested dropdowns, include 'children' array.",
+            "typescript": "Array<{ label: string; value: string | number; disabled?: boolean; description?: string; children?: Array<DropdownOption> }>",
             "example": ":options=\"[{ label: 'Option 1', value: '1' }, { label: 'Option 2', value: '2' }]\""
           }
         },
         "value": {
           "description": "Selected value (v-model)",
           "valueFormat": {
-            "structure": "string | number",
+            "structure": "string | number | boolean",
+            "notes": "Current selected value that matches the 'value' property of an option. Use v-model for two-way binding. Can be string, number, or boolean depending on your option values. Empty string means no selection.",
+            "typescript": "string | number | boolean",
             "example": "v-model=\"selectedValue\""
           }
         },
         "customOptionsKey": {
           "description": "Custom property name for option label",
           "valueFormat": {
-            "structure": "string",
-            "example": "custom-options-key=\"name\""
+            "structure": "Array<string>",
+            "notes": "Maps custom property names from your data to dropdown's expected format. Use when your API returns objects with different property names than 'label' and 'value'. Example: if API returns [{name: 'John', id: 1}], use ['name', 'id'] to map name→label and id→value.",
+            "typescript": "Array<string>",
+            "example": ":custom-options-key=\"['name', 'id']\""
           }
         },
         "fetchUrl": {
           "description": "API endpoint for fetching options",
           "valueFormat": {
             "structure": "string (URL)",
-            "example": "fetch-url=\"/api/options\""
+            "notes": "API endpoint URL to fetch dropdown options dynamically. When set, component will fetch options from this endpoint on mount or when search query changes. Use with 'responseKey' to extract data from nested responses and 'queryString' for search parameter name.",
+            "typescript": "string",
+            "example": "fetch-url=\"/api/users\""
           }
         },
         "responseKey": {
           "description": "JSON path to options in API response",
           "valueFormat": {
             "structure": "string (dot notation)",
+            "notes": "Dot-notation path to extract options array from API response. CRITICAL for API fetching. If API returns {data: {items: [...]}}, use 'data.items'. If response is flat array at root, leave empty or use 'data' if responseHasData=true.",
+            "typescript": "string",
             "example": "response-key=\"data.items\""
           }
         },
@@ -8314,13 +8396,17 @@
           "description": "Query parameter name for search",
           "valueFormat": {
             "structure": "string",
-            "example": "query-string=\"q\""
+            "notes": "Name of the query parameter for search functionality when using API fetch. The search input value will be sent as this parameter. Example: if queryString='search', API will be called with ?search=userInput. Requires searchStatus=true and fetchUrl to be set.",
+            "typescript": "string",
+            "example": "query-string=\"search\""
           }
         },
         "overriddenListPosition": {
           "description": "Override dropdown position",
           "valueFormat": {
-            "structure": "string enum",
+            "structure": "string (enum from LIST_POSITION)",
+            "notes": "Forces dropdown menu to open in specific direction, overriding automatic positioning. Use 'top' to open above the button (useful when dropdown is near bottom of viewport), 'bottom' to open below. If not set, component auto-positions based on available space.",
+            "typescript": "'top' | 'bottom' | ''",
             "possibleValues": [
               "top",
               "bottom"
@@ -8332,6 +8418,8 @@
           "description": "Dropdown type/variant",
           "valueFormat": {
             "structure": "string enum",
+            "notes": "Dropdown behavior variant. 'default' for standard single-level dropdown. 'nested' enables hierarchical options with child menus (requires options with 'children' property). Use nested type for category/subcategory structures.",
+            "typescript": "'default' | 'nested'",
             "possibleValues": [
               "default",
               "nested"
@@ -8343,7 +8431,10 @@
           "description": "Button style variant",
           "valueFormat": {
             "structure": "string enum",
+            "notes": "Visual style of the dropdown trigger button. 'dropdown' (default) for standard dropdown appearance, 'primary' for prominent actions, 'secondary' for less emphasis, 'ghost' for minimal styling. Affects button colors and borders.",
+            "typescript": "'dropdown' | 'primary' | 'secondary' | 'ghost'",
             "possibleValues": [
+              "dropdown",
               "primary",
               "secondary",
               "ghost"
@@ -8355,9 +8446,11 @@
           "description": "Button size",
           "valueFormat": {
             "structure": "string enum",
+            "notes": "Size of the dropdown trigger button. 'default' (40px height), 'small' (32px), 'large' (48px). Affects button height, padding, and font size. Use 'small' in compact UIs, 'large' for emphasis or touch-friendly interfaces.",
+            "typescript": "'default' | 'small' | 'large'",
             "possibleValues": [
+              "default",
               "small",
-              "medium",
               "large"
             ],
             "example": "button-size=\"small\""
@@ -8366,7 +8459,9 @@
         "childOptionsLeftPosition": {
           "description": "Position of nested child options",
           "valueFormat": {
-            "structure": "string enum",
+            "structure": "string | number",
+            "notes": "Horizontal position (in pixels) of child dropdown menu for nested options. Only applies when type='nested'. Use string value ('left' or 'right') for relative positioning, or number for absolute pixel offset. Controls where nested submenu appears relative to parent menu.",
+            "typescript": "string | number",
             "possibleValues": [
               "left",
               "right"
@@ -8378,14 +8473,18 @@
           "description": "Allow clearing selection",
           "valueFormat": {
             "structure": "boolean",
-            "example": "can-remove-selected-item"
+            "notes": "When true, shows an 'X' button to clear the current selection and reset dropdown to empty state. Useful for optional fields where user might want to unselect. When false, selection is permanent until user picks another option.",
+            "typescript": "boolean",
+            "example": ":can-remove-selected-item=\"true\""
           }
         },
         "createOptionStatus": {
           "description": "Allow creating new options",
           "valueFormat": {
             "structure": "boolean",
-            "example": "create-option-status"
+            "notes": "Enables adding new options on-the-fly when user types value not in the options list. Shows 'Add new option' button in dropdown. When clicked, emits 'addNewOption' event with the typed value. Useful for tags, categories, or dynamic lists where user can create entries.",
+            "typescript": "boolean",
+            "example": ":create-option-status=\"true\""
           }
         }
       },
@@ -10349,13 +10448,15 @@
           "description": "Array of selectable options",
           "valueFormat": {
             "structure": "Array of option objects",
+            "notes": "Defines the multi-select items. Each option must have 'label' (display text) and 'value' (selected value). Optional: 'disabled' to prevent selection. For type='checkbox', checkboxes appear next to each option. For type='tags', options show as removable tags when selected.",
             "typescript": "Array<{ label: string; value: string | number; disabled?: boolean; }>",
             "example": ":options=\"[{ label: 'Option 1', value: '1' }, { label: 'Option 2', value: '2', disabled: true }]\""
           },
           "commonMistakes": [
             {
               "mistake": "Using 'text' instead of 'label' for option display",
-              "correction": "V1 uses 'label' property for option text",
+              "impact": "Options won't display - component expects 'label' property",
+              "fix": "Use 'label' property: { label: 'Text', value: 'val' }",
               "severity": "high"
             }
           ]
@@ -10364,6 +10465,7 @@
           "description": "Selected values array (v-model)",
           "valueFormat": {
             "structure": "Array of selected values",
+            "notes": "Array of currently selected values that match the 'value' properties of selected options. Use v-model for two-way binding. Empty array means no selection. Component automatically adds/removes values when user selects/deselects options.",
             "typescript": "Array<string | number>",
             "example": "v-model=\"selectedValues\""
           }
@@ -10371,13 +10473,16 @@
         "customOptionsKey": {
           "description": "Custom property name for option label",
           "valueFormat": {
-            "structure": "string",
-            "example": "custom-options-key=\"name\""
+            "structure": "Array<string>",
+            "notes": "Maps custom property names from your data to dropdown's expected format. Use when your API returns objects with different property names than 'label' and 'value'. Example: if API returns [{name: 'John', id: 1}], use ['name', 'id'] to map name→label and id→value. Same as InDropDown.",
+            "typescript": "Array<string>",
+            "example": ":custom-options-key=\"['name', 'id']\""
           },
           "commonMistakes": [
             {
               "mistake": "Not setting when options have different label key",
-              "correction": "Set customOptionsKey when options use 'name' or other key instead of 'label'",
+              "impact": "Options don't display correctly - shows undefined or [Object object]",
+              "fix": "Map your property names: :custom-options-key=\"['yourLabelKey', 'yourValueKey']\"",
               "severity": "medium"
             }
           ]
@@ -10386,13 +10491,17 @@
           "description": "API endpoint for fetching options dynamically",
           "valueFormat": {
             "structure": "string (URL)",
-            "example": "fetch-url=\"/api/options\""
+            "notes": "API endpoint URL to fetch dropdown options dynamically. When set, component will fetch options from this endpoint on mount or when search query changes. Use with 'responseKey' to extract data from nested responses and 'queryString' for search parameter name.",
+            "typescript": "string",
+            "example": "fetch-url=\"/api/users\""
           }
         },
         "responseKey": {
           "description": "JSON path to options array in API response",
           "valueFormat": {
             "structure": "string (dot notation)",
+            "notes": "Dot-notation path to extract options array from API response. CRITICAL for API fetching. If API returns {data: {items: [...]}}, use 'data.items'. If response is flat array at root, leave empty or use 'data' if responseHasData=true.",
+            "typescript": "string",
             "example": "response-key=\"data.items\""
           }
         },
@@ -10400,13 +10509,17 @@
           "description": "Query parameter name for search",
           "valueFormat": {
             "structure": "string",
-            "example": "query-string=\"q\""
+            "notes": "Name of the query parameter for search functionality when using API fetch. The search input value will be sent as this parameter. Example: if queryString='search', API will be called with ?search=userInput. Requires searchStatus=true and fetchUrl to be set.",
+            "typescript": "string",
+            "example": "query-string=\"search\""
           }
         },
         "maxSelectableItem": {
           "description": "Maximum number of items that can be selected",
           "valueFormat": {
             "structure": "number",
+            "notes": "Limits the number of options that can be selected. When limit is reached, remaining options become disabled and warningMessage is displayed. Use 0 (default) for unlimited selection. Useful for enforcing business rules like 'select up to 5 categories'.",
+            "typescript": "number",
             "example": ":max-selectable-item=\"5\""
           }
         },
@@ -10414,20 +10527,26 @@
           "description": "Allow creating new options by typing",
           "valueFormat": {
             "structure": "boolean",
-            "example": "add-new-tag-status"
+            "notes": "Enables adding new options on-the-fly when user types value not in the options list. Shows 'Create new' button in dropdown. When clicked, emits 'addNewOption' event with the typed value. Subject to character limits (minimumNewTagCharacterLimit, maxNewTagCharacterLimit).",
+            "typescript": "boolean",
+            "example": ":add-new-tag-status=\"true\""
           }
         },
         "minimumNewTagCharacterLimit": {
           "description": "Minimum characters required for new tag",
           "valueFormat": {
             "structure": "number",
+            "notes": "Minimum length required for creating new tags. Default is 2. 'Create new' option only appears when typed text length >= this value. Prevents accidentally creating single-character or empty tags.",
+            "typescript": "number",
             "example": ":minimum-new-tag-character-limit=\"2\""
           }
         },
         "maxNewTagCharacterLimit": {
           "description": "Maximum characters allowed for new tag",
           "valueFormat": {
-            "structure": "number",
+            "structure": "number | string",
+            "notes": "Maximum length allowed for creating new tags. Empty string ('') means no limit. When limit is reached, user cannot type more characters. Use to enforce tag naming standards or database constraints.",
+            "typescript": "number | string",
             "example": ":max-new-tag-character-limit=\"50\""
           }
         },
@@ -10435,15 +10554,19 @@
           "description": "Allow temporary options that aren't persisted",
           "valueFormat": {
             "structure": "boolean",
-            "example": "has-temporary-options"
+            "notes": "When true, newly created options are marked as temporary and may not be persisted to backend. Useful for client-side filtering or preview functionality where new options shouldn't be saved to database immediately.",
+            "typescript": "boolean",
+            "example": ":has-temporary-options=\"true\""
           }
         },
         "type": {
           "description": "Visual type/variant of the dropdown",
           "valueFormat": {
             "structure": "string enum",
+            "notes": "Controls visual representation of selections. 'checkbox' (default) shows checkboxes next to options, useful for traditional multi-select. 'tags' displays selected items as removable tag chips above dropdown, better for space-constrained UIs.",
+            "typescript": "'checkbox' | 'tags'",
             "possibleValues": [
-              "default",
+              "checkbox",
               "tags"
             ],
             "example": "type=\"tags\""
@@ -10453,7 +10576,10 @@
           "description": "Color theme of the dropdown",
           "valueFormat": {
             "structure": "string enum",
+            "notes": "Visual color theme. 'grey' (default) for standard gray styling, 'light' for lighter background, 'dark' for dark mode. Affects dropdown background, borders, and text colors.",
+            "typescript": "'grey' | 'light' | 'dark'",
             "possibleValues": [
+              "grey",
               "light",
               "dark"
             ],
@@ -13076,13 +13202,17 @@
           "description": "Input content with dynamic tags (v-model)",
           "valueFormat": {
             "structure": "string with tag placeholders",
-            "example": "v-model=\"content\""
+            "notes": "HTML/rich text content with embedded dynamic content tags. Use v-model for two-way binding. Content can include toolbar formatting (bold, italic, links), dynamic tags ({{attribute}}), and WhatsApp styling (*bold*, _italic_) if enabled. Listen to @purify event to get sanitized output for saving.",
+            "typescript": "string",
+            "example": "v-model=\"content\" // '<p>Hello {{first_name}}, welcome!</p>'"
           }
         },
         "labelText": {
           "description": "Label text for the input",
           "valueFormat": {
             "structure": "string",
+            "notes": "Label text displayed above the rich text editor. Shown when labelStatus=true. Use clear, descriptive labels to help users understand the field purpose (e.g., 'Message Content', 'Email Body', 'SMS Text').",
+            "typescript": "string",
             "example": "label-text=\"Message Content\""
           }
         },
@@ -13090,13 +13220,15 @@
           "description": "Available dynamic content attributes - replaces V1 attributeList",
           "valueFormat": {
             "structure": "Array of attribute objects",
+            "notes": "CRITICAL: Defines insertable dynamic content/merge tags for personalized messages. Each attribute needs 'label' (shown in dropdown) and 'value' (inserted as {{value}}). Optional: 'category' for grouping, 'icon' for visual distinction. Used for email templates, SMS campaigns, push notifications with user data. Example: user selects 'First Name', {{first_name}} gets inserted and later replaced with actual name.",
             "typescript": "Array<{ label: string; value: string; category?: string; icon?: string; }>",
             "example": ":dynamic-content-list=\"[{ label: 'First Name', value: 'first_name', category: 'User' }]\""
           },
           "commonMistakes": [
             {
               "mistake": "Using attributeList from V1",
-              "correction": "V2 uses dynamicContentList instead of attributeList",
+              "impact": "Prop not recognized - no dynamic content available in dropdown",
+              "fix": "Change to dynamicContentList: :dynamic-content-list=\"attributes\"",
               "severity": "high"
             }
           ]
@@ -13105,6 +13237,7 @@
           "description": "Configure visible toolbar buttons",
           "valueFormat": {
             "structure": "Array of toolbar option strings",
+            "notes": "Defines which formatting tools appear in the editor toolbar. Common options: 'bold', 'italic', 'underline' for text styling, 'link' for URLs, 'emoji' for emoji picker, 'dynamicContent' for merge tags. Customize based on use case: SMS uses minimal ['bold', 'italic', 'dynamicContent'], email uses full formatting. Order in array determines button order.",
             "typescript": "Array<'bold' | 'italic' | 'underline' | 'link' | 'emoji' | 'dynamicContent'>",
             "example": ":toolbar-options=\"['bold', 'italic', 'link', 'emoji', 'dynamicContent']\""
           }
@@ -13113,6 +13246,7 @@
           "description": "Configure footer elements",
           "valueFormat": {
             "structure": "Array of footer option strings",
+            "notes": "Controls what appears in the editor footer area. 'counter' shows character/word count (requires characterCounterStatus=true), 'label' displays footerLabel text, 'tags' shows list of used dynamic content tags. Useful for giving users real-time feedback on message length and dynamic content usage.",
             "typescript": "Array<'counter' | 'label' | 'tags'>",
             "example": ":footer-options=\"['counter', 'tags']\""
           }
@@ -13121,6 +13255,7 @@
           "description": "Validation configuration - replaces V1 textValidateConfig",
           "valueFormat": {
             "structure": "Object with validation rules",
+            "notes": "Validation rules for rich text content. maxLength enforces character limit (critical for SMS 160 chars), minLength requires minimum content, segmentLength shows message segmentation for SMS (each segment = 160 chars). Validation messages appear via states/stateMessage props. Essential for channels with strict length limits.",
             "typescript": "{ maxLength?: number; minLength?: number; segmentLength?: number; }",
             "example": ":helper-text-validation-config=\"{ maxLength: 160, segmentLength: 160 }\""
           }
@@ -13129,6 +13264,8 @@
           "description": "Enable helper text validation display",
           "valueFormat": {
             "structure": "boolean",
+            "notes": "When true, enables validation feedback based on helperTextValidationConfig rules. Shows warning/error states when limits are approached or exceeded. Use with states and stateMessage props to provide user feedback. Essential for enforcing content constraints.",
+            "typescript": "boolean",
             "example": "helper-text-validation-config-status"
           }
         },
@@ -13136,61 +13273,76 @@
           "description": "Validation state - replaces V1 invalid/warning",
           "valueFormat": {
             "structure": "string enum",
+            "notes": "Visual validation state for the editor. 'default' for normal, 'success' for valid, 'warning' for approaching limits (e.g., 150/160 chars), 'error' for invalid/exceeded limits. Replaces V1's separate invalid and warning boolean props. Use with stateMessage to explain the validation issue.",
+            "typescript": "'default' | 'success' | 'warning' | 'error'",
             "possibleValues": [
               "default",
               "success",
               "warning",
               "error"
             ],
-            "example": "states=\"error\""
+            "example": "states=\"warning\" // When approaching SMS limit"
           }
         },
         "stateMessage": {
           "description": "Message for validation state",
           "valueFormat": {
             "structure": "string",
-            "example": "state-message=\"This field is required\""
+            "notes": "Explanatory message shown with validation state. Appears below editor when states is set to warning/error. Provide clear, actionable feedback: 'Required field', 'Maximum 160 characters', 'Message will be split into 2 SMS'. Critical for user understanding of validation rules.",
+            "typescript": "string",
+            "example": "state-message=\"Message exceeds SMS limit and will be split into multiple messages\""
           }
         },
         "characterCounterStatus": {
           "description": "Show character counter - replaces V1 isCounter",
           "valueFormat": {
             "structure": "boolean",
-            "example": "character-counter-status"
+            "notes": "Shows character/word count in footer. Requires footerOptions to include 'counter'. Count respects helperTextValidationConfig.maxLength (e.g., '45/160'). Essential for SMS (160 char limit), Twitter-like interfaces, or any character-limited content. Use customCounter for custom counting logic.",
+            "typescript": "boolean",
+            "example": "character-counter-status :footer-options=\"['counter']\""
           }
         },
         "maxSelectableDynamicContent": {
           "description": "Maximum dynamic content tags allowed",
           "valueFormat": {
             "structure": "number",
-            "example": ":max-selectable-dynamic-content=\"5\""
+            "notes": "Limits how many dynamic content tags can be inserted into the message. 0 (default) means unlimited. When limit reached, dynamic content button becomes disabled. Useful for enforcing business rules like 'max 5 personalization fields per SMS' or preventing over-personalization that hurts deliverability.",
+            "typescript": "number",
+            "example": ":max-selectable-dynamic-content=\"5\" // Max 5 dynamic tags"
           }
         },
         "isDynamicContentOnly": {
           "description": "Only allow dynamic content (no free text)",
           "valueFormat": {
             "structure": "boolean",
-            "example": "is-dynamic-content-only"
+            "notes": "When true, users can ONLY insert dynamic content tags - no free text allowed. Useful for strict templating scenarios where content must be entirely composed of predefined attributes. Example: webhook payload builder where only valid field names are allowed.",
+            "typescript": "boolean",
+            "example": "is-dynamic-content-only // Only {{tags}} allowed, no free text"
           }
         },
         "canOnlyReplaceDynamicContent": {
           "description": "Only allow replacing existing dynamic content",
           "valueFormat": {
             "structure": "boolean",
-            "example": "can-only-replace-dynamic-content"
+            "notes": "When true, users cannot add NEW dynamic content tags, only replace/edit existing ones. Useful for locked templates where tag structure is fixed but tag selection can change. Example: pre-defined email template where placeholders exist but sender can swap which attributes fill them.",
+            "typescript": "boolean",
+            "example": "can-only-replace-dynamic-content // Edit existing tags only"
           }
         },
         "tipStatus": {
           "description": "Show usage tips",
           "valueFormat": {
             "structure": "boolean",
-            "example": "tip-status"
+            "notes": "Displays helpful usage tips/hints to users within the editor interface. Tips can explain keyboard shortcuts, formatting syntax (WhatsApp *bold*), or dynamic content usage. Use slot 'tipOptions' to provide custom tip content. Helpful for first-time users or complex features.",
+            "typescript": "boolean",
+            "example": "tip-status // Shows usage tips in UI"
           }
         },
         "specialCharacters": {
           "description": "Special characters configuration",
           "valueFormat": {
             "structure": "Object with character settings",
+            "notes": "Configures special character support (©, ®, ™, etc). When enabled=true, shows special character picker. Provide optional 'list' array to customize available characters. Useful for legal/marketing content requiring trademark symbols. Characters can be highlighted with isHighlightCharactersEnabled.",
             "typescript": "{ enabled: boolean; list?: string[]; }",
             "example": ":special-characters=\"{ enabled: true, list: ['©', '®', '™'] }\""
           }
@@ -13199,6 +13351,8 @@
           "description": "Highlight special characters in text",
           "valueFormat": {
             "structure": "boolean",
+            "notes": "When true, visually highlights special characters (from specialCharacters.list) in the editor. Helps users identify non-standard characters that might cause encoding issues in SMS or affect character count. Essential for multi-language or SMS campaigns where special chars consume extra space.",
+            "typescript": "boolean",
             "example": "is-highlight-characters-enabled"
           }
         },
@@ -13206,6 +13360,8 @@
           "description": "Highlight URLs in text",
           "valueFormat": {
             "structure": "boolean",
+            "notes": "Automatically detects and highlights URLs in the text content. URLs become clickable and visually distinct. Detection uses urlPatternRegex if provided. Useful for email/SMS editors where link tracking or shortening is needed. Combine with @onShortenUrlClick event for URL shortening workflows.",
+            "typescript": "boolean",
             "example": "is-highlight-url-enabled"
           }
         },
@@ -13213,20 +13369,26 @@
           "description": "Enable WhatsApp text formatting (*bold*, _italic_)",
           "valueFormat": {
             "structure": "boolean",
-            "example": "whatsapp-styling-support"
+            "notes": "Enables WhatsApp markdown-style formatting: *bold*, _italic_, ~strikethrough~, ```monospace```. When enabled, text wrapped in these symbols will be formatted in WhatsApp messages. Critical for WhatsApp Business API campaigns where formatting must match WhatsApp's syntax. Shows formatting hints to users.",
+            "typescript": "boolean",
+            "example": "whatsapp-styling-support // Enables *bold*, _italic_ syntax"
           }
         },
         "emojiButtonStatus": {
           "description": "Show emoji picker button - replaces V1 hasEmoji",
           "valueFormat": {
             "structure": "boolean",
-            "example": "emoji-button-status"
+            "notes": "Shows emoji picker button in toolbar. Replaces V1's hasEmoji prop. When clicked, opens emoji selector allowing users to insert emojis into content. Essential for social media posts, WhatsApp messages, or casual communication channels. Emojis can affect character count in SMS.",
+            "typescript": "boolean",
+            "example": "emoji-button-status // Shows emoji picker in toolbar"
           }
         },
         "isExtendedDynamicContent": {
           "description": "Enable extended dynamic content features",
           "valueFormat": {
             "structure": "boolean",
+            "notes": "Enables advanced dynamic content features like nested attributes, conditional rendering, or complex data structures. When true, dynamic content picker shows extended UI with more options. Use dynamicContentBoxProps to configure the extended picker. For enterprise-level templating with complex data models.",
+            "typescript": "boolean",
             "example": "is-extended-dynamic-content"
           }
         },
@@ -13234,6 +13396,7 @@
           "description": "Props for dynamic content selection box",
           "valueFormat": {
             "structure": "Object with box configuration",
+            "notes": "Configuration for the dynamic content selection dropdown/modal. searchable=true adds search box (use when >20 attributes), grouped=true shows category groups, maxHeight limits dropdown height. Essential for large attribute lists to maintain usability. Works with isExtendedDynamicContent for advanced features.",
             "typescript": "{ searchable?: boolean; grouped?: boolean; maxHeight?: number; }",
             "example": ":dynamic-content-box-props=\"{ searchable: true, grouped: true }\""
           }
@@ -13242,41 +13405,53 @@
           "description": "Track which dynamic content is used",
           "valueFormat": {
             "structure": "Array of used attribute values",
-            "example": ":used-dynamic-content=\"usedAttributes\""
+            "notes": "Array tracking which dynamic content tags are currently in the message. Updates automatically as tags are added/removed. Use to show 'used attributes' list in UI, validate required attributes are present, or analyze attribute usage patterns. Emitted via @markedTags event.",
+            "typescript": "Array<string>",
+            "example": ":used-dynamic-content=\"['first_name', 'email']\" // Currently used tags"
           }
         },
         "errorTags": {
           "description": "Tags to highlight as errors",
           "valueFormat": {
             "structure": "Array of tag values",
-            "example": ":error-tags=\"['invalid_attr']\""
+            "notes": "Array of attribute values to mark as errors in the editor. Tags in this list will be visually highlighted with error styling. Use for invalid/undefined attributes, deprecated fields, or tags that failed validation. Critical for preventing message delivery failures from bad attribute references.",
+            "typescript": "Array<string>",
+            "example": ":error-tags=\"['invalid_attr', 'deleted_field']\" // Show as errors"
           }
         },
         "warningTags": {
           "description": "Tags to highlight as warnings",
           "valueFormat": {
             "structure": "Array of tag values",
-            "example": ":warning-tags=\"['deprecated_attr']\""
+            "notes": "Array of attribute values to mark with warning styling. Use for deprecated but still functional attributes, optional fields that might be empty, or attributes with potential issues. Warns users without blocking submission. Softer than errorTags.",
+            "typescript": "Array<string>",
+            "example": ":warning-tags=\"['deprecated_attr', 'beta_field']\" // Show warnings"
           }
         },
         "customCounter": {
           "description": "Custom counter component/logic",
           "valueFormat": {
             "structure": "Object or component",
-            "example": ":custom-counter=\"customCounterConfig\""
+            "notes": "Custom character counting logic or component to replace default counter. Use when standard counting doesn't fit your needs (e.g., Unicode normalization, special character weighting, GSM-7 encoding for SMS). Provide component or config object with counting function.",
+            "typescript": "Object | Component",
+            "example": ":custom-counter=\"smsGsmCounter\" // Custom SMS character counter"
           }
         },
         "footerLabel": {
           "description": "Label text in footer",
           "valueFormat": {
             "structure": "string",
-            "example": "footer-label=\"Characters remaining\""
+            "notes": "Custom label text displayed in the editor footer. Appears when footerOptions includes 'label'. Use to provide context-specific information: 'SMS segments used', 'Characters remaining', 'Estimated send cost'. Shown alongside counter if both are enabled.",
+            "typescript": "string",
+            "example": "footer-label=\"SMS segments\""
           }
         },
         "urlPatternRegex": {
           "description": "Custom regex for URL detection",
           "valueFormat": {
             "structure": "RegExp",
+            "notes": "Custom regular expression for detecting URLs in text. Default regex catches http/https URLs. Override to match custom URL formats, internal links, or specific domains. Used with isHighlightUrlEnabled to identify clickable links. Affects URL shortening and tracking features.",
+            "typescript": "RegExp",
             "example": ":url-pattern-regex=\"/https?:\\/\\/[^\\s]+/g\""
           }
         },
@@ -13284,13 +13459,17 @@
           "description": "Enable image upload for fallback",
           "valueFormat": {
             "structure": "boolean",
-            "example": "is-upload-fallback"
+            "notes": "Allows uploading images as fallback values for dynamic content. When user clicks on a dynamic tag, they can upload an image instead of text. Useful for personalized product images, profile pictures, or visual content in templates. Image URLs become fallback values.",
+            "typescript": "boolean",
+            "example": "is-upload-fallback // Allow image uploads for fallbacks"
           }
         },
         "fallbackVisibility": {
           "description": "Control fallback UI visibility",
           "valueFormat": {
             "structure": "string enum",
+            "notes": "Controls when fallback editor UI is shown. 'always' shows fallback input permanently, 'onHover' reveals it when hovering over dynamic tags, 'onClick' shows modal when tag is clicked. Choose based on UX: onClick is cleaner for many tags, always is better for visibility.",
+            "typescript": "'always' | 'onHover' | 'onClick'",
             "possibleValues": [
               "always",
               "onHover",
@@ -13303,15 +13482,18 @@
           "description": "Disable specific toolbar buttons",
           "valueFormat": {
             "structure": "Array of option strings",
-            "example": ":disabled-toolbar-options=\"['link', 'emoji']\""
+            "notes": "Array of toolbar button names to disable (greyed out, not clickable). Use to restrict certain formatting based on context: disable 'link' for SMS, disable 'emoji' for formal emails. More granular than omitting from toolbarOptions - buttons still visible but disabled.",
+            "typescript": "Array<string>",
+            "example": ":disabled-toolbar-options=\"['link', 'emoji']\" // Show but disable"
           }
         },
         "dynamicContentStates": {
           "description": "State configuration for dynamic content tags",
           "valueFormat": {
             "structure": "Object mapping tags to states",
+            "notes": "Maps each dynamic content tag to a visual state (default/warning/error). More flexible than errorTags/warningTags arrays. Use for per-tag validation states: show 'email' as warning if optional, 'deleted_field' as error. State affects tag styling in editor.",
             "typescript": "Record<string, 'default' | 'warning' | 'error'>",
-            "example": ":dynamic-content-states=\"{ 'old_attr': 'warning' }\""
+            "example": ":dynamic-content-states=\"{ 'old_attr': 'warning', 'invalid': 'error' }\""
           }
         }
       },
@@ -15287,6 +15469,8 @@
           "description": "Input content with dynamic tags (v-model)",
           "valueFormat": {
             "structure": "string with tag placeholders",
+            "notes": "Text content including dynamic attribute tags. Tags are wrapped in delimiters (default: {{attribute}}). Use v-model for two-way binding. Example: 'Hello {{first_name}}, welcome!' becomes 'Hello John, welcome!' when rendered. Listen to @purify event for sanitized output.",
+            "typescript": "string",
             "example": "v-model=\"content\" // 'Hello {{name}}, welcome!'"
           }
         },
@@ -15294,13 +15478,15 @@
           "description": "Available dynamic content/attributes for insertion",
           "valueFormat": {
             "structure": "Array of attribute objects",
+            "notes": "CRITICAL: Defines insertable dynamic attributes (like merge tags). Each attribute needs 'label' (shown in dropdown) and 'value' (inserted into text). Optional 'category' for grouping. Used with dynamicContentSupport=true. Example: user selects 'First Name' from dropdown, {{first_name}} gets inserted into text.",
             "typescript": "Array<{ label: string; value: string; category?: string; }>",
             "example": ":attribute-list=\"[{ label: 'First Name', value: 'first_name' }, { label: 'Email', value: 'email' }]\""
           },
           "commonMistakes": [
             {
               "mistake": "Not providing attributeList when dynamicContentSupport is true",
-              "correction": "Always provide attributeList with available attributes",
+              "impact": "No attributes available in dropdown, users can't insert dynamic content",
+              "fix": "Always provide :attribute-list with available attributes when dynamic-content-support is enabled",
               "severity": "high"
             }
           ]
@@ -15309,13 +15495,16 @@
           "description": "Enable dynamic content/attribute insertion",
           "valueFormat": {
             "structure": "boolean",
-            "example": "dynamic-content-support"
+            "notes": "Master switch for dynamic attribute functionality. When true, shows attribute dropdown button and allows inserting dynamic tags into text. Requires attributeList to be provided. Used for personalized messages, email templates, SMS campaigns with merge fields.",
+            "typescript": "boolean",
+            "example": ":dynamic-content-support=\"true\""
           }
         },
         "textValidateConfig": {
           "description": "Text validation configuration object",
           "valueFormat": {
             "structure": "Object with validation rules",
+            "notes": "Centralized validation rules object. maxLength enforces character limit (shows counter), minLength requires minimum text, pattern validates format (regex), required makes field mandatory. Validation errors trigger invalid state and messages.",
             "typescript": "{ maxLength?: number; minLength?: number; pattern?: RegExp; required?: boolean; }",
             "example": ":text-validate-config=\"{ maxLength: 160, minLength: 10 }\""
           }
@@ -15324,6 +15513,8 @@
           "description": "Default fallback text for dynamic attributes",
           "valueFormat": {
             "structure": "string",
+            "notes": "Default value shown when dynamic attribute is empty/undefined. Critical for email/SMS where missing data shouldn't break templates. Example: if {{first_name}} is empty and fallBackText='Customer', message shows 'Hello Customer' instead of 'Hello '.",
+            "typescript": "string",
             "example": "fall-back-text=\"Customer\""
           }
         },
@@ -15331,6 +15522,8 @@
           "description": "Label for fallback input field",
           "valueFormat": {
             "structure": "string",
+            "notes": "Label text shown above fallback input field when user clicks on dynamic attribute tag. Helps users understand they're setting a default value. Example: 'Default value if empty' or 'Fallback text'.",
+            "typescript": "string",
             "example": "fall-back-label=\"Default Value\""
           }
         },
@@ -15338,6 +15531,8 @@
           "description": "Characters not allowed in fallback text",
           "valueFormat": {
             "structure": "Array of characters",
+            "notes": "Blacklist of characters that cannot be used in fallback values. Useful for preventing XSS attacks or enforcing data format. Example: ['<', '>', '&'] prevents HTML injection. Shows validation error if user types forbidden character.",
+            "typescript": "Array<string>",
             "example": ":fall-back-disabled-characters=\"['<', '>', '&']\""
           }
         },
@@ -15345,6 +15540,7 @@
           "description": "Tag delimiters for dynamic content",
           "valueFormat": {
             "structure": "Array with start and end delimiter",
+            "notes": "Defines how dynamic attributes are wrapped in text. Default is ['{{', '}}'] for {{attribute}}. Can customize for different templating syntaxes like ['<<', '>>'] or ['${', '}']. MUST be 2-element array [opening, closing].",
             "typescript": "[string, string]",
             "example": ":delimiters=\"['{{', '}}']\""
           }
@@ -15353,27 +15549,35 @@
           "description": "Enable emoji picker",
           "valueFormat": {
             "structure": "boolean",
-            "example": "has-emoji"
+            "notes": "Shows emoji picker button that allows users to insert emojis into text. Useful for social media posts, marketing messages, or casual communication. Emoji picker includes categories and search functionality.",
+            "typescript": "boolean",
+            "example": ":has-emoji=\"true\""
           }
         },
         "isTagContainer": {
           "description": "Display as tag container mode",
           "valueFormat": {
             "structure": "boolean",
-            "example": "is-tag-container"
+            "notes": "Changes input to tag-based interface where each entry becomes a removable chip/tag. Instead of free text, users add discrete tags. Useful for categories, keywords, or multiple selections. Works with tagsLimit to restrict count.",
+            "typescript": "boolean",
+            "example": ":is-tag-container=\"true\""
           }
         },
         "isCounter": {
           "description": "Show character counter",
           "valueFormat": {
             "structure": "boolean",
-            "example": "is-counter"
+            "notes": "Displays character count below input (e.g., '45/160'). Count respects textValidateConfig.maxLength. Use countDynamicContentForValidation to decide if dynamic tags count toward limit. Essential for SMS (160 char) or Twitter-like interfaces.",
+            "typescript": "boolean",
+            "example": ":is-counter=\"true\""
           }
         },
         "tagsLimit": {
           "description": "Maximum number of tags allowed",
           "valueFormat": {
             "structure": "number",
+            "notes": "Maximum tags when isTagContainer=true. 0 (default) means unlimited. When limit reached, users cannot add more tags and get warning message. Useful for enforcing business rules like 'max 5 categories'.",
+            "typescript": "number",
             "example": ":tags-limit=\"5\""
           }
         },
@@ -15381,6 +15585,8 @@
           "description": "Number of visible text rows",
           "valueFormat": {
             "structure": "number",
+            "notes": "Textarea height in rows (visible lines). Default is 1 (single line). Use 3-5 for multi-line text like descriptions, 1 for compact inputs. Actual textarea height = rowLength * line-height.",
+            "typescript": "number",
             "example": ":row-length=\"3\""
           }
         },
@@ -15388,8 +15594,10 @@
           "description": "Type of attribute dropdown",
           "valueFormat": {
             "structure": "string enum",
+            "notes": "Style/behavior of attribute selector dropdown. 'text' (default) for simple list, 'grouped' organizes by category, 'searchable' adds search box. Use 'searchable' when attributeList has 10+ items for better UX.",
+            "typescript": "'text' | 'grouped' | 'searchable'",
             "possibleValues": [
-              "default",
+              "text",
               "grouped",
               "searchable"
             ],
@@ -15400,21 +15608,27 @@
           "description": "Allow creating new attributes",
           "valueFormat": {
             "structure": "boolean",
-            "example": "create-new-option-status"
+            "notes": "Enables adding custom attributes not in attributeList. Shows 'Create new' option in dropdown when user types unknown attribute. New attributes can be saved dynamically. Use with caution - consider strictAddMode for controlled environments.",
+            "typescript": "boolean",
+            "example": ":create-new-option-status=\"true\""
           }
         },
         "strictAddMode": {
           "description": "Only allow predefined attributes",
           "valueFormat": {
             "structure": "boolean",
-            "example": "strict-add-mode"
+            "notes": "When true, users can ONLY select from attributeList - no free text or new attributes allowed. Enforces strict data integrity. Use for production email templates where only validated attributes are safe. Default true for security.",
+            "typescript": "boolean",
+            "example": ":strict-add-mode=\"true\""
           }
         },
         "countDynamicContentForValidation": {
           "description": "Include dynamic content in character count",
           "valueFormat": {
             "structure": "boolean",
-            "example": "count-dynamic-content-for-validation"
+            "notes": "When true, dynamic tags like {{first_name}} count as their placeholder length (e.g., 12 chars). When false, tags count as their rendered value length. Critical for SMS: if counting rendered values, 'Hi {{first_name}}' might exceed 160 chars after rendering.",
+            "typescript": "boolean",
+            "example": ":count-dynamic-content-for-validation=\"true\""
           }
         }
       },

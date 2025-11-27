@@ -259,7 +259,7 @@
       ]
     }
   },
-  "exampleEnrichments": [
+  "examples": [
     {
       "title": "Basic V1 Date Range Picker",
       "description": "Simple date range picker without custom ranges",
@@ -328,22 +328,5 @@
       "reason": "Custom range buttons are announced by screen readers",
       "severity": "medium"
     }
-  ],
-  "migrationNotes": {
-    "considerV2": "InDatePicker (V1) is deprecated. Consider migrating to InDatePickerV2 for new features like comparison mode, better validation, and consistent API. Migration is medium effort but provides significant UX improvements.",
-    "v2Component": "InDatePickerV2",
-    "migrationGuide": "InDatePicker-to-V2",
-    "breakingChanges": [
-      "value prop format: Object → Array<Object>",
-      "customRanges format: Object with Date arrays → Array with string dates",
-      "disabledRange format: Array of Unix timestamps → Object with date strings",
-      "@update event → @apply event (with different payload handling)"
-    ],
-    "newFeaturesInV2": [
-      "Comparison mode with side-by-side date ranges",
-      "Dynamic comparison range calculation",
-      "Better validation and error messages",
-      "More flexible quick range configuration"
-    ]
-  }
+  ]
 }

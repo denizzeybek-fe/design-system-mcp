@@ -1,20 +1,26 @@
 {
-  "generatedAt": "2025-11-26T12:27:35.425Z",
+  "generatedAt": "2025-11-27T10:48:30.934Z",
   "componentsCount": 63,
-  "totalJsonSize": 706639,
+  "totalJsonSize": 742559,
   "totalMarkdownSize": 165300,
-  "totalSavings": 77,
-  "avgSavings": 60,
+  "totalSavings": 78,
+  "avgSavings": 61,
   "estimatedTokens": {
-    "json": 176660,
+    "json": 185640,
     "markdown": 41325,
-    "saved": 135335
+    "saved": 144315
   },
   "components": [
     {
       "name": "InButtonV2",
       "jsonSize": 55407,
       "markdownSize": 6612,
+      "savings": 88
+    },
+    {
+      "name": "InDataTableV2",
+      "jsonSize": 70432,
+      "markdownSize": 8222,
       "savings": 88
     },
     {
@@ -40,12 +46,6 @@
       "jsonSize": 31042,
       "markdownSize": 4217,
       "savings": 86
-    },
-    {
-      "name": "InDataTableV2",
-      "jsonSize": 56383,
-      "markdownSize": 8222,
-      "savings": 85
     },
     {
       "name": "InDatePickerV2",
@@ -81,6 +81,12 @@
       "name": "InPageHeadings",
       "jsonSize": 922,
       "markdownSize": 169,
+      "savings": 82
+    },
+    {
+      "name": "InRichTextInput",
+      "jsonSize": 47603,
+      "markdownSize": 8805,
       "savings": 82
     },
     {
@@ -120,12 +126,6 @@
       "savings": 77
     },
     {
-      "name": "InRichTextInput",
-      "jsonSize": 37158,
-      "markdownSize": 8805,
-      "savings": 76
-    },
-    {
       "name": "InFormStatus",
       "jsonSize": 991,
       "markdownSize": 260,
@@ -144,9 +144,21 @@
       "savings": 72
     },
     {
+      "name": "InDropDown",
+      "jsonSize": 11786,
+      "markdownSize": 3547,
+      "savings": 70
+    },
+    {
       "name": "InCreateButton",
       "jsonSize": 1223,
       "markdownSize": 377,
+      "savings": 69
+    },
+    {
+      "name": "InMultiDropDown",
+      "jsonSize": 12577,
+      "markdownSize": 3883,
       "savings": 69
     },
     {
@@ -162,6 +174,12 @@
       "savings": 66
     },
     {
+      "name": "InSuperInput",
+      "jsonSize": 14550,
+      "markdownSize": 4884,
+      "savings": 66
+    },
+    {
       "name": "InDataTable",
       "jsonSize": 34900,
       "markdownSize": 12289,
@@ -169,9 +187,9 @@
     },
     {
       "name": "InDatePicker",
-      "jsonSize": 17838,
+      "jsonSize": 17066,
       "markdownSize": 6392,
-      "savings": 64
+      "savings": 63
     },
     {
       "name": "InBulkActions",
@@ -240,18 +258,6 @@
       "savings": 57
     },
     {
-      "name": "InDropDown",
-      "jsonSize": 8001,
-      "markdownSize": 3547,
-      "savings": 56
-    },
-    {
-      "name": "InMultiDropDown",
-      "jsonSize": 8853,
-      "markdownSize": 3883,
-      "savings": 56
-    },
-    {
       "name": "InTimePicker",
       "jsonSize": 1371,
       "markdownSize": 627,
@@ -274,12 +280,6 @@
       "jsonSize": 4966,
       "markdownSize": 2357,
       "savings": 53
-    },
-    {
-      "name": "InSuperInput",
-      "jsonSize": 9861,
-      "markdownSize": 4884,
-      "savings": 50
     },
     {
       "name": "InDrawer",
