@@ -1,0 +1,382 @@
+{
+  "_metadata": {
+    "lastUpdated": "2025-11-28T00:00:00.000Z",
+    "propsHash": "generated",
+    "eventsHash": "generated",
+    "propCount": 13,
+    "eventCount": 4
+  },
+  "component": "InModalV2",
+  "propEnrichments": {
+    "status": {
+      "description": "Controls modal visibility (v-model)",
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "Use v-model:status for two-way binding to open/close modal. True shows modal, false hides it. Automatically syncs with close events. Prefer v-model over manual :status binding for proper state management.",
+        "typescript": "boolean",
+        "example": "v-model:status=\"isModalOpen\""
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Using :status instead of v-model:status",
+          "impact": "Modal won't close when user clicks X or outside",
+          "fix": "Use v-model:status for two-way binding",
+          "severity": "high"
+        }
+      ]
+    },
+    "state": {
+      "description": "Visual state/theme of modal",
+      "valueFormat": {
+        "structure": "string enum",
+        "notes": "Controls modal appearance and context. 'default' (neutral gray), 'primary' (blue, info), 'warning' (yellow, caution), 'danger' (red, destructive actions). Affects header color and footer button styling.",
+        "typescript": "'default' | 'primary' | 'warning' | 'danger'",
+        "possibleValues": ["default", "primary", "warning", "danger"],
+        "example": "state=\"danger\" // For delete confirmations"
+      }
+    },
+    "size": {
+      "description": "Modal width preset",
+      "valueFormat": {
+        "structure": "string enum",
+        "notes": "Determines modal width. 'small' (~400px, forms), 'medium' (~600px, default), 'large' (~800px, detailed content), 'x-large' (~1000px, complex forms). Responsive on mobile - all sizes become full-width.",
+        "typescript": "'small' | 'medium' | 'large' | 'x-large'",
+        "possibleValues": ["small", "medium", "large", "x-large"],
+        "example": "size=\"large\""
+      }
+    },
+    "titleText": {
+      "description": "Modal header title",
+      "valueFormat": {
+        "structure": "string",
+        "notes": "Main heading displayed in modal header. Keep concise (1-5 words). For custom title with icons or actions, use headerTitleSlot instead. Supports XSS prevention when preventXss=true.",
+        "typescript": "string",
+        "example": "title-text=\"Delete User\""
+      }
+    },
+    "descriptionText": {
+      "description": "Optional description below title",
+      "valueFormat": {
+        "structure": "string",
+        "notes": "Subtitle or helper text shown below title when descriptionStatus=true. Use for brief context (1-2 sentences). For longer descriptions, use default slot content.",
+        "typescript": "string",
+        "example": "description-text=\"This action cannot be undone\""
+      }
+    },
+    "footerButtonGroupOptions": {
+      "description": "Footer button configuration",
+      "valueFormat": {
+        "structure": "Object with button configs",
+        "notes": "Defines footer action buttons. Properties: cancelButton (back/cancel), secondaryButton (optional middle), primaryButton (main action). Each has: labelText, type ('primary'|'secondary'|'danger'), styling ('solid'|'outline'), disabled, loading. Buttons emit corresponding events.",
+        "typescript": "{ cancelButton?: ButtonConfig; secondaryButton?: ButtonConfig; primaryButton?: ButtonConfig; }",
+        "example": ":footer-button-group-options=\"{\n  cancelButton: { labelText: 'Cancel' },\n  primaryButton: { labelText: 'Delete', type: 'danger' }\n}\""
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Not listening to button events",
+          "impact": "Buttons don't do anything when clicked",
+          "fix": "Listen to @primaryButtonEvent, @secondaryButtonEvent, @cancelOrBackButtonEvent",
+          "severity": "high"
+        }
+      ]
+    },
+    "closeOnOutsideClick": {
+      "description": "Allow closing by clicking backdrop",
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "When true (default), clicking outside modal closes it. Set to false for critical actions (delete confirmations) to force user to click Cancel or X. Works with v-model:status.",
+        "typescript": "boolean",
+        "example": ":close-on-outside-click=\"false\" // Force button interaction"
+      }
+    },
+    "closeButtonStatus": {
+      "description": "Show/hide X close button in header",
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "When true (default), shows X button in top-right. Set false for mandatory actions requiring explicit button choice. Emits @onCloseEvent when clicked.",
+        "typescript": "boolean",
+        "example": ":close-button-status=\"false\" // Remove X button"
+      }
+    },
+    "footerStatus": {
+      "description": "Show/hide footer section",
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "When true (default), shows footer with buttons from footerButtonGroupOptions. Set false when using custom footer via footerSlot or for information-only modals.",
+        "typescript": "boolean",
+        "example": ":footer-status=\"false\""
+      }
+    },
+    "fullWidthContentStatus": {
+      "description": "Remove content padding",
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "When true, removes default content padding for full-width elements like tables, lists, or images. Use when content needs to extend edge-to-edge within modal.",
+        "typescript": "boolean",
+        "example": ":full-width-content-status=\"true\" // For tables"
+      }
+    }
+  },
+  "eventEnrichments": {
+    "onCloseEvent": {
+      "description": "Fired when X button or Escape key pressed",
+      "payload": "void",
+      "when": "User clicks X button in header or presses Escape key"
+    },
+    "cancelOrBackButtonEvent": {
+      "description": "Fired when cancel/back button clicked",
+      "payload": "void",
+      "when": "User clicks the cancel button in footer (defined in footerButtonGroupOptions.cancelButton)"
+    },
+    "secondaryButtonEvent": {
+      "description": "Fired when secondary button clicked",
+      "payload": "void",
+      "when": "User clicks the secondary button in footer (optional middle button)"
+    },
+    "primaryButtonEvent": {
+      "description": "Fired when primary action button clicked",
+      "payload": "void",
+      "when": "User clicks the primary button in footer (main action button)"
+    }
+  },
+  "examples": [
+    {
+      "title": "Confirmation Dialog",
+      "description": "Delete confirmation modal with danger state",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InModalV2 } from '@useinsider/design-system-vue';\n\nconst showDeleteModal = ref(false);\n\nconst handleDelete = () => {\n  // Perform delete\n  console.log('Deleting...');\n  showDeleteModal.value = false;\n};\n\nconst footerButtons = {\n  cancelButton: { labelText: 'Cancel' },\n  primaryButton: { labelText: 'Delete', type: 'danger' }\n};\n</script>\n\n<template>\n  <InModalV2\n    v-model:status=\"showDeleteModal\"\n    state=\"danger\"\n    size=\"small\"\n    title-text=\"Delete User\"\n    description-text=\"This action cannot be undone.\"\n    :footer-button-group-options=\"footerButtons\"\n    :close-on-outside-click=\"false\"\n    @primaryButtonEvent=\"handleDelete\"\n    @cancelOrBackButtonEvent=\"showDeleteModal = false\"\n  >\n    <p>Are you sure you want to delete this user?</p>\n  </InModalV2>\n</template>"
+    },
+    {
+      "title": "Form Modal with Loading State",
+      "description": "Modal with form and loading state on submit",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InModalV2 } from '@useinsider/design-system-vue';\n\nconst showModal = ref(false);\nconst loading = ref(false);\nconst formData = ref({ name: '', email: '' });\n\nconst handleSubmit = async () => {\n  loading.value = true;\n  try {\n    await api.createUser(formData.value);\n    showModal.value = false;\n  } catch (error) {\n    console.error(error);\n  } finally {\n    loading.value = false;\n  }\n};\n\nconst footerButtons = computed(() => ({\n  cancelButton: { labelText: 'Cancel' },\n  primaryButton: {\n    labelText: 'Create User',\n    type: 'primary',\n    loading: loading.value\n  }\n}));\n</script>\n\n<template>\n  <InModalV2\n    v-model:status=\"showModal\"\n    state=\"primary\"\n    size=\"medium\"\n    title-text=\"Create New User\"\n    :footer-button-group-options=\"footerButtons\"\n    @primaryButtonEvent=\"handleSubmit\"\n    @cancelOrBackButtonEvent=\"showModal = false\"\n  >\n    <div class=\"form\">\n      <input v-model=\"formData.name\" placeholder=\"Name\" />\n      <input v-model=\"formData.email\" placeholder=\"Email\" />\n    </div>\n  </InModalV2>\n</template>"
+    },
+    {
+      "title": "Information Modal",
+      "description": "Simple information modal with single close button",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InModalV2 } from '@useinsider/design-system-vue';\n\nconst showInfo = ref(false);\n\nconst footerButtons = {\n  primaryButton: { labelText: 'Got it', type: 'primary' }\n};\n</script>\n\n<template>\n  <InModalV2\n    v-model:status=\"showInfo\"\n    size=\"small\"\n    title-text=\"Welcome!\"\n    description-text=\"Here are some tips to get started\"\n    :footer-button-group-options=\"footerButtons\"\n    @primaryButtonEvent=\"showInfo = false\"\n  >\n    <ul>\n      <li>Tip 1: Start with the dashboard</li>\n      <li>Tip 2: Check your settings</li>\n      <li>Tip 3: Invite team members</li>\n    </ul>\n  </InModalV2>\n</template>"
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Forgetting v-model:status binding",
+      "why": "Modal state won't sync when user closes it",
+      "impact": "Modal can't be reopened or stays open after close",
+      "fix": "Always use v-model:status for two-way binding",
+      "severity": "critical",
+      "example": "// Wrong:\n<InModalV2 :status=\"isOpen\" />\n\n// Correct:\n<InModalV2 v-model:status=\"isOpen\" />"
+    },
+    {
+      "mistake": "Not handling button events",
+      "why": "Buttons are defined but have no actions",
+      "impact": "Buttons don't do anything when clicked",
+      "fix": "Listen to @primaryButtonEvent, @cancelOrBackButtonEvent, etc.",
+      "severity": "high",
+      "example": "// Wrong:\n<InModalV2 :footer-button-group-options=\"buttons\" />\n\n// Correct:\n<InModalV2\n  :footer-button-group-options=\"buttons\"\n  @primaryButtonEvent=\"handleSubmit\"\n  @cancelOrBackButtonEvent=\"handleCancel\"\n/>"
+    },
+    {
+      "mistake": "Using wrong state for destructive actions",
+      "why": "Visual cue doesn't match action severity",
+      "impact": "User may not realize action is destructive",
+      "fix": "Use state='danger' for delete/destructive actions",
+      "severity": "medium",
+      "example": "// Wrong:\n<InModalV2 state=\"default\" title-text=\"Delete User\" />\n\n// Correct:\n<InModalV2 state=\"danger\" title-text=\"Delete User\" />"
+    },
+    {
+      "mistake": "Allowing outside click for critical actions",
+      "why": "User can accidentally dismiss important confirmations",
+      "impact": "Data loss or accidental cancellation",
+      "fix": "Set :close-on-outside-click=\"false\" for critical modals",
+      "severity": "medium",
+      "example": ":close-on-outside-click=\"false\" // For delete confirmations"
+    }
+  ],
+  "bestPractices": [
+    {
+      "title": "Use Appropriate State for Context",
+      "description": "Match modal state to action type for clear visual communication",
+      "code": "// Danger for destructive actions\n<InModalV2 state=\"danger\" title-text=\"Delete Account\" />\n\n// Warning for important but non-destructive\n<InModalV2 state=\"warning\" title-text=\"Unsaved Changes\" />\n\n// Primary for important info\n<InModalV2 state=\"primary\" title-text=\"New Feature\" />",
+      "reasoning": "Color-coded states provide immediate visual context about the action's nature and severity"
+    },
+    {
+      "title": "Disable Primary Button During Async Operations",
+      "description": "Show loading state and disable button during API calls",
+      "code": "const footerButtons = computed(() => ({\n  primaryButton: {\n    labelText: 'Save',\n    type: 'primary',\n    loading: isSaving.value,\n    disabled: isSaving.value\n  }\n}));\n\n@primaryButtonEvent=\"handleSave\"",
+      "reasoning": "Prevents double-submission and provides clear feedback that action is in progress"
+    },
+    {
+      "title": "Keep Modal Content Focused",
+      "description": "Use appropriate size and avoid overloading with content",
+      "code": "// Use small for simple confirmations\n<InModalV2 size=\"small\" title-text=\"Confirm\" />\n\n// Use large for forms with many fields\n<InModalV2 size=\"large\" title-text=\"Edit Profile\" />\n\n// Break complex flows into multiple modals\n// Instead of one huge modal",
+      "reasoning": "Focused, appropriately-sized modals are easier to understand and less overwhelming"
+    },
+    {
+      "title": "Always Close Modal After Successful Action",
+      "description": "Update v-model:status to close modal after async operations complete",
+      "code": "const handleSubmit = async () => {\n  try {\n    await api.save(data);\n    showModal.value = false; // Close on success\n    showSuccessToast('Saved successfully');\n  } catch (error) {\n    // Keep modal open on error for user to retry\n    showErrorMessage(error);\n  }\n};",
+      "reasoning": "Closing on success provides clear feedback and returns user to main flow, while keeping open on error allows retry"
+    }
+  ],
+  "codeSnippets": {
+    "basicModal": {
+      "title": "Basic Modal with Actions",
+      "description": "Simple modal with cancel and primary buttons",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InModalV2 } from '@useinsider/design-system-vue';\n\nconst isOpen = ref(false);\n\nconst buttons = {\n  cancelButton: { labelText: 'Cancel' },\n  primaryButton: { labelText: 'Confirm' }\n};\n\nconst handleConfirm = () => {\n  console.log('Confirmed');\n  isOpen.value = false;\n};\n</script>\n\n<template>\n  <button @click=\"isOpen = true\">Open Modal</button>\n  \n  <InModalV2\n    v-model:status=\"isOpen\"\n    title-text=\"Confirm Action\"\n    :footer-button-group-options=\"buttons\"\n    @primaryButtonEvent=\"handleConfirm\"\n    @cancelOrBackButtonEvent=\"isOpen = false\"\n  >\n    <p>Are you sure you want to proceed?</p>\n  </InModalV2>\n</template>"
+    },
+    "customHeaderFooter": {
+      "title": "Modal with Custom Header and Footer",
+      "description": "Using slots for custom header and footer content",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InModalV2 } from '@useinsider/design-system-vue';\n\nconst isOpen = ref(false);\n</script>\n\n<template>\n  <InModalV2\n    v-model:status=\"isOpen\"\n    :footer-status=\"false\"\n  >\n    <template #headerTitleSlot>\n      <div class=\"custom-header\">\n        <icon name=\"info\" />\n        <h2>Custom Title with Icon</h2>\n      </div>\n    </template>\n    \n    <div class=\"content\">\n      <p>Modal content here</p>\n    </div>\n    \n    <template #footerSlot>\n      <div class=\"custom-footer\">\n        <button @click=\"isOpen = false\">Custom Close</button>\n      </div>\n    </template>\n  </InModalV2>\n</template>"
+    },
+    "fullWidthTable": {
+      "title": "Modal with Full-Width Table",
+      "description": "Using fullWidthContentStatus for edge-to-edge content",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InModalV2 } from '@useinsider/design-system-vue';\n\nconst showTable = ref(false);\nconst tableData = ref([...]);\n</script>\n\n<template>\n  <InModalV2\n    v-model:status=\"showTable\"\n    size=\"x-large\"\n    title-text=\"User List\"\n    :full-width-content-status=\"true\"\n    :footer-status=\"false\"\n  >\n    <table class=\"full-width-table\">\n      <thead>\n        <tr>\n          <th>Name</th>\n          <th>Email</th>\n          <th>Role</th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr v-for=\"user in tableData\" :key=\"user.id\">\n          <td>{{ user.name }}</td>\n          <td>{{ user.email }}</td>\n          <td>{{ user.role }}</td>\n        </tr>\n      </tbody>\n    </table>\n  </InModalV2>\n</template>"
+    }
+  },
+  "styling": {
+    "cssVariables": {
+      "--modal-overlay-bg": "Backdrop overlay color (default: rgba(0,0,0,0.5))",
+      "--modal-bg": "Modal background color (default: white)",
+      "--modal-border-radius": "Modal corner radius (default: 8px)",
+      "--modal-header-bg": "Header background color (changes with state)",
+      "--modal-shadow": "Modal shadow (default: 0 4px 20px rgba(0,0,0,0.15))",
+      "--modal-max-height": "Maximum modal height (default: 90vh)"
+    },
+    "classes": {
+      "in-modal-v2": "Root modal container",
+      "in-modal-v2__overlay": "Backdrop overlay",
+      "in-modal-v2__container": "Modal box container",
+      "in-modal-v2__header": "Header section",
+      "in-modal-v2__title": "Title text",
+      "in-modal-v2__description": "Description text below title",
+      "in-modal-v2__close": "X close button",
+      "in-modal-v2__content": "Main content area",
+      "in-modal-v2__footer": "Footer with buttons",
+      "in-modal-v2--small": "Applied when size='small'",
+      "in-modal-v2--danger": "Applied when state='danger'"
+    },
+    "notes": "Modal uses fixed positioning and z-index stacking. State prop changes header background color. Size classes control modal width."
+  },
+  "implementationPatterns": [
+    {
+      "name": "Multi-Step Modal Wizard",
+      "description": "Multi-step form flow within a single modal",
+      "code": "<script setup>\nimport { ref, computed } from 'vue';\nimport { InModalV2 } from '@useinsider/design-system-vue';\n\nconst isOpen = ref(false);\nconst currentStep = ref(1);\nconst formData = ref({ name: '', email: '', role: '' });\n\nconst steps = [\n  { title: 'Personal Info', description: 'Enter your details' },\n  { title: 'Account Setup', description: 'Choose your role' },\n  { title: 'Confirmation', description: 'Review your information' }\n];\n\nconst currentStepData = computed(() => steps[currentStep.value - 1]);\n\nconst footerButtons = computed(() => ({\n  cancelButton: { labelText: currentStep.value === 1 ? 'Cancel' : 'Back' },\n  primaryButton: {\n    labelText: currentStep.value === 3 ? 'Finish' : 'Next',\n    type: 'primary'\n  }\n}));\n\nconst handlePrimary = () => {\n  if (currentStep.value === 3) {\n    // Submit form\n    console.log('Submit:', formData.value);\n    isOpen.value = false;\n    currentStep.value = 1;\n  } else {\n    currentStep.value++;\n  }\n};\n\nconst handleCancel = () => {\n  if (currentStep.value === 1) {\n    isOpen.value = false;\n  } else {\n    currentStep.value--;\n  }\n};\n</script>\n\n<template>\n  <InModalV2\n    v-model:status=\"isOpen\"\n    :title-text=\"currentStepData.title\"\n    :description-text=\"currentStepData.description\"\n    :footer-button-group-options=\"footerButtons\"\n    :close-on-outside-click=\"false\"\n    @primaryButtonEvent=\"handlePrimary\"\n    @cancelOrBackButtonEvent=\"handleCancel\"\n  >\n    <div v-if=\"currentStep === 1\">\n      <input v-model=\"formData.name\" placeholder=\"Name\" />\n      <input v-model=\"formData.email\" placeholder=\"Email\" />\n    </div>\n    <div v-else-if=\"currentStep === 2\">\n      <select v-model=\"formData.role\">\n        <option value=\"admin\">Admin</option>\n        <option value=\"user\">User</option>\n      </select>\n    </div>\n    <div v-else>\n      <p>Name: {{ formData.name }}</p>\n      <p>Email: {{ formData.email }}</p>\n      <p>Role: {{ formData.role }}</p>\n    </div>\n  </InModalV2>\n</template>",
+      "when": "Use for multi-step processes that fit in modal context (user creation, settings wizard)",
+      "pros": ["Keeps user in context", "Progressive disclosure", "Easy navigation between steps"],
+      "cons": ["Can become complex", "Not suitable for very long flows"]
+    },
+    {
+      "name": "Confirmation with Async Validation",
+      "description": "Modal that validates before allowing action",
+      "code": "<script setup>\nimport { ref, computed } from 'vue';\nimport { InModalV2 } from '@useinsider/design-system-vue';\n\nconst showDeleteModal = ref(false);\nconst confirmText = ref('');\nconst isValidating = ref(false);\n\nconst isValid = computed(() => confirmText.value === 'DELETE');\n\nconst footerButtons = computed(() => ({\n  cancelButton: { labelText: 'Cancel' },\n  primaryButton: {\n    labelText: 'Delete',\n    type: 'danger',\n    disabled: !isValid.value,\n    loading: isValidating.value\n  }\n}));\n\nconst handleDelete = async () => {\n  if (!isValid.value) return;\n  \n  isValidating.value = true;\n  try {\n    await api.deleteResource();\n    showDeleteModal.value = false;\n    confirmText.value = '';\n  } catch (error) {\n    console.error(error);\n  } finally {\n    isValidating.value = false;\n  }\n};\n</script>\n\n<template>\n  <InModalV2\n    v-model:status=\"showDeleteModal\"\n    state=\"danger\"\n    title-text=\"Delete Resource\"\n    description-text=\"This action cannot be undone\"\n    :footer-button-group-options=\"footerButtons\"\n    :close-on-outside-click=\"false\"\n    @primaryButtonEvent=\"handleDelete\"\n    @cancelOrBackButtonEvent=\"showDeleteModal = false\"\n  >\n    <p>Type DELETE to confirm:</p>\n    <input v-model=\"confirmText\" placeholder=\"Type DELETE\" />\n  </InModalV2>\n</template>",
+      "when": "Use for critical destructive actions that need extra confirmation",
+      "pros": ["Prevents accidental deletions", "Clear user intent", "Extra safety layer"],
+      "cons": ["Extra friction for user", "Can be annoying if overused"]
+    },
+    {
+      "name": "Stacked Modals Pattern",
+      "description": "Opening a modal from within another modal",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InModalV2 } from '@useinsider/design-system-vue';\n\nconst showEditModal = ref(false);\nconst showConfirmModal = ref(false);\nconst hasUnsavedChanges = ref(true);\n\nconst handleCloseEdit = () => {\n  if (hasUnsavedChanges.value) {\n    showConfirmModal.value = true;\n  } else {\n    showEditModal.value = false;\n  }\n};\n\nconst handleConfirmDiscard = () => {\n  showConfirmModal.value = false;\n  showEditModal.value = false;\n  hasUnsavedChanges.value = false;\n};\n</script>\n\n<template>\n  <!-- Main edit modal -->\n  <InModalV2\n    v-model:status=\"showEditModal\"\n    title-text=\"Edit Profile\"\n    @onCloseEvent=\"handleCloseEdit\"\n  >\n    <form>\n      <!-- Form fields -->\n    </form>\n  </InModalV2>\n  \n  <!-- Confirmation modal (stacked on top) -->\n  <InModalV2\n    v-model:status=\"showConfirmModal\"\n    state=\"warning\"\n    size=\"small\"\n    title-text=\"Unsaved Changes\"\n    description-text=\"You have unsaved changes. Discard them?\"\n    :footer-button-group-options=\"{\n      cancelButton: { labelText: 'Keep Editing' },\n      primaryButton: { labelText: 'Discard', type: 'warning' }\n    }\"\n    @primaryButtonEvent=\"handleConfirmDiscard\"\n    @cancelOrBackButtonEvent=\"showConfirmModal = false\"\n  />\n</template>",
+      "when": "Use when confirmation is needed before closing a modal with unsaved changes",
+      "pros": ["Prevents data loss", "Clear user choice", "Maintains context"],
+      "cons": ["Can be confusing", "Increases z-index complexity"]
+    }
+  ],
+  "useCases": [
+    {
+      "title": "Delete Confirmations",
+      "description": "Confirm destructive actions before execution",
+      "example": "Delete user confirmation with danger state, disabled outside click, and 'DELETE' text confirmation input"
+    },
+    {
+      "title": "Form Dialogs",
+      "description": "Quick forms without navigating away from current page",
+      "example": "Create user modal with form inputs, validation, loading state on submit, and success toast on close"
+    },
+    {
+      "title": "Information Dialogs",
+      "description": "Display important information or announcements",
+      "example": "Feature announcement modal with primary state, description, and single 'Got it' button"
+    },
+    {
+      "title": "Data Preview",
+      "description": "Show detailed information in modal overlay",
+      "example": "User details modal with full-width table, x-large size, and custom header with actions"
+    }
+  ],
+  "performanceNotes": [
+    {
+      "topic": "Multiple modals on page",
+      "description": "Having many modal components in DOM even when hidden",
+      "recommendation": "Use v-if instead of v-show to conditionally render modals. Only render modal when status=true to reduce DOM size",
+      "impact": "low"
+    },
+    {
+      "topic": "Large content in modal",
+      "description": "Rendering heavy content (large tables, images) slows modal opening",
+      "recommendation": "Lazy load modal content. Use skeleton loaders while fetching data. Consider pagination for large data sets",
+      "impact": "medium"
+    },
+    {
+      "topic": "Animation performance",
+      "description": "Modal fade-in/out animations can be janky on low-end devices",
+      "recommendation": "Component uses optimized CSS transitions. Avoid heavy JS in modal content. Test on low-end devices",
+      "impact": "low"
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "topic": "Focus management",
+      "description": "Focus must trap inside modal when open",
+      "wcagLevel": "A",
+      "recommendation": "Component automatically traps focus. First focusable element receives focus on open. Tab cycles through modal elements only. Focus returns to trigger on close",
+      "example": "// Component handles focus automatically\n// No action needed"
+    },
+    {
+      "topic": "Keyboard navigation",
+      "description": "Modal must be fully keyboard accessible",
+      "wcagLevel": "A",
+      "recommendation": "Component supports: Escape to close (unless prevented), Tab/Shift+Tab to navigate, Enter on buttons. Ensure custom content is also keyboard accessible",
+      "example": "// Escape key closes modal\n// Tab navigates through buttons"
+    },
+    {
+      "topic": "Screen reader announcements",
+      "description": "Modal opening must be announced to screen readers",
+      "wcagLevel": "AA",
+      "recommendation": "Component has role='dialog' and aria-modal='true'. Title is linked with aria-labelledby. Ensure titleText is descriptive",
+      "example": "title-text=\"Delete User\" // Clear, descriptive title"
+    },
+    {
+      "topic": "Color contrast for states",
+      "description": "State colors must have sufficient contrast",
+      "wcagLevel": "AA",
+      "recommendation": "Component uses WCAG AA compliant colors. Danger state has red header with white text (contrast ratio > 4.5:1)",
+      "example": "state=\"danger\" // Automatic high-contrast styling"
+    }
+  ],
+  "helperFunctions": [
+    {
+      "name": "createModalController",
+      "description": "Composable for managing modal state and actions",
+      "code": "function createModalController(onConfirm?: () => void | Promise<void>) {\n  const isOpen = ref(false);\n  const isLoading = ref(false);\n  \n  const open = () => {\n    isOpen.value = true;\n  };\n  \n  const close = () => {\n    isOpen.value = false;\n  };\n  \n  const handleConfirm = async () => {\n    if (!onConfirm) {\n      close();\n      return;\n    }\n    \n    isLoading.value = true;\n    try {\n      await onConfirm();\n      close();\n    } catch (error) {\n      console.error('Modal action failed:', error);\n    } finally {\n      isLoading.value = false;\n    }\n  };\n  \n  return {\n    isOpen,\n    isLoading,\n    open,\n    close,\n    handleConfirm\n  };\n}",
+      "parameters": [
+        {
+          "name": "onConfirm",
+          "type": "() => void | Promise<void>",
+          "description": "Optional callback when primary button clicked"
+        }
+      ],
+      "returnType": "{ isOpen: Ref<boolean>; isLoading: Ref<boolean>; open: () => void; close: () => void; handleConfirm: () => Promise<void>; }",
+      "example": "const deleteModal = createModalController(async () => {\n  await api.deleteUser(userId);\n});\n\n// Use:\ndeleteModal.open();\n<InModalV2 v-model:status=\"deleteModal.isOpen\" @primaryButtonEvent=\"deleteModal.handleConfirm\" />"
+    },
+    {
+      "name": "useConfirmationModal",
+      "description": "Hook for creating confirmation dialogs programmatically",
+      "code": "function useConfirmationModal() {\n  const isOpen = ref(false);\n  const config = ref<{\n    title: string;\n    message: string;\n    confirmText?: string;\n    cancelText?: string;\n    state?: string;\n    onConfirm?: () => void;\n  }>({});\n  \n  const confirm = (options: typeof config.value) => {\n    return new Promise<boolean>((resolve) => {\n      config.value = {\n        confirmText: 'Confirm',\n        cancelText: 'Cancel',\n        state: 'default',\n        ...options\n      };\n      \n      const originalOnConfirm = config.value.onConfirm;\n      \n      config.value.onConfirm = () => {\n        originalOnConfirm?.();\n        resolve(true);\n        isOpen.value = false;\n      };\n      \n      isOpen.value = true;\n    });\n  };\n  \n  const handleCancel = () => {\n    isOpen.value = false;\n  };\n  \n  return {\n    isOpen,\n    config,\n    confirm,\n    handleCancel\n  };\n}",
+      "parameters": [],
+      "returnType": "{ isOpen: Ref<boolean>; config: Ref<object>; confirm: (options) => Promise<boolean>; handleCancel: () => void; }",
+      "example": "const { isOpen, config, confirm, handleCancel } = useConfirmationModal();\n\nconst handleDelete = async () => {\n  const confirmed = await confirm({\n    title: 'Delete User',\n    message: 'Are you sure?',\n    state: 'danger'\n  });\n  \n  if (confirmed) {\n    await api.deleteUser();\n  }\n};"
+    }
+  ]
+}

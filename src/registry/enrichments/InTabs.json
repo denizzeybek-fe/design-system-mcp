@@ -1,0 +1,448 @@
+{
+  "component": "InTabs",
+  "_metadata": {
+    "lastUpdated": "2025-11-28T00:00:00.000Z",
+    "propsHash": "intabs-v1-27props",
+    "eventsHash": "intabs-v1-10events",
+    "propCount": 27,
+    "eventCount": 10
+  },
+  "propEnrichments": {
+    "tabsList": {
+      "valueFormat": {
+        "structure": "Array<{ id: string | number; name: string; route?: string; disabled?: boolean; badge?: number; icon?: string; percentage?: number; }>",
+        "notes": "Required array defining all tabs. Each tab object must have id and name. Optional fields: route (for routing), disabled, badge (notification count), icon, percentage (for progress tabs). The order in array determines tab display order.",
+        "typescript": "interface TabItem {\n  id: string | number;\n  name: string;\n  route?: string;\n  disabled?: boolean;\n  badge?: number;\n  icon?: string;\n  percentage?: number;\n}",
+        "example": "[\n  { id: 'overview', name: 'Overview', route: '/dashboard' },\n  { id: 'users', name: 'Users', badge: 5, disabled: false },\n  { id: 'settings', name: 'Settings', icon: 'gear' }\n]"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Missing id or name in tab objects",
+          "why": "Component relies on id for tracking and name for display",
+          "impact": "Tabs won't render or will show empty labels",
+          "fix": "Ensure every tab object has both id and name properties",
+          "severity": "critical",
+          "example": "// Wrong:\n[{ name: 'Tab 1' }]\n\n// Correct:\n[{ id: 1, name: 'Tab 1' }]"
+        }
+      ]
+    },
+    "useRouter": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "When true (default), clicking tabs triggers Vue Router navigation using the 'route' property from tabsList. When false, tabs act as simple UI toggles without routing.",
+        "typescript": "boolean",
+        "example": "true // Enable routing\nfalse // Disable routing for non-navigation tabs"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Setting useRouter=true without route in tabsList",
+          "why": "Routing requires route property on tab objects",
+          "impact": "Console warnings or broken navigation",
+          "fix": "Either add route to tabs or set useRouter=false",
+          "severity": "medium",
+          "example": "// Wrong:\n:useRouter=\"true\"\n:tabsList=\"[{ id: 1, name: 'Tab' }]\"\n\n// Correct:\n:tabsList=\"[{ id: 1, name: 'Tab', route: '/tab' }]\""
+        }
+      ]
+    },
+    "dropdownTabs": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "When true, tabs that don't fit horizontally are moved into an overflow dropdown menu (three-dot menu). Useful for responsive designs with many tabs.",
+        "typescript": "boolean",
+        "example": "true // Enable overflow dropdown for tabs"
+      }
+    },
+    "draggable": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Enables drag-and-drop reordering of tabs. When user drops a tab, emits 'changeOrder' event with new tab order. Useful for customizable dashboards.",
+        "typescript": "boolean",
+        "example": "true // Allow users to reorder tabs"
+      }
+    },
+    "addNewTabActive": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Shows a '+' button to add new tabs. Works with addNewTabFunctionality to determine add behavior (dropdown options or custom modal).",
+        "typescript": "boolean",
+        "example": "true // Show '+ Add Tab' button"
+      }
+    },
+    "addTabDropdownOptions": {
+      "valueFormat": {
+        "structure": "Array<{ label: string; value: string | number; icon?: string; }>",
+        "notes": "Options shown in dropdown when user clicks '+ Add Tab' button (requires addNewTabActive=true and addNewTabFunctionality='options'). Each option represents a tab type user can add.",
+        "typescript": "interface AddTabOption {\n  label: string;\n  value: string | number;\n  icon?: string;\n}",
+        "example": "[\n  { label: 'Add Filter', value: 'filter' },\n  { label: 'Add Chart', value: 'chart' },\n  { label: 'Add Table', value: 'table' }\n]"
+      }
+    },
+    "addNewTabFunctionality": {
+      "valueFormat": {
+        "structure": "'options' | 'custom'",
+        "notes": "Determines behavior of '+ Add Tab' button. 'options': shows dropdown with addTabDropdownOptions. 'custom': emits addNewTab event for custom handling (e.g., open modal).",
+        "typescript": "'options' | 'custom'",
+        "example": "'options' // Show dropdown\n'custom' // Emit event for custom modal"
+      }
+    },
+    "renameOption": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Shows 'Rename' option in tab context menu (right-click or dropdown). When clicked, emits 'rename' event with tab data.",
+        "typescript": "boolean",
+        "example": "true // Allow tab renaming"
+      }
+    },
+    "removeOption": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Shows 'Remove' option in tab context menu. Default is true. When clicked, emits 'removeTab' or 'delete' event depending on useEmitForRemove.",
+        "typescript": "boolean",
+        "example": "false // Prevent tab removal"
+      }
+    },
+    "duplicateOption": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Shows 'Duplicate' option in tab context menu. When clicked, emits 'duplicate' event with tab data to clone.",
+        "typescript": "boolean",
+        "example": "true // Allow tab duplication"
+      }
+    },
+    "boxStyle": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Applies box/card styling to tabs instead of default underline style. Creates visually distinct rectangular tabs.",
+        "typescript": "boolean",
+        "example": "true // Use box-style tabs"
+      }
+    },
+    "maxTabDisplayTextLength": {
+      "valueFormat": {
+        "structure": "Number",
+        "notes": "Maximum character length for tab labels before truncation. Set to 0 (default) for no truncation. Truncated text shows full label on hover.",
+        "typescript": "number",
+        "example": "20 // Truncate tab names longer than 20 chars"
+      }
+    }
+  },
+  "eventEnrichments": {
+    "click": {
+      "description": "Emitted when a tab is clicked",
+      "payload": "{ id: string | number; name: string; route?: string; }",
+      "when": "User clicks on a tab. Fired before route navigation if useRouter=true."
+    },
+    "changeOrder": {
+      "description": "Emitted when user reorders tabs via drag-and-drop",
+      "payload": "{ newOrder: Array<TabItem> }",
+      "when": "User drops a tab in new position (requires draggable=true). Use to persist new tab order."
+    },
+    "addNewTab": {
+      "description": "Emitted when user clicks '+ Add Tab' button with custom functionality",
+      "payload": "void",
+      "when": "User clicks add button and addNewTabFunctionality='custom'. Use to show custom modal/form."
+    },
+    "removeTab": {
+      "description": "Emitted when user removes a tab",
+      "payload": "{ id: string | number; name: string; index: number; }",
+      "when": "User clicks remove option in tab menu (requires removeOption=true)."
+    },
+    "rename": {
+      "description": "Emitted when user clicks rename option",
+      "payload": "{ id: string | number; name: string; }",
+      "when": "User clicks rename in tab menu (requires renameOption=true). Use to show rename dialog."
+    },
+    "duplicate": {
+      "description": "Emitted when user duplicates a tab",
+      "payload": "{ id: string | number; name: string; }",
+      "when": "User clicks duplicate option (requires duplicateOption=true). Use to clone tab with new ID."
+    }
+  },
+  "codeSnippets": {
+    "basicTabs": {
+      "title": "Basic Tab Navigation",
+      "description": "Simple tabs with routing",
+      "code": "<template>\n  <InTabs\n    :tabsList=\"tabs\"\n    :useRouter=\"true\"\n    @click=\"handleTabClick\"\n  />\n</template>\n\n<script setup>\nconst tabs = ref([\n  { id: 'overview', name: 'Overview', route: '/overview' },\n  { id: 'analytics', name: 'Analytics', route: '/analytics', badge: 3 },\n  { id: 'settings', name: 'Settings', route: '/settings' }\n]);\n\nconst handleTabClick = (tab) => {\n  console.log('Tab clicked:', tab.name);\n};\n</script>"
+    },
+    "draggableTabs": {
+      "title": "Draggable Tabs with Persistence",
+      "description": "Allow users to reorder tabs and save order",
+      "code": "<template>\n  <InTabs\n    :tabsList=\"tabs\"\n    :draggable=\"true\"\n    :useRouter=\"false\"\n    @changeOrder=\"saveTabOrder\"\n  />\n</template>\n\n<script setup>\nconst tabs = ref([\n  { id: 1, name: 'Dashboard' },\n  { id: 2, name: 'Reports' },\n  { id: 3, name: 'Users' }\n]);\n\nconst saveTabOrder = ({ newOrder }) => {\n  tabs.value = newOrder;\n  localStorage.setItem('tabOrder', JSON.stringify(newOrder));\n};\n\n// Load saved order on mount\nonMounted(() => {\n  const saved = localStorage.getItem('tabOrder');\n  if (saved) tabs.value = JSON.parse(saved);\n});\n</script>"
+    },
+    "dynamicTabs": {
+      "title": "Dynamic Tabs with Add/Remove",
+      "description": "Allow users to add and remove tabs",
+      "code": "<template>\n  <InTabs\n    :tabsList=\"tabs\"\n    :addNewTabActive=\"true\"\n    :addNewTabFunctionality=\"'options'\"\n    :addTabDropdownOptions=\"addOptions\"\n    :removeOption=\"true\"\n    @addNewTab=\"handleAddTab\"\n    @removeTab=\"handleRemoveTab\"\n  />\n</template>\n\n<script setup>\nconst tabs = ref([\n  { id: 1, name: 'Home' }\n]);\n\nconst addOptions = [\n  { label: 'Add Chart', value: 'chart' },\n  { label: 'Add Table', value: 'table' }\n];\n\nlet nextId = 2;\nconst handleAddTab = (option) => {\n  tabs.value.push({\n    id: nextId++,\n    name: option.label,\n    type: option.value\n  });\n};\n\nconst handleRemoveTab = ({ id }) => {\n  tabs.value = tabs.value.filter(tab => tab.id !== id);\n};\n</script>"
+    }
+  },
+  "styling": {
+    "cssVariables": {
+      "--tab-background": "Background color for tabs",
+      "--tab-active-color": "Color for active tab",
+      "--tab-border-color": "Border color for box-style tabs"
+    },
+    "classes": {
+      ".in-tabs": "Main tabs container",
+      ".in-tabs__item": "Individual tab element",
+      ".in-tabs__item--active": "Active tab state",
+      ".in-tabs__item--box": "Box-style tab (when boxStyle=true)",
+      ".in-tabs__dropdown": "Overflow dropdown menu"
+    },
+    "notes": "Box-style tabs (boxStyle=true) have distinct rectangular appearance with borders. Default style uses underline for active tab."
+  },
+  "examples": [
+    {
+      "title": "Dashboard with Tab Navigation",
+      "description": "Main dashboard with routed tabs and notification badges",
+      "code": "<template>\n  <div class=\"dashboard\">\n    <InTabs\n      :tabsList=\"dashboardTabs\"\n      :useRouter=\"true\"\n      :dropdownTabs=\"true\"\n      :maxTabDisplayTextLength=\"25\"\n    />\n    <router-view />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, computed } from 'vue';\nimport { useNotificationStore } from '@/stores/notifications';\n\nconst notificationStore = useNotificationStore();\n\nconst dashboardTabs = computed(() => [\n  { \n    id: 'overview', \n    name: 'Overview', \n    route: '/dashboard/overview' \n  },\n  { \n    id: 'campaigns', \n    name: 'Campaigns', \n    route: '/dashboard/campaigns',\n    badge: notificationStore.pendingCampaigns\n  },\n  { \n    id: 'segments', \n    name: 'Audience Segments', \n    route: '/dashboard/segments' \n  },\n  { \n    id: 'analytics', \n    name: 'Analytics & Reports', \n    route: '/dashboard/analytics',\n    badge: notificationStore.newReports\n  },\n  { \n    id: 'settings', \n    name: 'Settings', \n    route: '/dashboard/settings' \n  }\n]);\n</script>"
+    },
+    {
+      "title": "Customizable Widget Dashboard",
+      "description": "Draggable tabs with add/remove/duplicate functionality",
+      "code": "<template>\n  <div class=\"widget-dashboard\">\n    <InTabs\n      :tabsList=\"widgets\"\n      :draggable=\"true\"\n      :addNewTabActive=\"true\"\n      :addNewTabFunctionality=\"'options'\"\n      :addTabDropdownOptions=\"widgetTypes\"\n      :renameOption=\"true\"\n      :removeOption=\"true\"\n      :duplicateOption=\"true\"\n      :useRouter=\"false\"\n      @click=\"selectWidget\"\n      @changeOrder=\"saveWidgetOrder\"\n      @addNewTab=\"addWidget\"\n      @removeTab=\"removeWidget\"\n      @rename=\"showRenameDialog\"\n      @duplicate=\"duplicateWidget\"\n    />\n    <div class=\"widget-content\">\n      <component :is=\"currentWidget.component\" v-if=\"currentWidget\" />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\n\nconst widgets = ref([\n  { id: 1, name: 'Sales Chart', type: 'chart' },\n  { id: 2, name: 'User Stats', type: 'stats' }\n]);\n\nconst widgetTypes = [\n  { label: 'Add Chart', value: 'chart', icon: 'chart-line' },\n  { label: 'Add Table', value: 'table', icon: 'table' },\n  { label: 'Add Stats', value: 'stats', icon: 'calculator' }\n];\n\nconst currentWidget = ref(widgets.value[0]);\nlet nextWidgetId = 3;\n\nconst selectWidget = (widget) => {\n  currentWidget.value = widget;\n};\n\nconst saveWidgetOrder = ({ newOrder }) => {\n  widgets.value = newOrder;\n  localStorage.setItem('widgetOrder', JSON.stringify(newOrder));\n};\n\nconst addWidget = (option) => {\n  const newWidget = {\n    id: nextWidgetId++,\n    name: `New ${option.label}`,\n    type: option.value\n  };\n  widgets.value.push(newWidget);\n  currentWidget.value = newWidget;\n};\n\nconst removeWidget = ({ id }) => {\n  const index = widgets.value.findIndex(w => w.id === id);\n  widgets.value.splice(index, 1);\n  if (currentWidget.value.id === id) {\n    currentWidget.value = widgets.value[0];\n  }\n};\n\nconst duplicateWidget = ({ id, name }) => {\n  const original = widgets.value.find(w => w.id === id);\n  const duplicate = {\n    ...original,\n    id: nextWidgetId++,\n    name: `${name} (Copy)`\n  };\n  widgets.value.push(duplicate);\n};\n\nconst showRenameDialog = ({ id }) => {\n  // Show rename modal/prompt\n  console.log('Rename widget:', id);\n};\n</script>"
+    },
+    {
+      "title": "Box-Style Progress Tabs",
+      "description": "Progress indicator tabs with percentage tracking",
+      "code": "<template>\n  <div class=\"onboarding\">\n    <InTabs\n      :tabsList=\"steps\"\n      :boxStyle=\"true\"\n      :useRouter=\"false\"\n      :preventTabSelectionOnClick=\"true\"\n      @click=\"goToStep\"\n    />\n    <div class=\"step-content\">\n      <component :is=\"currentStepComponent\" @complete=\"completeStep\" />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, computed } from 'vue';\n\nconst currentStepIndex = ref(0);\n\nconst steps = computed(() => [\n  { \n    id: 'account', \n    name: 'Account Setup', \n    percentage: currentStepIndex.value > 0 ? 100 : 0,\n    disabled: false\n  },\n  { \n    id: 'profile', \n    name: 'Profile Info', \n    percentage: currentStepIndex.value > 1 ? 100 : (currentStepIndex.value === 1 ? 50 : 0),\n    disabled: currentStepIndex.value < 1\n  },\n  { \n    id: 'preferences', \n    name: 'Preferences', \n    percentage: currentStepIndex.value > 2 ? 100 : 0,\n    disabled: currentStepIndex.value < 2\n  },\n  { \n    id: 'complete', \n    name: 'Complete', \n    percentage: currentStepIndex.value === 3 ? 100 : 0,\n    disabled: currentStepIndex.value < 3\n  }\n]);\n\nconst goToStep = (step) => {\n  const index = steps.value.findIndex(s => s.id === step.id);\n  if (!step.disabled && index <= currentStepIndex.value) {\n    currentStepIndex.value = index;\n  }\n};\n\nconst completeStep = () => {\n  if (currentStepIndex.value < steps.value.length - 1) {\n    currentStepIndex.value++;\n  }\n};\n</script>"
+    }
+  ],
+  "implementationPatterns": [
+    {
+      "name": "Responsive Tab Overflow",
+      "description": "Handle many tabs gracefully on small screens using dropdown overflow",
+      "code": "<InTabs\n  :tabsList=\"manyTabs\"\n  :dropdownTabs=\"true\"\n  :maxTabDisplayTextLength=\"20\"\n/>",
+      "when": "You have 5+ tabs or tab names are long. Prevents horizontal scrolling and layout breaking.",
+      "pros": [
+        "Clean UI even with many tabs",
+        "Mobile-friendly",
+        "Automatic overflow handling"
+      ],
+      "cons": [
+        "Tabs in dropdown are less discoverable",
+        "Requires extra click for overflow tabs"
+      ]
+    },
+    {
+      "name": "Controlled Tab State (Non-Router)",
+      "description": "Manually control active tab without routing, useful for sub-navigation",
+      "code": "<template>\n  <InTabs\n    :tabsList=\"tabs\"\n    :useRouter=\"false\"\n    @click=\"activeTab = $event.id\"\n  />\n  <component :is=\"tabComponents[activeTab]\" />\n</template>\n\n<script setup>\nconst activeTab = ref('overview');\nconst tabComponents = {\n  overview: OverviewTab,\n  details: DetailsTab\n};\n</script>",
+      "when": "Tabs control content within a page/modal, not entire routes. Common in settings panels, wizards, or detail views.",
+      "pros": [
+        "No route changes",
+        "Faster transitions",
+        "Works in modals/isolated components"
+      ],
+      "cons": [
+        "No browser back/forward support",
+        "No shareable URLs per tab"
+      ]
+    },
+    {
+      "name": "Persistent Tab Customization",
+      "description": "Save user's tab order, added tabs, and preferences to localStorage/backend",
+      "code": "<template>\n  <InTabs\n    :tabsList=\"userTabs\"\n    :draggable=\"true\"\n    :addNewTabActive=\"true\"\n    @changeOrder=\"saveTabs\"\n    @addNewTab=\"saveTabs\"\n    @removeTab=\"saveTabs\"\n  />\n</template>\n\n<script setup>\nconst userTabs = ref([]);\n\n// Load on mount\nonMounted(async () => {\n  const saved = await api.getUserTabs();\n  userTabs.value = saved || defaultTabs;\n});\n\nconst saveTabs = () => {\n  api.saveUserTabs(userTabs.value);\n};\n</script>",
+      "when": "Building customizable dashboards where users can personalize their workflow. Common in analytics platforms, CRM tools.",
+      "pros": [
+        "Personalized user experience",
+        "Flexible workflows",
+        "Power user friendly"
+      ],
+      "cons": [
+        "Requires backend storage",
+        "More complex state management",
+        "Reset/default mechanism needed"
+      ]
+    }
+  ],
+  "useCases": [
+    {
+      "title": "Multi-Section Dashboard Navigation",
+      "description": "Primary navigation between major dashboard sections with route-based tabs",
+      "example": "Marketing platform with tabs for Campaigns, Audiences, Analytics, Reports, and Settings. Each tab navigates to different route with its own sub-pages."
+    },
+    {
+      "title": "Report Builder with Dynamic Tabs",
+      "description": "Allow users to add multiple report tabs, each with different data views",
+      "example": "Analytics dashboard where users can add chart tabs, table tabs, or metric cards. Tabs are draggable, renameable, and removable for custom layouts."
+    },
+    {
+      "title": "Multi-Step Form Wizard",
+      "description": "Progress indicator showing completion status for each step",
+      "example": "Onboarding flow with Account Setup → Profile → Preferences → Complete. Box-style tabs with percentage indicators show progress. Previous steps are clickable, future steps are disabled."
+    },
+    {
+      "title": "Settings Panel Organization",
+      "description": "Organize complex settings into categorized tabs without route changes",
+      "example": "Account settings with General, Security, Notifications, Integrations tabs. Uses useRouter=false to keep settings in one route with tab-based content switching."
+    }
+  ],
+  "bestPractices": [
+    {
+      "title": "Limit Active Tab Count",
+      "description": "Keep visible tabs to 5-7 maximum, use dropdownTabs for overflow",
+      "code": "<InTabs\n  :tabsList=\"allTabs\"\n  :dropdownTabs=\"true\"\n/>",
+      "reasoning": "Too many visible tabs cause cognitive overload and UI crowding. Overflow dropdown keeps interface clean while maintaining access to all tabs."
+    },
+    {
+      "title": "Always Provide Unique IDs",
+      "description": "Use stable, unique identifiers for tab IDs, not array indices",
+      "code": "// Good:\n{ id: 'user-settings', name: 'Settings' }\n{ id: 'campaign-123', name: 'Campaign' }\n\n// Bad:\n{ id: index, name: 'Tab' }",
+      "reasoning": "Stable IDs ensure correct tab tracking when reordering, adding, or removing tabs. Array indices break when tabs are rearranged."
+    },
+    {
+      "title": "Disable Navigation During Loading",
+      "description": "Temporarily disable tabs during async operations to prevent race conditions",
+      "code": "<InTabs\n  :tabsList=\"tabs.map(t => ({ ...t, disabled: isLoading }))\"\n/>",
+      "reasoning": "Prevents users from switching tabs mid-operation, which could cause data inconsistency or incomplete saves."
+    },
+    {
+      "title": "Use Badge Numbers Sparingly",
+      "description": "Only show badges for actionable notifications, not just counts",
+      "code": "// Good: Pending approvals\n{ badge: pendingApprovals.length }\n\n// Bad: Total records\n{ badge: totalUsers.length }",
+      "reasoning": "Badges should indicate items requiring user attention. Overuse reduces their effectiveness and creates visual noise."
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Using array index as tab ID",
+      "why": "Indices change when tabs are reordered or removed",
+      "impact": "Active tab tracking breaks, wrong tab gets selected after reorder",
+      "fix": "Use stable unique identifiers (string or UUID)",
+      "severity": "high",
+      "example": "// Wrong:\ntabsList.map((tab, index) => ({ id: index, name: tab }))\n\n// Correct:\ntabsList.map(tab => ({ id: tab.uniqueId, name: tab.name }))"
+    },
+    {
+      "mistake": "Forgetting to handle changeOrder event",
+      "why": "Tab order changes are not persisted",
+      "impact": "Users reorder tabs but changes are lost on refresh",
+      "fix": "Listen to changeOrder event and save new order",
+      "severity": "medium",
+      "example": "// Add handler:\n@changeOrder=\"({ newOrder }) => saveTabs(newOrder)\""
+    },
+    {
+      "mistake": "Using useRouter=true without route property",
+      "why": "Component expects route for navigation",
+      "impact": "Console warnings, broken navigation",
+      "fix": "Either add route to all tabs or set useRouter=false",
+      "severity": "medium",
+      "example": "// Fix 1: Add routes\n:tabsList=\"[{ id: 1, name: 'Tab', route: '/tab' }]\"\n\n// Fix 2: Disable routing\n:useRouter=\"false\""
+    },
+    {
+      "mistake": "Not truncating long tab names",
+      "why": "Long labels break layout on small screens",
+      "impact": "Horizontal scrolling, overlapping tabs, poor mobile UX",
+      "fix": "Set maxTabDisplayTextLength to appropriate limit",
+      "severity": "low",
+      "example": "<InTabs\n  :maxTabDisplayTextLength=\"20\"\n  :tabsList=\"tabs\"\n/>"
+    }
+  ],
+  "performanceNotes": [
+    {
+      "topic": "Avoid Reactive Tab Badges",
+      "description": "Badge counts that update frequently can cause excessive re-renders",
+      "recommendation": "Debounce or throttle badge count updates. Use computed properties with proper dependencies.",
+      "impact": "High: Constant badge updates can make tabs feel sluggish"
+    },
+    {
+      "topic": "Lazy Load Tab Content",
+      "description": "Don't render all tab content simultaneously",
+      "recommendation": "Use v-if or dynamic components to render only active tab content. Use keep-alive if switching between tabs should preserve state.",
+      "impact": "Medium: Pre-rendering all tabs increases initial load time"
+    },
+    {
+      "topic": "Optimize Large Tab Lists",
+      "description": "Rendering 20+ tabs can slow down tab bar",
+      "recommendation": "Enable dropdownTabs to hide overflow tabs. Consider if that many tabs indicates a UX problem (maybe use nested navigation instead).",
+      "impact": "Medium: Large tab lists affect render performance"
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "topic": "Keyboard Navigation",
+      "description": "Tab component should support arrow key navigation between tabs",
+      "wcagLevel": "A",
+      "recommendation": "Ensure users can navigate tabs with Left/Right arrows and activate with Enter/Space. Test with keyboard only.",
+      "example": "<InTabs\n  :tabsList=\"tabs\"\n  role=\"tablist\"\n/>"
+    },
+    {
+      "topic": "ARIA Labels for Context Menus",
+      "description": "Tab action buttons (rename, remove, duplicate) need accessible labels",
+      "wcagLevel": "A",
+      "recommendation": "Ensure dropdown menu options have proper aria-labels. Screen reader should announce 'Rename Dashboard tab' not just 'Rename'.",
+      "example": "aria-label=\"Rename {{ tab.name }} tab\""
+    },
+    {
+      "topic": "Disabled Tab Communication",
+      "description": "Users should understand why a tab is disabled",
+      "wcagLevel": "AA",
+      "recommendation": "Use tooltips or aria-describedby to explain disabled state. Example: 'Complete Step 1 to unlock Step 2'.",
+      "example": "<tab :disabled=\"true\" aria-describedby=\"unlock-message\">\n  <span id=\"unlock-message\">Complete previous step</span>\n</tab>"
+    },
+    {
+      "topic": "Focus Management",
+      "description": "Focus should move to tab content after selection",
+      "wcagLevel": "A",
+      "recommendation": "When tab changes, focus should move to first interactive element in tab panel for keyboard users.",
+      "example": "// After tab change:\nawait nextTick();\ntabPanel.$el.querySelector('button')?.focus();"
+    }
+  ],
+  "helperFunctions": [
+    {
+      "name": "useTabManager",
+      "description": "Composable for managing dynamic tabs with add/remove/reorder functionality",
+      "code": "export function useTabManager(initialTabs = []) {\n  const tabs = ref([...initialTabs]);\n  let nextId = Math.max(...tabs.value.map(t => t.id), 0) + 1;\n\n  const addTab = (tab) => {\n    tabs.value.push({\n      ...tab,\n      id: tab.id || nextId++\n    });\n  };\n\n  const removeTab = (id) => {\n    const index = tabs.value.findIndex(t => t.id === id);\n    if (index !== -1) tabs.value.splice(index, 1);\n  };\n\n  const reorderTabs = (newOrder) => {\n    tabs.value = [...newOrder];\n  };\n\n  const updateTab = (id, updates) => {\n    const tab = tabs.value.find(t => t.id === id);\n    if (tab) Object.assign(tab, updates);\n  };\n\n  return {\n    tabs,\n    addTab,\n    removeTab,\n    reorderTabs,\n    updateTab\n  };\n}",
+      "parameters": [
+        {
+          "name": "initialTabs",
+          "type": "Array<TabItem>",
+          "description": "Initial tab list"
+        }
+      ],
+      "returnType": "{ tabs: Ref<TabItem[]>, addTab: Function, removeTab: Function, reorderTabs: Function, updateTab: Function }",
+      "example": "const { tabs, addTab, removeTab, reorderTabs } = useTabManager([\n  { id: 1, name: 'Home' }\n]);\n\naddTab({ name: 'New Tab' });\nremoveTab(1);"
+    },
+    {
+      "name": "persistTabs",
+      "description": "Save and restore tab state from localStorage",
+      "code": "export function persistTabs(storageKey, defaultTabs = []) {\n  const tabs = ref(defaultTabs);\n\n  // Load from storage\n  const loadTabs = () => {\n    try {\n      const saved = localStorage.getItem(storageKey);\n      if (saved) {\n        tabs.value = JSON.parse(saved);\n      }\n    } catch (e) {\n      console.error('Failed to load tabs:', e);\n    }\n  };\n\n  // Save to storage\n  const saveTabs = () => {\n    try {\n      localStorage.setItem(storageKey, JSON.stringify(tabs.value));\n    } catch (e) {\n      console.error('Failed to save tabs:', e);\n    }\n  };\n\n  // Reset to defaults\n  const resetTabs = () => {\n    tabs.value = [...defaultTabs];\n    saveTabs();\n  };\n\n  // Auto-load on mount\n  onMounted(loadTabs);\n\n  // Auto-save on change\n  watch(tabs, saveTabs, { deep: true });\n\n  return { tabs, loadTabs, saveTabs, resetTabs };\n}",
+      "parameters": [
+        {
+          "name": "storageKey",
+          "type": "string",
+          "description": "localStorage key for persistence"
+        },
+        {
+          "name": "defaultTabs",
+          "type": "Array<TabItem>",
+          "description": "Default tabs if nothing saved"
+        }
+      ],
+      "returnType": "{ tabs: Ref<TabItem[]>, loadTabs: Function, saveTabs: Function, resetTabs: Function }",
+      "example": "const { tabs, resetTabs } = persistTabs('dashboard-tabs', [\n  { id: 'home', name: 'Home' }\n]);\n\n// Tabs auto-load from localStorage\n// Changes auto-save\n// Call resetTabs() to restore defaults"
+    },
+    {
+      "name": "createTabWithBadge",
+      "description": "Helper to create tab objects with reactive badge counts",
+      "code": "export function createTabWithBadge(id, name, badgeGetter) {\n  return computed(() => ({\n    id,\n    name,\n    badge: badgeGetter() || undefined\n  }));\n}",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "string | number",
+          "description": "Unique tab identifier"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Tab display name"
+        },
+        {
+          "name": "badgeGetter",
+          "type": "() => number",
+          "description": "Function returning current badge count"
+        }
+      ],
+      "returnType": "ComputedRef<TabItem>",
+      "example": "const notificationTab = createTabWithBadge(\n  'notifications',\n  'Notifications',\n  () => unreadNotifications.value.length\n);\n\nconst tabs = [homeTab, notificationTab];"
+    }
+  ]
+}

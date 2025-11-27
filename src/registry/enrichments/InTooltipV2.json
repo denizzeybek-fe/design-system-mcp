@@ -262,16 +262,162 @@
       "code": "<template>\n  <div class=\"icon-grid\">\n    <div class=\"icon-item\">\n      <InIcons name=\"settings\" />\n      <InTooltipV2\n        id=\"settings-tooltip\"\n        :dynamic-position=\"true\"\n        static-position=\"bottom center\"\n        :offset=\"{ x: 0, y: 16 }\"\n        tooltip-text=\"Application Settings\"\n      />\n    </div>\n  </div>\n</template>"
     }
   ],
-  "helperFunctions": [],
+  "codeSnippets": {
+    "basicTooltip": {
+      "title": "Basic Tooltip",
+      "description": "Simple tooltip on hover",
+      "code": "<button>\n  Help\n  <InTooltipV2\n    id=\"help-tip\"\n    tooltip-text=\"Click for documentation\"\n  />\n</button>"
+    },
+    "fixedPosition": {
+      "title": "Fixed Position Tooltip",
+      "description": "Tooltip at specific coordinates",
+      "code": "<InTooltipV2\n  id=\"notification\"\n  :dynamic-position=\"false\"\n  :absolute-position=\"{ top: 60, right: 20 }\"\n  tooltip-text=\"New update available\"\n/>"
+    },
+    "customOffset": {
+      "title": "Custom Spacing",
+      "description": "Adjust tooltip distance from target",
+      "code": "<InTooltipV2\n  id=\"icon-tip\"\n  :offset=\"{ x: 0, y: 16 }\"\n  static-position=\"bottom center\"\n  tooltip-text=\"Settings\"\n/>"
+    }
+  },
+  "styling": {
+    "cssVariables": {
+      "--tooltip-bg": "Background color (default: dark gray)",
+      "--tooltip-text": "Text color (default: white)",
+      "--tooltip-padding": "Internal padding (default: 8px 12px)",
+      "--tooltip-border-radius": "Corner radius (default: 4px)",
+      "--tooltip-max-width": "Maximum width (default: 250px)",
+      "--tooltip-z-index": "Stack order (default: 9999)"
+    },
+    "classes": {
+      "in-tooltip-v2": "Root tooltip container",
+      "in-tooltip-v2__content": "Tooltip content area",
+      "in-tooltip-v2__arrow": "Tooltip arrow/pointer",
+      "in-tooltip-v2--top": "Top positioned modifier",
+      "in-tooltip-v2--bottom": "Bottom positioned modifier",
+      "in-tooltip-v2--left": "Left positioned modifier",
+      "in-tooltip-v2--right": "Right positioned modifier"
+    },
+    "notes": "Tooltip uses absolute positioning with automatic viewport detection. Arrow position adjusts based on tooltip placement. Override CSS variables for custom theming."
+  },
+  "implementationPatterns": [
+    {
+      "name": "Icon with tooltip",
+      "description": "Common pattern for icon buttons with explanatory tooltips",
+      "code": "<button class=\"icon-btn\">\n  <InIcons name=\"info\" />\n  <InTooltipV2\n    id=\"info-tooltip\"\n    tooltip-text=\"View detailed information\"\n    :offset=\"{ x: 0, y: 8 }\"\n  />\n</button>",
+      "when": "Icon-only buttons that need labels",
+      "pros": ["Clean UI", "Space efficient", "Good accessibility"],
+      "cons": ["Not discoverable on mobile"]
+    },
+    {
+      "name": "Form field help text",
+      "description": "Contextual help for form inputs",
+      "code": "<div class=\"form-field\">\n  <label>\n    Password\n    <button type=\"button\" class=\"help-icon\">\n      <InIcons name=\"help-circle\" />\n      <InTooltipV2\n        id=\"password-help\"\n        tooltip-text=\"Must be 8-20 characters with 1 number and 1 special character\"\n        static-position=\"right center\"\n      />\n    </button>\n  </label>\n  <input type=\"password\" />\n</div>",
+      "when": "Complex validation rules need explanation",
+      "pros": ["Reduces form clutter", "On-demand help"],
+      "cons": ["Extra click required"]
+    },
+    {
+      "name": "Truncated text preview",
+      "description": "Show full text on hover when space-constrained",
+      "code": "<div class=\"truncated\">\n  <span class=\"text-ellipsis\">{{ truncatedText }}</span>\n  <InTooltipV2\n    v-if=\"isTruncated\"\n    :id=\"`tooltip-${id}`\"\n    :tooltip-text=\"fullText\"\n    :dynamic-position=\"true\"\n  />\n</div>",
+      "when": "Tables or cards with limited space",
+      "pros": ["Clean layout", "Full content accessible"],
+      "cons": ["Requires hover", "Mobile limitation"]
+    }
+  ],
+  "useCases": [
+    {
+      "title": "Data table column headers",
+      "description": "Explain metrics or calculations in table headers",
+      "implementation": "<th>\n  Revenue (USD)\n  <InTooltipV2\n    id=\"revenue-tooltip\"\n    tooltip-text=\"Total revenue excluding taxes and refunds\"\n    static-position=\"top center\"\n  />\n</th>",
+      "notes": "Use static positioning 'top center' for consistent header tooltips"
+    },
+    {
+      "title": "Status indicators",
+      "description": "Explain status badges or icons",
+      "implementation": "<div class=\"status-badge status-warning\">\n  Pending\n  <InTooltipV2\n    id=\"status-tooltip\"\n    tooltip-text=\"Awaiting manager approval. Expected within 24 hours.\"\n  />\n</div>",
+      "notes": "Provide actionable context, not just status description"
+    },
+    {
+      "title": "Feature flags/beta labels",
+      "description": "Explain experimental or beta features",
+      "implementation": "<button>\n  AI Assistant <span class=\"badge\">Beta</span>\n  <InTooltipV2\n    id=\"beta-tooltip\"\n    tooltip-text=\"This feature is in beta. Please report any issues.\"\n    :offset=\"{ x: 0, y: 12 }\"\n  />\n</button>",
+      "notes": "Manage user expectations for incomplete features"
+    }
+  ],
+  "helperFunctions": [
+    {
+      "name": "createTooltipConfig",
+      "description": "Create tooltip configuration with defaults",
+      "code": "function createTooltipConfig(text: string, position = 'top center', options = {}) {\n  return {\n    tooltipText: text,\n    staticPosition: position,\n    dynamicPosition: true,\n    offset: { x: 0, y: 8 },\n    preventXss: true,\n    ...options\n  };\n}",
+      "parameters": [
+        { "name": "text", "type": "string", "description": "Tooltip text content" },
+        { "name": "position", "type": "string", "description": "Preferred position (default: 'top center')" },
+        { "name": "options", "type": "object", "description": "Additional options (optional)" }
+      ],
+      "returnType": "object",
+      "example": "const config = createTooltipConfig('Save changes', 'bottom right');"
+    },
+    {
+      "name": "truncateWithTooltip",
+      "description": "Truncate text and determine if tooltip is needed",
+      "code": "function truncateWithTooltip(text: string, maxLength: number) {\n  const isTruncated = text.length > maxLength;\n  return {\n    displayText: isTruncated ? text.slice(0, maxLength) + '...' : text,\n    tooltipText: isTruncated ? text : null,\n    needsTooltip: isTruncated\n  };\n}",
+      "parameters": [
+        { "name": "text", "type": "string", "description": "Full text content" },
+        { "name": "maxLength", "type": "number", "description": "Maximum display length" }
+      ],
+      "returnType": "{ displayText: string, tooltipText: string | null, needsTooltip: boolean }",
+      "example": "const { displayText, tooltipText, needsTooltip } = truncateWithTooltip(longText, 50);"
+    }
+  ],
   "performanceNotes": [
-    "Dynamic positioning calculates on every render - use static positioning when possible",
-    "Tooltips with XSS protection enabled have slight overhead for sanitization",
-    "Multiple tooltips on a page with dynamic positioning can impact scroll performance"
+    {
+      "topic": "Dynamic positioning calculations",
+      "description": "Dynamic positioning recalculates on every render to detect viewport boundaries.",
+      "recommendation": "Use static positioning (dynamic-position=\"false\") when tooltip placement is predictable. Only use dynamic for edge cases near viewport boundaries.",
+      "impact": "medium"
+    },
+    {
+      "topic": "XSS sanitization overhead",
+      "description": "When prevent-xss is enabled, tooltip text is sanitized on every render.",
+      "recommendation": "Keep prevent-xss=\"true\" (default) for security. If displaying trusted content only, can disable for slight performance gain.",
+      "impact": "low"
+    },
+    {
+      "topic": "Multiple tooltips on page",
+      "description": "Many tooltips with dynamic positioning can impact scroll performance due to continuous recalculation.",
+      "recommendation": "Limit dynamic tooltips on scrollable pages. Use static positioning for table headers or repeated elements.",
+      "impact": "medium"
+    }
   ],
   "accessibilityNotes": [
-    "Always provide meaningful tooltip text for screen readers",
-    "Tooltip text should not duplicate visible text",
-    "Use appropriate ARIA attributes (automatically handled by component)",
-    "Ensure sufficient color contrast for tooltip background and text"
+    {
+      "topic": "Meaningful tooltip text",
+      "description": "Tooltip text should provide useful information, not just repeat visible text.",
+      "wcagLevel": "A",
+      "recommendation": "Explain what an element does or provide context. Avoid redundancy.",
+      "example": "Good: 'Delete this item permanently'\nBad: 'Delete' (when button already says Delete)"
+    },
+    {
+      "topic": "ARIA attributes",
+      "description": "Component automatically adds role='tooltip' and aria-describedby for screen readers.",
+      "wcagLevel": "A",
+      "recommendation": "No action needed - component handles ARIA internally.",
+      "example": "Automatically applied: role=\"tooltip\" aria-describedby=\"tooltip-id\""
+    },
+    {
+      "topic": "Color contrast",
+      "description": "Tooltip background and text must meet WCAG AA contrast ratio (4.5:1).",
+      "wcagLevel": "AA",
+      "recommendation": "Default theme meets standards. If customizing colors, test contrast with tools like WebAIM.",
+      "example": "Default: Dark gray background (#333) with white text - 12.6:1 ratio"
+    },
+    {
+      "topic": "Keyboard accessibility",
+      "description": "Tooltips should be accessible via keyboard focus, not just hover.",
+      "wcagLevel": "AA",
+      "recommendation": "Ensure parent element is focusable (button, link, or tabindex=\"0\"). Tooltip shows on focus.",
+      "example": "<button>Help <InTooltipV2 .../></button> // Accessible via Tab key"
+    }
   ]
 }

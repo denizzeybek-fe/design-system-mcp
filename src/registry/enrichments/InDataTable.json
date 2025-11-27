@@ -580,5 +580,115 @@
       "correct": ":row-class=\"row => row.status === 'error' ? 'error-row' : ''\"",
       "impact": "Table re-renders slowly, performance issues"
     }
+  ],
+  "performanceNotes": [
+    {
+      "topic": "Client-side vs API mode",
+      "description": "Client-side mode loads all data into memory. API mode fetches paginated data from server.",
+      "recommendation": "Use client-side for < 1000 rows. Use API mode (fetch-url) for larger datasets to avoid memory issues and slow initial load.",
+      "impact": "high"
+    },
+    {
+      "topic": "Row rendering functions",
+      "description": "Custom renderers (rowClass, cellRenderer) are called on every render for every visible row.",
+      "recommendation": "Keep renderer functions simple. Avoid expensive calculations, API calls, or complex logic. Cache computed values outside the function.",
+      "impact": "high"
+    },
+    {
+      "topic": "Data reactivity",
+      "description": "Table watches data prop for changes. Deep watching large arrays is expensive.",
+      "recommendation": "When updating data, replace the entire array instead of mutating (data.value = [...newData]) to trigger efficient re-renders.",
+      "impact": "medium"
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "topic": "Table semantics",
+      "description": "InDataTable renders semantic HTML table with proper thead, tbody structure.",
+      "wcagLevel": "A",
+      "recommendation": "Ensure table headers (tableFields.label) are descriptive for screen readers.",
+      "example": "{ field: 'email', label: 'User Email Address' } // Descriptive label"
+    },
+    {
+      "topic": "Sortable columns keyboard access",
+      "description": "Sortable column headers are keyboard accessible with Enter/Space keys.",
+      "wcagLevel": "A",
+      "recommendation": "No action needed - component handles keyboard interaction internally.",
+      "example": "sortable=\"true\" // Automatically keyboard accessible"
+    },
+    {
+      "topic": "Row selection announcement",
+      "description": "Selected rows should be announced to screen readers.",
+      "wcagLevel": "AA",
+      "recommendation": "Use aria-label on action buttons that operate on selected rows to provide context.",
+      "example": "<button :aria-label=\"`Delete ${selectedRows.length} selected items`\">Delete</button>"
+    },
+    {
+      "topic": "Empty state messaging",
+      "description": "When table has no data, empty state should be announced.",
+      "wcagLevel": "A",
+      "recommendation": "Provide meaningful empty-text message that explains why table is empty.",
+      "example": "empty-text=\"No users found matching your filters\" // Context for screen readers"
+    }
+  ],
+  "helperFunctions": [
+    {
+      "name": "createTableField",
+      "description": "Create table field definition with common settings",
+      "code": "function createTableField(field: string, label: string, options = {}) {\n  return {\n    field,\n    label,\n    sortable: false,\n    width: 'auto',\n    ...options\n  };\n}",
+      "parameters": [
+        { "name": "field", "type": "string", "description": "Data property name" },
+        { "name": "label", "type": "string", "description": "Column header text" },
+        { "name": "options", "type": "object", "description": "Additional field options (optional)" }
+      ],
+      "returnType": "object",
+      "example": "const nameField = createTableField('name', 'User Name', { sortable: true, width: '200px' });"
+    },
+    {
+      "name": "createSortableFields",
+      "description": "Make multiple fields sortable at once",
+      "code": "function createSortableFields(fields: Array<{ field: string; label: string }>) {\n  return fields.map(f => ({\n    field: f.field,\n    label: f.label,\n    sortable: true\n  }));\n}",
+      "parameters": [
+        { "name": "fields", "type": "Array<{field, label}>", "description": "Array of field definitions" }
+      ],
+      "returnType": "Array<object>",
+      "example": "const fields = createSortableFields([{ field: 'name', label: 'Name' }, { field: 'date', label: 'Date' }]);"
+    },
+    {
+      "name": "filterTableData",
+      "description": "Filter table data by search term across multiple fields",
+      "code": "function filterTableData(data: any[], searchTerm: string, searchFields: string[]) {\n  if (!searchTerm) return data;\n  \n  const term = searchTerm.toLowerCase();\n  return data.filter(row => \n    searchFields.some(field => \n      String(row[field] || '').toLowerCase().includes(term)\n    )\n  );\n}",
+      "parameters": [
+        { "name": "data", "type": "Array<any>", "description": "Table data array" },
+        { "name": "searchTerm", "type": "string", "description": "Search query" },
+        { "name": "searchFields", "type": "Array<string>", "description": "Fields to search in" }
+      ],
+      "returnType": "Array<any>",
+      "example": "const filtered = filterTableData(users, 'john', ['name', 'email', 'department']);"
+    },
+    {
+      "name": "sortTableData",
+      "description": "Sort table data by field and direction",
+      "code": "function sortTableData(data: any[], sortBy: string, sortOrder: 'asc' | 'desc' = 'asc') {\n  return [...data].sort((a, b) => {\n    const aVal = a[sortBy];\n    const bVal = b[sortBy];\n    \n    if (aVal === bVal) return 0;\n    \n    const comparison = aVal > bVal ? 1 : -1;\n    return sortOrder === 'asc' ? comparison : -comparison;\n  });\n}",
+      "parameters": [
+        { "name": "data", "type": "Array<any>", "description": "Table data array" },
+        { "name": "sortBy", "type": "string", "description": "Field name to sort by" },
+        { "name": "sortOrder", "type": "string", "description": "Sort direction: 'asc' or 'desc'" }
+      ],
+      "returnType": "Array<any>",
+      "example": "const sorted = sortTableData(users, 'name', 'asc');"
+    },
+    {
+      "name": "paginateData",
+      "description": "Get paginated slice of data array",
+      "code": "function paginateData(data: any[], page: number, perPage: number) {\n  const start = (page - 1) * perPage;\n  const end = start + perPage;\n  \n  return {\n    data: data.slice(start, end),\n    total: data.length,\n    page,\n    perPage,\n    totalPages: Math.ceil(data.length / perPage)\n  };\n}",
+      "parameters": [
+        { "name": "data", "type": "Array<any>", "description": "Full data array" },
+        { "name": "page", "type": "number", "description": "Current page number (1-based)" },
+        { "name": "perPage", "type": "number", "description": "Items per page" }
+      ],
+      "returnType": "{ data: Array<any>, total: number, page: number, perPage: number, totalPages: number }",
+      "example": "const paginated = paginateData(users, 2, 25); // Page 2, 25 items per page"
+    }
   ]
 }

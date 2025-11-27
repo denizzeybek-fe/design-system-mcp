@@ -229,5 +229,210 @@
       "description": "Use invalid/warning with messages",
       "example": "invalid invalid-message=\"Required field\""
     }
+  ],
+  "codeSnippets": {
+    "basicDropdown": {
+      "title": "Basic Dropdown with Static Options",
+      "description": "Simple dropdown with predefined options",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InDropDown } from '@useinsider/design-system-vue';\n\nconst selectedCountry = ref('');\n\nconst countryOptions = [\n  { label: 'United States', value: 'US' },\n  { label: 'United Kingdom', value: 'UK' },\n  { label: 'Germany', value: 'DE' },\n  { label: 'France', value: 'FR' }\n];\n</script>\n\n<template>\n  <InDropDown\n    v-model=\"selectedCountry\"\n    :options=\"countryOptions\"\n    label=\"Select Country\"\n    placeholder=\"Choose a country\"\n  />\n</template>"
+    },
+    "apiDropdown": {
+      "title": "Dropdown with API Data Fetching",
+      "description": "Fetch options from API with search support",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InDropDown } from '@useinsider/design-system-vue';\n\nconst selectedUser = ref('');\n</script>\n\n<template>\n  <InDropDown\n    v-model=\"selectedUser\"\n    label=\"Select User\"\n    fetch-url=\"/api/users\"\n    response-key=\"data.users\"\n    :custom-options-key=\"['name', 'id']\"\n    search-status\n    query-string=\"search\"\n    placeholder=\"Search users...\"\n  />\n</template>"
+    },
+    "validatedDropdown": {
+      "title": "Dropdown with Validation States",
+      "description": "Dropdown with error/warning/success states",
+      "code": "<script setup>\nimport { ref, computed } from 'vue';\nimport { InDropDown } from '@useinsider/design-system-vue';\n\nconst selectedRole = ref('');\nconst formSubmitted = ref(false);\n\nconst roleOptions = [\n  { label: 'Admin', value: 'admin' },\n  { label: 'Editor', value: 'editor' },\n  { label: 'Viewer', value: 'viewer' }\n];\n\nconst validationState = computed(() => {\n  if (!formSubmitted.value) return {};\n  \n  if (!selectedRole.value) {\n    return {\n      invalid: true,\n      invalidMessage: 'Role is required'\n    };\n  }\n  \n  return { valid: true };\n});\n</script>\n\n<template>\n  <InDropDown\n    v-model=\"selectedRole\"\n    :options=\"roleOptions\"\n    label=\"User Role\"\n    v-bind=\"validationState\"\n  />\n</template>"
+    }
+  },
+  "styling": {
+    "cssVariables": {
+      "--dropdown-bg": "Dropdown button background (default: white)",
+      "--dropdown-border": "Border color (default: #d0d5dd)",
+      "--dropdown-text": "Text color (default: #101828)",
+      "--dropdown-placeholder": "Placeholder color (default: #667085)",
+      "--dropdown-hover-bg": "Hover state background (default: #f9fafb)",
+      "--dropdown-focus-border": "Focus border color (default: primary color)",
+      "--dropdown-disabled-bg": "Disabled state background (default: #f2f4f7)",
+      "--dropdown-list-bg": "Dropdown menu background (default: white)",
+      "--dropdown-option-hover": "Option hover background (default: #f9fafb)"
+    },
+    "classes": {
+      "in-dropdown": "Root dropdown container",
+      "in-dropdown__button": "Dropdown trigger button",
+      "in-dropdown__label": "Label text above dropdown",
+      "in-dropdown__list": "Dropdown menu list",
+      "in-dropdown__option": "Individual option item",
+      "in-dropdown__option--selected": "Selected option",
+      "in-dropdown__option--disabled": "Disabled option",
+      "in-dropdown__search": "Search input in dropdown",
+      "in-dropdown--invalid": "Applied when invalid=true",
+      "in-dropdown--disabled": "Applied when disabled=true"
+    },
+    "notes": "Use CSS variables for consistent theming. The component automatically handles focus, hover, and active states."
+  },
+  "implementationPatterns": [
+    {
+      "name": "Dynamic API Dropdown",
+      "description": "Fetch options from API with debounced search",
+      "code": "<script setup>\nimport { ref, watch } from 'vue';\nimport { debounce } from 'lodash-es';\nimport { InDropDown } from '@useinsider/design-system-vue';\n\nconst selectedProduct = ref('');\nconst searchQuery = ref('');\nconst options = ref([]);\nconst loading = ref(false);\n\nconst fetchProducts = debounce(async (query) => {\n  loading.value = true;\n  try {\n    const response = await fetch(`/api/products?search=${query}`);\n    const data = await response.json();\n    options.value = data.products.map(p => ({\n      label: p.name,\n      value: p.id,\n      description: p.category\n    }));\n  } finally {\n    loading.value = false;\n  }\n}, 300);\n\nwatch(searchQuery, fetchProducts);\n</script>\n\n<template>\n  <InDropDown\n    v-model=\"selectedProduct\"\n    :options=\"options\"\n    :loading=\"loading\"\n    search-status\n    @search=\"searchQuery = $event\"\n  />\n</template>",
+      "when": "Use when options need to be fetched from API with search functionality",
+      "pros": ["Reduces initial load", "Supports large datasets", "Real-time filtering"],
+      "cons": ["Requires API endpoint", "Network latency affects UX"]
+    },
+    {
+      "name": "Grouped Options Pattern",
+      "description": "Organize options into categories with nested structure",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InDropDown } from '@useinsider/design-system-vue';\n\nconst selectedAction = ref('');\n\nconst actionOptions = [\n  {\n    label: 'User Actions',\n    value: 'user_group',\n    disabled: true,\n    children: [\n      { label: 'Create User', value: 'create_user' },\n      { label: 'Edit User', value: 'edit_user' },\n      { label: 'Delete User', value: 'delete_user' }\n    ]\n  },\n  {\n    label: 'System Actions',\n    value: 'system_group',\n    disabled: true,\n    children: [\n      { label: 'Export Data', value: 'export' },\n      { label: 'Import Data', value: 'import' },\n      { label: 'Clear Cache', value: 'clear_cache' }\n    ]\n  }\n];\n</script>\n\n<template>\n  <InDropDown\n    v-model=\"selectedAction\"\n    :options=\"actionOptions\"\n    label=\"Select Action\"\n  />\n</template>",
+      "when": "Use when options need logical grouping or categorization",
+      "pros": ["Better organization", "Easier navigation", "Clear hierarchy"],
+      "cons": ["More complex data structure", "Requires nested option support"]
+    },
+    {
+      "name": "Dependent Dropdowns",
+      "description": "Chain multiple dropdowns where options depend on previous selection",
+      "code": "<script setup>\nimport { ref, watch } from 'vue';\nimport { InDropDown } from '@useinsider/design-system-vue';\n\nconst selectedCountry = ref('');\nconst selectedCity = ref('');\nconst cityOptions = ref([]);\n\nconst countryOptions = [\n  { label: 'USA', value: 'US' },\n  { label: 'UK', value: 'UK' },\n  { label: 'Canada', value: 'CA' }\n];\n\nconst citiesByCountry = {\n  US: [\n    { label: 'New York', value: 'NY' },\n    { label: 'Los Angeles', value: 'LA' }\n  ],\n  UK: [\n    { label: 'London', value: 'LON' },\n    { label: 'Manchester', value: 'MAN' }\n  ],\n  CA: [\n    { label: 'Toronto', value: 'TOR' },\n    { label: 'Vancouver', value: 'VAN' }\n  ]\n};\n\nwatch(selectedCountry, (newCountry) => {\n  selectedCity.value = ''; // Reset city selection\n  cityOptions.value = citiesByCountry[newCountry] || [];\n});\n</script>\n\n<template>\n  <div>\n    <InDropDown\n      v-model=\"selectedCountry\"\n      :options=\"countryOptions\"\n      label=\"Country\"\n    />\n    \n    <InDropDown\n      v-model=\"selectedCity\"\n      :options=\"cityOptions\"\n      :disabled=\"!selectedCountry\"\n      label=\"City\"\n      placeholder=\"Select country first\"\n    />\n  </div>\n</template>",
+      "when": "Use when dropdown options depend on values from other dropdowns",
+      "pros": ["Dynamic filtering", "Prevents invalid combinations", "Better UX"],
+      "cons": ["Complex state management", "Requires careful sync"]
+    }
+  ],
+  "useCases": [
+    {
+      "title": "User Role Selection",
+      "description": "Select user roles in admin panels or user management",
+      "example": "Admin panel with role dropdown (Admin, Editor, Viewer) with validation to ensure role is selected before saving"
+    },
+    {
+      "title": "Country/Region Pickers",
+      "description": "Geographic selection in forms and settings",
+      "example": "Checkout form with country dropdown, followed by dependent state/province dropdown based on selected country"
+    },
+    {
+      "title": "Product/Category Filters",
+      "description": "Filter data by categories or product types",
+      "example": "E-commerce filter with searchable dropdown for product categories, supporting API-fetched options with search"
+    },
+    {
+      "title": "Action Menus",
+      "description": "Dropdown menus for bulk actions or context menus",
+      "example": "Data table with bulk action dropdown (Export, Delete, Archive) with grouped options by action type"
+    }
+  ],
+  "performanceNotes": [
+    {
+      "topic": "Large option lists",
+      "description": "Rendering 100+ options can slow dropdown opening",
+      "recommendation": "Use fetchUrl with search for large datasets. Enable virtual scrolling if available. Limit initial options to 50, load more on scroll or search",
+      "impact": "high"
+    },
+    {
+      "topic": "API fetch debouncing",
+      "description": "Excessive API calls during search",
+      "recommendation": "Implement debouncing (300-500ms) for search queries. Use queryString prop with debounced handler to reduce API load",
+      "impact": "medium"
+    },
+    {
+      "topic": "Nested options rendering",
+      "description": "Deep nesting can impact render performance",
+      "recommendation": "Limit nesting to 2-3 levels. Consider flattening deeply nested structures or using separate dropdowns for complex hierarchies",
+      "impact": "low"
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "topic": "Label requirement",
+      "description": "Dropdowns must have associated labels for screen readers",
+      "wcagLevel": "A",
+      "recommendation": "Always provide label prop. Component automatically links label to button with aria-labelledby",
+      "example": "label=\"Select Country\" // Required for accessibility"
+    },
+    {
+      "topic": "Keyboard navigation",
+      "description": "Dropdown must be fully keyboard accessible",
+      "wcagLevel": "A",
+      "recommendation": "Component supports: Enter/Space to open, Arrow keys to navigate options, Enter to select, Escape to close, Tab to move focus",
+      "example": "// Component handles keyboard automatically"
+    },
+    {
+      "topic": "Error announcements",
+      "description": "Validation errors must be announced to screen readers",
+      "wcagLevel": "AA",
+      "recommendation": "Use invalid and invalidMessage props together. Component adds aria-describedby linking to error message",
+      "example": ":invalid=\"true\"\ninvalid-message=\"Role is required\" // Announced to SR"
+    },
+    {
+      "topic": "Search field accessibility",
+      "description": "Search input in dropdown needs proper labeling",
+      "wcagLevel": "A",
+      "recommendation": "When searchStatus=true, component automatically adds aria-label='Search options' to search input",
+      "example": "search-status // Automatic search input labeling"
+    }
+  ],
+  "helperFunctions": [
+    {
+      "name": "transformApiResponse",
+      "description": "Transform API response to dropdown option format",
+      "code": "function transformApiResponse(data: any[], labelKey: string = 'name', valueKey: string = 'id'): Array<{label: string; value: any}> {\n  return data.map(item => ({\n    label: item[labelKey],\n    value: item[valueKey]\n  }));\n}",
+      "parameters": [
+        {
+          "name": "data",
+          "type": "any[]",
+          "description": "Array of objects from API"
+        },
+        {
+          "name": "labelKey",
+          "type": "string",
+          "description": "Property to use as label (default: 'name')"
+        },
+        {
+          "name": "valueKey",
+          "type": "string",
+          "description": "Property to use as value (default: 'id')"
+        }
+      ],
+      "returnType": "Array<{label: string; value: any}>",
+      "example": "const options = transformApiResponse(users, 'fullName', 'userId');\n// Converts [{fullName: 'John', userId: 1}] to [{label: 'John', value: 1}]"
+    },
+    {
+      "name": "groupOptionsByKey",
+      "description": "Group flat options array into nested structure",
+      "code": "function groupOptionsByKey(options: any[], groupKey: string): Array<{label: string; value: string; disabled: true; children: any[]}> {\n  const groups = options.reduce((acc, option) => {\n    const group = option[groupKey];\n    if (!acc[group]) acc[group] = [];\n    acc[group].push(option);\n    return acc;\n  }, {} as Record<string, any[]>);\n  \n  return Object.entries(groups).map(([groupName, items]) => ({\n    label: groupName,\n    value: groupName.toLowerCase(),\n    disabled: true,\n    children: items\n  }));\n}",
+      "parameters": [
+        {
+          "name": "options",
+          "type": "any[]",
+          "description": "Flat array of options"
+        },
+        {
+          "name": "groupKey",
+          "type": "string",
+          "description": "Property to group by"
+        }
+      ],
+      "returnType": "Array<{label: string; value: string; disabled: true; children: any[]}>",
+      "example": "const grouped = groupOptionsByKey(users, 'department');\n// Groups users by department into nested structure"
+    },
+    {
+      "name": "filterOptionsBySearch",
+      "description": "Client-side filtering of options by search query",
+      "code": "function filterOptionsBySearch(options: Array<{label: string; value: any}>, query: string): Array<{label: string; value: any}> {\n  if (!query) return options;\n  \n  const lowerQuery = query.toLowerCase();\n  return options.filter(option => \n    option.label.toLowerCase().includes(lowerQuery)\n  );\n}",
+      "parameters": [
+        {
+          "name": "options",
+          "type": "Array<{label: string; value: any}>",
+          "description": "Options array to filter"
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "description": "Search query string"
+        }
+      ],
+      "returnType": "Array<{label: string; value: any}>",
+      "example": "const filtered = filterOptionsBySearch(allOptions, 'john');\n// Returns options where label contains 'john'"
+    }
   ]
 }

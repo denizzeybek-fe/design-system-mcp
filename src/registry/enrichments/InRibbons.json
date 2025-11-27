@@ -416,5 +416,61 @@
       "note": "Color is not the only indicator",
       "recommendation": "Always include icon and clear text. Don't rely on color alone for severity indication."
     }
+  ],
+  "helperFunctions": [
+    {
+      "name": "createRibbon",
+      "description": "Create ribbon configuration object with defaults",
+      "code": "function createRibbon(text: string, type: 'success' | 'error' | 'warning' | 'info' = 'info', options = {}) {\n  return {\n    text,\n    type,\n    hasCloseButton: true,\n    preventXss: true,\n    ...options\n  };\n}",
+      "parameters": [
+        { "name": "text", "type": "string", "description": "Ribbon message text" },
+        { "name": "type", "type": "string", "description": "Ribbon type (success, error, warning, info)" },
+        { "name": "options", "type": "object", "description": "Additional ribbon options (optional)" }
+      ],
+      "returnType": "object",
+      "example": "const ribbon = createRibbon('Save successful!', 'success', { hasCloseButton: false });"
+    },
+    {
+      "name": "showTemporaryRibbon",
+      "description": "Display ribbon for a specific duration then auto-hide",
+      "code": "function showTemporaryRibbon(ribbonRef: Ref<boolean>, duration = 5000) {\n  ribbonRef.value = true;\n  \n  return setTimeout(() => {\n    ribbonRef.value = false;\n  }, duration);\n}",
+      "parameters": [
+        { "name": "ribbonRef", "type": "Ref<boolean>", "description": "Vue ref controlling ribbon visibility" },
+        { "name": "duration", "type": "number", "description": "Duration in milliseconds (default: 5000)" }
+      ],
+      "returnType": "number",
+      "example": "const timerId = showTemporaryRibbon(showRibbon, 3000); // Auto-hide after 3s"
+    },
+    {
+      "name": "createNotificationQueue",
+      "description": "Manage queue of ribbons to show sequentially",
+      "code": "function createNotificationQueue() {\n  const queue: Array<{ text: string; type: string }> = [];\n  const current = ref<{ text: string; type: string } | null>(null);\n  const isVisible = ref(false);\n  \n  const add = (text: string, type: string) => {\n    queue.push({ text, type });\n    if (!isVisible.value) showNext();\n  };\n  \n  const showNext = () => {\n    if (queue.length === 0) {\n      isVisible.value = false;\n      current.value = null;\n      return;\n    }\n    \n    current.value = queue.shift()!;\n    isVisible.value = true;\n    \n    setTimeout(() => {\n      showNext();\n    }, 4000);\n  };\n  \n  const clear = () => {\n    queue.length = 0;\n    isVisible.value = false;\n    current.value = null;\n  };\n  \n  return { current, isVisible, add, clear };\n}",
+      "parameters": [],
+      "returnType": "{ current: Ref, isVisible: Ref, add: Function, clear: Function }",
+      "example": "const notifications = createNotificationQueue();\nnotifications.add('Saved!', 'success');\nnotifications.add('Error occurred', 'error');"
+    },
+    {
+      "name": "formatErrorMessage",
+      "description": "Format API error for ribbon display",
+      "code": "function formatErrorMessage(error: any): string {\n  if (typeof error === 'string') return error;\n  if (error.response?.data?.message) return error.response.data.message;\n  if (error.message) return error.message;\n  return 'An unexpected error occurred';\n}",
+      "parameters": [
+        { "name": "error", "type": "any", "description": "Error object from API or try-catch" }
+      ],
+      "returnType": "string",
+      "example": "const message = formatErrorMessage(apiError);\nshowErrorRibbon(message);"
+    },
+    {
+      "name": "createRibbonWithAction",
+      "description": "Create ribbon configuration with clickable action link",
+      "code": "function createRibbonWithAction(text: string, actionText: string, onClick: Function, type = 'info') {\n  return {\n    text: `${text} <a href=\"#\" class=\"ribbon-action\">${actionText}</a>`,\n    type,\n    preventXss: false,\n    isClickableText: true,\n    onClick\n  };\n}",
+      "parameters": [
+        { "name": "text", "type": "string", "description": "Main ribbon message" },
+        { "name": "actionText", "type": "string", "description": "Clickable action text (e.g., 'Undo', 'View Details')" },
+        { "name": "onClick", "type": "Function", "description": "Click handler for action link" },
+        { "name": "type", "type": "string", "description": "Ribbon type (optional, default: 'info')" }
+      ],
+      "returnType": "object",
+      "example": "const ribbon = createRibbonWithAction('Item deleted', 'Undo', handleUndo, 'warning');"
+    }
   ]
 }

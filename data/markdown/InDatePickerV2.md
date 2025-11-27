@@ -449,3 +449,18 @@ export default {
 </script>
 ```
 
+## Common Mistakes
+
+ℹ️ **Using single v-model instead of dual v-model**
+
+ℹ️ **Not clearing compare dates when toggling off**
+
+ℹ️ **Creating custom ranges in template**
+
+## Best Practices
+
+- **Always Use Dual v-model:** V2 requires separate v-model for start and end dates
+- **Provide Custom Ranges for Analytics:** Include common analytics periods as shortcuts
+- **Handle Compare Mode Properly:** Clear compare dates when compare is disabled
+- **Set Unique ID and Name:** Required for accessibility and form submissions
+

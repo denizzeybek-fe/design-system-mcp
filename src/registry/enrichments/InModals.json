@@ -1,0 +1,427 @@
+{
+  "component": "InModals",
+  "_metadata": {
+    "lastUpdated": "2025-11-28T00:00:00.000Z",
+    "propsHash": "inmodals-v1-22props",
+    "eventsHash": "inmodals-v1-3events",
+    "propCount": 22,
+    "eventCount": 3
+  },
+  "propEnrichments": {
+    "status": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Controls modal visibility. Use v-model:status for two-way binding to easily open/close the modal.",
+        "typescript": "boolean",
+        "example": "// Show modal\nconst showModal = ref(true);\n\n<InModals v-model:status=\"showModal\" />\n\n// Or without v-model\n<InModals :status=\"isOpen\" @closeModal=\"isOpen = false\" />"
+      }
+    },
+    "type": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Defines the modal variant/purpose. Different types show different icons, colors, and layouts.",
+        "typescript": "'information' | 'confirmation' | 'warning' | 'error' | 'success' | 'form'",
+        "example": "// Information modal (default)\ntype=\"information\"\n\n// Confirmation dialog\ntype=\"confirmation\"\ntitle=\"Delete Item?\"\ninformationModalDescription=\"Are you sure you want to delete this item?\"\n\n// Warning modal\ntype=\"warning\"\ntitle=\"Unsaved Changes\"\n\n// Error modal\ntype=\"error\"\ntitle=\"Operation Failed\"\n\n// Success modal\ntype=\"success\"\ntitle=\"Saved Successfully\"\n\n// Form modal with custom content\ntype=\"form\"\ntitle=\"Edit Profile\""
+      }
+    },
+    "size": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Controls the width of the modal dialog.",
+        "typescript": "'small' | 'medium' | 'large' | 'extra-large' | 'full'",
+        "example": "// Small modal for simple confirmations\nsize=\"small\"\n\n// Medium modal (default)\nsize=\"medium\"\n\n// Large modal for forms\nsize=\"large\"\n\n// Extra large for complex content\nsize=\"extra-large\"\n\n// Full screen modal\nsize=\"full\""
+      }
+    },
+    "modalStatus": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Visual status/state of the modal affecting colors and styling. Different from type which affects layout.",
+        "typescript": "'default' | 'success' | 'warning' | 'danger' | 'info'",
+        "example": "// Default styling\nmodalStatus=\"default\"\n\n// Success state (green accents)\nmodalStatus=\"success\"\ntype=\"success\"\n\n// Warning state (yellow/orange)\nmodalStatus=\"warning\"\ntype=\"warning\"\n\n// Danger state (red)\nmodalStatus=\"danger\"\ntype=\"error\"\n\n// Info state (blue)\nmodalStatus=\"info\"\ntype=\"information\""
+      }
+    },
+    "informationModalDescription": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Description/body text for information and confirmation modals. Supports plain text. For HTML content, use the default slot instead.",
+        "typescript": "string",
+        "example": "informationModalDescription=\"This action cannot be undone.\"\n\ninformationModalDescription=\"Your changes have been saved successfully.\"\n\ninformationModalDescription=\"Are you sure you want to proceed? This will delete all associated data.\""
+      }
+    },
+    "acceptButtonText": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Label for the primary action button (confirm/submit/save).",
+        "typescript": "string",
+        "example": "acceptButtonText=\"Confirm\"\nacceptButtonText=\"Save Changes\"\nacceptButtonText=\"Delete\"\nacceptButtonText=\"Continue\"\nacceptButtonText=\"Submit\""
+      }
+    },
+    "acceptButtonType": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Visual style for the accept button. Should match the modal's purpose.",
+        "typescript": "'BUTTON_TYPE_PRIMARY' | 'BUTTON_TYPE_SECONDARY' | 'BUTTON_TYPE_DANGER' | 'BUTTON_TYPE_SUCCESS'",
+        "example": "// Primary button (default)\nacceptButtonType=\"BUTTON_TYPE_PRIMARY\"\n\n// Danger for destructive actions\nacceptButtonType=\"BUTTON_TYPE_DANGER\"\nacceptButtonText=\"Delete\"\ntype=\"warning\"\n\n// Success for positive actions\nacceptButtonType=\"BUTTON_TYPE_SUCCESS\"\nacceptButtonText=\"Save\"\n\n// Secondary for less emphasis\nacceptButtonType=\"BUTTON_TYPE_SECONDARY\"\nacceptButtonText=\"OK\""
+      }
+    },
+    "acceptButtonDisable": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Disables the accept button. Useful for form validation or preventing duplicate submissions.",
+        "typescript": "boolean",
+        "example": "// Disable until form is valid\n:acceptButtonDisable=\"!isFormValid\"\n\n// Disable during submission\n:acceptButtonDisable=\"isSubmitting\"\n\n// Disable based on conditions\n:acceptButtonDisable=\"!hasUnsavedChanges\""
+      }
+    },
+    "isModalAcceptButtonLoading": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Shows loading spinner on accept button during async operations. Automatically disables the button.",
+        "typescript": "boolean",
+        "example": "const loading = ref(false);\n\nconst handleAccept = async () => {\n  loading.value = true;\n  try {\n    await api.saveData();\n  } finally {\n    loading.value = false;\n  }\n};\n\n<InModals\n  :isModalAcceptButtonLoading=\"loading\"\n  @acceptButton=\"handleAccept\"\n/>"
+      }
+    },
+    "cancelButtonText": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Label for the cancel/close button.",
+        "typescript": "string",
+        "example": "cancelButtonText=\"Cancel\"\ncancelButtonText=\"Close\"\ncancelButtonText=\"Dismiss\"\ncancelButtonText=\"No, Keep It\""
+      }
+    },
+    "visibleButtons": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Controls visibility of footer buttons (accept and cancel). Set to false for custom button implementations.",
+        "typescript": "boolean",
+        "example": "// Show buttons (default)\n:visibleButtons=\"true\"\n\n// Hide buttons - use custom slot\n:visibleButtons=\"false\"\n\n<template #secondaryButton>\n  <button @click=\"customAction\">Custom Action</button>\n</template>"
+      }
+    },
+    "closeButtons": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Shows/hides the X close button in the top-right corner of the modal.",
+        "typescript": "boolean",
+        "example": "// Show close button (default)\n:closeButtons=\"true\"\n\n// Hide close button - force user to use footer buttons\n:closeButtons=\"false\""
+      }
+    },
+    "closeOnOverlayClick": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Allows closing the modal by clicking the overlay/backdrop. Set to false to prevent accidental closes.",
+        "typescript": "boolean",
+        "example": "// Allow overlay click to close (default)\n:closeOnOverlayClick=\"true\"\n\n// Prevent overlay click - force explicit close\n:closeOnOverlayClick=\"false\"\n// Useful for forms to prevent accidental data loss"
+      }
+    },
+    "hasOverlay": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Shows/hides the backdrop overlay behind the modal.",
+        "typescript": "boolean",
+        "example": "// With overlay (default)\n:hasOverlay=\"true\"\n\n// No overlay - modal floats without backdrop\n:hasOverlay=\"false\""
+      }
+    },
+    "withPage": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Enables multi-page/wizard mode within the modal. Allows navigation between steps.",
+        "typescript": "boolean",
+        "example": "// Enable multi-step wizard\n:withPage=\"true\"\n:withBackOption=\"true\"\nbackButtonText=\"Previous\"\n@back=\"goToPreviousStep\""
+      }
+    },
+    "withBackOption": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Shows a back/previous button in multi-page modals. Only effective when withPage is true.",
+        "typescript": "boolean",
+        "example": "// Multi-step modal with back button\n:withPage=\"true\"\n:withBackOption=\"currentStep > 0\"\nbackButtonText=\"Previous Step\"\n@back=\"previousStep\""
+      }
+    },
+    "backButtonText": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Label for the back button. Only shown when withBackOption is true.",
+        "typescript": "string",
+        "example": "backButtonText=\"Previous\"\nbackButtonText=\"Go Back\"\nbackButtonText=\"Previous Step\""
+      }
+    },
+    "preventXss": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Enables XSS protection for modal content. Important when displaying user-generated content.",
+        "typescript": "boolean",
+        "example": "// Enable XSS protection for user content\n:preventXss=\"true\"\n:informationModalDescription=\"userProvidedText\"\n\n// Safe to disable for trusted content\n:preventXss=\"false\"\n:informationModalDescription=\"trustedSystemMessage\""
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Displaying user-generated content without preventXss",
+          "why": "Users can inject malicious scripts",
+          "impact": "Critical XSS vulnerability allowing account hijacking and data theft",
+          "fix": "Always set preventXss: true when displaying any user-provided content",
+          "severity": "critical",
+          "example": "// WRONG - XSS vulnerability\n<InModals :informationModalDescription=\"userComment\" />\n\n// CORRECT - XSS protected\n<InModals\n  :informationModalDescription=\"userComment\"\n  :preventXss=\"true\"\n/>"
+        }
+      ]
+    },
+    "withSpacing": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "CSS padding class for modal content area. Uses Tailwind-style spacing.",
+        "typescript": "string",
+        "example": "// Default padding\nwithSpacing=\"px-5\"\n\n// More padding\nwithSpacing=\"px-8 py-6\"\n\n// Less padding\nwithSpacing=\"px-3 py-2\"\n\n// No padding\nwithSpacing=\"p-0\""
+      }
+    }
+  },
+  "eventEnrichments": {
+    "closeModal": {
+      "description": "Emitted when modal should close (X button, cancel button, or overlay click)",
+      "payload": "void",
+      "when": "User clicks close button, cancel button, or overlay (if closeOnOverlayClick is true)"
+    },
+    "acceptButton": {
+      "description": "Emitted when accept/confirm button is clicked",
+      "payload": "void",
+      "when": "User clicks the accept/confirm/submit button"
+    },
+    "back": {
+      "description": "Emitted when back button is clicked in multi-page modals",
+      "payload": "void",
+      "when": "User clicks back button (only when withBackOption is true)"
+    }
+  },
+  "codeSnippets": {
+    "simpleConfirmation": {
+      "title": "Simple Confirmation Modal",
+      "description": "Basic yes/no confirmation dialog",
+      "code": "<template>\n  <InModals\n    v-model:status=\"showConfirm\"\n    type=\"confirmation\"\n    size=\"small\"\n    title=\"Confirm Action\"\n    informationModalDescription=\"Are you sure you want to proceed?\"\n    acceptButtonText=\"Yes, Continue\"\n    cancelButtonText=\"Cancel\"\n    @acceptButton=\"handleConfirm\"\n    @closeModal=\"showConfirm = false\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\nimport { InModals } from '@useinsider/design-system-vue';\n\nconst showConfirm = ref(false);\n\nconst handleConfirm = () => {\n  console.log('Confirmed');\n  showConfirm.value = false;\n  // Perform action\n};\n</script>"
+    },
+    "deleteWarning": {
+      "title": "Destructive Action Warning",
+      "description": "Warning modal for delete/destructive operations",
+      "code": "<template>\n  <InModals\n    v-model:status=\"showDeleteWarning\"\n    type=\"warning\"\n    modalStatus=\"danger\"\n    size=\"medium\"\n    title=\"Delete Item\"\n    informationModalDescription=\"This action cannot be undone. All data associated with this item will be permanently deleted.\"\n    acceptButtonText=\"Delete Permanently\"\n    acceptButtonType=\"BUTTON_TYPE_DANGER\"\n    cancelButtonText=\"Cancel\"\n    :closeOnOverlayClick=\"false\"\n    @acceptButton=\"handleDelete\"\n    @closeModal=\"showDeleteWarning = false\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\nimport { InModals } from '@useinsider/design-system-vue';\n\nconst showDeleteWarning = ref(false);\n\nconst handleDelete = async () => {\n  try {\n    await deleteItem();\n    showDeleteWarning.value = false;\n  } catch (error) {\n    console.error('Delete failed:', error);\n  }\n};\n\nconst deleteItem = async () => {\n  // API call\n  await new Promise(resolve => setTimeout(resolve, 1000));\n};\n</script>"
+    },
+    "formModal": {
+      "title": "Form Modal with Validation",
+      "description": "Modal containing a form with validation and loading states",
+      "code": "<template>\n  <InModals\n    v-model:status=\"showForm\"\n    type=\"form\"\n    size=\"large\"\n    title=\"Edit Profile\"\n    acceptButtonText=\"Save Changes\"\n    cancelButtonText=\"Cancel\"\n    :acceptButtonDisable=\"!isFormValid\"\n    :isModalAcceptButtonLoading=\"isSaving\"\n    :closeOnOverlayClick=\"false\"\n    @acceptButton=\"handleSave\"\n    @closeModal=\"handleClose\"\n  >\n    <form @submit.prevent=\"handleSave\" class=\"space-y-4\">\n      <div>\n        <label>Name</label>\n        <input\n          v-model=\"form.name\"\n          type=\"text\"\n          required\n          class=\"w-full px-3 py-2 border rounded\"\n        />\n      </div>\n      \n      <div>\n        <label>Email</label>\n        <input\n          v-model=\"form.email\"\n          type=\"email\"\n          required\n          class=\"w-full px-3 py-2 border rounded\"\n        />\n      </div>\n      \n      <div>\n        <label>Bio</label>\n        <textarea\n          v-model=\"form.bio\"\n          rows=\"4\"\n          class=\"w-full px-3 py-2 border rounded\"\n        ></textarea>\n      </div>\n    </form>\n  </InModals>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, computed } from 'vue';\nimport { InModals } from '@useinsider/design-system-vue';\n\nconst showForm = ref(false);\nconst isSaving = ref(false);\n\nconst form = ref({\n  name: '',\n  email: '',\n  bio: ''\n});\n\nconst isFormValid = computed(() => {\n  return form.value.name.length > 0 && \n         form.value.email.length > 0 &&\n         form.value.email.includes('@');\n});\n\nconst handleSave = async () => {\n  if (!isFormValid.value) return;\n  \n  isSaving.value = true;\n  try {\n    // Save to API\n    await new Promise(resolve => setTimeout(resolve, 2000));\n    console.log('Saved:', form.value);\n    showForm.value = false;\n  } catch (error) {\n    console.error('Save failed:', error);\n  } finally {\n    isSaving.value = false;\n  }\n};\n\nconst handleClose = () => {\n  if (confirm('Discard unsaved changes?')) {\n    showForm.value = false;\n  }\n};\n</script>"
+    }
+  },
+  "styling": {
+    "cssVariables": {
+      "notes": "Uses design system variables. Customize via type, modalStatus, and size props.",
+      "variables": []
+    },
+    "classes": {
+      "notes": "Component applies classes based on type, status, and size.",
+      "classes": []
+    },
+    "customization": "Use type for semantic variants. modalStatus for color schemes. size for dimensions. withSpacing for padding control."
+  },
+  "examples": [
+    {
+      "title": "Multi-Step Wizard Modal",
+      "description": "Modal with multiple steps/pages for complex workflows",
+      "code": "<template>\n  <InModals\n    v-model:status=\"showWizard\"\n    type=\"form\"\n    size=\"large\"\n    :title=\"currentStepTitle\"\n    :acceptButtonText=\"isLastStep ? 'Finish' : 'Next'\"\n    cancelButtonText=\"Cancel\"\n    :withPage=\"true\"\n    :withBackOption=\"currentStep > 0\"\n    backButtonText=\"Previous\"\n    :acceptButtonDisable=\"!isCurrentStepValid\"\n    :isModalAcceptButtonLoading=\"isProcessing\"\n    :closeOnOverlayClick=\"false\"\n    @acceptButton=\"handleNext\"\n    @back=\"handleBack\"\n    @closeModal=\"handleClose\"\n  >\n    <!-- Step Indicator -->\n    <div class=\"step-indicator\">\n      <div\n        v-for=\"(step, index) in steps\"\n        :key=\"index\"\n        class=\"step\"\n        :class=\"{\n          active: index === currentStep,\n          completed: index < currentStep\n        }\"\n      >\n        <div class=\"step-number\">{{ index + 1 }}</div>\n        <div class=\"step-label\">{{ step.label }}</div>\n      </div>\n    </div>\n\n    <!-- Step Content -->\n    <div class=\"step-content\">\n      <!-- Step 1: Account Info -->\n      <div v-if=\"currentStep === 0\" class=\"space-y-4\">\n        <h3>Account Information</h3>\n        <div>\n          <label>Username</label>\n          <input v-model=\"wizardData.username\" type=\"text\" required />\n        </div>\n        <div>\n          <label>Email</label>\n          <input v-model=\"wizardData.email\" type=\"email\" required />\n        </div>\n        <div>\n          <label>Password</label>\n          <input v-model=\"wizardData.password\" type=\"password\" required />\n        </div>\n      </div>\n\n      <!-- Step 2: Personal Details -->\n      <div v-if=\"currentStep === 1\" class=\"space-y-4\">\n        <h3>Personal Details</h3>\n        <div>\n          <label>First Name</label>\n          <input v-model=\"wizardData.firstName\" type=\"text\" required />\n        </div>\n        <div>\n          <label>Last Name</label>\n          <input v-model=\"wizardData.lastName\" type=\"text\" required />\n        </div>\n        <div>\n          <label>Phone</label>\n          <input v-model=\"wizardData.phone\" type=\"tel\" />\n        </div>\n      </div>\n\n      <!-- Step 3: Preferences -->\n      <div v-if=\"currentStep === 2\" class=\"space-y-4\">\n        <h3>Preferences</h3>\n        <div>\n          <label>\n            <input v-model=\"wizardData.newsletter\" type=\"checkbox\" />\n            Subscribe to newsletter\n          </label>\n        </div>\n        <div>\n          <label>\n            <input v-model=\"wizardData.notifications\" type=\"checkbox\" />\n            Enable notifications\n          </label>\n        </div>\n      </div>\n\n      <!-- Step 4: Review -->\n      <div v-if=\"currentStep === 3\" class=\"space-y-4\">\n        <h3>Review Your Information</h3>\n        <div class=\"review-section\">\n          <h4>Account</h4>\n          <p>Username: {{ wizardData.username }}</p>\n          <p>Email: {{ wizardData.email }}</p>\n        </div>\n        <div class=\"review-section\">\n          <h4>Personal</h4>\n          <p>Name: {{ wizardData.firstName }} {{ wizardData.lastName }}</p>\n          <p>Phone: {{ wizardData.phone || 'Not provided' }}</p>\n        </div>\n        <div class=\"review-section\">\n          <h4>Preferences</h4>\n          <p>Newsletter: {{ wizardData.newsletter ? 'Yes' : 'No' }}</p>\n          <p>Notifications: {{ wizardData.notifications ? 'Yes' : 'No' }}</p>\n        </div>\n      </div>\n    </div>\n  </InModals>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, computed } from 'vue';\nimport { InModals } from '@useinsider/design-system-vue';\n\nconst showWizard = ref(true);\nconst currentStep = ref(0);\nconst isProcessing = ref(false);\n\nconst steps = [\n  { label: 'Account', validate: () => validateStep1() },\n  { label: 'Personal', validate: () => validateStep2() },\n  { label: 'Preferences', validate: () => true },\n  { label: 'Review', validate: () => true }\n];\n\nconst wizardData = ref({\n  username: '',\n  email: '',\n  password: '',\n  firstName: '',\n  lastName: '',\n  phone: '',\n  newsletter: false,\n  notifications: true\n});\n\nconst currentStepTitle = computed(() => {\n  const titles = [\n    'Step 1: Account Information',\n    'Step 2: Personal Details',\n    'Step 3: Preferences',\n    'Step 4: Review'\n  ];\n  return titles[currentStep.value];\n});\n\nconst isLastStep = computed(() => currentStep.value === steps.length - 1);\n\nconst isCurrentStepValid = computed(() => {\n  return steps[currentStep.value].validate();\n});\n\nconst validateStep1 = () => {\n  return (\n    wizardData.value.username.length >= 3 &&\n    wizardData.value.email.includes('@') &&\n    wizardData.value.password.length >= 8\n  );\n};\n\nconst validateStep2 = () => {\n  return (\n    wizardData.value.firstName.length > 0 &&\n    wizardData.value.lastName.length > 0\n  );\n};\n\nconst handleNext = async () => {\n  if (isLastStep.value) {\n    // Submit wizard\n    isProcessing.value = true;\n    try {\n      await submitWizard();\n      showWizard.value = false;\n    } catch (error) {\n      console.error('Submission failed:', error);\n    } finally {\n      isProcessing.value = false;\n    }\n  } else {\n    // Go to next step\n    currentStep.value++;\n  }\n};\n\nconst handleBack = () => {\n  if (currentStep.value > 0) {\n    currentStep.value--;\n  }\n};\n\nconst handleClose = () => {\n  if (confirm('Exit wizard? Your progress will be lost.')) {\n    showWizard.value = false;\n  }\n};\n\nconst submitWizard = async () => {\n  // Simulate API call\n  await new Promise(resolve => setTimeout(resolve, 2000));\n  console.log('Wizard submitted:', wizardData.value);\n};\n</script>\n\n<style scoped>\n.step-indicator {\n  display: flex;\n  justify-content: space-between;\n  margin-bottom: 32px;\n  padding-bottom: 24px;\n  border-bottom: 1px solid #e5e7eb;\n}\n\n.step {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 8px;\n  opacity: 0.5;\n}\n\n.step.active,\n.step.completed {\n  opacity: 1;\n}\n\n.step-number {\n  width: 32px;\n  height: 32px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 50%;\n  border: 2px solid #d1d5db;\n  font-weight: 600;\n}\n\n.step.active .step-number {\n  background: #3b82f6;\n  border-color: #3b82f6;\n  color: white;\n}\n\n.step.completed .step-number {\n  background: #10b981;\n  border-color: #10b981;\n  color: white;\n}\n\n.step-label {\n  font-size: 12px;\n  color: #6b7280;\n}\n\n.step.active .step-label {\n  color: #1f2937;\n  font-weight: 500;\n}\n\n.step-content {\n  min-height: 300px;\n}\n\n.review-section {\n  padding: 16px;\n  background: #f9fafb;\n  border-radius: 8px;\n  margin-bottom: 16px;\n}\n\n.review-section h4 {\n  margin: 0 0 12px 0;\n  font-weight: 600;\n  color: #1f2937;\n}\n\n.review-section p {\n  margin: 4px 0;\n  color: #4b5563;\n}\n\ninput[type=\"text\"],\ninput[type=\"email\"],\ninput[type=\"password\"],\ninput[type=\"tel\"] {\n  width: 100%;\n  padding: 8px 12px;\n  border: 1px solid #d1d5db;\n  border-radius: 4px;\n}\n\nlabel {\n  display: block;\n  margin-bottom: 4px;\n  font-weight: 500;\n  color: #374151;\n}\n</style>"
+    }
+  ],
+  "implementationPatterns": [
+    {
+      "name": "Confirmation Dialog Pattern",
+      "description": "Simple yes/no confirmation for user actions",
+      "when": "Need user confirmation before destructive or important actions",
+      "code": "<template>\n  <InModals\n    v-model:status=\"show\"\n    type=\"confirmation\"\n    size=\"small\"\n    :title=\"title\"\n    :informationModalDescription=\"message\"\n    acceptButtonText=\"Confirm\"\n    @acceptButton=\"onConfirm\"\n  />\n</template>\n\n<script setup lang=\"ts\">\ninterface Props {\n  show: boolean;\n  title: string;\n  message: string;\n  onConfirm: () => void;\n}\n\ndefineProps<Props>();\n</script>",
+      "pros": [
+        "Simple and clear",
+        "Prevents accidental actions",
+        "Familiar pattern",
+        "Easy to implement"
+      ],
+      "cons": [
+        "Can be overused",
+        "May annoy users if too frequent",
+        "Adds extra click"
+      ]
+    },
+    {
+      "name": "Form Modal Pattern",
+      "description": "Modal containing a form with validation and submission",
+      "when": "Quick edits, creation flows, or forms that don't need dedicated pages",
+      "code": "<template>\n  <InModals\n    v-model:status=\"show\"\n    type=\"form\"\n    :title=\"title\"\n    acceptButtonText=\"Save\"\n    :acceptButtonDisable=\"!isValid\"\n    :isModalAcceptButtonLoading=\"saving\"\n    :closeOnOverlayClick=\"false\"\n    @acceptButton=\"handleSubmit\"\n  >\n    <slot :form=\"form\" :errors=\"errors\" />\n  </InModals>\n</template>\n\n<script setup lang=\"ts\">\nconst form = ref({});\nconst errors = ref({});\nconst isValid = computed(() => validate(form.value));\n</script>",
+      "pros": [
+        "Keeps user in context",
+        "Good for simple forms",
+        "Clear save/cancel actions",
+        "Prevents navigation away"
+      ],
+      "cons": [
+        "Limited space for complex forms",
+        "Can feel cramped",
+        "Mobile experience challenging"
+      ]
+    },
+    {
+      "name": "Multi-Step Wizard Pattern",
+      "description": "Guided workflow split across multiple modal pages",
+      "when": "Complex workflows like onboarding, setup wizards, or multi-stage processes",
+      "code": "<template>\n  <InModals\n    v-model:status=\"show\"\n    :withPage=\"true\"\n    :withBackOption=\"step > 0\"\n    :title=\"steps[step].title\"\n    :acceptButtonText=\"step === steps.length - 1 ? 'Finish' : 'Next'\"\n    @acceptButton=\"nextStep\"\n    @back=\"prevStep\"\n  >\n    <component :is=\"steps[step].component\" />\n  </InModals>\n</template>",
+      "pros": [
+        "Breaks complex flows into steps",
+        "Reduces cognitive load",
+        "Shows progress",
+        "Allows back navigation"
+      ],
+      "cons": [
+        "More clicks to complete",
+        "Can feel lengthy",
+        "State management complexity"
+      ]
+    }
+  ],
+  "useCases": [
+    {
+      "title": "Delete Confirmations",
+      "description": "Confirm destructive actions like deleting items, accounts, or data",
+      "example": "Delete user account, remove files, clear data. Use type='warning', modalStatus='danger', and BUTTON_TYPE_DANGER for the accept button."
+    },
+    {
+      "title": "Success/Error Notifications",
+      "description": "Display operation results to users",
+      "example": "Account created successfully, payment processed, error occurred. Use type='success' or type='error' with appropriate modalStatus."
+    },
+    {
+      "title": "Quick Edit Forms",
+      "description": "Small forms for editing without leaving current page",
+      "example": "Edit profile, update settings, change password. Use type='form' with size='medium' or 'large' and validation."
+    },
+    {
+      "title": "Onboarding Wizards",
+      "description": "Multi-step guided setup or onboarding flows",
+      "example": "Account setup, initial configuration, feature tours. Use withPage and withBackOption for step navigation."
+    },
+    {
+      "title": "Information Displays",
+      "description": "Show detailed information or help content",
+      "example": "Terms of service, privacy policy, feature explanations. Use type='information' with appropriate size."
+    },
+    {
+      "title": "Unsaved Changes Warnings",
+      "description": "Warn users about unsaved changes before navigation",
+      "example": "Form has unsaved changes, confirm exit. Use type='warning' with closeOnOverlayClick={false}."
+    }
+  ],
+  "bestPractices": [
+    {
+      "title": "Use Appropriate Modal Type",
+      "description": "Choose the correct type based on the modal's purpose for clear user communication",
+      "code": "// GOOD - matches purpose\n<InModals\n  type=\"warning\"\n  modalStatus=\"danger\"\n  title=\"Delete Account\"\n  acceptButtonType=\"BUTTON_TYPE_DANGER\"\n/>\n\n// BAD - confusing mismatch\n<InModals\n  type=\"information\" // Wrong type\n  title=\"Delete Account\" // Destructive action\n  acceptButtonType=\"BUTTON_TYPE_PRIMARY\" // Wrong button type\n/>",
+      "reasoning": "Correct type provides visual cues, sets user expectations, and improves UX consistency"
+    },
+    {
+      "title": "Disable Overlay Click for Forms",
+      "description": "Prevent accidental data loss by disabling overlay click on forms with user input",
+      "code": "// GOOD - prevents accidental close\n<InModals\n  type=\"form\"\n  :closeOnOverlayClick=\"false\"\n  @closeModal=\"confirmClose\"\n/>\n\nconst confirmClose = () => {\n  if (hasUnsavedChanges.value) {\n    if (confirm('Discard changes?')) {\n      showModal.value = false;\n    }\n  } else {\n    showModal.value = false;\n  }\n};\n\n// BAD - easy to lose work\n<InModals\n  type=\"form\"\n  :closeOnOverlayClick=\"true\" // Accidental clicks lose work!\n/>",
+      "reasoning": "Prevents frustrating data loss from accidental overlay clicks during form entry"
+    },
+    {
+      "title": "Show Loading State on Async Actions",
+      "description": "Use isModalAcceptButtonLoading during async operations to provide feedback",
+      "code": "// GOOD - shows loading feedback\nconst saving = ref(false);\n\nconst handleSave = async () => {\n  saving.value = true;\n  try {\n    await api.save(data);\n  } finally {\n    saving.value = false;\n  }\n};\n\n<InModals\n  :isModalAcceptButtonLoading=\"saving\"\n  @acceptButton=\"handleSave\"\n/>\n\n// BAD - no feedback\n<InModals\n  @acceptButton=\"async () => await api.save(data)\"\n  // User doesn't know if it's working!\n/>",
+      "reasoning": "Provides visual feedback, prevents double-clicks, improves perceived performance"
+    },
+    {
+      "title": "Use v-model for Status",
+      "description": "Use v-model:status for cleaner two-way binding of modal visibility",
+      "code": "// GOOD - clean v-model\nconst show = ref(false);\n\n<InModals v-model:status=\"show\" />\n\n// Less ideal - manual sync\nconst show = ref(false);\n\n<InModals\n  :status=\"show\"\n  @closeModal=\"show = false\"\n/>",
+      "reasoning": "Simpler code, automatic two-way binding, less boilerplate"
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Not handling XSS in user-generated content",
+      "why": "Modal may display user input without sanitization",
+      "impact": "Critical XSS vulnerability allowing script injection and account compromise",
+      "fix": "Always set preventXss: true when displaying user-provided content",
+      "severity": "critical",
+      "example": "// WRONG\n<InModals :informationModalDescription=\"userComment\" />\n\n// CORRECT\n<InModals\n  :informationModalDescription=\"userComment\"\n  :preventXss=\"true\"\n/>"
+    },
+    {
+      "mistake": "Missing error handling in accept button handler",
+      "why": "Async operations can fail",
+      "impact": "Silent failures, modal stuck open, no user feedback",
+      "fix": "Wrap async operations in try-catch and handle errors",
+      "severity": "high",
+      "example": "// WRONG - no error handling\nconst handleAccept = async () => {\n  await api.save(data); // May fail silently\n  showModal.value = false;\n};\n\n// CORRECT - with error handling\nconst handleAccept = async () => {\n  try {\n    await api.save(data);\n    showModal.value = false;\n    toast.success('Saved');\n  } catch (error) {\n    toast.error('Save failed: ' + error.message);\n    // Modal stays open\n  }\n};"
+    },
+    {
+      "mistake": "Using closeOnOverlayClick for forms",
+      "why": "Users accidentally click overlay while entering data",
+      "impact": "Frustrating data loss, poor UX",
+      "fix": "Set closeOnOverlayClick: false for forms and confirm before close",
+      "severity": "medium",
+      "example": "// WRONG - loses form data\n<InModals type=\"form\" :closeOnOverlayClick=\"true\" />\n\n// CORRECT\n<InModals\n  type=\"form\"\n  :closeOnOverlayClick=\"false\"\n  @closeModal=\"confirmClose\"\n/>"
+    },
+    {
+      "mistake": "Not disabling accept button during loading",
+      "why": "Users can click multiple times",
+      "impact": "Duplicate submissions, multiple API calls, race conditions",
+      "fix": "Use isModalAcceptButtonLoading or acceptButtonDisable",
+      "severity": "medium",
+      "example": "// WRONG - allows multiple clicks\n<InModals @acceptButton=\"save\" />\n\n// CORRECT - disabled during save\n<InModals\n  :isModalAcceptButtonLoading=\"saving\"\n  @acceptButton=\"save\"\n/>"
+    }
+  ],
+  "performanceNotes": [
+    {
+      "topic": "Modal Rendering",
+      "description": "Modals are rendered in DOM even when hidden",
+      "recommendation": "Use v-if instead of v-show if modal content is heavy. For frequently shown modals, keep v-show for faster toggling.",
+      "impact": "Heavy modal content in DOM can slow initial page load by 100-300ms"
+    },
+    {
+      "topic": "Large Form Modals",
+      "description": "Forms with many inputs can slow modal open/close animations",
+      "recommendation": "Lazy load form fields or use skeleton loaders. Consider splitting into wizard steps.",
+      "impact": "Forms with 20+ fields can add 200ms delay to modal opening"
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "topic": "Focus Trapping",
+      "description": "Focus must stay within modal when open",
+      "wcagLevel": "A",
+      "recommendation": "Component should trap focus automatically. Test with Tab key - focus should cycle through modal elements only.",
+      "example": "// Component handles focus trap\n// Test: Open modal → Tab through elements → Focus loops back"
+    },
+    {
+      "topic": "Keyboard Escape",
+      "description": "Modals must be closeable with Escape key",
+      "wcagLevel": "A",
+      "recommendation": "Component handles Escape automatically. Ensure it respects closeOnOverlayClick logic.",
+      "example": "// Modal closes on Escape (built-in)\n// If closeOnOverlayClick=false, consider requiring explicit close"
+    },
+    {
+      "topic": "Screen Reader Announcements",
+      "description": "Modal opening should be announced to screen readers",
+      "wcagLevel": "AA",
+      "recommendation": "Use role='dialog' and aria-labelledby. Component should announce title to screen readers.",
+      "example": "<InModals\n  title=\"Confirm Delete\"\n  aria-labelledby=\"modal-title\"\n  role=\"dialog\"\n/>"
+    },
+    {
+      "topic": "Button Labels",
+      "description": "Accept and cancel buttons need clear, descriptive labels",
+      "wcagLevel": "A",
+      "recommendation": "Avoid generic 'OK' or 'Submit'. Use action-specific labels like 'Delete Item', 'Save Changes'.",
+      "example": "// GOOD\nacceptButtonText=\"Delete Account\"\ncancelButtonText=\"Keep Account\"\n\n// BAD\nacceptButtonText=\"OK\"\ncancelButtonText=\"Cancel\""
+    }
+  ],
+  "helperFunctions": [
+    {
+      "name": "useModal",
+      "description": "Composable for managing modal state with confirm/cancel callbacks",
+      "code": "import { ref } from 'vue';\n\nexport function useModal(options: {\n  onConfirm?: () => void | Promise<void>;\n  onCancel?: () => void;\n  confirmBeforeClose?: boolean;\n} = {}) {\n  const { onConfirm, onCancel, confirmBeforeClose = false } = options;\n  \n  const isOpen = ref(false);\n  const isLoading = ref(false);\n\n  const open = () => {\n    isOpen.value = true;\n  };\n\n  const close = () => {\n    if (confirmBeforeClose) {\n      if (confirm('Are you sure you want to close?')) {\n        isOpen.value = false;\n        onCancel?.();\n      }\n    } else {\n      isOpen.value = false;\n      onCancel?.();\n    }\n  };\n\n  const confirm = async () => {\n    if (onConfirm) {\n      isLoading.value = true;\n      try {\n        await onConfirm();\n        isOpen.value = false;\n      } catch (error) {\n        console.error('Confirm failed:', error);\n        throw error;\n      } finally {\n        isLoading.value = false;\n      }\n    } else {\n      isOpen.value = false;\n    }\n  };\n\n  return {\n    isOpen,\n    isLoading,\n    open,\n    close,\n    confirm\n  };\n}",
+      "parameters": [
+        "options: { onConfirm?, onCancel?, confirmBeforeClose? } - Modal callbacks and options"
+      ],
+      "returnType": "{ isOpen, isLoading, open, close, confirm }",
+      "example": "// Usage\nimport { useModal } from './composables/useModal';\n\nconst deleteModal = useModal({\n  onConfirm: async () => {\n    await api.deleteItem(itemId);\n    toast.success('Deleted');\n  },\n  confirmBeforeClose: false\n});\n\n// Template\n<button @click=\"deleteModal.open()\">Delete</button>\n\n<InModals\n  v-model:status=\"deleteModal.isOpen.value\"\n  type=\"warning\"\n  title=\"Delete Item\"\n  :isModalAcceptButtonLoading=\"deleteModal.isLoading.value\"\n  @acceptButton=\"deleteModal.confirm\"\n  @closeModal=\"deleteModal.close\"\n/>"
+    }
+  ]
+}

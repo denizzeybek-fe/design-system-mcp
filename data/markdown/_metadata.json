@@ -1,16 +1,40 @@
 {
-  "generatedAt": "2025-11-27T10:48:30.934Z",
+  "generatedAt": "2025-11-27T23:01:34.671Z",
   "componentsCount": 63,
-  "totalJsonSize": 742559,
-  "totalMarkdownSize": 165300,
-  "totalSavings": 78,
-  "avgSavings": 61,
+  "totalJsonSize": 1384985,
+  "totalMarkdownSize": 270708,
+  "totalSavings": 80,
+  "avgSavings": 72,
   "estimatedTokens": {
-    "json": 185640,
-    "markdown": 41325,
-    "saved": 144315
+    "json": 346246,
+    "markdown": 67677,
+    "saved": 278569
   },
   "components": [
+    {
+      "name": "InDataTableV2",
+      "jsonSize": 75443,
+      "markdownSize": 8222,
+      "savings": 89
+    },
+    {
+      "name": "InDropdownMenu",
+      "jsonSize": 46765,
+      "markdownSize": 5137,
+      "savings": 89
+    },
+    {
+      "name": "InSidebarV2",
+      "jsonSize": 46360,
+      "markdownSize": 5174,
+      "savings": 89
+    },
+    {
+      "name": "InTooltipV2",
+      "jsonSize": 38419,
+      "markdownSize": 4217,
+      "savings": 89
+    },
     {
       "name": "InButtonV2",
       "jsonSize": 55407,
@@ -18,9 +42,9 @@
       "savings": 88
     },
     {
-      "name": "InDataTableV2",
-      "jsonSize": 70432,
-      "markdownSize": 8222,
+      "name": "InMultiSelect",
+      "jsonSize": 44579,
+      "markdownSize": 5452,
       "savings": 88
     },
     {
@@ -30,39 +54,57 @@
       "savings": 87
     },
     {
-      "name": "InDropdownMenu",
-      "jsonSize": 36674,
-      "markdownSize": 4814,
-      "savings": 87
-    },
-    {
-      "name": "InSidebarV2",
-      "jsonSize": 37894,
-      "markdownSize": 5174,
-      "savings": 86
-    },
-    {
-      "name": "InTooltipV2",
-      "jsonSize": 31042,
-      "markdownSize": 4217,
-      "savings": 86
-    },
-    {
       "name": "InDatePickerV2",
-      "jsonSize": 60552,
-      "markdownSize": 9743,
-      "savings": 84
+      "jsonSize": 74257,
+      "markdownSize": 10276,
+      "savings": 86
     },
     {
-      "name": "InMultiSelect",
-      "jsonSize": 31998,
-      "markdownSize": 5147,
-      "savings": 84
+      "name": "InRichTextInput",
+      "jsonSize": 60097,
+      "markdownSize": 8589,
+      "savings": 86
+    },
+    {
+      "name": "InDropDown",
+      "jsonSize": 24459,
+      "markdownSize": 3547,
+      "savings": 85
+    },
+    {
+      "name": "InMultiDropDown",
+      "jsonSize": 26123,
+      "markdownSize": 3883,
+      "savings": 85
     },
     {
       "name": "InSelect",
-      "jsonSize": 46731,
-      "markdownSize": 8136,
+      "jsonSize": 56329,
+      "markdownSize": 8604,
+      "savings": 85
+    },
+    {
+      "name": "InModalV2",
+      "jsonSize": 28949,
+      "markdownSize": 4644,
+      "savings": 84
+    },
+    {
+      "name": "InSuperInput",
+      "jsonSize": 30566,
+      "markdownSize": 4884,
+      "savings": 84
+    },
+    {
+      "name": "InBasicTextInput",
+      "jsonSize": 40054,
+      "markdownSize": 6693,
+      "savings": 83
+    },
+    {
+      "name": "InChart",
+      "jsonSize": 27632,
+      "markdownSize": 4769,
       "savings": 83
     },
     {
@@ -84,16 +126,28 @@
       "savings": 82
     },
     {
-      "name": "InRichTextInput",
-      "jsonSize": 47603,
-      "markdownSize": 8805,
-      "savings": 82
-    },
-    {
       "name": "InCheckBoxV2",
       "jsonSize": 55598,
       "markdownSize": 10453,
       "savings": 81
+    },
+    {
+      "name": "InRibbons",
+      "jsonSize": 22364,
+      "markdownSize": 4311,
+      "savings": 81
+    },
+    {
+      "name": "InContainer",
+      "jsonSize": 43430,
+      "markdownSize": 8477,
+      "savings": 80
+    },
+    {
+      "name": "InOnPageMessage",
+      "jsonSize": 11516,
+      "markdownSize": 2357,
+      "savings": 80
     },
     {
       "name": "InChips",
@@ -102,16 +156,10 @@
       "savings": 79
     },
     {
-      "name": "InContainer",
-      "jsonSize": 40183,
-      "markdownSize": 8477,
-      "savings": 79
-    },
-    {
-      "name": "InSkeleton",
-      "jsonSize": 926,
-      "markdownSize": 199,
-      "savings": 79
+      "name": "InCustomDropDown",
+      "jsonSize": 44250,
+      "markdownSize": 9749,
+      "savings": 78
     },
     {
       "name": "InIcons",
@@ -120,15 +168,63 @@
       "savings": 78
     },
     {
-      "name": "InRibbons",
-      "jsonSize": 18493,
-      "markdownSize": 4311,
+      "name": "InNoData",
+      "jsonSize": 27696,
+      "markdownSize": 6360,
       "savings": 77
+    },
+    {
+      "name": "InTagsText",
+      "jsonSize": 22096,
+      "markdownSize": 5157,
+      "savings": 77
+    },
+    {
+      "name": "InToasts",
+      "jsonSize": 27293,
+      "markdownSize": 6325,
+      "savings": 77
+    },
+    {
+      "name": "InDatePicker",
+      "jsonSize": 28104,
+      "markdownSize": 6912,
+      "savings": 75
+    },
+    {
+      "name": "InSkeleton",
+      "jsonSize": 23394,
+      "markdownSize": 5915,
+      "savings": 75
+    },
+    {
+      "name": "InDrawer",
+      "jsonSize": 28592,
+      "markdownSize": 7296,
+      "savings": 74
     },
     {
       "name": "InFormStatus",
       "jsonSize": 991,
       "markdownSize": 260,
+      "savings": 74
+    },
+    {
+      "name": "InModals",
+      "jsonSize": 35193,
+      "markdownSize": 9162,
+      "savings": 74
+    },
+    {
+      "name": "InProgress",
+      "jsonSize": 30480,
+      "markdownSize": 7799,
+      "savings": 74
+    },
+    {
+      "name": "InTabs",
+      "jsonSize": 28890,
+      "markdownSize": 7523,
       "savings": 74
     },
     {
@@ -138,27 +234,39 @@
       "savings": 73
     },
     {
+      "name": "InDynamicContentBox",
+      "jsonSize": 51093,
+      "markdownSize": 14136,
+      "savings": 72
+    },
+    {
       "name": "InSidebar",
       "jsonSize": 1006,
       "markdownSize": 281,
       "savings": 72
     },
     {
-      "name": "InDropDown",
-      "jsonSize": 11786,
-      "markdownSize": 3547,
+      "name": "InTextInput",
+      "jsonSize": 57031,
+      "markdownSize": 15769,
+      "savings": 72
+    },
+    {
+      "name": "InCodeSnippet",
+      "jsonSize": 54592,
+      "markdownSize": 16203,
+      "savings": 70
+    },
+    {
+      "name": "InDataTable",
+      "jsonSize": 40554,
+      "markdownSize": 12289,
       "savings": 70
     },
     {
       "name": "InCreateButton",
       "jsonSize": 1223,
       "markdownSize": 377,
-      "savings": 69
-    },
-    {
-      "name": "InMultiDropDown",
-      "jsonSize": 12577,
-      "markdownSize": 3883,
       "savings": 69
     },
     {
@@ -172,24 +280,6 @@
       "jsonSize": 1354,
       "markdownSize": 465,
       "savings": 66
-    },
-    {
-      "name": "InSuperInput",
-      "jsonSize": 14550,
-      "markdownSize": 4884,
-      "savings": 66
-    },
-    {
-      "name": "InDataTable",
-      "jsonSize": 34900,
-      "markdownSize": 12289,
-      "savings": 65
-    },
-    {
-      "name": "InDatePicker",
-      "jsonSize": 17066,
-      "markdownSize": 6392,
-      "savings": 63
     },
     {
       "name": "InBulkActions",
@@ -207,12 +297,6 @@
       "name": "InBox",
       "jsonSize": 1278,
       "markdownSize": 500,
-      "savings": 61
-    },
-    {
-      "name": "InTagsText",
-      "jsonSize": 1192,
-      "markdownSize": 465,
       "savings": 61
     },
     {
@@ -252,12 +336,6 @@
       "savings": 57
     },
     {
-      "name": "InToasts",
-      "jsonSize": 1326,
-      "markdownSize": 574,
-      "savings": 57
-    },
-    {
       "name": "InTimePicker",
       "jsonSize": 1371,
       "markdownSize": 627,
@@ -276,40 +354,16 @@
       "savings": 53
     },
     {
-      "name": "InOnPageMessage",
-      "jsonSize": 4966,
-      "markdownSize": 2357,
-      "savings": 53
-    },
-    {
-      "name": "InDrawer",
-      "jsonSize": 1911,
-      "markdownSize": 989,
-      "savings": 48
-    },
-    {
       "name": "InLinks",
       "jsonSize": 1538,
       "markdownSize": 810,
       "savings": 47
     },
     {
-      "name": "InModalV2",
-      "jsonSize": 2100,
-      "markdownSize": 1137,
-      "savings": 46
-    },
-    {
       "name": "InTextArea",
       "jsonSize": 1676,
       "markdownSize": 930,
       "savings": 45
-    },
-    {
-      "name": "InProgress",
-      "jsonSize": 2221,
-      "markdownSize": 1290,
-      "savings": 42
     },
     {
       "name": "InTags",
@@ -324,12 +378,6 @@
       "savings": 41
     },
     {
-      "name": "InNoData",
-      "jsonSize": 1914,
-      "markdownSize": 1137,
-      "savings": 41
-    },
-    {
       "name": "InOnboard",
       "jsonSize": 1868,
       "markdownSize": 1117,
@@ -340,54 +388,6 @@
       "jsonSize": 2048,
       "markdownSize": 1265,
       "savings": 38
-    },
-    {
-      "name": "InModals",
-      "jsonSize": 2378,
-      "markdownSize": 1518,
-      "savings": 36
-    },
-    {
-      "name": "InTabs",
-      "jsonSize": 2876,
-      "markdownSize": 2053,
-      "savings": 29
-    },
-    {
-      "name": "InTextInput",
-      "jsonSize": 2834,
-      "markdownSize": 2019,
-      "savings": 29
-    },
-    {
-      "name": "InCustomDropDown",
-      "jsonSize": 3084,
-      "markdownSize": 2232,
-      "savings": 28
-    },
-    {
-      "name": "InBasicTextInput",
-      "jsonSize": 3982,
-      "markdownSize": 2918,
-      "savings": 27
-    },
-    {
-      "name": "InChart",
-      "jsonSize": 3078,
-      "markdownSize": 2270,
-      "savings": 26
-    },
-    {
-      "name": "InCodeSnippet",
-      "jsonSize": 3550,
-      "markdownSize": 2687,
-      "savings": 24
-    },
-    {
-      "name": "InDynamicContentBox",
-      "jsonSize": 3355,
-      "markdownSize": 2537,
-      "savings": 24
     }
   ]
 }

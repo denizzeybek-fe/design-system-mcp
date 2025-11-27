@@ -1,0 +1,425 @@
+{
+  "component": "InDynamicContentBox",
+  "_metadata": {
+    "lastUpdated": "2025-11-28T00:00:00.000Z",
+    "propsHash": "indynamiccontentbox-v1-31props",
+    "eventsHash": "indynamiccontentbox-v1-2events",
+    "propCount": 31,
+    "eventCount": 2
+  },
+  "propEnrichments": {
+    "fieldsConfig": {
+      "valueFormat": {
+        "structure": "Object",
+        "notes": "Configuration object defining the structure and behavior of dynamic content fields. Specifies available events, attributes, partners, and their metadata. Critical for controlling what content can be inserted.",
+        "typescript": "{\n  events?: Array<{\n    id: string | number;\n    name: string;\n    label: string;\n    category?: string;\n    isConstant?: boolean;\n    isGrouped?: boolean;\n  }>;\n  attributes?: Array<{\n    id: string | number;\n    name: string;\n    label: string;\n    category?: string;\n    type?: string;\n    isConstant?: boolean;\n  }>;\n  partners?: Array<{\n    id: string | number;\n    name: string;\n    label: string;\n  }>;\n}",
+        "example": "{\n  events: [\n    {\n      id: 'page_view',\n      name: 'page_view',\n      label: 'Page View',\n      category: 'Page Events',\n      isConstant: false\n    },\n    {\n      id: 'purchase',\n      name: 'purchase',\n      label: 'Purchase',\n      category: 'Conversion Events',\n      isConstant: true\n    }\n  ],\n  attributes: [\n    {\n      id: 'user.email',\n      name: 'user.email',\n      label: 'Email Address',\n      category: 'User',\n      type: 'string',\n      isConstant: false\n    },\n    {\n      id: 'product.price',\n      name: 'product.price',\n      label: 'Product Price',\n      category: 'Product',\n      type: 'number',\n      isConstant: false\n    }\n  ],\n  partners: [\n    { id: 1, name: 'google', label: 'Google Analytics' },\n    { id: 2, name: 'facebook', label: 'Facebook Pixel' }\n  ]\n}"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Not providing unique IDs for events and attributes",
+          "why": "Causes selection conflicts and duplicate entries in UI",
+          "impact": "Users cannot distinguish between similar items, selection state breaks",
+          "fix": "Ensure every event and attribute has a unique id property",
+          "severity": "high",
+          "example": "// WRONG - duplicate IDs\n{\n  events: [\n    { id: 1, name: 'click', label: 'Button Click' },\n    { id: 1, name: 'submit', label: 'Form Submit' } // Same ID!\n  ]\n}\n\n// CORRECT - unique IDs\n{\n  events: [\n    { id: 'event_click', name: 'click', label: 'Button Click' },\n    { id: 'event_submit', name: 'submit', label: 'Form Submit' }\n  ]\n}"
+        }
+      ]
+    },
+    "dynamicContent": {
+      "valueFormat": {
+        "structure": "Object",
+        "notes": "Currently selected dynamic content items. Represents the user's selections of events, attributes, and partners. Use v-model:dynamicContent for two-way binding.",
+        "typescript": "{\n  selectedEvents?: Array<string | number>; // IDs of selected events\n  selectedAttributes?: Array<string | number>; // IDs of selected attributes\n  selectedPartners?: Array<string | number>; // IDs of selected partners\n  groupedEvents?: Array<string | number>; // IDs of grouped events\n}",
+        "example": "// User's current selections\n{\n  selectedEvents: ['page_view', 'purchase', 'add_to_cart'],\n  selectedAttributes: ['user.email', 'user.name', 'product.id'],\n  selectedPartners: [1, 2],\n  groupedEvents: ['page_view', 'purchase']\n}\n\n// Two-way binding\n<InDynamicContentBox\n  v-model:dynamicContent=\"userSelections\"\n  :fieldsConfig=\"availableFields\"\n/>"
+      }
+    },
+    "theme": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Visual theme for the component. Affects background colors and contrast.",
+        "typescript": "'light' | 'dark'",
+        "example": "// Light theme (default)\ntheme=\"light\"\n\n// Dark theme for dark mode UIs\ntheme=\"dark\""
+      }
+    },
+    "variant": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Color variant for visual styling and semantic meaning.",
+        "typescript": "'neutral' | 'primary' | 'success' | 'warning' | 'danger'",
+        "example": "// Default neutral\nvariant=\"neutral\"\n\n// Primary for important selections\nvariant=\"primary\"\n\n// Success for confirmed selections\nvariant=\"success\"\n\n// Warning for deprecated fields\nvariant=\"warning\"\n\n// Danger for critical/removed fields\nvariant=\"danger\""
+      }
+    },
+    "size": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Size variant affecting spacing, typography, and overall dimensions.",
+        "typescript": "'small' | 'medium' | 'large'",
+        "example": "// Compact size for sidebars\nsize=\"small\"\n\n// Default medium\nsize=\"medium\"\n\n// Large for main content areas (default)\nsize=\"large\""
+      }
+    },
+    "hasGroupLevelPartners": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Enables partner-level grouping/filtering. When true, shows partner selection UI and filters events/attributes by selected partners.",
+        "typescript": "boolean",
+        "example": "// Enable partner filtering\n:hasGroupLevelPartners=\"true\"\n:groupLevelPartners=\"availablePartners\"\n\n// Disable partner features\n:hasGroupLevelPartners=\"false\""
+      }
+    },
+    "groupLevelPartners": {
+      "valueFormat": {
+        "structure": "Array",
+        "notes": "List of available partners for grouping/filtering. Only effective when hasGroupLevelPartners is true.",
+        "typescript": "Array<{\n  id: string | number;\n  name: string;\n  label: string;\n  logo?: string;\n  enabled?: boolean;\n}>",
+        "example": "[\n  {\n    id: 'google_analytics',\n    name: 'google_analytics',\n    label: 'Google Analytics',\n    logo: '/logos/ga.png',\n    enabled: true\n  },\n  {\n    id: 'facebook_pixel',\n    name: 'facebook_pixel',\n    label: 'Facebook Pixel',\n    logo: '/logos/fb.png',\n    enabled: true\n  },\n  {\n    id: 'mixpanel',\n    name: 'mixpanel',\n    label: 'Mixpanel',\n    enabled: false\n  }\n]"
+      }
+    },
+    "hasConstantEvent": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Enables constant/persistent event features. When true, shows UI for marking events as constants that persist across sessions/contexts.",
+        "typescript": "boolean",
+        "example": "// Enable constant events\n:hasConstantEvent=\"true\"\nconstantEventInfoMessage=\"These events are always tracked\"\n\n// Disable\n:hasConstantEvent=\"false\""
+      }
+    },
+    "hasConstantAttribute": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Enables constant/persistent attribute features. When true, shows UI for marking attributes as constants.",
+        "typescript": "boolean",
+        "example": "// Enable constant attributes\n:hasConstantAttribute=\"true\"\nconstantAttributeInfoMessage=\"These attributes are always included\""
+      }
+    },
+    "activateGroupingEvents": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Enables event grouping functionality. When true, shows checkbox/UI to toggle event grouping mode.",
+        "typescript": "boolean",
+        "example": "// Enable grouping controls\n:activateGroupingEvents=\"true\"\ngroupEventsCheckboxLabel=\"Group related events\"\n\n// Disable grouping\n:activateGroupingEvents=\"false\""
+      }
+    },
+    "isGroupingEvents": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Current state of event grouping. When true, events are grouped. Use v-model:isGroupingEvents for two-way binding.",
+        "typescript": "boolean",
+        "example": "// Control grouping state\nconst grouping = ref(false);\n\n<InDynamicContentBox\n  v-model:isGroupingEvents=\"grouping\"\n  :activateGroupingEvents=\"true\"\n  @updateGroupingEvents=\"handleGroupingChange\"\n/>"
+      }
+    },
+    "groupedEvents": {
+      "valueFormat": {
+        "structure": "Array",
+        "notes": "List of event IDs that should be displayed in grouped mode. Only relevant when isGroupingEvents is true.",
+        "typescript": "Array<string | number>",
+        "example": "// Events to show when grouping is active\n[\n  'page_view',\n  'product_view',\n  'category_view',\n  'search'\n]\n\n// These events will be grouped together in the UI"
+      }
+    },
+    "buttonOptions": {
+      "valueFormat": {
+        "structure": "Array",
+        "notes": "Configuration for action buttons displayed in the component (save, cancel, clear, etc.). Defines button labels, variants, and callbacks.",
+        "typescript": "Array<{\n  label: string;\n  variant?: 'primary' | 'secondary' | 'danger';\n  disabled?: boolean;\n  callback: () => void;\n}>",
+        "example": "[\n  {\n    label: 'Save Selection',\n    variant: 'primary',\n    disabled: false,\n    callback: () => saveSelections()\n  },\n  {\n    label: 'Cancel',\n    variant: 'secondary',\n    callback: () => resetSelections()\n  },\n  {\n    label: 'Clear All',\n    variant: 'danger',\n    callback: () => clearAll()\n  }\n]"
+      }
+    },
+    "maxChildHeight": {
+      "valueFormat": {
+        "structure": "Number",
+        "notes": "Maximum height in pixels for scrollable content areas. When content exceeds this height, a scrollbar appears.",
+        "typescript": "number",
+        "example": "// Default: 300px\n:maxChildHeight=\"300\"\n\n// Taller for more content visibility\n:maxChildHeight=\"500\"\n\n// Shorter for compact layouts\n:maxChildHeight=\"200\""
+      }
+    },
+    "lazyLoadChunkSize": {
+      "valueFormat": {
+        "structure": "Number",
+        "notes": "Number of items to load per chunk when lazy loading large lists. Improves performance for hundreds/thousands of events or attributes.",
+        "typescript": "number",
+        "example": "// Default: 100 items per chunk\n:lazyLoadChunkSize=\"100\"\n\n// Larger chunks for faster loading (more memory)\n:lazyLoadChunkSize=\"200\"\n\n// Smaller chunks for lower memory (more requests)\n:lazyLoadChunkSize=\"50\""
+      }
+    },
+    "preloadBunchSize": {
+      "valueFormat": {
+        "structure": "Number",
+        "notes": "Number of chunks to preload ahead of current scroll position. Reduces perceived lag during scrolling.",
+        "typescript": "number",
+        "example": "// Default: 10 chunks preloaded\n:preloadBunchSize=\"10\"\n\n// Aggressive preloading (smoother but more memory)\n:preloadBunchSize=\"20\"\n\n// Conservative preloading (less memory)\n:preloadBunchSize=\"5\""
+      }
+    }
+  },
+  "eventEnrichments": {
+    "setEventAsGrouped": {
+      "description": "Emitted when an event is added to or removed from the grouped events list",
+      "payload": "{ eventId: string | number, isGrouped: boolean } - Event ID and new grouped state",
+      "when": "User toggles an event's grouped status in the UI"
+    },
+    "updateGroupingEvents": {
+      "description": "Emitted when the overall event grouping mode is toggled on or off",
+      "payload": "boolean - New grouping state (true if grouping is now active)",
+      "when": "User toggles the group events checkbox or grouping mode changes"
+    }
+  },
+  "codeSnippets": {
+    "basicUsage": {
+      "title": "Basic Dynamic Content Selection",
+      "description": "Simple setup for event and attribute selection",
+      "code": "<template>\n  <InDynamicContentBox\n    id=\"dynamic-content-selector\"\n    v-model:dynamicContent=\"selections\"\n    :fieldsConfig=\"fieldsConfig\"\n    titleText=\"Select Events and Attributes\"\n    descriptionText=\"Choose which events and attributes to track\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\nimport { InDynamicContentBox } from '@useinsider/design-system-vue';\n\nconst selections = ref({\n  selectedEvents: [],\n  selectedAttributes: [],\n  selectedPartners: []\n});\n\nconst fieldsConfig = {\n  events: [\n    { id: 'page_view', name: 'page_view', label: 'Page View', category: 'Page' },\n    { id: 'click', name: 'click', label: 'Click', category: 'Interaction' },\n    { id: 'purchase', name: 'purchase', label: 'Purchase', category: 'Conversion' }\n  ],\n  attributes: [\n    { id: 'user.email', name: 'user.email', label: 'Email', category: 'User' },\n    { id: 'user.name', name: 'user.name', label: 'Name', category: 'User' },\n    { id: 'product.id', name: 'product.id', label: 'Product ID', category: 'Product' }\n  ]\n};\n</script>"
+    },
+    "withPartners": {
+      "title": "Partner-Based Filtering",
+      "description": "Enable partner selection and filtering",
+      "code": "<template>\n  <InDynamicContentBox\n    id=\"partner-content-selector\"\n    v-model:dynamicContent=\"selections\"\n    :fieldsConfig=\"fieldsConfig\"\n    :hasGroupLevelPartners=\"true\"\n    :groupLevelPartners=\"partners\"\n    titleText=\"Configure Partner Integrations\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\nimport { InDynamicContentBox } from '@useinsider/design-system-vue';\n\nconst selections = ref({\n  selectedEvents: [],\n  selectedAttributes: [],\n  selectedPartners: ['google_analytics']\n});\n\nconst partners = [\n  {\n    id: 'google_analytics',\n    name: 'google_analytics',\n    label: 'Google Analytics 4',\n    enabled: true\n  },\n  {\n    id: 'facebook_pixel',\n    name: 'facebook_pixel',\n    label: 'Meta Pixel',\n    enabled: true\n  },\n  {\n    id: 'mixpanel',\n    name: 'mixpanel',\n    label: 'Mixpanel',\n    enabled: false\n  }\n];\n\nconst fieldsConfig = {\n  events: [\n    { id: 'page_view', name: 'page_view', label: 'Page View' },\n    { id: 'purchase', name: 'purchase', label: 'Purchase' }\n  ],\n  attributes: [\n    { id: 'user.id', name: 'user.id', label: 'User ID' },\n    { id: 'revenue', name: 'revenue', label: 'Revenue' }\n  ]\n};\n</script>"
+    },
+    "withGrouping": {
+      "title": "Event Grouping Configuration",
+      "description": "Enable event grouping with custom messages",
+      "code": "<template>\n  <InDynamicContentBox\n    id=\"grouped-events-selector\"\n    v-model:dynamicContent=\"selections\"\n    v-model:isGroupingEvents=\"isGrouping\"\n    :fieldsConfig=\"fieldsConfig\"\n    :activateGroupingEvents=\"true\"\n    :groupedEvents=\"groupedEventIds\"\n    groupEventsCheckboxLabel=\"Enable grouped event tracking\"\n    groupEventsTooltip=\"Group related events together for better organization\"\n    groupingEventWarningText=\"Grouping will combine similar events\"\n    @updateGroupingEvents=\"handleGroupingChange\"\n    @setEventAsGrouped=\"handleEventGrouped\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\nimport { InDynamicContentBox } from '@useinsider/design-system-vue';\n\nconst selections = ref({\n  selectedEvents: ['page_view', 'product_view'],\n  selectedAttributes: []\n});\n\nconst isGrouping = ref(false);\nconst groupedEventIds = ref<string[]>([]);\n\nconst fieldsConfig = {\n  events: [\n    { id: 'page_view', name: 'page_view', label: 'Page View' },\n    { id: 'product_view', name: 'product_view', label: 'Product View' },\n    { id: 'category_view', name: 'category_view', label: 'Category View' },\n    { id: 'search', name: 'search', label: 'Search' }\n  ]\n};\n\nconst handleGroupingChange = (enabled: boolean) => {\n  console.log('Grouping', enabled ? 'enabled' : 'disabled');\n  if (!enabled) {\n    groupedEventIds.value = [];\n  }\n};\n\nconst handleEventGrouped = (event: { eventId: string; isGrouped: boolean }) => {\n  if (event.isGrouped) {\n    groupedEventIds.value.push(event.eventId);\n  } else {\n    groupedEventIds.value = groupedEventIds.value.filter(id => id !== event.eventId);\n  }\n};\n</script>"
+    }
+  },
+  "styling": {
+    "cssVariables": {
+      "notes": "Uses design system variables for theming. Customize via theme and variant props.",
+      "variables": []
+    },
+    "classes": {
+      "notes": "Component applies size, theme, and variant-based classes automatically.",
+      "classes": []
+    },
+    "customization": "Use theme prop for light/dark mode. variant prop for color schemes. size prop for dimensions. fullWidthContentStatus for layout control."
+  },
+  "examples": [
+    {
+      "title": "Complete Marketing Analytics Configurator",
+      "description": "Advanced configuration interface for selecting events, attributes, and partners with grouping and constant fields",
+      "code": "<template>\n  <div class=\"analytics-configurator\">\n    <h1>Analytics Configuration</h1>\n    \n    <InDynamicContentBox\n      id=\"analytics-config\"\n      v-model:dynamicContent=\"config\"\n      v-model:isGroupingEvents=\"groupingEnabled\"\n      :fieldsConfig=\"fieldsConfig\"\n      :hasGroupLevelPartners=\"true\"\n      :groupLevelPartners=\"analyticsPartners\"\n      :hasConstantEvent=\"true\"\n      :hasConstantAttribute=\"true\"\n      :activateGroupingEvents=\"true\"\n      :groupedEvents=\"groupedEvents\"\n      :buttonOptions=\"actionButtons\"\n      :maxChildHeight=\"400\"\n      :lazyLoadChunkSize=\"100\"\n      theme=\"light\"\n      variant=\"primary\"\n      size=\"large\"\n      titleText=\"Configure Analytics Tracking\"\n      descriptionText=\"Select events and attributes to track across your analytics platforms\"\n      constantEventInfoMessage=\"These events are tracked automatically on all pages\"\n      constantAttributeInfoMessage=\"These attributes are included with every event\"\n      constantEventWarningMessage=\"Removing constant events may break existing reports\"\n      constantAttributeWarningMessage=\"Removing constant attributes may affect data quality\"\n      groupEventsCheckboxLabel=\"Enable event grouping for better organization\"\n      groupEventsTooltip=\"Group similar events together to simplify your analytics setup\"\n      groupingEventWarningText=\"Grouped events will be combined in reports\"\n      @setEventAsGrouped=\"handleEventGrouping\"\n      @updateGroupingEvents=\"handleGroupingToggle\"\n    />\n\n    <!-- Summary -->\n    <div class=\"config-summary\">\n      <h3>Configuration Summary</h3>\n      <div class=\"summary-grid\">\n        <div class=\"summary-item\">\n          <label>Selected Events:</label>\n          <span>{{ config.selectedEvents?.length || 0 }}</span>\n        </div>\n        <div class=\"summary-item\">\n          <label>Selected Attributes:</label>\n          <span>{{ config.selectedAttributes?.length || 0 }}</span>\n        </div>\n        <div class=\"summary-item\">\n          <label>Active Partners:</label>\n          <span>{{ config.selectedPartners?.length || 0 }}</span>\n        </div>\n        <div class=\"summary-item\">\n          <label>Grouped Events:</label>\n          <span>{{ groupedEvents.length }}</span>\n        </div>\n      </div>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, watch } from 'vue';\nimport { InDynamicContentBox } from '@useinsider/design-system-vue';\n\ninterface DynamicContent {\n  selectedEvents?: string[];\n  selectedAttributes?: string[];\n  selectedPartners?: string[];\n}\n\nconst config = ref<DynamicContent>({\n  selectedEvents: ['page_view', 'session_start'],\n  selectedAttributes: ['user.id', 'user.email'],\n  selectedPartners: ['google_analytics']\n});\n\nconst groupingEnabled = ref(false);\nconst groupedEvents = ref<string[]>([]);\n\nconst analyticsPartners = [\n  {\n    id: 'google_analytics',\n    name: 'google_analytics',\n    label: 'Google Analytics 4',\n    logo: '/logos/ga4.png',\n    enabled: true\n  },\n  {\n    id: 'facebook_pixel',\n    name: 'facebook_pixel',\n    label: 'Meta Pixel',\n    logo: '/logos/meta.png',\n    enabled: true\n  },\n  {\n    id: 'mixpanel',\n    name: 'mixpanel',\n    label: 'Mixpanel',\n    logo: '/logos/mixpanel.png',\n    enabled: true\n  },\n  {\n    id: 'amplitude',\n    name: 'amplitude',\n    label: 'Amplitude',\n    logo: '/logos/amplitude.png',\n    enabled: false\n  }\n];\n\nconst fieldsConfig = {\n  events: [\n    // Page Events\n    {\n      id: 'page_view',\n      name: 'page_view',\n      label: 'Page View',\n      category: 'Page Events',\n      isConstant: true\n    },\n    {\n      id: 'session_start',\n      name: 'session_start',\n      label: 'Session Start',\n      category: 'Page Events',\n      isConstant: true\n    },\n    {\n      id: 'scroll',\n      name: 'scroll',\n      label: 'Scroll Depth',\n      category: 'Page Events'\n    },\n    \n    // Product Events\n    {\n      id: 'product_view',\n      name: 'product_view',\n      label: 'Product View',\n      category: 'Product Events'\n    },\n    {\n      id: 'add_to_cart',\n      name: 'add_to_cart',\n      label: 'Add to Cart',\n      category: 'Product Events'\n    },\n    {\n      id: 'remove_from_cart',\n      name: 'remove_from_cart',\n      label: 'Remove from Cart',\n      category: 'Product Events'\n    },\n    \n    // Conversion Events\n    {\n      id: 'begin_checkout',\n      name: 'begin_checkout',\n      label: 'Begin Checkout',\n      category: 'Conversion Events'\n    },\n    {\n      id: 'purchase',\n      name: 'purchase',\n      label: 'Purchase',\n      category: 'Conversion Events'\n    },\n    {\n      id: 'refund',\n      name: 'refund',\n      label: 'Refund',\n      category: 'Conversion Events'\n    },\n    \n    // User Events\n    {\n      id: 'login',\n      name: 'login',\n      label: 'Login',\n      category: 'User Events'\n    },\n    {\n      id: 'sign_up',\n      name: 'sign_up',\n      label: 'Sign Up',\n      category: 'User Events'\n    },\n    {\n      id: 'profile_update',\n      name: 'profile_update',\n      label: 'Profile Update',\n      category: 'User Events'\n    },\n    \n    // Engagement Events\n    {\n      id: 'search',\n      name: 'search',\n      label: 'Search',\n      category: 'Engagement'\n    },\n    {\n      id: 'share',\n      name: 'share',\n      label: 'Share',\n      category: 'Engagement'\n    },\n    {\n      id: 'video_play',\n      name: 'video_play',\n      label: 'Video Play',\n      category: 'Engagement'\n    }\n  ],\n  \n  attributes: [\n    // User Attributes (Constant)\n    {\n      id: 'user.id',\n      name: 'user.id',\n      label: 'User ID',\n      category: 'User',\n      type: 'string',\n      isConstant: true\n    },\n    {\n      id: 'user.email',\n      name: 'user.email',\n      label: 'Email',\n      category: 'User',\n      type: 'string',\n      isConstant: true\n    },\n    {\n      id: 'user.name',\n      name: 'user.name',\n      label: 'Name',\n      category: 'User',\n      type: 'string'\n    },\n    {\n      id: 'user.country',\n      name: 'user.country',\n      label: 'Country',\n      category: 'User',\n      type: 'string'\n    },\n    \n    // Product Attributes\n    {\n      id: 'product.id',\n      name: 'product.id',\n      label: 'Product ID',\n      category: 'Product',\n      type: 'string'\n    },\n    {\n      id: 'product.name',\n      name: 'product.name',\n      label: 'Product Name',\n      category: 'Product',\n      type: 'string'\n    },\n    {\n      id: 'product.price',\n      name: 'product.price',\n      label: 'Price',\n      category: 'Product',\n      type: 'number'\n    },\n    {\n      id: 'product.category',\n      name: 'product.category',\n      label: 'Category',\n      category: 'Product',\n      type: 'string'\n    },\n    \n    // Transaction Attributes\n    {\n      id: 'transaction.id',\n      name: 'transaction.id',\n      label: 'Transaction ID',\n      category: 'Transaction',\n      type: 'string'\n    },\n    {\n      id: 'transaction.revenue',\n      name: 'transaction.revenue',\n      label: 'Revenue',\n      category: 'Transaction',\n      type: 'number'\n    },\n    {\n      id: 'transaction.tax',\n      name: 'transaction.tax',\n      label: 'Tax',\n      category: 'Transaction',\n      type: 'number'\n    },\n    {\n      id: 'transaction.shipping',\n      name: 'transaction.shipping',\n      label: 'Shipping Cost',\n      category: 'Transaction',\n      type: 'number'\n    },\n    \n    // Page Attributes\n    {\n      id: 'page.url',\n      name: 'page.url',\n      label: 'Page URL',\n      category: 'Page',\n      type: 'string'\n    },\n    {\n      id: 'page.title',\n      name: 'page.title',\n      label: 'Page Title',\n      category: 'Page',\n      type: 'string'\n    },\n    {\n      id: 'page.referrer',\n      name: 'page.referrer',\n      label: 'Referrer',\n      category: 'Page',\n      type: 'string'\n    }\n  ]\n};\n\nconst actionButtons = [\n  {\n    label: 'Save Configuration',\n    variant: 'primary' as const,\n    disabled: false,\n    callback: async () => {\n      console.log('Saving configuration:', config.value);\n      try {\n        // API call to save\n        await saveAnalyticsConfig(config.value);\n        alert('Configuration saved successfully!');\n      } catch (error) {\n        console.error('Save failed:', error);\n        alert('Failed to save configuration');\n      }\n    }\n  },\n  {\n    label: 'Reset to Defaults',\n    variant: 'secondary' as const,\n    callback: () => {\n      if (confirm('Reset to default configuration?')) {\n        config.value = {\n          selectedEvents: ['page_view', 'session_start'],\n          selectedAttributes: ['user.id', 'user.email'],\n          selectedPartners: ['google_analytics']\n        };\n        groupedEvents.value = [];\n        groupingEnabled.value = false;\n      }\n    }\n  },\n  {\n    label: 'Clear All',\n    variant: 'danger' as const,\n    callback: () => {\n      if (confirm('Clear all selections?')) {\n        config.value = {\n          selectedEvents: [],\n          selectedAttributes: [],\n          selectedPartners: []\n        };\n        groupedEvents.value = [];\n      }\n    }\n  }\n];\n\nconst handleEventGrouping = (event: { eventId: string; isGrouped: boolean }) => {\n  console.log('Event grouping changed:', event);\n  \n  if (event.isGrouped) {\n    if (!groupedEvents.value.includes(event.eventId)) {\n      groupedEvents.value.push(event.eventId);\n    }\n  } else {\n    groupedEvents.value = groupedEvents.value.filter(id => id !== event.eventId);\n  }\n};\n\nconst handleGroupingToggle = (enabled: boolean) => {\n  console.log('Grouping', enabled ? 'enabled' : 'disabled');\n  \n  if (!enabled) {\n    // Clear grouped events when grouping is disabled\n    groupedEvents.value = [];\n  }\n};\n\nconst saveAnalyticsConfig = async (config: DynamicContent) => {\n  // Simulate API call\n  return new Promise((resolve) => {\n    setTimeout(() => {\n      console.log('Config saved:', config);\n      resolve(true);\n    }, 1000);\n  });\n};\n\n// Watch for changes\nwatch(config, (newConfig) => {\n  console.log('Configuration updated:', newConfig);\n}, { deep: true });\n</script>\n\n<style scoped>\n.analytics-configurator {\n  max-width: 1200px;\n  margin: 0 auto;\n  padding: 24px;\n}\n\n.analytics-configurator h1 {\n  margin-bottom: 24px;\n}\n\n.config-summary {\n  margin-top: 32px;\n  padding: 20px;\n  background: #f8f9fa;\n  border-radius: 8px;\n}\n\n.config-summary h3 {\n  margin: 0 0 16px 0;\n}\n\n.summary-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));\n  gap: 16px;\n}\n\n.summary-item {\n  display: flex;\n  justify-content: space-between;\n  padding: 12px;\n  background: white;\n  border-radius: 4px;\n}\n\n.summary-item label {\n  font-weight: 500;\n  color: #666;\n}\n\n.summary-item span {\n  font-weight: 600;\n  color: #333;\n}\n</style>"
+    }
+  ],
+  "implementationPatterns": [
+    {
+      "name": "Simple Event Selection Pattern",
+      "description": "Basic event and attribute selection without advanced features",
+      "when": "Need simple tracking configuration without partners or grouping",
+      "code": "<template>\n  <InDynamicContentBox\n    id=\"simple-selector\"\n    v-model:dynamicContent=\"selections\"\n    :fieldsConfig=\"config\"\n    titleText=\"Select Tracking Events\"\n    size=\"medium\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\nimport { InDynamicContentBox } from '@useinsider/design-system-vue';\n\nconst selections = ref({ selectedEvents: [], selectedAttributes: [] });\nconst config = {\n  events: [\n    { id: 'click', name: 'click', label: 'Click Event' },\n    { id: 'view', name: 'view', label: 'View Event' }\n  ],\n  attributes: [\n    { id: 'user.id', name: 'user.id', label: 'User ID' }\n  ]\n};\n</script>",
+      "pros": [
+        "Simple and easy to understand",
+        "Minimal configuration required",
+        "Fast to implement",
+        "Low overhead"
+      ],
+      "cons": [
+        "No advanced features",
+        "Limited flexibility",
+        "Not suitable for complex scenarios"
+      ]
+    },
+    {
+      "name": "Multi-Partner Integration Pattern",
+      "description": "Configuration with multiple analytics partners and partner-specific filtering",
+      "when": "Managing integrations with multiple analytics platforms simultaneously",
+      "code": "<template>\n  <InDynamicContentBox\n    id=\"multi-partner-config\"\n    v-model:dynamicContent=\"config\"\n    :fieldsConfig=\"fields\"\n    :hasGroupLevelPartners=\"true\"\n    :groupLevelPartners=\"partners\"\n    @partnerSelectionChanged=\"syncPartnerConfig\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, watch } from 'vue';\nimport { InDynamicContentBox } from '@useinsider/design-system-vue';\n\nconst config = ref({ selectedEvents: [], selectedPartners: [] });\nconst partners = ref([\n  { id: 'ga', name: 'ga', label: 'Google Analytics' },\n  { id: 'fb', name: 'fb', label: 'Facebook' }\n]);\nconst fields = { events: [...], attributes: [...] };\n\nconst syncPartnerConfig = (selectedPartners: string[]) => {\n  // Sync config to each partner's system\n  selectedPartners.forEach(partnerId => {\n    syncToPartner(partnerId, config.value);\n  });\n};\n</script>",
+      "pros": [
+        "Centralized multi-partner management",
+        "Partner-specific field filtering",
+        "Reduces configuration duplication",
+        "Unified selection interface"
+      ],
+      "cons": [
+        "More complex setup",
+        "Requires partner sync logic",
+        "Potential sync conflicts"
+      ]
+    },
+    {
+      "name": "Lazy Loading for Large Datasets Pattern",
+      "description": "Performance-optimized configuration for hundreds or thousands of events/attributes",
+      "when": "Dealing with large catalogs of events or attributes (500+ items)",
+      "code": "<template>\n  <InDynamicContentBox\n    id=\"large-dataset-config\"\n    v-model:dynamicContent=\"selections\"\n    :fieldsConfig=\"lazyFields\"\n    :lazyLoadChunkSize=\"100\"\n    :preloadBunchSize=\"10\"\n    :maxChildHeight=\"400\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, computed } from 'vue';\nimport { InDynamicContentBox } from '@useinsider/design-system-vue';\n\nconst selections = ref({ selectedEvents: [] });\n\n// Generate large dataset\nconst allEvents = Array.from({ length: 1000 }, (_, i) => ({\n  id: `event_${i}`,\n  name: `event_${i}`,\n  label: `Event ${i}`,\n  category: `Category ${Math.floor(i / 100)}`\n}));\n\nconst lazyFields = computed(() => ({\n  events: allEvents,\n  attributes: []\n}));\n</script>",
+      "pros": [
+        "Handles massive datasets efficiently",
+        "Smooth scrolling performance",
+        "Lower initial memory footprint",
+        "Configurable chunk sizes"
+      ],
+      "cons": [
+        "Slight delay when scrolling quickly",
+        "More complex rendering logic",
+        "Search may be slower on initial load"
+      ]
+    }
+  ],
+  "useCases": [
+    {
+      "title": "Marketing Analytics Platform Setup",
+      "description": "Configure tracking events and user attributes for marketing analytics platforms like Google Analytics, Facebook Pixel, or Mixpanel",
+      "example": "Marketing teams select which page views, button clicks, form submissions, and purchases to track. They choose user attributes (email, name, country) and product attributes (price, category) to include with each event. Partner filtering ensures only relevant events are sent to each platform."
+    },
+    {
+      "title": "Customer Data Platform (CDP) Configuration",
+      "description": "Set up event and attribute mappings for CDPs to unify customer data across touchpoints",
+      "example": "Data engineers configure which customer interaction events (login, purchase, support ticket) to ingest. They map customer attributes (lifetime value, segment, preferences) to create unified profiles. Constant attributes ensure critical IDs are always included."
+    },
+    {
+      "title": "A/B Testing Platform Integration",
+      "description": "Select events and metrics for A/B testing experiments and variant tracking",
+      "example": "Product managers choose conversion events (signup, purchase, retention) as experiment goals. They select user attributes (device type, location) for segmentation. Event grouping combines similar conversions for broader analysis."
+    },
+    {
+      "title": "Business Intelligence Dashboard Configuration",
+      "description": "Choose metrics and dimensions for business intelligence dashboards and reports",
+      "example": "Analysts select revenue events (purchase, subscription, upsell) and business attributes (product line, region, channel). They group related events (all purchase types) for unified reporting. Lazy loading handles thousands of potential metrics."
+    },
+    {
+      "title": "Data Warehouse ETL Setup",
+      "description": "Configure which events and attributes to extract, transform, and load into data warehouses",
+      "example": "Data engineers select operational events (inventory updates, order status changes) and business entities (products, customers, orders). Constant attributes ensure referential integrity. Partner selection routes data to different warehouse schemas."
+    },
+    {
+      "title": "Privacy Compliance Configuration",
+      "description": "Manage which events and PII attributes are collected based on privacy regulations (GDPR, CCPA)",
+      "example": "Compliance teams use constant attributes to mark required consent fields. They disable certain PII attributes (email, phone) for users who opt out. Event selection ensures only necessary tracking for legitimate business purposes."
+    }
+  ],
+  "bestPractices": [
+    {
+      "title": "Use Unique IDs for All Items",
+      "description": "Ensure every event, attribute, and partner has a unique identifier to prevent selection conflicts",
+      "code": "// GOOD - Unique IDs\nconst fieldsConfig = {\n  events: [\n    { id: 'page_view_home', name: 'page_view', label: 'Home Page View' },\n    { id: 'page_view_product', name: 'page_view', label: 'Product Page View' }\n  ]\n};\n\n// BAD - Duplicate IDs\nconst fieldsConfig = {\n  events: [\n    { id: 'page_view', name: 'page_view', label: 'Home Page View' },\n    { id: 'page_view', name: 'page_view', label: 'Product Page View' } // Duplicate!\n  ]\n};",
+      "reasoning": "Unique IDs prevent selection state bugs, ensure correct data mapping, and avoid confusion in the UI"
+    },
+    {
+      "title": "Enable Lazy Loading for Large Datasets",
+      "description": "Use lazyLoadChunkSize and preloadBunchSize when dealing with hundreds of events or attributes",
+      "code": "// For large catalogs (500+ items)\n<InDynamicContentBox\n  :fieldsConfig=\"largeEventCatalog\"\n  :lazyLoadChunkSize=\"100\" // Load 100 items at a time\n  :preloadBunchSize=\"10\" // Preload 10 chunks ahead\n  :maxChildHeight=\"400\" // Fixed height for virtual scrolling\n/>\n\n// Result: Handles 1000+ items smoothly",
+      "reasoning": "Lazy loading dramatically improves performance, reduces initial load time, and enables smooth scrolling with large datasets"
+    },
+    {
+      "title": "Mark Critical Fields as Constant",
+      "description": "Use isConstant flag for events/attributes that must always be tracked for data integrity",
+      "code": "const fieldsConfig = {\n  events: [\n    {\n      id: 'page_view',\n      name: 'page_view',\n      label: 'Page View',\n      isConstant: true // Always tracked, can't be disabled\n    }\n  ],\n  attributes: [\n    {\n      id: 'user.id',\n      name: 'user.id',\n      label: 'User ID',\n      isConstant: true // Always included for user tracking\n    }\n  ]\n};\n\n<InDynamicContentBox\n  :fieldsConfig=\"fieldsConfig\"\n  :hasConstantEvent=\"true\"\n  :hasConstantAttribute=\"true\"\n  constantEventInfoMessage=\"Page views are always tracked for analytics\"\n/>",
+      "reasoning": "Constant fields prevent accidental removal of critical data, ensure data consistency, and maintain referential integrity"
+    },
+    {
+      "title": "Provide Clear Action Buttons",
+      "description": "Configure buttonOptions with clear labels and appropriate variants for user actions",
+      "code": "const buttonOptions = [\n  {\n    label: 'Save Configuration',\n    variant: 'primary',\n    callback: async () => {\n      await saveConfig();\n      showSuccessMessage();\n    }\n  },\n  {\n    label: 'Preview Changes',\n    variant: 'secondary',\n    callback: () => showPreview()\n  },\n  {\n    label: 'Reset',\n    variant: 'danger',\n    callback: () => {\n      if (confirm('Reset all changes?')) resetToDefaults();\n    }\n  }\n];\n\n<InDynamicContentBox\n  :buttonOptions=\"buttonOptions\"\n/>",
+      "reasoning": "Clear buttons guide users through the workflow, prevent accidental actions (via confirmation), and provide predictable outcomes"
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Using duplicate IDs for events or attributes",
+      "why": "Component uses IDs for selection state tracking and data mapping",
+      "impact": "Selection state breaks, wrong items get selected/deselected, data corruption",
+      "fix": "Ensure every item has a globally unique ID, use prefixes like 'event_', 'attr_', 'partner_'",
+      "severity": "critical",
+      "example": "// WRONG\n{ events: [\n  { id: 1, name: 'click' },\n  { id: 1, name: 'view' } // Same ID!\n]}\n\n// CORRECT\n{ events: [\n  { id: 'event_click', name: 'click' },\n  { id: 'event_view', name: 'view' }\n]}"
+    },
+    {
+      "mistake": "Not enabling lazy loading for large datasets",
+      "why": "Rendering 1000+ items at once causes severe performance issues",
+      "impact": "UI freezes, slow scrolling, high memory usage, poor user experience",
+      "fix": "Enable lazy loading with appropriate chunk sizes for datasets over 200 items",
+      "severity": "high",
+      "example": "// WRONG - renders all 1000 items immediately\n<InDynamicContentBox :fieldsConfig=\"{ events: thousand Items }\" />\n\n// CORRECT - lazy loads in chunks\n<InDynamicContentBox\n  :fieldsConfig=\"{ events: thousandItems }\"\n  :lazyLoadChunkSize=\"100\"\n  :preloadBunchSize=\"10\"\n/>"
+    },
+    {
+      "mistake": "Missing categories for events and attributes",
+      "why": "Component groups items by category for better organization",
+      "impact": "All items appear in 'Uncategorized', difficult to find items, poor UX",
+      "fix": "Always provide meaningful category values for events and attributes",
+      "severity": "medium",
+      "example": "// WRONG - no categories\n{ events: [\n  { id: 'page_view', name: 'page_view', label: 'Page View' },\n  { id: 'purchase', name: 'purchase', label: 'Purchase' }\n]}\n\n// CORRECT - organized by category\n{ events: [\n  { id: 'page_view', name: 'page_view', label: 'Page View', category: 'Page Events' },\n  { id: 'purchase', name: 'purchase', label: 'Purchase', category: 'Conversion Events' }\n]}"
+    },
+    {
+      "mistake": "Not handling button callbacks properly",
+      "why": "Button actions often involve async operations that can fail",
+      "impact": "Errors swallowed silently, user thinks action succeeded when it failed, data loss",
+      "fix": "Implement proper error handling and user feedback in all button callbacks",
+      "severity": "high",
+      "example": "// WRONG - no error handling\nconst buttonOptions = [{\n  label: 'Save',\n  callback: async () => {\n    await api.save(config); // May fail silently\n  }\n}];\n\n// CORRECT - with error handling\nconst buttonOptions = [{\n  label: 'Save',\n  callback: async () => {\n    try {\n      await api.save(config);\n      toast.success('Saved successfully');\n    } catch (error) {\n      toast.error('Save failed: ' + error.message);\n      console.error(error);\n    }\n  }\n}];"
+    },
+    {
+      "mistake": "Forgetting to sync dynamicContent with v-model",
+      "why": "Component needs two-way binding to update parent state",
+      "impact": "Selections don't persist, parent component doesn't know what's selected",
+      "fix": "Use v-model:dynamicContent for two-way binding",
+      "severity": "high",
+      "example": "// WRONG - no binding, selections lost\n<InDynamicContentBox :dynamicContent=\"selections\" />\n\n// CORRECT - two-way binding\n<InDynamicContentBox v-model:dynamicContent=\"selections\" />"
+    }
+  ],
+  "performanceNotes": [
+    {
+      "topic": "Lazy Loading Configuration",
+      "description": "Component supports lazy loading for large datasets to maintain performance",
+      "recommendation": "For datasets over 200 items, use lazyLoadChunkSize (50-100) and preloadBunchSize (5-10). For 1000+ items, use lazyLoadChunkSize=100 and preloadBunchSize=10.",
+      "impact": "Proper lazy loading can reduce initial render time from 5+ seconds to under 500ms for large datasets"
+    },
+    {
+      "topic": "Virtual Scrolling with maxChildHeight",
+      "description": "Setting maxChildHeight enables virtual scrolling for better performance",
+      "recommendation": "Set maxChildHeight to a reasonable value (300-500px) to enable virtual scrolling. Don't set it too large as it defeats the purpose.",
+      "impact": "Virtual scrolling can handle 10,000+ items smoothly while maintaining 60fps"
+    },
+    {
+      "topic": "Event Handler Optimization",
+      "description": "Avoid expensive operations in event handlers (setEventAsGrouped, updateGroupingEvents)",
+      "recommendation": "If handlers perform expensive operations (API calls, complex calculations), debounce them or use async queuing.",
+      "impact": "Unbounded event handlers can cause UI lag during rapid selection changes"
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "topic": "Keyboard Navigation",
+      "description": "Component supports full keyboard navigation for selecting events and attributes",
+      "wcagLevel": "A",
+      "recommendation": "Ensure Tab, Arrow keys, Space, and Enter work for all selections. Test with keyboard-only navigation.",
+      "example": "// Component handles keyboard navigation automatically\n// Test: Tab through items, Space/Enter to select, Arrow keys to navigate lists"
+    },
+    {
+      "topic": "Screen Reader Announcements",
+      "description": "Selection changes and grouping state should be announced to screen readers",
+      "wcagLevel": "AA",
+      "recommendation": "Use aria-live regions for dynamic selection updates. Ensure labels clearly describe item purpose.",
+      "example": "<div aria-live=\"polite\" aria-atomic=\"true\">\n  {{ selections.selectedEvents.length }} events selected\n</div>"
+    },
+    {
+      "topic": "Focus Management",
+      "description": "Focus should be managed when opening/closing sections or applying filters",
+      "wcagLevel": "AA",
+      "recommendation": "Return focus to trigger element after modal-like interactions. Maintain focus within component during keyboard navigation.",
+      "example": "// Focus management for modals/overlays\nconst returnFocus = () => {\n  triggerElement.focus();\n};"
+    },
+    {
+      "topic": "Clear Labels and Descriptions",
+      "description": "All interactive elements need clear, descriptive labels",
+      "wcagLevel": "A",
+      "recommendation": "Use titleText and descriptionText props. Provide tooltips for complex features. Use meaningful button labels.",
+      "example": "<InDynamicContentBox\n  titleText=\"Configure Analytics Events\"\n  descriptionText=\"Select which user actions to track in your analytics platform\"\n  groupEventsTooltip=\"Group similar events together for simplified reporting\"\n/>"
+    }
+  ],
+  "helperFunctions": [
+    {
+      "name": "useDynamicContentManager",
+      "description": "Composable for managing dynamic content state with validation, save/load, and change tracking",
+      "code": "import { ref, computed, watch } from 'vue';\n\ninterface DynamicContent {\n  selectedEvents?: string[];\n  selectedAttributes?: string[];\n  selectedPartners?: string[];\n  groupedEvents?: string[];\n}\n\nexport function useDynamicContentManager(\n  initialContent: DynamicContent = {},\n  options: {\n    onSave?: (content: DynamicContent) => Promise<void>;\n    onLoad?: () => Promise<DynamicContent>;\n    validateBeforeSave?: boolean;\n  } = {}\n) {\n  const content = ref<DynamicContent>({ ...initialContent });\n  const originalContent = ref<DynamicContent>({ ...initialContent });\n  const saving = ref(false);\n  const loading = ref(false);\n  const error = ref<string | null>(null);\n\n  const isDirty = computed(() => {\n    return JSON.stringify(content.value) !== JSON.stringify(originalContent.value);\n  });\n\n  const hasSelections = computed(() => {\n    return (\n      (content.value.selectedEvents?.length || 0) > 0 ||\n      (content.value.selectedAttributes?.length || 0) > 0 ||\n      (content.value.selectedPartners?.length || 0) > 0\n    );\n  });\n\n  const validate = (): { valid: boolean; errors: string[] } => {\n    const errors: string[] = [];\n\n    // Example validations\n    if (!content.value.selectedEvents || content.value.selectedEvents.length === 0) {\n      errors.push('At least one event must be selected');\n    }\n\n    if (!content.value.selectedPartners || content.value.selectedPartners.length === 0) {\n      errors.push('At least one partner must be selected');\n    }\n\n    return {\n      valid: errors.length === 0,\n      errors\n    };\n  };\n\n  const save = async () => {\n    if (options.validateBeforeSave) {\n      const validation = validate();\n      if (!validation.valid) {\n        error.value = validation.errors.join(', ');\n        return false;\n      }\n    }\n\n    if (!options.onSave) {\n      console.warn('No onSave handler provided');\n      return false;\n    }\n\n    saving.value = true;\n    error.value = null;\n\n    try {\n      await options.onSave(content.value);\n      originalContent.value = { ...content.value };\n      return true;\n    } catch (err: any) {\n      error.value = err.message || 'Save failed';\n      return false;\n    } finally {\n      saving.value = false;\n    }\n  };\n\n  const load = async () => {\n    if (!options.onLoad) {\n      console.warn('No onLoad handler provided');\n      return;\n    }\n\n    loading.value = true;\n    error.value = null;\n\n    try {\n      const loadedContent = await options.onLoad();\n      content.value = { ...loadedContent };\n      originalContent.value = { ...loadedContent };\n    } catch (err: any) {\n      error.value = err.message || 'Load failed';\n    } finally {\n      loading.value = false;\n    }\n  };\n\n  const reset = () => {\n    content.value = { ...originalContent.value };\n    error.value = null;\n  };\n\n  const clear = () => {\n    content.value = {\n      selectedEvents: [],\n      selectedAttributes: [],\n      selectedPartners: [],\n      groupedEvents: []\n    };\n  };\n\n  return {\n    content,\n    isDirty,\n    hasSelections,\n    saving,\n    loading,\n    error,\n    validate,\n    save,\n    load,\n    reset,\n    clear\n  };\n}",
+      "parameters": [
+        "initialContent: DynamicContent - Initial selections",
+        "options: { onSave, onLoad, validateBeforeSave } - Configuration options"
+      ],
+      "returnType": "{ content, isDirty, hasSelections, saving, loading, error, validate, save, load, reset, clear }",
+      "example": "// Usage in component\nimport { useDynamicContentManager } from './composables/useDynamicContentManager';\n\nconst manager = useDynamicContentManager(\n  { selectedEvents: [], selectedAttributes: [] },\n  {\n    onSave: async (content) => {\n      await api.saveAnalyticsConfig(content);\n    },\n    onLoad: async () => {\n      return await api.loadAnalyticsConfig();\n    },\n    validateBeforeSave: true\n  }\n);\n\n// Template\n<InDynamicContentBox\n  v-model:dynamicContent=\"manager.content.value\"\n  :buttonOptions=\"[\n    {\n      label: 'Save',\n      variant: 'primary',\n      disabled: !manager.isDirty.value || manager.saving.value,\n      callback: manager.save\n    },\n    {\n      label: 'Reset',\n      variant: 'secondary',\n      callback: manager.reset\n    }\n  ]\"\n/>\n\n<div v-if=\"manager.error.value\">{{ manager.error.value }}</div>"
+    },
+    {
+      "name": "createFieldsConfigFromAPI",
+      "description": "Helper to transform API response into fieldsConfig format with proper typing and validation",
+      "code": "interface APIEvent {\n  event_id: string;\n  event_name: string;\n  display_name: string;\n  event_category?: string;\n  is_constant?: boolean;\n}\n\ninterface APIAttribute {\n  attr_id: string;\n  attr_name: string;\n  display_name: string;\n  attr_category?: string;\n  data_type?: string;\n  is_constant?: boolean;\n}\n\ninterface FieldsConfig {\n  events: Array<{\n    id: string;\n    name: string;\n    label: string;\n    category?: string;\n    isConstant?: boolean;\n  }>;\n  attributes: Array<{\n    id: string;\n    name: string;\n    label: string;\n    category?: string;\n    type?: string;\n    isConstant?: boolean;\n  }>;\n  partners?: Array<{\n    id: string;\n    name: string;\n    label: string;\n  }>;\n}\n\nexport function createFieldsConfigFromAPI(\n  apiEvents: APIEvent[],\n  apiAttributes: APIAttribute[],\n  apiPartners?: any[]\n): FieldsConfig {\n  return {\n    events: apiEvents.map(event => ({\n      id: event.event_id,\n      name: event.event_name,\n      label: event.display_name,\n      category: event.event_category,\n      isConstant: event.is_constant || false\n    })),\n    \n    attributes: apiAttributes.map(attr => ({\n      id: attr.attr_id,\n      name: attr.attr_name,\n      label: attr.display_name,\n      category: attr.attr_category,\n      type: attr.data_type,\n      isConstant: attr.is_constant || false\n    })),\n    \n    partners: apiPartners?.map(partner => ({\n      id: partner.partner_id,\n      name: partner.partner_name,\n      label: partner.display_name\n    })) || []\n  };\n}",
+      "parameters": [
+        "apiEvents: APIEvent[] - Events from API response",
+        "apiAttributes: APIAttribute[] - Attributes from API response",
+        "apiPartners?: any[] - Optional partners from API"
+      ],
+      "returnType": "FieldsConfig - Formatted configuration object",
+      "example": "// Fetch from API and transform\nconst apiResponse = await api.getTrackingConfig();\n\nconst fieldsConfig = createFieldsConfigFromAPI(\n  apiResponse.events,\n  apiResponse.attributes,\n  apiResponse.partners\n);\n\n// Use in component\n<InDynamicContentBox :fieldsConfig=\"fieldsConfig\" />"
+    }
+  ]
+}

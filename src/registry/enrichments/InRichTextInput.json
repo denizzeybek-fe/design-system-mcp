@@ -436,16 +436,240 @@
       "example": "helper-text-validation-config-status :helper-text-validation-config=\"{ maxLength: 160 }\""
     }
   ],
-  "performanceNotes": [
+  "codeSnippets": {
+    "basicRichText": {
+      "title": "Basic Rich Text Editor",
+      "description": "Simple editor with formatting toolbar",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InRichTextInput } from '@useinsider/design-system-vue';\n\nconst content = ref('');\n</script>\n\n<template>\n  <InRichTextInput\n    id=\"editor\"\n    name=\"editor\"\n    v-model=\"content\"\n    label-text=\"Description\"\n    placeholder=\"Enter description...\"\n  />\n</template>"
+    },
+    "withMergeTags": {
+      "title": "Rich Text with Merge Tags",
+      "description": "Editor with dynamic content/personalization",
+      "code": "<script setup>\nimport { ref } from 'vue';\n\nconst emailContent = ref('');\n\nconst mergeTags = [\n  { id: 'first_name', text: 'First Name', value: '{{first_name}}' },\n  { id: 'last_name', text: 'Last Name', value: '{{last_name}}' },\n  { id: 'email', text: 'Email', value: '{{email}}' },\n  { id: 'company', text: 'Company', value: '{{company}}' }\n];\n\nconst handlePurify = (cleanHtml) => {\n  console.log('Sanitized HTML:', cleanHtml);\n};\n</script>\n\n<template>\n  <InRichTextInput\n    id=\"email-editor\"\n    name=\"email-editor\"\n    v-model=\"emailContent\"\n    label-text=\"Email Content\"\n    dynamic-content-status\n    :dynamic-content-list=\"mergeTags\"\n    @purify=\"handlePurify\"\n  />\n</template>"
+    },
+    "withValidation": {
+      "title": "Rich Text with Character Limit",
+      "description": "Editor with validation and helper text",
+      "code": "<script setup>\nimport { ref, computed } from 'vue';\n\nconst content = ref('');\nconst maxLength = 500;\n\nconst state = computed(() => {\n  const length = content.value.replace(/<[^>]*>/g, '').length;\n  if (length === 0) return 'error';\n  if (length > maxLength) return 'error';\n  if (length > maxLength * 0.9) return 'warning';\n  return 'default';\n});\n\nconst helperText = computed(() => {\n  const length = content.value.replace(/<[^>]*>/g, '').length;\n  return `${length}/${maxLength} characters`;\n});\n</script>\n\n<template>\n  <InRichTextInput\n    id=\"limited-editor\"\n    name=\"limited-editor\"\n    v-model=\"content\"\n    label-text=\"Short Description\"\n    :state=\"state\"\n    :helper-text=\"helperText\"\n    helper-text-validation-config-status\n    :helper-text-validation-config=\"{ maxLength }\"\n  />\n</template>"
+    }
+  },
+  "styling": {
+    "cssVariables": {
+      "--rich-text-bg": "Editor background (default: white)",
+      "--rich-text-text": "Text color",
+      "--rich-text-border": "Border color",
+      "--rich-text-toolbar-bg": "Toolbar background",
+      "--rich-text-button-hover": "Toolbar button hover color",
+      "--rich-text-placeholder": "Placeholder text color"
+    },
+    "classes": {
+      "in-rich-text-input": "Root container",
+      "in-rich-text-input__toolbar": "Formatting toolbar",
+      "in-rich-text-input__editor": "Editable content area",
+      "in-rich-text-input__button": "Toolbar button",
+      "in-rich-text-input__button--active": "Active format button",
+      "in-rich-text-input__merge-tag": "Inserted merge tag",
+      "in-rich-text-input__helper": "Helper text below editor",
+      "in-rich-text-input__counter": "Character counter"
+    },
+    "notes": "Rich text editor supports HTML formatting. Merge tags styled differently for visibility."
+  },
+  "implementationPatterns": [
     {
-      "note": "Large dynamicContentList can slow dropdown",
-      "description": "Use dynamicContentBoxProps.searchable for large lists",
-      "recommendation": "Enable search when > 20 attributes"
+      "name": "Email Template Editor",
+      "description": "Rich text editor for email templates with personalization",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InRichTextInput } from '@useinsider/design-system-vue';\n\nconst emailTemplate = ref('');\n\nconst customerFields = [\n  { id: 'first_name', text: 'First Name', value: '{{first_name}}' },\n  { id: 'last_name', text: 'Last Name', value: '{{last_name}}' },\n  { id: 'email', text: 'Email Address', value: '{{email}}' },\n  { id: 'phone', text: 'Phone Number', value: '{{phone}}' },\n  { id: 'company', text: 'Company Name', value: '{{company}}' },\n  { id: 'order_id', text: 'Order ID', value: '{{order_id}}' }\n];\n\nconst dynamicContentBoxProps = {\n  searchable: true,\n  grouped: true,\n  groups: {\n    'Customer': ['first_name', 'last_name', 'email', 'phone'],\n    'Business': ['company', 'order_id']\n  }\n};\n\nconst handleSave = async () => {\n  const response = await fetch('/api/email-templates', {\n    method: 'POST',\n    body: JSON.stringify({\n      content: emailTemplate.value\n    })\n  });\n};\n</script>\n\n<template>\n  <InRichTextInput\n    id=\"email-template\"\n    name=\"email-template\"\n    v-model=\"emailTemplate\"\n    label-text=\"Email Template\"\n    dynamic-content-status\n    :dynamic-content-list=\"customerFields\"\n    :dynamic-content-box-props=\"dynamicContentBoxProps\"\n    dynamic-content-box-label=\"Insert Customer Field\"\n  />\n</template>",
+      "when": "Building email marketing or notification systems",
+      "pros": ["Personalization support", "Rich formatting", "Template reusability"],
+      "cons": ["Complex state management", "HTML sanitization needed"]
     },
     {
-      "note": "Frequent @purify calls",
-      "description": "purify event fires on every change",
-      "recommendation": "Debounce if doing expensive operations"
+      "name": "Blog Post Editor",
+      "description": "Content editor for blog posts with media",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InRichTextInput } from '@useinsider/design-system-vue';\n\nconst postContent = ref('');\nconst isDraft = ref(true);\n\nconst toolbarConfig = {\n  bold: true,\n  italic: true,\n  underline: true,\n  heading: true,\n  bulletList: true,\n  orderedList: true,\n  link: true,\n  image: true,\n  code: true\n};\n\nconst autoSave = async () => {\n  if (!isDraft.value) return;\n  \n  await fetch('/api/posts/autosave', {\n    method: 'POST',\n    body: JSON.stringify({\n      content: postContent.value,\n      timestamp: Date.now()\n    })\n  });\n};\n\n// Auto-save every 30 seconds\nsetInterval(autoSave, 30000);\n</script>\n\n<template>\n  <InRichTextInput\n    id=\"blog-editor\"\n    name=\"blog-editor\"\n    v-model=\"postContent\"\n    label-text=\"Post Content\"\n    placeholder=\"Write your blog post...\"\n    :toolbar=\"toolbarConfig\"\n  />\n</template>",
+      "when": "Building CMS or blogging platforms",
+      "pros": ["Full formatting control", "Auto-save capability", "Media embedding"],
+      "cons": ["Large payloads", "Complex content validation"]
+    },
+    {
+      "name": "SMS Message Editor",
+      "description": "Character-limited editor for SMS with merge tags",
+      "code": "<script setup>\nimport { ref, computed } from 'vue';\nimport { InRichTextInput } from '@useinsider/design-system-vue';\n\nconst smsContent = ref('');\nconst maxChars = 160;\n\nconst mergeTags = [\n  { id: 'name', text: 'Name', value: '{{name}}' },\n  { id: 'code', text: 'Verification Code', value: '{{code}}' },\n  { id: 'link', text: 'Link', value: '{{link}}' }\n];\n\nconst charCount = computed(() => {\n  // Remove HTML tags and count merge tags as their max length\n  let text = smsContent.value.replace(/<[^>]*>/g, '');\n  text = text.replace(/{{name}}/g, 'X'.repeat(50));\n  text = text.replace(/{{code}}/g, 'X'.repeat(6));\n  text = text.replace(/{{link}}/g, 'X'.repeat(100));\n  return text.length;\n});\n\nconst state = computed(() => {\n  if (charCount.value > maxChars) return 'error';\n  if (charCount.value > maxChars * 0.9) return 'warning';\n  return 'default';\n});\n\nconst helperText = computed(() => {\n  const remaining = maxChars - charCount.value;\n  if (remaining < 0) return `Over limit by ${Math.abs(remaining)} characters`;\n  return `${remaining} characters remaining`;\n});\n</script>\n\n<template>\n  <InRichTextInput\n    id=\"sms-editor\"\n    name=\"sms-editor\"\n    v-model=\"smsContent\"\n    label-text=\"SMS Message\"\n    dynamic-content-status\n    :dynamic-content-list=\"mergeTags\"\n    :state=\"state\"\n    :helper-text=\"helperText\"\n    :toolbar=\"{ bold: false, italic: false, link: false }\"\n  />\n</template>",
+      "when": "Building SMS marketing or notification systems",
+      "pros": ["Character counting", "Merge tag support", "Length validation"],
+      "cons": ["Complex character calculation", "Limited formatting"]
+    }
+  ],
+  "useCases": [
+    {
+      "title": "Email Marketing",
+      "description": "Rich email templates with personalization",
+      "example": "<InRichTextInput\n  label-text=\"Email Content\"\n  dynamic-content-status\n  :dynamic-content-list=\"customerFields\"\n  v-model=\"emailContent\"\n/>"
+    },
+    {
+      "title": "Blog Content",
+      "description": "Blog post editor with full formatting",
+      "example": "<InRichTextInput\n  label-text=\"Post Content\"\n  v-model=\"postContent\"\n  :toolbar=\"fullToolbar\"\n/>"
+    },
+    {
+      "title": "Product Descriptions",
+      "description": "Rich product descriptions with character limits",
+      "example": "<InRichTextInput\n  label-text=\"Description\"\n  v-model=\"description\"\n  :helper-text-validation-config=\"{ maxLength: 500 }\"\n  helper-text-validation-config-status\n/>"
+    },
+    {
+      "title": "Notification Messages",
+      "description": "Push/SMS messages with merge tags",
+      "example": "<InRichTextInput\n  label-text=\"Message\"\n  dynamic-content-status\n  :dynamic-content-list=\"mergeTags\"\n  v-model=\"message\"\n/>"
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "topic": "Label requirement",
+      "description": "Rich text editor must have descriptive label",
+      "wcagLevel": "A",
+      "recommendation": "Always provide label-text prop",
+      "example": "<InRichTextInput label-text=\"Email Content\" />"
+    },
+    {
+      "topic": "Toolbar button labels",
+      "description": "Formatting buttons need accessible labels",
+      "wcagLevel": "A",
+      "recommendation": "Component provides ARIA labels for all toolbar buttons",
+      "example": "// Bold button has aria-label=\"Bold\""
+    },
+    {
+      "topic": "Keyboard shortcuts",
+      "description": "Editor must support keyboard shortcuts",
+      "wcagLevel": "AA",
+      "recommendation": "Ctrl+B (bold), Ctrl+I (italic), Ctrl+U (underline), etc.",
+      "example": "// Automatically supported by component"
+    },
+    {
+      "topic": "Merge tag accessibility",
+      "description": "Dynamic content tags must be announced",
+      "wcagLevel": "AA",
+      "recommendation": "Use aria-label to describe merge tag purpose",
+      "example": "// Merge tag announced as 'First Name merge tag'"
+    }
+  ],
+  "helperFunctions": [
+    {
+      "name": "stripHtmlTags",
+      "description": "Remove HTML tags to get plain text for character counting",
+      "code": "function stripHtmlTags(html: string): string {\n  return html.replace(/<[^>]*>/g, '');\n}",
+      "parameters": [
+        {
+          "name": "html",
+          "type": "string",
+          "description": "HTML content"
+        }
+      ],
+      "returnType": "string",
+      "example": "const plainText = stripHtmlTags('<p>Hello <b>World</b></p>');\n// Returns: 'Hello World'"
+    },
+    {
+      "name": "calculateMergeTagLength",
+      "description": "Calculate estimated length with expanded merge tags",
+      "code": "function calculateMergeTagLength(content: string, tagLengths: Record<string, number>): number {\n  let text = content.replace(/<[^>]*>/g, '');\n  \n  Object.entries(tagLengths).forEach(([tag, length]) => {\n    const regex = new RegExp(`{{${tag}}}`, 'g');\n    text = text.replace(regex, 'X'.repeat(length));\n  });\n  \n  return text.length;\n}",
+      "parameters": [
+        {
+          "name": "content",
+          "type": "string",
+          "description": "Rich text content with merge tags"
+        },
+        {
+          "name": "tagLengths",
+          "type": "Record<string, number>",
+          "description": "Max length for each merge tag"
+        }
+      ],
+      "returnType": "number",
+      "example": "const length = calculateMergeTagLength(\n  'Hello {{name}}',\n  { name: 50 }\n);\n// Returns: 56 (Hello  + 50 chars)"
+    },
+    {
+      "name": "sanitizeRichText",
+      "description": "Sanitize HTML while preserving allowed tags",
+      "code": "function sanitizeRichText(html: string, allowedTags: string[] = ['p', 'b', 'i', 'u', 'a', 'br']): string {\n  const div = document.createElement('div');\n  div.innerHTML = html;\n  \n  const walk = (node: Node) => {\n    if (node.nodeType === 1) { // Element node\n      const tagName = (node as Element).tagName.toLowerCase();\n      if (!allowedTags.includes(tagName)) {\n        // Replace with text content\n        const textNode = document.createTextNode(node.textContent || '');\n        node.parentNode?.replaceChild(textNode, node);\n      }\n    }\n    \n    node.childNodes.forEach(walk);\n  };\n  \n  walk(div);\n  return div.innerHTML;\n}",
+      "parameters": [
+        {
+          "name": "html",
+          "type": "string",
+          "description": "HTML content to sanitize"
+        },
+        {
+          "name": "allowedTags",
+          "type": "string[]",
+          "description": "Array of allowed HTML tags"
+        }
+      ],
+      "returnType": "string",
+      "example": "const clean = sanitizeRichText(\n  '<p>Hello <script>alert(1)</script></p>',\n  ['p', 'b', 'i']\n);\n// Returns: '<p>Hello alert(1)</p>'"
+    }
+  ],
+  "performanceNotes": [
+    {
+      "topic": "Large dynamic content lists",
+      "description": "Large dynamicContentList (50+ items) can slow dropdown rendering",
+      "recommendation": "Use dynamicContentBoxProps.searchable for large lists, enable search when > 20 attributes",
+      "impact": "medium"
+    },
+    {
+      "topic": "Frequent purify events",
+      "description": "purify event fires on every content change",
+      "recommendation": "Debounce expensive operations in purify handler if doing API calls or complex processing",
+      "impact": "low"
+    },
+    {
+      "topic": "HTML content size",
+      "description": "Rich HTML content can become very large",
+      "recommendation": "Implement content compression for storage, consider plain text fallback",
+      "impact": "medium"
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Not sanitizing HTML output before saving",
+      "why": "User input can contain malicious scripts",
+      "impact": "XSS vulnerability, security risk",
+      "fix": "Use @purify event or sanitize before saving to database",
+      "severity": "critical",
+      "example": "// Listen to purify event:\n@purify=\"handleSanitized\"\n\nconst handleSanitized = (cleanHtml) => {\n  // Save cleanHtml to database\n}"
+    },
+    {
+      "mistake": "Incorrect character counting with HTML tags",
+      "why": "HTML tags inflate character count",
+      "impact": "Inaccurate length validation",
+      "fix": "Strip HTML tags before counting: content.replace(/<[^>]*>/g, '')",
+      "severity": "high",
+      "example": "// Wrong:\nconst count = content.value.length;\n\n// Correct:\nconst count = content.value.replace(/<[^>]*>/g, '').length;"
+    },
+    {
+      "mistake": "Not handling merge tag max lengths",
+      "why": "Merge tags expand to variable-length values",
+      "impact": "Content exceeds limits when tags are replaced",
+      "fix": "Calculate with max expected length for each tag",
+      "severity": "medium",
+      "example": "// Replace {{name}} with max length estimate\nconst estimated = text.replace(/{{name}}/g, 'X'.repeat(50));"
+    }
+  ],
+  "bestPractices": [
+    {
+      "title": "Always Handle Purify Event",
+      "description": "Sanitize HTML content before saving",
+      "code": "<InRichTextInput\n  v-model=\"content\"\n  @purify=\"handleSanitized\"\n/>\n\nconst handleSanitized = (cleanHtml) => {\n  // Save cleanHtml to database\n  saveContent(cleanHtml);\n};",
+      "reasoning": "Prevents XSS attacks and ensures clean HTML"
+    },
+    {
+      "title": "Group Merge Tags Logically",
+      "description": "Use dynamicContentBoxProps.groups for better UX",
+      "code": "const dynamicContentBoxProps = {\n  searchable: true,\n  grouped: true,\n  groups: {\n    'Customer Info': ['name', 'email', 'phone'],\n    'Order Details': ['order_id', 'total', 'status']\n  }\n};",
+      "reasoning": "Makes it easier for users to find relevant merge tags"
+    },
+    {
+      "title": "Implement Character Limits",
+      "description": "Use helper text validation for length constraints",
+      "code": "<InRichTextInput\n  helper-text-validation-config-status\n  :helper-text-validation-config=\"{ maxLength: 500 }\"\n  :helper-text=\"charCountMessage\"\n/>",
+      "reasoning": "Prevents content from exceeding platform limits (SMS, push, etc.)"
     }
   ]
 }

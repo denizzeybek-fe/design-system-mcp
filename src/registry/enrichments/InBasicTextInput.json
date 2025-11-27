@@ -1,0 +1,701 @@
+{
+  "_metadata": {
+    "lastUpdated": "2025-11-27T10:00:00.000Z",
+    "propsHash": "generated",
+    "eventsHash": "generated",
+    "propCount": 39,
+    "eventCount": 11
+  },
+  "component": "InBasicTextInput",
+  "propEnrichments": {
+    "value": {
+      "description": "Input value (v-model)",
+      "valueFormat": {
+        "structure": "string or number",
+        "notes": "Input content with two-way binding support. For text inputs use string, for number inputs use number. When type='number', value is automatically parsed to number. Use v-model for reactive binding. Listen to @input for real-time changes or @change for committed changes.",
+        "typescript": "string | number",
+        "example": "v-model=\"username\" // For text\nv-model=\"age\" // For number input"
+      }
+    },
+    "type": {
+      "description": "Input type (text or number)",
+      "valueFormat": {
+        "structure": "string enum",
+        "notes": "Determines input behavior and validation. 'text' (default) for general text, 'number' for numeric values with min/max validation. When 'number', shows spinner controls in some browsers and validates numeric format. Use with allowDecimal and allowComma for number formatting.",
+        "typescript": "'text' | 'number'",
+        "possibleValues": ["text", "number"],
+        "example": "type=\"number\" // Numeric input with validation"
+      }
+    },
+    "theme": {
+      "description": "Visual theme variant",
+      "valueFormat": {
+        "structure": "string",
+        "notes": "Controls the visual appearance and color scheme of the input. Default is 'grey'. Theme affects border color, background, and hover states. Use consistent theme across related form elements for visual coherence.",
+        "typescript": "string",
+        "example": "theme=\"grey\""
+      }
+    },
+    "states": {
+      "description": "Validation/feedback state",
+      "valueFormat": {
+        "structure": "string enum",
+        "notes": "Visual feedback for validation status. 'default' (neutral), 'success' (green, valid), 'warning' (yellow, caution), 'error' (red, invalid). Changes border color and shows stateMessage. Use with stateMessage to explain the state. Critical for form validation UX.",
+        "typescript": "'default' | 'success' | 'warning' | 'error'",
+        "possibleValues": ["default", "success", "warning", "error"],
+        "example": ":states=\"hasError ? 'error' : 'default'\"\nstate-message=\"Email is required\""
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Using states prop without stateMessage",
+          "impact": "User sees error styling but no explanation why",
+          "fix": "Always provide state-message when states is 'error', 'warning', or 'success'",
+          "severity": "high"
+        }
+      ]
+    },
+    "stateMessage": {
+      "description": "Message shown with validation state",
+      "valueFormat": {
+        "structure": "string",
+        "notes": "Explanation text shown below input when states is set to error/warning/success. Critical for accessibility - screen readers announce this message. Keep messages concise but informative. Examples: 'Email is required', 'Password must be 8+ characters', 'Username is available'.",
+        "typescript": "string",
+        "example": "state-message=\"Must be at least 8 characters\""
+      }
+    },
+    "prefixStatus": {
+      "description": "Enable prefix text/icon before input",
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "Shows text or icon before the input field. Used for currency symbols ($, €), units (kg, cm), or context indicators. When true, displays prefixText value. For interactive prefix, use actionablePrefixStatus with prefixDropdownOptions.",
+        "typescript": "boolean",
+        "example": ":prefix-status=\"true\"\nprefix-text=\"$\""
+      }
+    },
+    "prefixText": {
+      "description": "Static text shown as prefix",
+      "valueFormat": {
+        "structure": "string",
+        "notes": "Text displayed before input when prefixStatus=true. Common uses: currency symbols ($, €, £), percentage (%), units (kg, m, cm), protocol (https://). Keep short (1-4 characters). For dynamic/selectable prefix, use actionablePrefixStatus instead.",
+        "typescript": "string",
+        "example": "prefix-text=\"$\" // Currency\nprefix-text=\"https://\" // URL protocol"
+      }
+    },
+    "actionablePrefixStatus": {
+      "description": "Make prefix a clickable dropdown",
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "Converts prefix into an interactive dropdown selector. Requires prefixDropdownOptions to define available choices. Use for: currency switcher ($, €, £), unit selector (kg, lb), protocol picker (http://, https://). Emits @prefixClick with selected value.",
+        "typescript": "boolean",
+        "example": ":actionable-prefix-status=\"true\"\n:prefix-dropdown-options=\"currencyOptions\""
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Using actionablePrefixStatus without prefixDropdownOptions",
+          "impact": "Dropdown is empty or shows default placeholder",
+          "fix": "Always provide :prefix-dropdown-options array when actionablePrefixStatus is true",
+          "severity": "high"
+        }
+      ]
+    },
+    "prefixDropdownOptions": {
+      "description": "Options for actionable prefix dropdown",
+      "valueFormat": {
+        "structure": "array of option objects",
+        "notes": "Dropdown options when actionablePrefixStatus=true. Each option needs 'text' (display) and 'value' (selected value). Optional 'selectionType' for single/multi select. Example use cases: currency selector, unit converter, protocol picker. Listen to @prefixClick to get selected value.",
+        "typescript": "Array<{ text: string; value: string | number; selectionType?: 'single' | 'multi' }>",
+        "example": ":prefix-dropdown-options=\"[\n  { text: 'USD ($)', value: 'usd' },\n  { text: 'EUR (€)', value: 'eur' },\n  { text: 'GBP (£)', value: 'gbp' }\n]\"\n@prefix-click=\"handleCurrencyChange\""
+      }
+    },
+    "suffixStatus": {
+      "description": "Enable suffix text/icon after input",
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "Shows text or icon after the input field. Common uses: units (kg, pixels, %), clear button, search icon. When true, displays suffixText value. For interactive suffix (like clear button), use actionableSuffixStatus with suffixDropdownOptions.",
+        "typescript": "boolean",
+        "example": ":suffix-status=\"true\"\nsuffix-text=\"px\""
+      }
+    },
+    "suffixText": {
+      "description": "Static text shown as suffix",
+      "valueFormat": {
+        "structure": "string",
+        "notes": "Text displayed after input when suffixStatus=true. Common uses: measurement units (px, kg, cm), percentage (%), rate indicators (/month). Keep concise. For clickable actions (clear, search), use actionableSuffixStatus instead.",
+        "typescript": "string",
+        "example": "suffix-text=\"kg\" // Weight unit\nsuffix-text=\"/month\" // Pricing"
+      }
+    },
+    "actionableSuffixStatus": {
+      "description": "Make suffix a clickable dropdown",
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "Converts suffix into an interactive dropdown or button. Requires suffixDropdownOptions. Use for: unit selector (kg/lb/g), clear button, action triggers. More common than actionablePrefix. Emits @suffixClick with selected value or action.",
+        "typescript": "boolean",
+        "example": ":actionable-suffix-status=\"true\"\n:suffix-dropdown-options=\"unitOptions\"\n@suffix-click=\"handleUnitChange\""
+      }
+    },
+    "suffixDropdownOptions": {
+      "description": "Options for actionable suffix dropdown",
+      "valueFormat": {
+        "structure": "array of option objects",
+        "notes": "Dropdown options when actionableSuffixStatus=true. Each option needs 'text' (display) and 'value'. Common patterns: unit converter (kg→lb), time selector (minutes/hours), clear action. Listen to @suffixClick to handle selection.",
+        "typescript": "Array<{ text: string; value: string | number; selectionType?: 'single' | 'multi' }>",
+        "example": ":suffix-dropdown-options=\"[\n  { text: 'Kilograms', value: 'kg' },\n  { text: 'Pounds', value: 'lb' },\n  { text: 'Grams', value: 'g' }\n]\""
+      }
+    },
+    "leftIconStatus": {
+      "description": "Show icon on left side of input",
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "Displays icon before input text (after prefix if exists). Common uses: search icon, user icon, lock icon for password. When true, shows leftIconName icon. Icon is clickable and emits @leftIconClick. Use for visual context or actions.",
+        "typescript": "boolean",
+        "example": ":left-icon-status=\"true\"\nleft-icon-name=\"search\""
+      }
+    },
+    "leftIconName": {
+      "description": "Icon name for left side",
+      "valueFormat": {
+        "structure": "string",
+        "notes": "Icon identifier from Design System icon library. Default is 'search'. Common icons: 'search', 'user', 'mail', 'lock', 'phone'. Icon becomes clickable button when leftIconStatus=true. Emits @leftIconClick when clicked. Check icon library for available names.",
+        "typescript": "string",
+        "example": "left-icon-name=\"user\" // User icon\nleft-icon-name=\"mail\" // Email icon"
+      }
+    },
+    "rightIconStatus": {
+      "description": "Show icon on right side of input",
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "Displays icon after input text (before suffix if exists). More common than leftIcon. Common uses: password visibility toggle, clear button, info tooltip, validation checkmark. When true, shows rightIconName icon. Clickable with @rightIconClick event.",
+        "typescript": "boolean",
+        "example": ":right-icon-status=\"true\"\nright-icon-name=\"eye\"\n@right-icon-click=\"togglePasswordVisibility\""
+      }
+    },
+    "rightIconName": {
+      "description": "Icon name for right side",
+      "valueFormat": {
+        "structure": "string",
+        "notes": "Icon identifier from Design System. Default is 'search'. Common icons: 'eye'/'eye-off' (password toggle), 'x' (clear), 'check' (valid), 'info' (help). Icon is interactive button that emits @rightIconClick. More commonly used than leftIcon for actions.",
+        "typescript": "string",
+        "example": "right-icon-name=\"eye\" // Password visibility\nright-icon-name=\"x\" // Clear button"
+      }
+    },
+    "maxCharacterLength": {
+      "description": "Maximum character limit",
+      "valueFormat": {
+        "structure": "number or string",
+        "notes": "Maximum allowed characters for text input. Enforces hard limit - prevents typing beyond this length. Shows character counter when characterCounterStatus=true. Use for: tweets (280), SMS (160), usernames (50), short descriptions (500). Returns 0 when limit reached.",
+        "typescript": "number | string",
+        "example": ":max-character-length=\"280\" // Tweet length\n:character-counter-status=\"true\""
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Setting maxCharacterLength without characterCounterStatus",
+          "impact": "Limit enforced but user doesn't see remaining characters",
+          "fix": "Enable character-counter-status when using max-character-length for better UX",
+          "severity": "medium"
+        }
+      ]
+    },
+    "characterCounterStatus": {
+      "description": "Show character counter below input",
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "Displays 'X / Y' character count below input. Works with maxCharacterLength (shows '45 / 280') or characterCounterMaxValue. Essential for inputs with length limits like tweets, SMS, bios. Updates in real-time as user types. Turns red when approaching limit.",
+        "typescript": "boolean",
+        "example": ":character-counter-status=\"true\"\n:max-character-length=\"280\""
+      }
+    },
+    "characterCounterMaxValue": {
+      "description": "Max value for character counter display",
+      "valueFormat": {
+        "structure": "number",
+        "notes": "Sets the denominator in character counter (X / Y). Default is 20. Use when you want to show counter without enforcing maxCharacterLength limit. Shows visual feedback but doesn't prevent typing beyond limit. Prefer maxCharacterLength for hard limits.",
+        "typescript": "number",
+        "example": ":character-counter-max-value=\"100\"\n:character-counter-status=\"true\""
+      }
+    },
+    "minValue": {
+      "description": "Minimum allowed value for numbers",
+      "valueFormat": {
+        "structure": "number or string",
+        "notes": "Minimum acceptable value when type='number'. Prevents submission/validation below this value. Default is 0. Use for: age (18+), quantity (1+), price (0+), percentage (0-100). Validation happens on blur/change, not during typing. Shows error state when violated.",
+        "typescript": "number | string",
+        "example": "type=\"number\"\n:min-value=\"0\" // Non-negative\n:min-value=\"18\" // Age restriction"
+      }
+    },
+    "maxValue": {
+      "description": "Maximum allowed value for numbers",
+      "valueFormat": {
+        "structure": "number or string",
+        "notes": "Maximum acceptable value when type='number'. Prevents values exceeding this limit. Use with minValue for range validation. Examples: percentage (0-100), age (18-120), discount (0-99). Validation on blur. Shows error state when exceeded.",
+        "typescript": "number | string",
+        "example": "type=\"number\"\n:min-value=\"0\"\n:max-value=\"100\" // Percentage range"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Using minValue/maxValue on text type input",
+          "impact": "Validation doesn't work - only applies to type=\"number\"",
+          "fix": "Ensure type=\"number\" when using min-value or max-value",
+          "severity": "high"
+        }
+      ]
+    },
+    "allowDecimal": {
+      "description": "Allow decimal numbers in number input",
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "When true, permits decimal point in number inputs (3.14, 99.99). When false, only integers allowed. Use for: prices ($9.99), measurements (5.5kg), percentages (33.33%). Works only with type='number'. Decimal separator is '.' (period).",
+        "typescript": "boolean",
+        "example": "type=\"number\"\n:allow-decimal=\"true\" // Allow 9.99\n:allow-decimal=\"false\" // Only integers"
+      }
+    },
+    "allowComma": {
+      "description": "Allow thousand separator commas",
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "When true (default), permits comma as thousand separator in numbers (1,000,000). Improves readability for large numbers. When false, commas are blocked. Works with type='number'. Common in prices, populations, counts. Format: 1,234,567.89",
+        "typescript": "boolean",
+        "example": "type=\"number\"\n:allow-comma=\"true\" // 1,000,000\n:allow-comma=\"false\" // 1000000"
+      }
+    },
+    "preventXss": {
+      "description": "Enable XSS attack prevention",
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "When true (default), sanitizes input to prevent XSS attacks. Strips/escapes dangerous characters like <script>, HTML tags, JavaScript event handlers. CRITICAL for security when displaying user input. Only disable in controlled environments. Sanitization happens on input event.",
+        "typescript": "boolean",
+        "example": ":prevent-xss=\"true\" // Recommended for security"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Disabling preventXss without proper server-side validation",
+          "impact": "Security vulnerability - allows XSS attacks",
+          "fix": "Keep prevent-xss=\"true\" unless you have robust server-side sanitization",
+          "severity": "critical"
+        }
+      ]
+    },
+    "autoComplete": {
+      "description": "Browser autocomplete behavior",
+      "valueFormat": {
+        "structure": "string",
+        "notes": "HTML autocomplete attribute for browser autofill. 'off' (default) disables autocomplete. Use specific values for better UX: 'name', 'email', 'username', 'current-password', 'new-password', 'tel', 'address-line1', 'postal-code', 'cc-number'. Improves form filling speed.",
+        "typescript": "string",
+        "example": "auto-complete=\"email\" // Email autofill\nauto-complete=\"current-password\" // Password manager\nauto-complete=\"off\" // Disable"
+      }
+    },
+    "autoFocus": {
+      "description": "Auto-focus input on mount",
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "When true, automatically focuses this input when component mounts. Use sparingly - only for primary action inputs (search box, login form). Multiple autoFocus can cause focus conflicts. Improves UX by reducing clicks. Not recommended for mobile due to keyboard pop-up.",
+        "typescript": "boolean",
+        "example": ":auto-focus=\"true\" // Focus on page load"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Using autoFocus on multiple inputs",
+          "impact": "Focus conflict - unpredictable which input gets focus",
+          "fix": "Only use auto-focus on ONE input per page/form",
+          "severity": "medium"
+        }
+      ]
+    },
+    "helperMessageStatus": {
+      "description": "Show helper text below input",
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "When true (default), displays helperMessage text below input. Use for: format hints ('MM/DD/YYYY'), examples ('john@example.com'), instructions ('8-20 characters'). Different from stateMessage which shows errors. Helper is always visible, state appears on validation.",
+        "typescript": "boolean",
+        "example": ":helper-message-status=\"true\"\nhelper-message=\"Format: (555) 123-4567\""
+      }
+    },
+    "helperMessage": {
+      "description": "Helpful instruction text",
+      "valueFormat": {
+        "structure": "string",
+        "notes": "Instructional text shown below input when helperMessageStatus=true. Guides users on expected format/content. Examples: 'Your email will not be shared', 'Min 8 characters with 1 number', '(555) 123-4567 format'. Keep concise. Shows in neutral gray color.",
+        "typescript": "string",
+        "example": "helper-message=\"Password must contain 8-20 characters\""
+      }
+    },
+    "skeletonStatus": {
+      "description": "Show skeleton loading state",
+      "valueFormat": {
+        "structure": "boolean",
+        "notes": "When true, displays animated skeleton placeholder instead of input. Use during data loading or async operations. Maintains layout while content loads. Better UX than spinners for form fields. Automatically hides when loading completes.",
+        "typescript": "boolean",
+        "example": ":skeleton-status=\"isLoading\""
+      }
+    },
+    "skeletonSizing": {
+      "description": "Skeleton dimensions configuration",
+      "valueFormat": {
+        "structure": "object with width/height",
+        "notes": "Defines skeleton loader dimensions. Object with 'width' and 'height' properties (numbers or strings with units). Default matches input size. Use to prevent layout shift during loading. Only applies when skeletonStatus=true.",
+        "typescript": "{ width?: number | string; height?: number | string; }",
+        "example": ":skeleton-sizing=\"{ width: '100%', height: '40px' }\""
+      }
+    }
+  },
+  "eventEnrichments": {
+    "input": {
+      "description": "Emitted on every keystroke",
+      "payload": "string | number - current input value",
+      "usage": "@input=\"handleInput\""
+    },
+    "change": {
+      "description": "Emitted when input loses focus with changed value",
+      "payload": "string | number - final committed value",
+      "usage": "@change=\"handleChange\""
+    },
+    "keyup": {
+      "description": "Emitted on key release",
+      "payload": "KeyboardEvent - native keyboard event",
+      "usage": "@keyup=\"handleKeyUp\""
+    },
+    "enter": {
+      "description": "Emitted when Enter key is pressed",
+      "payload": "Event - keyboard event",
+      "usage": "@enter=\"handleSubmit\""
+    },
+    "focus": {
+      "description": "Emitted when input receives focus",
+      "payload": "FocusEvent - native focus event",
+      "usage": "@focus=\"handleFocus\""
+    },
+    "blur": {
+      "description": "Emitted when input loses focus",
+      "payload": "FocusEvent - native blur event",
+      "usage": "@blur=\"handleBlur\""
+    },
+    "leftIconClick": {
+      "description": "Emitted when left icon is clicked",
+      "payload": "MouseEvent - click event",
+      "usage": "@left-icon-click=\"handleLeftIconClick\""
+    },
+    "rightIconClick": {
+      "description": "Emitted when right icon is clicked",
+      "payload": "MouseEvent - click event",
+      "usage": "@right-icon-click=\"handleRightIconClick\""
+    },
+    "prefixClick": {
+      "description": "Emitted when actionable prefix is clicked",
+      "payload": "selected option value from prefixDropdownOptions",
+      "usage": "@prefix-click=\"handlePrefixChange\""
+    },
+    "suffixClick": {
+      "description": "Emitted when actionable suffix is clicked",
+      "payload": "selected option value from suffixDropdownOptions",
+      "usage": "@suffix-click=\"handleSuffixChange\""
+    }
+  },
+  "examples": [
+    {
+      "title": "Basic Text Input with Validation",
+      "description": "Simple text input with label, placeholder, and error state",
+      "code": "<InBasicTextInput\n  id=\"username\"\n  name=\"username\"\n  label-text=\"Username\"\n  placeholder-text=\"Enter your username\"\n  v-model=\"username\"\n  :states=\"usernameError ? 'error' : 'default'\"\n  :state-message=\"usernameError\"\n  helper-message=\"3-20 characters, letters and numbers only\"\n  :max-character-length=\"20\"\n  :character-counter-status=\"true\"\n/>"
+    },
+    {
+      "title": "Number Input with Range Validation",
+      "description": "Number input with min/max limits and decimal support",
+      "code": "<InBasicTextInput\n  id=\"price\"\n  name=\"price\"\n  type=\"number\"\n  label-text=\"Product Price\"\n  placeholder-text=\"0.00\"\n  v-model=\"price\"\n  :prefix-status=\"true\"\n  prefix-text=\"$\"\n  :allow-decimal=\"true\"\n  :allow-comma=\"true\"\n  :min-value=\"0\"\n  :max-value=\"999999\"\n  helper-message=\"Enter price in USD\"\n/>"
+    },
+    {
+      "title": "Search Input with Icon",
+      "description": "Text input with search icon and clear button",
+      "code": "<InBasicTextInput\n  id=\"search\"\n  name=\"search\"\n  placeholder-text=\"Search products...\"\n  v-model=\"searchQuery\"\n  :left-icon-status=\"true\"\n  left-icon-name=\"search\"\n  :right-icon-status=\"!!searchQuery\"\n  right-icon-name=\"x\"\n  @right-icon-click=\"clearSearch\"\n  @enter=\"performSearch\"\n/>"
+    },
+    {
+      "title": "Currency Input with Dropdown",
+      "description": "Number input with actionable currency prefix selector",
+      "code": "<InBasicTextInput\n  id=\"amount\"\n  name=\"amount\"\n  type=\"number\"\n  label-text=\"Amount\"\n  placeholder-text=\"0.00\"\n  v-model=\"amount\"\n  :prefix-status=\"true\"\n  :actionable-prefix-status=\"true\"\n  :prefix-dropdown-options=\"[\n    { text: 'USD ($)', value: 'usd' },\n    { text: 'EUR (€)', value: 'eur' },\n    { text: 'GBP (£)', value: 'gbp' }\n  ]\"\n  :allow-decimal=\"true\"\n  @prefix-click=\"handleCurrencyChange\"\n/>"
+    },
+    {
+      "title": "Password Input with Toggle",
+      "description": "Password field with visibility toggle icon",
+      "code": "<InBasicTextInput\n  id=\"password\"\n  name=\"password\"\n  :type=\"showPassword ? 'text' : 'password'\"\n  label-text=\"Password\"\n  placeholder-text=\"Enter password\"\n  v-model=\"password\"\n  auto-complete=\"current-password\"\n  :right-icon-status=\"true\"\n  :right-icon-name=\"showPassword ? 'eye-off' : 'eye'\"\n  @right-icon-click=\"showPassword = !showPassword\"\n  helper-message=\"Min 8 characters, 1 uppercase, 1 number\"\n  :states=\"passwordError ? 'error' : 'default'\"\n  :state-message=\"passwordError\"\n/>"
+    },
+    {
+      "title": "Weight Input with Unit Selector",
+      "description": "Number input with actionable unit suffix dropdown",
+      "code": "<InBasicTextInput\n  id=\"weight\"\n  name=\"weight\"\n  type=\"number\"\n  label-text=\"Weight\"\n  placeholder-text=\"0\"\n  v-model=\"weight\"\n  :suffix-status=\"true\"\n  :actionable-suffix-status=\"true\"\n  :suffix-dropdown-options=\"[\n    { text: 'kg', value: 'kg' },\n    { text: 'lb', value: 'lb' },\n    { text: 'g', value: 'g' }\n  ]\"\n  :allow-decimal=\"true\"\n  :min-value=\"0\"\n  @suffix-click=\"handleUnitChange\"\n/>"
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Using states='error' without stateMessage",
+      "impact": "User sees red border but doesn't know what's wrong",
+      "fix": "Always provide state-message when using error/warning/success states",
+      "severity": "high"
+    },
+    {
+      "mistake": "Using minValue/maxValue with type='text'",
+      "impact": "Validation doesn't work - these only apply to number inputs",
+      "fix": "Ensure type=\"number\" when using min-value or max-value props",
+      "severity": "high"
+    },
+    {
+      "mistake": "Setting actionablePrefixStatus without prefixDropdownOptions",
+      "impact": "Dropdown appears empty or non-functional",
+      "fix": "Always provide :prefix-dropdown-options array when actionable-prefix-status is true",
+      "severity": "high"
+    },
+    {
+      "mistake": "Disabling preventXss without server-side validation",
+      "impact": "Critical security vulnerability - allows XSS attacks",
+      "fix": "Keep prevent-xss=\"true\" (default) unless you have robust server validation",
+      "severity": "critical"
+    },
+    {
+      "mistake": "Using autoFocus on multiple inputs",
+      "impact": "Focus conflict - unpredictable behavior, only last one gets focus",
+      "fix": "Only use auto-focus on ONE input per page/modal",
+      "severity": "medium"
+    },
+    {
+      "mistake": "Setting maxCharacterLength without characterCounterStatus",
+      "impact": "Limit enforced silently - user doesn't see character count",
+      "fix": "Enable character-counter-status when using max-character-length for better UX",
+      "severity": "medium"
+    },
+    {
+      "mistake": "Forgetting to handle @enter event for search inputs",
+      "impact": "User must click search button, can't use Enter key",
+      "fix": "Add @enter handler for search and form submission use cases",
+      "severity": "medium"
+    },
+    {
+      "mistake": "Using allowDecimal with integer-only scenarios",
+      "impact": "Users can enter decimals where not appropriate (age, count)",
+      "fix": "Set :allow-decimal=\"false\" for quantities, ages, counts",
+      "severity": "low"
+    }
+  ],
+  "bestPractices": [
+    {
+      "practice": "Always pair validation states with messages",
+      "description": "Provide clear stateMessage for error/warning/success states",
+      "example": ":states=\"'error'\"\nstate-message=\"Email format is invalid\""
+    },
+    {
+      "practice": "Use helperMessage for format guidance",
+      "description": "Show expected format before user makes mistakes",
+      "example": "helper-message=\"Format: (555) 123-4567\""
+    },
+    {
+      "practice": "Enable character counter for length-limited inputs",
+      "description": "Show remaining characters for tweets, SMS, bios",
+      "example": ":max-character-length=\"280\"\n:character-counter-status=\"true\""
+    },
+    {
+      "practice": "Use appropriate autocomplete values",
+      "description": "Improve UX with browser autofill for common fields",
+      "example": "auto-complete=\"email\" // For email inputs\nauto-complete=\"current-password\" // For passwords"
+    },
+    {
+      "practice": "Implement proper number validation",
+      "description": "Use type='number' with min/max for numeric inputs",
+      "example": "type=\"number\"\n:min-value=\"0\"\n:max-value=\"100\"\n:allow-decimal=\"true\""
+    },
+    {
+      "practice": "Keep preventXss enabled by default",
+      "description": "Security first - only disable with strong justification",
+      "example": ":prevent-xss=\"true\" // Default, recommended"
+    }
+  ],
+  "codeSnippets": {
+    "basicTextInput": {
+      "title": "Basic Text Input with Validation",
+      "description": "Standard text input with validation states and messages",
+      "code": "<script setup>\nimport { ref, computed } from 'vue';\nimport { InBasicTextInput } from '@useinsider/design-system-vue';\n\nconst email = ref('');\nconst emailError = ref('');\n\nconst emailState = computed(() => {\n  if (!email.value) return 'default';\n  return emailError.value ? 'error' : 'success';\n});\n\nconst validateEmail = () => {\n  if (!email.value.includes('@')) {\n    emailError.value = 'Please enter a valid email';\n  } else {\n    emailError.value = '';\n  }\n};\n</script>\n\n<template>\n  <InBasicTextInput\n    id=\"email\"\n    v-model=\"email\"\n    label-text=\"Email\"\n    placeholder=\"you@example.com\"\n    :states=\"emailState\"\n    :state-message=\"emailError\"\n    auto-complete=\"email\"\n    @blur=\"validateEmail\"\n  />\n</template>"
+    },
+    "numberInputWithRange": {
+      "title": "Number Input with Min/Max",
+      "description": "Numeric input with range validation and decimal support",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InBasicTextInput } from '@useinsider/design-system-vue';\n\nconst price = ref(0);\n</script>\n\n<template>\n  <InBasicTextInput\n    id=\"price\"\n    v-model=\"price\"\n    label-text=\"Price\"\n    type=\"number\"\n    :prefix-status=\"true\"\n    prefix-text=\"$\"\n    :min-value=\"0\"\n    :max-value=\"10000\"\n    :allow-decimal=\"true\"\n    placeholder=\"0.00\"\n    helper-message=\"Enter price between $0 and $10,000\"\n  />\n</template>"
+    },
+    "actionablePrefix": {
+      "title": "Input with Selectable Prefix",
+      "description": "Currency input with dropdown prefix selector",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InBasicTextInput } from '@useinsider/design-system-vue';\n\nconst amount = ref('');\nconst selectedCurrency = ref('$');\n\nconst currencyOptions = [\n  { label: 'USD ($)', value: '$' },\n  { label: 'EUR (€)', value: '€' },\n  { label: 'GBP (£)', value: '£' }\n];\n\nconst handlePrefixClick = (currency) => {\n  selectedCurrency.value = currency;\n};\n</script>\n\n<template>\n  <InBasicTextInput\n    id=\"amount\"\n    v-model=\"amount\"\n    label-text=\"Amount\"\n    type=\"number\"\n    :prefix-status=\"true\"\n    :prefix-text=\"selectedCurrency\"\n    :actionable-prefix-status=\"true\"\n    :prefix-dropdown-options=\"currencyOptions\"\n    @prefixClick=\"handlePrefixClick\"\n  />\n</template>"
+    }
+  },
+  "styling": {
+    "cssVariables": {
+      "--text-input-bg": "Input background color (default: white)",
+      "--text-input-border": "Border color (default: #d0d5dd)",
+      "--text-input-text": "Text color (default: #101828)",
+      "--text-input-placeholder": "Placeholder text color (default: #667085)",
+      "--text-input-focus-border": "Border color when focused (default: primary color)",
+      "--text-input-error-border": "Border color for error state (default: #f04438)",
+      "--text-input-success-border": "Border color for success state (default: #12b76a)",
+      "--text-input-disabled-bg": "Background when disabled (default: #f9fafb)"
+    },
+    "classes": {
+      "in-basic-text-input": "Root container element",
+      "in-basic-text-input__label": "Label text above input",
+      "in-basic-text-input__input": "The actual input element",
+      "in-basic-text-input__prefix": "Prefix text/icon container",
+      "in-basic-text-input__suffix": "Suffix text/icon container",
+      "in-basic-text-input__helper": "Helper text below input",
+      "in-basic-text-input__state-message": "Validation message",
+      "in-basic-text-input__counter": "Character counter",
+      "in-basic-text-input--error": "Applied when states='error'",
+      "in-basic-text-input--disabled": "Applied when disabled=true"
+    },
+    "notes": "Use CSS variables for consistent theming across inputs. The component automatically applies state classes for styling feedback."
+  },
+  "implementationPatterns": [
+    {
+      "name": "Form Validation Pattern",
+      "description": "Real-time validation with debounced API checks",
+      "code": "<script setup>\nimport { ref, watch } from 'vue';\nimport { debounce } from 'lodash-es';\n\nconst username = ref('');\nconst usernameState = ref('default');\nconst usernameMessage = ref('');\n\nconst checkUsername = debounce(async (value) => {\n  if (!value) {\n    usernameState.value = 'default';\n    return;\n  }\n  \n  try {\n    const available = await api.checkUsername(value);\n    if (available) {\n      usernameState.value = 'success';\n      usernameMessage.value = 'Username is available';\n    } else {\n      usernameState.value = 'error';\n      usernameMessage.value = 'Username is already taken';\n    }\n  } catch (error) {\n    usernameState.value = 'error';\n    usernameMessage.value = 'Failed to validate username';\n  }\n}, 500);\n\nwatch(username, checkUsername);\n</script>\n\n<template>\n  <InBasicTextInput\n    v-model=\"username\"\n    :states=\"usernameState\"\n    :state-message=\"usernameMessage\"\n  />\n</template>",
+      "when": "Use for inputs that require async validation (username availability, email verification)",
+      "pros": ["Real-time feedback", "Reduces form submission errors", "Better UX"],
+      "cons": ["Requires debouncing to avoid excessive API calls", "May slow on poor connections"]
+    },
+    {
+      "name": "Character-Limited Input",
+      "description": "Text input with character counter for length constraints",
+      "code": "<script setup>\nimport { ref, computed } from 'vue';\n\nconst bio = ref('');\nconst maxLength = 280;\n\nconst bioState = computed(() => {\n  if (bio.value.length > maxLength) return 'error';\n  if (bio.value.length > maxLength * 0.9) return 'warning';\n  return 'default';\n});\n\nconst bioMessage = computed(() => {\n  if (bio.value.length > maxLength) {\n    return `Bio exceeds maximum length by ${bio.value.length - maxLength} characters`;\n  }\n  return '';\n});\n</script>\n\n<template>\n  <InBasicTextInput\n    v-model=\"bio\"\n    label-text=\"Bio\"\n    :max-character-length=\"maxLength\"\n    :character-counter-status=\"true\"\n    :states=\"bioState\"\n    :state-message=\"bioMessage\"\n    placeholder=\"Tell us about yourself...\"\n  />\n</template>",
+      "when": "Use for tweets, SMS messages, bios, or any length-constrained text",
+      "pros": ["Clear visual feedback", "Prevents submission errors", "Helps users stay within limits"],
+      "cons": ["May feel restrictive for some use cases"]
+    },
+    {
+      "name": "Multi-Unit Input",
+      "description": "Numeric input with switchable unit suffix",
+      "code": "<script setup>\nimport { ref } from 'vue';\n\nconst distance = ref('');\nconst unit = ref('km');\n\nconst unitOptions = [\n  { label: 'Kilometers', value: 'km' },\n  { label: 'Miles', value: 'mi' },\n  { label: 'Meters', value: 'm' }\n];\n\nconst handleSuffixClick = (selectedUnit) => {\n  unit.value = selectedUnit;\n};\n</script>\n\n<template>\n  <InBasicTextInput\n    v-model=\"distance\"\n    type=\"number\"\n    label-text=\"Distance\"\n    :suffix-status=\"true\"\n    :suffix-text=\"unit\"\n    :actionable-suffix-status=\"true\"\n    :suffix-dropdown-options=\"unitOptions\"\n    @suffixClick=\"handleSuffixClick\"\n  />\n</template>",
+      "when": "Use for measurements, currencies, or any value with multiple unit options",
+      "pros": ["Flexible unit conversion", "Clean UI without extra dropdowns", "Better UX than separate selectors"],
+      "cons": ["Requires handling unit conversion logic"]
+    }
+  ],
+  "useCases": [
+    {
+      "title": "User Registration Forms",
+      "description": "Collect user information with validation",
+      "example": "Email, username, password fields with real-time validation, clear error messages, and autocomplete support for better UX"
+    },
+    {
+      "title": "E-commerce Product Pricing",
+      "description": "Enter product prices with currency selection",
+      "example": "Price input with actionable prefix for currency selector ($, €, £), decimal support, and min/max validation"
+    },
+    {
+      "title": "Search and Filter Inputs",
+      "description": "Text inputs for searching and filtering data",
+      "example": "Search bars with clearable suffix, loading states during search, and helper text for search syntax guidance"
+    },
+    {
+      "title": "Settings and Preferences",
+      "description": "Configuration inputs with constraints",
+      "example": "Timeout values (number), API keys (text with copy suffix), character limits with counters for display names"
+    }
+  ],
+  "performanceNotes": [
+    {
+      "topic": "Input validation performance",
+      "description": "Frequent validation on every keystroke can impact performance",
+      "recommendation": "Use debouncing for expensive validation operations (API calls, complex regex). Validate on @blur for simple client-side checks, @input with debounce for async validation",
+      "impact": "medium"
+    },
+    {
+      "topic": "Large forms with many inputs",
+      "description": "Many InBasicTextInput instances can slow rendering",
+      "recommendation": "Use v-if to conditionally render sections, implement virtual scrolling for 50+ inputs, lazy-load validation rules",
+      "impact": "low"
+    },
+    {
+      "topic": "Prefix/suffix dropdown rendering",
+      "description": "Large dropdown option lists can delay interaction",
+      "recommendation": "Limit dropdown options to 10-15 items, use searchable dropdown for larger lists, consider separate selector for 20+ options",
+      "impact": "low"
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "topic": "Label requirement",
+      "description": "All inputs must have associated labels for screen readers",
+      "wcagLevel": "A",
+      "recommendation": "Always provide labelText prop. If visual label is not desired, use aria-label attribute",
+      "example": "label-text=\"Email Address\" // Visible label\naria-label=\"Search query\" // Invisible label"
+    },
+    {
+      "topic": "Error message announcement",
+      "description": "Validation errors must be announced to screen readers",
+      "wcagLevel": "AA",
+      "recommendation": "Component automatically adds aria-describedby linking to stateMessage. Ensure stateMessage is provided when states='error'",
+      "example": ":states=\"'error'\"\nstate-message=\"Email is required\" // Announced to screen readers"
+    },
+    {
+      "topic": "Autocomplete for common fields",
+      "description": "Enable browser autofill for better accessibility and UX",
+      "wcagLevel": "AA",
+      "recommendation": "Use autoComplete prop with standard values: 'email', 'name', 'tel', 'current-password', 'new-password', etc.",
+      "example": "auto-complete=\"email\" // For email inputs"
+    },
+    {
+      "topic": "Keyboard navigation",
+      "description": "All interactive elements must be keyboard accessible",
+      "wcagLevel": "A",
+      "recommendation": "Component handles Tab/Shift+Tab navigation. For actionable prefix/suffix, ensure @prefixClick/@suffixClick handlers work with Enter/Space keys",
+      "example": "// Component automatically handles keyboard for dropdowns"
+    }
+  ],
+  "helperFunctions": [
+    {
+      "name": "validateEmail",
+      "description": "Validate email format with regex",
+      "code": "function validateEmail(email: string): boolean {\n  const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\n  return emailRegex.test(email);\n}",
+      "parameters": [
+        {
+          "name": "email",
+          "type": "string",
+          "description": "Email address to validate"
+        }
+      ],
+      "returnType": "boolean",
+      "example": "const isValid = validateEmail('user@example.com');\n// Returns: true"
+    },
+    {
+      "name": "formatCurrency",
+      "description": "Format number as currency with symbol and decimals",
+      "code": "function formatCurrency(value: number, currency: string = '$', decimals: number = 2): string {\n  return `${currency}${value.toFixed(decimals)}`;\n}",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "number",
+          "description": "Numeric value to format"
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "description": "Currency symbol (default: '$')"
+        },
+        {
+          "name": "decimals",
+          "type": "number",
+          "description": "Decimal places (default: 2)"
+        }
+      ],
+      "returnType": "string",
+      "example": "const formatted = formatCurrency(1234.5, '$', 2);\n// Returns: '$1234.50'"
+    },
+    {
+      "name": "sanitizeInput",
+      "description": "Remove potentially dangerous characters for XSS prevention",
+      "code": "function sanitizeInput(input: string): string {\n  return input\n    .replace(/</g, '&lt;')\n    .replace(/>/g, '&gt;')\n    .replace(/\"/g, '&quot;')\n    .replace(/'/g, '&#x27;')\n    .replace(/\\//g, '&#x2F;');\n}",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "string",
+          "description": "User input to sanitize"
+        }
+      ],
+      "returnType": "string",
+      "example": "const safe = sanitizeInput('<script>alert(1)</script>');\n// Returns: '&lt;script&gt;alert(1)&lt;&#x2F;script&gt;'"
+    }
+  ]
+}

@@ -241,5 +241,219 @@
       "description": "Prevent users from adding arbitrary attributes",
       "example": "strict-add-mode"
     }
+  ],
+  "codeSnippets": {
+    "basicSuperInput": {
+      "title": "Basic Super Input with Dynamic Content",
+      "description": "Text input with dynamic attribute insertion",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InSuperInput } from '@useinsider/design-system-vue';\n\nconst message = ref('');\n\nconst attributes = [\n  { label: 'First Name', value: 'first_name' },\n  { label: 'Last Name', value: 'last_name' },\n  { label: 'Email', value: 'email' },\n  { label: 'Company', value: 'company' }\n];\n</script>\n\n<template>\n  <InSuperInput\n    v-model=\"message\"\n    label=\"Message\"\n    :dynamic-content-support=\"true\"\n    :attribute-list=\"attributes\"\n    placeholder=\"Type your message...\"\n    fall-back-text=\"Customer\"\n  />\n</template>"
+    },
+    "smsTemplateInput": {
+      "title": "SMS Template with Character Limit",
+      "description": "SMS message with length validation and dynamic content",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InSuperInput } from '@useinsider/design-system-vue';\n\nconst smsContent = ref('');\nconst cleanContent = ref('');\n\nconst smsAttributes = [\n  { label: 'First Name', value: 'first_name', category: 'User' },\n  { label: 'Phone', value: 'phone', category: 'User' },\n  { label: 'Order ID', value: 'order_id', category: 'Order' },\n  { label: 'Total', value: 'total', category: 'Order' }\n];\n\nconst handlePurify = (sanitized) => {\n  cleanContent.value = sanitized;\n};\n</script>\n\n<template>\n  <InSuperInput\n    v-model=\"smsContent\"\n    label=\"SMS Message\"\n    :dynamic-content-support=\"true\"\n    :attribute-list=\"smsAttributes\"\n    :text-validate-config=\"{ maxLength: 160 }\"\n    :character-counter-status=\"true\"\n    fall-back-text=\"Customer\"\n    fall-back-label=\"Default if empty\"\n    @purify=\"handlePurify\"\n  />\n</template>"
+    },
+    "emailSubjectInput": {
+      "title": "Email Subject with Strict Validation",
+      "description": "Email subject line with controlled dynamic content",
+      "code": "<script setup>\nimport { ref, computed } from 'vue';\nimport { InSuperInput } from '@useinsider/design-system-vue';\n\nconst subject = ref('');\nconst formSubmitted = ref(false);\n\nconst emailAttributes = [\n  { label: 'First Name', value: 'first_name' },\n  { label: 'Product Name', value: 'product_name' },\n  { label: 'Discount', value: 'discount' }\n];\n\nconst validationState = computed(() => {\n  if (!formSubmitted.value) return {};\n  \n  if (!subject.value) {\n    return {\n      invalid: true,\n      invalidMessage: 'Subject is required'\n    };\n  }\n  \n  if (subject.value.length > 100) {\n    return {\n      warning: true,\n      warningMessage: 'Subject exceeds recommended length (100 chars)'\n    };\n  }\n  \n  return {};\n});\n</script>\n\n<template>\n  <InSuperInput\n    v-model=\"subject\"\n    label=\"Email Subject\"\n    :dynamic-content-support=\"true\"\n    :attribute-list=\"emailAttributes\"\n    strict-add-mode\n    :text-validate-config=\"{ required: true, maxLength: 200 }\"\n    :fall-back-disabled-characters=\"['<', '>', '&', '\\\"']\"\n    v-bind=\"validationState\"\n  />\n</template>"
+    }
+  },
+  "styling": {
+    "cssVariables": {
+      "--super-input-bg": "Input background (default: white)",
+      "--super-input-border": "Border color (default: #d0d5dd)",
+      "--super-input-text": "Text color (default: #101828)",
+      "--super-input-placeholder": "Placeholder color (default: #667085)",
+      "--super-input-tag-bg": "Dynamic attribute tag background (default: #eff8ff)",
+      "--super-input-tag-text": "Dynamic attribute tag text (default: #175cd3)",
+      "--super-input-tag-border": "Tag border color (default: #b2ddff)",
+      "--super-input-attribute-btn": "Attribute dropdown button color (default: primary)",
+      "--super-input-counter": "Character counter text color (default: #667085)"
+    },
+    "classes": {
+      "in-super-input": "Root container",
+      "in-super-input__label": "Label text above input",
+      "in-super-input__wrapper": "Input and controls wrapper",
+      "in-super-input__input": "The text input element",
+      "in-super-input__tag": "Dynamic attribute tag",
+      "in-super-input__attribute-btn": "Attribute dropdown button",
+      "in-super-input__dropdown": "Attribute selection dropdown",
+      "in-super-input__counter": "Character counter display",
+      "in-super-input__fallback-modal": "Fallback value modal",
+      "in-super-input--invalid": "Applied when invalid=true"
+    },
+    "notes": "Dynamic attribute tags are styled with pill/chip design. Fallback modal appears when clicking on a tag to set default value."
+  },
+  "implementationPatterns": [
+    {
+      "name": "SMS Campaign Template",
+      "description": "SMS template with character counting and dynamic personalization",
+      "code": "<script setup>\nimport { ref, computed } from 'vue';\nimport { InSuperInput } from '@useinsider/design-system-vue';\n\nconst smsTemplate = ref('');\nconst estimatedLength = ref(0);\n\nconst userAttributes = [\n  { label: 'First Name', value: 'first_name', category: 'User' },\n  { label: 'Order Number', value: 'order_number', category: 'Order' },\n  { label: 'Tracking Link', value: 'tracking_link', category: 'Order' }\n];\n\n// Estimate length with max attribute values\nconst maxAttributeLengths = {\n  first_name: 30,\n  order_number: 12,\n  tracking_link: 50\n};\n\nconst calculateEstimatedLength = (content: string) => {\n  let length = content.length;\n  \n  // Replace each {{attribute}} with its max length\n  Object.entries(maxAttributeLengths).forEach(([attr, maxLen]) => {\n    const pattern = new RegExp(`{{${attr}}}`, 'g');\n    const matches = content.match(pattern) || [];\n    length += matches.length * (maxLen - `{{${attr}}}`.length);\n  });\n  \n  return length;\n};\n\nconst handlePurify = (clean: string) => {\n  estimatedLength.value = calculateEstimatedLength(clean);\n};\n\nconst lengthState = computed(() => {\n  if (estimatedLength.value > 160) {\n    return {\n      warning: true,\n      warningMessage: `Message may exceed 160 chars (estimated: ${estimatedLength.value})`\n    };\n  }\n  return {};\n});\n</script>\n\n<template>\n  <InSuperInput\n    v-model=\"smsTemplate\"\n    label=\"SMS Template\"\n    :dynamic-content-support=\"true\"\n    :attribute-list=\"userAttributes\"\n    :text-validate-config=\"{ maxLength: 320 }\"\n    :character-counter-status=\"true\"\n    fall-back-text=\"Customer\"\n    @purify=\"handlePurify\"\n    v-bind=\"lengthState\"\n  />\n  <p class=\"help-text\">Estimated length with attributes: {{ estimatedLength }} chars</p>\n</template>",
+      "when": "Use for SMS campaigns where character count is critical and attributes vary in length",
+      "pros": ["Accurate length estimation", "Prevents SMS splitting", "Real-time feedback"],
+      "cons": ["Requires maintaining max length mapping", "Complex calculation"]
+    },
+    {
+      "name": "Controlled Email Template",
+      "description": "Email template with strict attribute control and XSS prevention",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InSuperInput } from '@useinsider/design-system-vue';\n\nconst emailBody = ref('');\nconst sanitizedBody = ref('');\n\nconst allowedAttributes = [\n  { label: 'Customer Name', value: 'customer_name', category: 'Customer' },\n  { label: 'Product Name', value: 'product_name', category: 'Product' },\n  { label: 'Order Total', value: 'order_total', category: 'Order' },\n  { label: 'Support Link', value: 'support_link', category: 'Links' }\n];\n\nconst forbiddenChars = ['<', '>', '&', '\"', \"'\", '/'];\n\nconst handlePurify = (clean: string) => {\n  sanitizedBody.value = clean;\n  // Additional server-side validation recommended\n};\n\nconst handleSubmit = async () => {\n  // Use sanitizedBody for API call, not raw emailBody\n  await api.saveEmailTemplate({ body: sanitizedBody.value });\n};\n</script>\n\n<template>\n  <InSuperInput\n    v-model=\"emailBody\"\n    label=\"Email Body\"\n    :dynamic-content-support=\"true\"\n    :attribute-list=\"allowedAttributes\"\n    strict-add-mode\n    :fall-back-disabled-characters=\"forbiddenChars\"\n    fall-back-label=\"Default value\"\n    @purify=\"handlePurify\"\n  />\n</template>",
+      "when": "Use for email templates where security is critical and only specific attributes are allowed",
+      "pros": ["Prevents XSS attacks", "Controlled attribute set", "Sanitized output"],
+      "cons": ["Strict restrictions may limit flexibility"]
+    },
+    {
+      "name": "Multi-Language Template",
+      "description": "Template supporting multiple languages with dynamic content",
+      "code": "<script setup>\nimport { ref, computed } from 'vue';\nimport { InSuperInput } from '@useinsider/design-system-vue';\n\nconst selectedLanguage = ref('en');\nconst templates = ref({\n  en: 'Hello {{first_name}}, welcome!',\n  es: 'Hola {{first_name}}, bienvenido!',\n  fr: 'Bonjour {{first_name}}, bienvenue!'\n});\n\nconst attributes = [\n  { label: 'First Name', value: 'first_name' },\n  { label: 'Last Name', value: 'last_name' }\n];\n\nconst currentTemplate = computed({\n  get: () => templates.value[selectedLanguage.value],\n  set: (val) => { templates.value[selectedLanguage.value] = val; }\n});\n</script>\n\n<template>\n  <div>\n    <select v-model=\"selectedLanguage\">\n      <option value=\"en\">English</option>\n      <option value=\"es\">Spanish</option>\n      <option value=\"fr\">French</option>\n    </select>\n    \n    <InSuperInput\n      v-model=\"currentTemplate\"\n      :label=\"`Template (${selectedLanguage.toUpperCase()})`\"\n      :dynamic-content-support=\"true\"\n      :attribute-list=\"attributes\"\n      fall-back-text=\"Customer\"\n    />\n  </div>\n</template>",
+      "when": "Use for multi-language messaging systems with dynamic personalization",
+      "pros": ["Support multiple languages", "Consistent attributes across languages", "Easy switching"],
+      "cons": ["Requires managing separate templates per language"]
+    }
+  ],
+  "useCases": [
+    {
+      "title": "SMS Campaign Templates",
+      "description": "Personalized SMS messages with character limits",
+      "example": "Marketing SMS: 'Hi {{first_name}}, your order {{order_id}} is ready!' with 160-character limit and character counter"
+    },
+    {
+      "title": "Email Subject Lines",
+      "description": "Dynamic email subjects with personalization",
+      "example": "Transactional email: '{{first_name}}, your {{product_name}} order is confirmed' with strict validation and XSS prevention"
+    },
+    {
+      "title": "Push Notification Templates",
+      "description": "App push notifications with dynamic content",
+      "example": "Push notification: 'Welcome back {{username}}! You have {{unread_count}} new messages' with 100-char limit"
+    },
+    {
+      "title": "Chatbot Response Templates",
+      "description": "Automated chatbot responses with user data",
+      "example": "Customer support: 'Hello {{customer_name}}, your ticket {{ticket_id}} has been updated' with fallback values for missing data"
+    }
+  ],
+  "performanceNotes": [
+    {
+      "topic": "Large attribute lists",
+      "description": "Rendering 100+ attributes in dropdown can slow UI",
+      "recommendation": "Categorize attributes (category property) and use grouped dropdown. Limit to 50 attributes or implement search/filtering in dropdown",
+      "impact": "medium"
+    },
+    {
+      "topic": "Real-time character counting with attributes",
+      "description": "Calculating estimated length with dynamic attributes on every keystroke",
+      "recommendation": "Debounce length calculations (200-300ms). Use @purify event which fires less frequently than @input. Cache attribute max lengths",
+      "impact": "low"
+    },
+    {
+      "topic": "Fallback modal rendering",
+      "description": "Opening fallback modal for each attribute click",
+      "recommendation": "Modal is lightweight, but limit fallback validation complexity. Use simple character blacklists instead of heavy regex validation",
+      "impact": "low"
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "topic": "Label requirement",
+      "description": "Input must have associated label for screen readers",
+      "wcagLevel": "A",
+      "recommendation": "Always provide label prop. Component automatically links label to input with for/id attributes",
+      "example": "label=\"Message Template\" // Required for accessibility"
+    },
+    {
+      "topic": "Dynamic attribute tags",
+      "description": "Attribute tags must be keyboard accessible and announced",
+      "wcagLevel": "A",
+      "recommendation": "Component adds role='button' and aria-label to each tag. Tags are keyboard accessible (Tab to focus, Enter/Space to open fallback modal)",
+      "example": "// Component announces: 'Dynamic attribute: First Name'"
+    },
+    {
+      "topic": "Attribute dropdown accessibility",
+      "description": "Dropdown must be keyboard navigable and properly labeled",
+      "wcagLevel": "A",
+      "recommendation": "Component handles: Enter/Space to open dropdown, Arrow keys to navigate, Enter to select, Escape to close. Dropdown has aria-label='Insert dynamic attribute'",
+      "example": ":dynamic-content-support=\"true\" // Automatic A11y handling"
+    },
+    {
+      "topic": "Character counter announcement",
+      "description": "Screen readers should announce character count updates",
+      "wcagLevel": "AA",
+      "recommendation": "Component updates aria-live region with character count. Announces at intervals (every 10% of limit) to avoid spam",
+      "example": ":character-counter-status=\"true\" // Announces count changes"
+    }
+  ],
+  "helperFunctions": [
+    {
+      "name": "calculateAttributeLength",
+      "description": "Calculate estimated text length with expanded attributes",
+      "code": "function calculateAttributeLength(\n  content: string,\n  attributeMaxLengths: Record<string, number>\n): number {\n  let estimatedLength = content.length;\n  \n  Object.entries(attributeMaxLengths).forEach(([attr, maxLen]) => {\n    const tagPattern = new RegExp(`{{${attr}}}`, 'g');\n    const matches = content.match(tagPattern) || [];\n    const tagLength = `{{${attr}}}`.length;\n    \n    // Replace tag length with actual max length\n    estimatedLength += matches.length * (maxLen - tagLength);\n  });\n  \n  return estimatedLength;\n}",
+      "parameters": [
+        {
+          "name": "content",
+          "type": "string",
+          "description": "Template content with attribute tags"
+        },
+        {
+          "name": "attributeMaxLengths",
+          "type": "Record<string, number>",
+          "description": "Max length for each attribute"
+        }
+      ],
+      "returnType": "number",
+      "example": "const length = calculateAttributeLength(\n  'Hello {{name}}!',\n  { name: 50 }\n);\n// Returns: 57 (Hello  + 50 + !)"
+    },
+    {
+      "name": "extractAttributes",
+      "description": "Extract all attribute tags from template content",
+      "code": "function extractAttributes(content: string): string[] {\n  const attributePattern = /{{([^}]+)}}/g;\n  const matches = content.matchAll(attributePattern);\n  \n  return Array.from(matches, match => match[1]);\n}",
+      "parameters": [
+        {
+          "name": "content",
+          "type": "string",
+          "description": "Template content with attribute tags"
+        }
+      ],
+      "returnType": "string[]",
+      "example": "const attrs = extractAttributes('Hi {{first_name}} {{last_name}}');\n// Returns: ['first_name', 'last_name']"
+    },
+    {
+      "name": "replaceAttributes",
+      "description": "Replace attribute tags with actual values",
+      "code": "function replaceAttributes(\n  template: string,\n  attributeValues: Record<string, string>,\n  fallbackText: string = ''\n): string {\n  return template.replace(/{{([^}]+)}}/g, (match, attr) => {\n    return attributeValues[attr] || fallbackText || match;\n  });\n}",
+      "parameters": [
+        {
+          "name": "template",
+          "type": "string",
+          "description": "Template with attribute tags"
+        },
+        {
+          "name": "attributeValues",
+          "type": "Record<string, string>",
+          "description": "Actual values for each attribute"
+        },
+        {
+          "name": "fallbackText",
+          "type": "string",
+          "description": "Default text for missing attributes"
+        }
+      ],
+      "returnType": "string",
+      "example": "const result = replaceAttributes(\n  'Hello {{name}}!',\n  { name: 'John' },\n  'Customer'\n);\n// Returns: 'Hello John!'"
+    },
+    {
+      "name": "validateAttributeSyntax",
+      "description": "Validate that all attribute tags are properly formatted",
+      "code": "function validateAttributeSyntax(content: string): { valid: boolean; errors: string[] } {\n  const errors: string[] = [];\n  \n  // Check for unclosed tags\n  const openBraces = (content.match(/{{/g) || []).length;\n  const closeBraces = (content.match(/}}/g) || []).length;\n  \n  if (openBraces !== closeBraces) {\n    errors.push('Mismatched braces: unclosed attribute tag');\n  }\n  \n  // Check for empty tags\n  if (/{{\\s*}}/.test(content)) {\n    errors.push('Empty attribute tag found');\n  }\n  \n  return {\n    valid: errors.length === 0,\n    errors\n  };\n}",
+      "parameters": [
+        {
+          "name": "content",
+          "type": "string",
+          "description": "Template content to validate"
+        }
+      ],
+      "returnType": "{ valid: boolean; errors: string[] }",
+      "example": "const validation = validateAttributeSyntax('Hello {{name');\n// Returns: { valid: false, errors: ['Mismatched braces...'] }"
+    }
   ]
 }

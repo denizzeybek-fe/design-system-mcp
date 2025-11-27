@@ -1,0 +1,444 @@
+{
+  "component": "InProgress",
+  "_metadata": {
+    "lastUpdated": "2025-11-28T00:00:00.000Z",
+    "propsHash": "inprogress-v1-19props",
+    "eventsHash": "inprogress-v1-1event",
+    "propCount": 19,
+    "eventCount": 1
+  },
+  "propEnrichments": {
+    "value": {
+      "valueFormat": {
+        "structure": "Number",
+        "notes": "Current progress value. Must be between 0 and maxValue. Represents the completed portion of the task. For percentage-based progress, use 0-100 range with maxValue=100 (default).",
+        "typescript": "number",
+        "example": "45 // 45% complete when maxValue=100\n3 // 3 of 10 steps when maxValue=10"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Setting value greater than maxValue",
+          "why": "Progress bar should not exceed 100% completion",
+          "impact": "Visual overflow or progress bar appearing full when task incomplete",
+          "fix": "Ensure value <= maxValue, clamp value programmatically",
+          "severity": "medium",
+          "example": "// Wrong:\n:value=\"150\" :maxValue=\"100\"\n\n// Correct:\n:value=\"Math.min(currentValue, maxValue)\""
+        }
+      ]
+    },
+    "maxValue": {
+      "valueFormat": {
+        "structure": "Number",
+        "notes": "Maximum value representing 100% completion. Default is 100 for percentage-based progress. Use custom values for step-based progress (e.g., maxValue=5 for 5-step process).",
+        "typescript": "number",
+        "example": "100 // Percentage-based (0-100)\n10 // 10 steps total\n500 // 500 files to process"
+      }
+    },
+    "variant": {
+      "valueFormat": {
+        "structure": "'default' | 'indeterminate'",
+        "notes": "Progress bar variant. 'default': shows definite progress with value. 'indeterminate': animated loading indicator when progress is unknown (ignores value prop).",
+        "typescript": "'default' | 'indeterminate'",
+        "example": "'default' // Show 45% progress\n'indeterminate' // Unknown duration loading"
+      },
+      "possibleValues": [
+        {
+          "value": "default",
+          "description": "Determinate progress bar showing exact percentage/value"
+        },
+        {
+          "value": "indeterminate",
+          "description": "Animated loading indicator for unknown duration tasks"
+        }
+      ],
+      "commonMistakes": [
+        {
+          "mistake": "Using variant='default' when progress is unknown",
+          "why": "Showing 0% or stuck progress confuses users",
+          "impact": "Users think process is frozen or not working",
+          "fix": "Use variant='indeterminate' for unknown-duration tasks",
+          "severity": "medium",
+          "example": "// Wrong: API call with unknown time\n<InProgress :value=\"0\" variant=\"default\" />\n\n// Correct:\n<InProgress variant=\"indeterminate\" />"
+        }
+      ]
+    },
+    "semiCircle": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "When true, displays progress as semi-circle/gauge instead of linear bar. Useful for dashboard widgets and compact displays. Works with semiCircleWidth prop.",
+        "typescript": "boolean",
+        "example": "true // Show as gauge/semi-circle\nfalse // Show as linear bar (default)"
+      }
+    },
+    "semiCircleWidth": {
+      "valueFormat": {
+        "structure": "Number",
+        "notes": "Width in pixels for semi-circle progress (only applies when semiCircle=true). Default is 300px. Adjusts both width and height proportionally.",
+        "typescript": "number",
+        "example": "200 // Smaller gauge (200x200)\n400 // Larger gauge (400x400)"
+      }
+    },
+    "success": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "When true, shows success state with green color and success icon. Use when progress reaches 100% or task completes successfully. Overrides normal progress display.",
+        "typescript": "boolean",
+        "example": "true // Show success state"
+      }
+    },
+    "successMessage": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Message displayed in success state (requires success=true). Shows alongside success icon to confirm completion.",
+        "typescript": "string",
+        "example": "'Upload completed successfully!'\n'All 50 files processed'"
+      }
+    },
+    "successIcon": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Icon name shown in success state. Default is 'line-check-neutral'. Use Insider icon system names.",
+        "typescript": "string",
+        "example": "'line-check-neutral' // Default checkmark\n'line-check-circle' // Circle checkmark"
+      }
+    },
+    "invalid": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "When true, shows error/invalid state with red color and error icon. Use when task fails or encounters error during progress.",
+        "typescript": "boolean",
+        "example": "true // Show error state"
+      }
+    },
+    "invalidMessage": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Error message displayed in invalid state (requires invalid=true). Explains what went wrong.",
+        "typescript": "string",
+        "example": "'Upload failed - file too large'\n'Processing error at step 3'"
+      }
+    },
+    "invalidType": {
+      "valueFormat": {
+        "structure": "'button' | 'text'",
+        "notes": "How to display the invalid state. 'button': shows retry button with icon (emits click event). 'text': shows text message only.",
+        "typescript": "'button' | 'text'",
+        "example": "'button' // Show retry button\n'text' // Show error message only"
+      }
+    },
+    "invalidIcon": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Icon name shown in invalid state. Default is 'line-redo' (retry icon). Use Insider icon system names.",
+        "typescript": "string",
+        "example": "'line-redo' // Default retry icon\n'line-alert-triangle' // Warning icon"
+      }
+    },
+    "descriptionStatus": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "When true, shows description text alongside progress bar. Use with description prop to provide context about the ongoing task.",
+        "typescript": "boolean",
+        "example": "true // Show description\nfalse // Hide description (default)"
+      }
+    },
+    "description": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Description text shown when descriptionStatus=true. Provides context about what's being processed. Can include dynamic content like current step or filename.",
+        "typescript": "string",
+        "example": "'Uploading report.pdf...'\n'Processing 45 of 100 records'\n'Step 3 of 5: Analyzing data'"
+      }
+    },
+    "descriptionPosition": {
+      "valueFormat": {
+        "structure": "'left' | 'right' | 'top' | 'bottom'",
+        "notes": "Position of description text relative to progress bar. Default is 'left'.",
+        "typescript": "'left' | 'right' | 'top' | 'bottom'",
+        "example": "'left' // Description on left (default)\n'top' // Description above progress bar\n'bottom' // Description below progress bar"
+      }
+    },
+    "completed": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Alternative way to show completion state. Similar to success but without requiring success message/icon. Use for simple completion indication.",
+        "typescript": "boolean",
+        "example": "true // Mark as completed"
+      }
+    }
+  },
+  "eventEnrichments": {
+    "click": {
+      "description": "Emitted when user clicks the progress component (typically the retry button in invalid state)",
+      "payload": "MouseEvent",
+      "when": "User clicks retry button when invalid=true and invalidType='button'. Use to retry failed operation."
+    }
+  },
+  "codeSnippets": {
+    "basicProgress": {
+      "title": "Basic Progress Bar",
+      "description": "Simple percentage-based progress",
+      "code": "<template>\n  <InProgress\n    id=\"upload-progress\"\n    :value=\"uploadProgress\"\n    :maxValue=\"100\"\n    :descriptionStatus=\"true\"\n    :description=\"`Uploading... ${uploadProgress}%`\"\n  />\n</template>\n\n<script setup>\nconst uploadProgress = ref(0);\n\n// Simulate upload progress\nconst simulateUpload = () => {\n  const interval = setInterval(() => {\n    uploadProgress.value += 10;\n    if (uploadProgress.value >= 100) {\n      clearInterval(interval);\n    }\n  }, 500);\n};\n</script>"
+    },
+    "progressWithStates": {
+      "title": "Progress with Success/Error States",
+      "description": "Handle success and error scenarios",
+      "code": "<template>\n  <InProgress\n    id=\"file-process\"\n    :value=\"progress\"\n    :maxValue=\"100\"\n    :success=\"isSuccess\"\n    :successMessage=\"'All files processed successfully!'\"\n    :invalid=\"isError\"\n    :invalidMessage=\"errorMessage\"\n    :invalidType=\"'button'\"\n    @click=\"retryProcess\"\n  />\n</template>\n\n<script setup>\nconst progress = ref(0);\nconst isSuccess = ref(false);\nconst isError = ref(false);\nconst errorMessage = ref('');\n\nconst processFiles = async () => {\n  try {\n    isError.value = false;\n    for (let i = 0; i <= 100; i += 20) {\n      progress.value = i;\n      await new Promise(resolve => setTimeout(resolve, 500));\n      \n      // Simulate random error\n      if (Math.random() > 0.8) {\n        throw new Error('Processing failed at ' + i + '%');\n      }\n    }\n    isSuccess.value = true;\n  } catch (error) {\n    isError.value = true;\n    errorMessage.value = error.message;\n  }\n};\n\nconst retryProcess = () => {\n  progress.value = 0;\n  isError.value = false;\n  processFiles();\n};\n</script>"
+    },
+    "semiCircleGauge": {
+      "title": "Semi-Circle Gauge Progress",
+      "description": "Compact gauge display for dashboards",
+      "code": "<template>\n  <div class=\"dashboard-widget\">\n    <InProgress\n      id=\"completion-gauge\"\n      :value=\"completionRate\"\n      :maxValue=\"100\"\n      :semiCircle=\"true\"\n      :semiCircleWidth=\"250\"\n      :descriptionStatus=\"true\"\n      :description=\"`${completionRate}% Complete`\"\n      descriptionPosition=\"bottom\"\n    />\n  </div>\n</template>\n\n<script setup>\nconst completionRate = ref(67);\n</script>"
+    }
+  },
+  "styling": {
+    "cssVariables": {
+      "--progress-bar-color": "Color of the progress fill",
+      "--progress-bg-color": "Background color of the progress track",
+      "--progress-success-color": "Color in success state (default: green)",
+      "--progress-error-color": "Color in error state (default: red)"
+    },
+    "classes": {
+      ".in-progress": "Main progress container",
+      ".in-progress__bar": "Progress bar element",
+      ".in-progress__fill": "Progress fill indicator",
+      ".in-progress__semicircle": "Semi-circle/gauge variant",
+      ".in-progress--success": "Success state modifier",
+      ".in-progress--invalid": "Error state modifier",
+      ".in-progress--indeterminate": "Indeterminate animation state"
+    },
+    "notes": "Semi-circle variant uses SVG rendering. Indeterminate variant shows animated loading pattern. Success and invalid states override the default progress color."
+  },
+  "examples": [
+    {
+      "title": "File Upload with Multi-File Progress",
+      "description": "Track multiple file uploads with individual progress bars",
+      "code": "<template>\n  <div class=\"upload-manager\">\n    <h3>Uploading {{ files.length }} files</h3>\n    <div v-for=\"file in files\" :key=\"file.id\" class=\"file-progress\">\n      <InProgress\n        :id=\"`upload-${file.id}`\"\n        :value=\"file.progress\"\n        :maxValue=\"100\"\n        :success=\"file.status === 'completed'\"\n        :successMessage=\"`${file.name} uploaded`\"\n        :invalid=\"file.status === 'error'\"\n        :invalidMessage=\"file.error\"\n        :invalidType=\"'button'\"\n        :descriptionStatus=\"true\"\n        :description=\"getFileDescription(file)\"\n        @click=\"retryUpload(file)\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\n\ninterface FileUpload {\n  id: string;\n  name: string;\n  progress: number;\n  status: 'uploading' | 'completed' | 'error';\n  error?: string;\n}\n\nconst files = ref<FileUpload[]>([\n  { id: '1', name: 'report.pdf', progress: 45, status: 'uploading' },\n  { id: '2', name: 'data.csv', progress: 100, status: 'completed' },\n  { id: '3', name: 'image.jpg', progress: 23, status: 'error', error: 'Network timeout' }\n]);\n\nconst getFileDescription = (file: FileUpload) => {\n  if (file.status === 'completed') return file.name;\n  if (file.status === 'error') return `Failed: ${file.name}`;\n  return `Uploading ${file.name}... ${file.progress}%`;\n};\n\nconst retryUpload = async (file: FileUpload) => {\n  file.progress = 0;\n  file.status = 'uploading';\n  file.error = undefined;\n  \n  // Simulate upload\n  const interval = setInterval(() => {\n    file.progress += 10;\n    if (file.progress >= 100) {\n      clearInterval(interval);\n      file.status = 'completed';\n    }\n  }, 300);\n};\n</script>"
+    },
+    {
+      "title": "Dashboard Performance Gauges",
+      "description": "Multiple semi-circle gauges showing KPI metrics",
+      "code": "<template>\n  <div class=\"kpi-dashboard\">\n    <div class=\"kpi-row\">\n      <div class=\"kpi-card\">\n        <h4>Campaign Completion</h4>\n        <InProgress\n          id=\"campaign-progress\"\n          :value=\"kpis.campaignCompletion\"\n          :semiCircle=\"true\"\n          :semiCircleWidth=\"200\"\n          :descriptionStatus=\"true\"\n          :description=\"`${kpis.campaignCompletion}%`\"\n          descriptionPosition=\"bottom\"\n        />\n      </div>\n      \n      <div class=\"kpi-card\">\n        <h4>Goal Achievement</h4>\n        <InProgress\n          id=\"goal-progress\"\n          :value=\"kpis.goalAchievement\"\n          :semiCircle=\"true\"\n          :semiCircleWidth=\"200\"\n          :success=\"kpis.goalAchievement >= 100\"\n          :descriptionStatus=\"true\"\n          :description=\"`${kpis.goalAchievement}%`\"\n          descriptionPosition=\"bottom\"\n        />\n      </div>\n      \n      <div class=\"kpi-card\">\n        <h4>System Health</h4>\n        <InProgress\n          id=\"health-progress\"\n          :value=\"kpis.systemHealth\"\n          :semiCircle=\"true\"\n          :semiCircleWidth=\"200\"\n          :invalid=\"kpis.systemHealth < 50\"\n          :descriptionStatus=\"true\"\n          :description=\"`${kpis.systemHealth}%`\"\n          descriptionPosition=\"bottom\"\n        />\n      </div>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, onMounted } from 'vue';\n\nconst kpis = ref({\n  campaignCompletion: 67,\n  goalAchievement: 103,\n  systemHealth: 89\n});\n\n// Update KPIs from API\nonMounted(async () => {\n  const data = await fetchKPIs();\n  kpis.value = data;\n});\n</script>\n\n<style scoped>\n.kpi-dashboard {\n  padding: 20px;\n}\n\n.kpi-row {\n  display: flex;\n  gap: 30px;\n  justify-content: center;\n}\n\n.kpi-card {\n  text-align: center;\n}\n</style>"
+    },
+    {
+      "title": "Multi-Step Process with Progress",
+      "description": "Show progress through a multi-step workflow",
+      "code": "<template>\n  <div class=\"workflow\">\n    <div class=\"workflow-header\">\n      <h3>Data Import Process</h3>\n      <p>Step {{ currentStep }} of {{ totalSteps }}</p>\n    </div>\n    \n    <InProgress\n      id=\"workflow-progress\"\n      :value=\"currentStep\"\n      :maxValue=\"totalSteps\"\n      :descriptionStatus=\"true\"\n      :description=\"stepDescriptions[currentStep - 1]\"\n      descriptionPosition=\"top\"\n      :variant=\"isProcessing ? 'indeterminate' : 'default'\"\n      :success=\"currentStep === totalSteps && !isProcessing\"\n      :successMessage=\"'Import completed successfully!'\"\n      :invalid=\"hasError\"\n      :invalidMessage=\"errorMessage\"\n      :invalidType=\"'button'\"\n      @click=\"retryCurrentStep\"\n    />\n    \n    <div class=\"workflow-actions\" v-if=\"!hasError && currentStep < totalSteps\">\n      <button @click=\"processNextStep\" :disabled=\"isProcessing\">\n        {{ isProcessing ? 'Processing...' : 'Next Step' }}\n      </button>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\n\nconst currentStep = ref(1);\nconst totalSteps = 5;\nconst isProcessing = ref(false);\nconst hasError = ref(false);\nconst errorMessage = ref('');\n\nconst stepDescriptions = [\n  'Validating file format...',\n  'Parsing data structure...',\n  'Checking data integrity...',\n  'Importing records...',\n  'Finalizing import...'\n];\n\nconst processNextStep = async () => {\n  isProcessing.value = true;\n  hasError.value = false;\n  \n  try {\n    // Simulate step processing\n    await new Promise((resolve, reject) => {\n      setTimeout(() => {\n        // Simulate random error\n        if (Math.random() > 0.85) {\n          reject(new Error(`Failed at ${stepDescriptions[currentStep.value - 1]}`));\n        } else {\n          resolve(true);\n        }\n      }, 2000);\n    });\n    \n    currentStep.value++;\n  } catch (error) {\n    hasError.value = true;\n    errorMessage.value = error.message;\n  } finally {\n    isProcessing.value = false;\n  }\n};\n\nconst retryCurrentStep = () => {\n  hasError.value = false;\n  errorMessage.value = '';\n  processNextStep();\n};\n</script>"
+    }
+  ],
+  "implementationPatterns": [
+    {
+      "name": "Determinate Progress (Known Duration)",
+      "description": "Use when you can calculate exact progress percentage",
+      "code": "<InProgress\n  id=\"file-upload\"\n  :value=\"bytesUploaded\"\n  :maxValue=\"totalBytes\"\n  variant=\"default\"\n  :descriptionStatus=\"true\"\n  :description=\"`${Math.round(bytesUploaded / totalBytes * 100)}% uploaded`\"\n/>",
+      "when": "File uploads, batch processing with known item count, paginated data loading, step-by-step wizards",
+      "pros": [
+        "Clear user expectation of completion time",
+        "Shows exact progress",
+        "Better UX for long operations"
+      ],
+      "cons": [
+        "Requires accurate progress tracking",
+        "Can stall if progress calculation is wrong"
+      ]
+    },
+    {
+      "name": "Indeterminate Progress (Unknown Duration)",
+      "description": "Use when you cannot predict completion time",
+      "code": "<InProgress\n  id=\"api-call\"\n  variant=\"indeterminate\"\n  :descriptionStatus=\"true\"\n  description=\"Loading data...\"\n/>",
+      "when": "API calls without progress info, database queries, authentication flows, any operation with unpredictable duration",
+      "pros": [
+        "No need to track exact progress",
+        "Simple to implement",
+        "Shows activity is happening"
+      ],
+      "cons": [
+        "No completion expectation",
+        "Can feel slower to users",
+        "May cause anxiety for long operations"
+      ]
+    },
+    {
+      "name": "Progress with Retry Pattern",
+      "description": "Allow users to retry failed operations",
+      "code": "<InProgress\n  id=\"process\"\n  :value=\"progress\"\n  :invalid=\"hasError\"\n  :invalidMessage=\"errorMessage\"\n  :invalidType=\"'button'\"\n  @click=\"retryOperation\"\n/>\n\nconst retryOperation = async () => {\n  progress.value = 0;\n  hasError.value = false;\n  await startOperation();\n};",
+      "when": "Network-dependent operations, file uploads, data synchronization, any failable async task",
+      "pros": [
+        "Recoverable errors",
+        "Better user experience",
+        "No need to restart entire flow"
+      ],
+      "cons": [
+        "Requires error state management",
+        "Need to implement retry logic"
+      ]
+    }
+  ],
+  "useCases": [
+    {
+      "title": "File Upload Progress Tracking",
+      "description": "Show real-time progress for single or multiple file uploads",
+      "example": "Document management system where users upload reports, images, or datasets. Show individual progress bars for each file with success/error states and retry capability."
+    },
+    {
+      "title": "Dashboard KPI Gauges",
+      "description": "Display performance metrics as semi-circle progress gauges",
+      "example": "Marketing dashboard showing campaign completion rate, goal achievement percentage, budget utilization. Use semi-circle gauges for compact, at-a-glance metrics."
+    },
+    {
+      "title": "Multi-Step Workflow Progress",
+      "description": "Track progress through sequential process steps",
+      "example": "Data import wizard: validate → parse → verify → import → finalize. Show current step progress with descriptions and handle step failures with retry."
+    },
+    {
+      "title": "Background Task Monitoring",
+      "description": "Show progress of long-running background operations",
+      "example": "Report generation, data export, batch email sending. Use indeterminate progress initially, switch to determinate when progress info becomes available."
+    }
+  ],
+  "bestPractices": [
+    {
+      "title": "Always Provide Descriptive Feedback",
+      "description": "Use descriptionStatus with meaningful messages about what's happening",
+      "code": "<InProgress\n  :value=\"progress\"\n  :descriptionStatus=\"true\"\n  :description=\"`Processing ${currentFile} (${filesProcessed} of ${totalFiles})`\"\n/>",
+      "reasoning": "Generic progress bars without context create anxiety. Users need to know what's being processed and why it's taking time."
+    },
+    {
+      "title": "Choose Correct Variant Based on Knowledge",
+      "description": "Use 'default' only when you can track actual progress, otherwise use 'indeterminate'",
+      "code": "// Known progress:\n<InProgress :value=\"itemsProcessed\" :maxValue=\"totalItems\" />\n\n// Unknown duration:\n<InProgress variant=\"indeterminate\" />",
+      "reasoning": "Showing 0% progress or stuck percentages is worse than showing indeterminate loading. Don't fake progress."
+    },
+    {
+      "title": "Implement Retry for Network Operations",
+      "description": "Always provide retry option for operations that can fail",
+      "code": "<InProgress\n  :invalid=\"hasError\"\n  :invalidMessage=\"errorMessage\"\n  :invalidType=\"'button'\"\n  @click=\"retryOperation\"\n/>",
+      "reasoning": "Network failures are common. Forcing users to restart entire flows is poor UX. Retry button saves time and frustration."
+    },
+    {
+      "title": "Show Success State Briefly Before Hiding",
+      "description": "Display success state for 1-2 seconds before removing progress indicator",
+      "code": "const showSuccess = async () => {\n  isSuccess.value = true;\n  await new Promise(resolve => setTimeout(resolve, 1500));\n  // Then hide or redirect\n};",
+      "reasoning": "Instant removal of progress can feel abrupt. Brief success confirmation provides closure and confirms completion."
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Not clamping progress value to maxValue",
+      "why": "Progress calculations can exceed 100% due to rounding or errors",
+      "impact": "Progress bar overflows visually or shows incorrect completion state",
+      "fix": "Always clamp: Math.min(currentValue, maxValue)",
+      "severity": "medium",
+      "example": "// Wrong:\n:value=\"calculatedProgress\"\n\n// Correct:\n:value=\"Math.min(calculatedProgress, maxValue)\""
+    },
+    {
+      "mistake": "Using 'default' variant for unknown-duration tasks",
+      "why": "Cannot track actual progress for API calls, auth flows, etc.",
+      "impact": "Progress stuck at 0%, users think app is frozen",
+      "fix": "Use variant='indeterminate' when progress is unknown",
+      "severity": "high",
+      "example": "// Wrong:\n<InProgress :value=\"0\" /> // for API call\n\n// Correct:\n<InProgress variant=\"indeterminate\" />"
+    },
+    {
+      "mistake": "Not handling error states",
+      "why": "Operations fail (network errors, timeouts, validation failures)",
+      "impact": "Progress stuck indefinitely, no way to recover",
+      "fix": "Always implement invalid state with retry option",
+      "severity": "high",
+      "example": "// Add error handling:\n:invalid=\"hasError\"\n:invalidMessage=\"errorMessage\"\n:invalidType=\"'button'\"\n@click=\"retryOperation\""
+    },
+    {
+      "mistake": "Forgetting to show success confirmation",
+      "why": "Users need visual confirmation of successful completion",
+      "impact": "Unclear if operation succeeded, users may retry unnecessarily",
+      "fix": "Set success=true when complete, show for 1-2 seconds",
+      "severity": "low",
+      "example": "if (progress >= 100) {\n  isSuccess.value = true;\n  setTimeout(() => onComplete(), 1500);\n}"
+    }
+  ],
+  "performanceNotes": [
+    {
+      "topic": "Throttle Progress Updates",
+      "description": "Don't update progress on every byte/item, it causes excessive re-renders",
+      "recommendation": "Update progress in meaningful increments (5-10%) or throttle updates to every 100-200ms",
+      "impact": "High: Rapid progress updates can freeze UI on slow devices"
+    },
+    {
+      "topic": "Avoid Multiple Indeterminate Animations",
+      "description": "Multiple animated progress bars impact performance",
+      "recommendation": "Limit visible indeterminate progress bars to 2-3 max. Consider using skeleton loaders for long lists.",
+      "impact": "Medium: CSS animations for multiple progress bars consume CPU"
+    },
+    {
+      "topic": "Clean Up Progress Intervals",
+      "description": "Progress tracking intervals must be cleared when component unmounts",
+      "recommendation": "Use onBeforeUnmount to clear intervals/timeouts. Consider using composables with automatic cleanup.",
+      "impact": "Medium: Memory leaks from uncleaned intervals"
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "topic": "ARIA Progress Role",
+      "description": "Progress component should have proper ARIA attributes for screen readers",
+      "wcagLevel": "A",
+      "recommendation": "Ensure component has role='progressbar', aria-valuenow, aria-valuemin, aria-valuemax, and aria-label",
+      "example": "<div \n  role=\"progressbar\" \n  :aria-valuenow=\"value\" \n  :aria-valuemin=\"0\" \n  :aria-valuemax=\"maxValue\"\n  aria-label=\"Upload progress\"\n/>"
+    },
+    {
+      "topic": "Indeterminate Progress Announcement",
+      "description": "Indeterminate progress needs aria-busy attribute",
+      "wcagLevel": "A",
+      "recommendation": "Add aria-busy='true' for indeterminate variant so screen readers announce loading state",
+      "example": "<InProgress \n  variant=\"indeterminate\" \n  aria-busy=\"true\"\n  aria-label=\"Loading data\"\n/>"
+    },
+    {
+      "topic": "Success/Error State Announcements",
+      "description": "State changes should be announced to screen reader users",
+      "wcagLevel": "AA",
+      "recommendation": "Use aria-live regions to announce success/error messages. Set aria-live='polite' for non-critical updates.",
+      "example": "<div aria-live=\"polite\" aria-atomic=\"true\">\n  <InProgress \n    :success=\"isSuccess\" \n    :successMessage=\"message\"\n  />\n</div>"
+    },
+    {
+      "topic": "Retry Button Accessibility",
+      "description": "Retry button in error state needs descriptive label",
+      "wcagLevel": "A",
+      "recommendation": "Ensure retry button has clear aria-label explaining what will be retried",
+      "example": "aria-label=\"Retry uploading report.pdf\""
+    }
+  ],
+  "helperFunctions": [
+    {
+      "name": "useProgressTracker",
+      "description": "Composable for managing progress state with success/error handling",
+      "code": "export function useProgressTracker(totalItems = 100) {\n  const progress = ref(0);\n  const isSuccess = ref(false);\n  const isError = ref(false);\n  const errorMessage = ref('');\n  const isProcessing = ref(false);\n\n  const start = () => {\n    progress.value = 0;\n    isSuccess.value = false;\n    isError.value = false;\n    errorMessage.value = '';\n    isProcessing.value = true;\n  };\n\n  const increment = (amount = 1) => {\n    progress.value = Math.min(progress.value + amount, totalItems);\n  };\n\n  const setProgress = (value) => {\n    progress.value = Math.min(value, totalItems);\n  };\n\n  const complete = () => {\n    progress.value = totalItems;\n    isSuccess.value = true;\n    isProcessing.value = false;\n  };\n\n  const fail = (message) => {\n    isError.value = true;\n    errorMessage.value = message;\n    isProcessing.value = false;\n  };\n\n  const reset = () => {\n    start();\n    isProcessing.value = false;\n  };\n\n  const percentage = computed(() => \n    Math.round((progress.value / totalItems) * 100)\n  );\n\n  return {\n    progress,\n    isSuccess,\n    isError,\n    errorMessage,\n    isProcessing,\n    percentage,\n    start,\n    increment,\n    setProgress,\n    complete,\n    fail,\n    reset\n  };\n}",
+      "parameters": [
+        {
+          "name": "totalItems",
+          "type": "number",
+          "description": "Total items/maxValue for progress tracking"
+        }
+      ],
+      "returnType": "{ progress: Ref<number>, isSuccess: Ref<boolean>, isError: Ref<boolean>, errorMessage: Ref<string>, isProcessing: Ref<boolean>, percentage: ComputedRef<number>, start: Function, increment: Function, setProgress: Function, complete: Function, fail: Function, reset: Function }",
+      "example": "const { progress, percentage, isSuccess, isError, errorMessage, increment, complete, fail } = useProgressTracker(100);\n\n// Start processing\nfor (let i = 0; i < 100; i++) {\n  await processItem(i);\n  increment();\n}\ncomplete();"
+    },
+    {
+      "name": "createProgressFromPromise",
+      "description": "Track progress of array of promises with automatic state management",
+      "code": "export async function createProgressFromPromise(promises, onProgress) {\n  const total = promises.length;\n  let completed = 0;\n  let errors = [];\n\n  const results = await Promise.allSettled(\n    promises.map(async (promise, index) => {\n      try {\n        const result = await promise;\n        completed++;\n        onProgress({\n          progress: completed,\n          total,\n          percentage: Math.round((completed / total) * 100),\n          current: index,\n          isComplete: completed === total,\n          hasErrors: errors.length > 0\n        });\n        return result;\n      } catch (error) {\n        errors.push({ index, error });\n        completed++;\n        onProgress({\n          progress: completed,\n          total,\n          percentage: Math.round((completed / total) * 100),\n          current: index,\n          isComplete: completed === total,\n          hasErrors: true,\n          errors\n        });\n        throw error;\n      }\n    })\n  );\n\n  return {\n    results,\n    errors,\n    succeeded: results.filter(r => r.status === 'fulfilled').length,\n    failed: results.filter(r => r.status === 'rejected').length\n  };\n}",
+      "parameters": [
+        {
+          "name": "promises",
+          "type": "Promise[]",
+          "description": "Array of promises to track"
+        },
+        {
+          "name": "onProgress",
+          "type": "(state) => void",
+          "description": "Callback invoked on each completion"
+        }
+      ],
+      "returnType": "Promise<{ results: PromiseSettledResult[], errors: Array, succeeded: number, failed: number }>",
+      "example": "const files = ['file1.txt', 'file2.txt', 'file3.txt'];\nconst uploadPromises = files.map(file => uploadFile(file));\n\nconst { progress } = useProgressTracker(files.length);\n\nawait createProgressFromPromise(uploadPromises, (state) => {\n  progress.value = state.progress;\n  if (state.isComplete) {\n    if (state.hasErrors) {\n      console.log(`Completed with ${state.errors.length} errors`);\n    } else {\n      console.log('All uploads successful!');\n    }\n  }\n});"
+    }
+  ]
+}

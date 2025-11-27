@@ -1,0 +1,480 @@
+{
+  "component": "InCustomDropDown",
+  "_metadata": {
+    "lastUpdated": "2025-11-28T00:00:00.000Z",
+    "propsHash": "incustomdropdown-v1-30props",
+    "eventsHash": "incustomdropdown-v1-7events",
+    "propCount": 30,
+    "eventCount": 7
+  },
+  "propEnrichments": {
+    "options": {
+      "valueFormat": {
+        "structure": "Array (required)",
+        "notes": "Array of dropdown options. Each option can be a simple object with label/value or include custom template, icons, actions, and metadata. Supports nested options for grouped dropdowns.",
+        "typescript": "Array<{\n  label: string; // Display text\n  value: any; // Option value\n  icon?: string; // Optional icon name\n  disabled?: boolean; // Disable selection\n  active?: boolean; // Initially active/selected\n  template?: string; // Custom HTML template\n  onClick?: (option) => void; // Click handler\n  metadata?: any; // Additional data\n  children?: Array<Option>; // Nested options\n}>",
+        "example": "// Simple options\n[\n  { label: 'Option 1', value: 1 },\n  { label: 'Option 2', value: 2 },\n  { label: 'Option 3', value: 3 }\n]\n\n// With icons and disabled states\n[\n  { label: 'Edit', value: 'edit', icon: 'edit' },\n  { label: 'Delete', value: 'delete', icon: 'delete', disabled: true },\n  { label: 'Archive', value: 'archive', icon: 'archive' }\n]\n\n// With custom templates\n[\n  {\n    label: 'John Doe',\n    value: 'user_1',\n    template: '<div class=\"user-option\"><img src=\"avatar.jpg\"><span>John Doe</span><span class=\"role\">Admin</span></div>'\n  }\n]\n\n// With click handlers\n[\n  {\n    label: 'Export PDF',\n    value: 'pdf',\n    onClick: (option) => exportToPDF()\n  },\n  {\n    label: 'Export CSV',\n    value: 'csv',\n    onClick: (option) => exportToCSV()\n  }\n]"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Not providing unique values for each option",
+          "why": "Component uses value to track selections and identify options",
+          "impact": "Selection state breaks, wrong options get selected, cannot distinguish duplicates",
+          "fix": "Ensure every option has a unique value property",
+          "severity": "high",
+          "example": "// WRONG - duplicate values\n[\n  { label: 'Option A', value: 1 },\n  { label: 'Option B', value: 1 } // Same value!\n]\n\n// CORRECT - unique values\n[\n  { label: 'Option A', value: 1 },\n  { label: 'Option B', value: 2 }\n]"
+        }
+      ]
+    },
+    "searchStatus": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Enables search/filter functionality in the dropdown. When true, shows search input at the top of the dropdown menu. Useful for long option lists.",
+        "typescript": "boolean",
+        "example": "// Enable search for long lists\n:searchStatus=\"true\"\n:options=\"hundredsOfOptions\"\n\n// Disable for short lists\n:searchStatus=\"false\"\n:options=\"fewOptions\""
+      }
+    },
+    "createNewOptionStatus": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Enables 'Create New' option at the bottom of the dropdown. When clicked, emits event allowing users to add new options dynamically. Useful for tag selection, category creation, etc.",
+        "typescript": "boolean",
+        "example": "// Enable create new option\n:createNewOptionStatus=\"true\"\ncreateNewOptionText=\"+ Add New Tag\"\n@clickExtraOption=\"handleCreateNew\"\n\nconst handleCreateNew = () => {\n  // Show modal to create new option\n  showCreateModal();\n};"
+      }
+    },
+    "createNewOptionText": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Label text for the 'Create New' option. Only shown when createNewOptionStatus is true.",
+        "typescript": "string",
+        "example": "createNewOptionText=\"+ Create New Category\"\ncreateNewOptionText=\"+ Add Custom Value\"\ncreateNewOptionText=\"+ Create New Template\""
+      }
+    },
+    "type": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Defines the behavior of dropdown options. 'link' makes options act as links (with href), 'button' makes them act as buttons triggering onClick.",
+        "typescript": "'link' | 'button'",
+        "example": "// Link type - navigates on click\ntype=\"link\"\n:options=\"[\n  { label: 'Dashboard', value: '/dashboard', href: '/dashboard' },\n  { label: 'Settings', value: '/settings', href: '/settings' }\n]\"\n\n// Button type - triggers action\ntype=\"button\"\n:options=\"[\n  { label: 'Export', value: 'export', onClick: exportData },\n  { label: 'Delete', value: 'delete', onClick: deleteItem }\n]\""
+      }
+    },
+    "target": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "HTML anchor target attribute for link-type options. Controls where links open.",
+        "typescript": "'_self' | '_blank' | '_parent' | '_top'",
+        "example": "// Open in same tab (default)\ntarget=\"_self\"\n\n// Open in new tab\ntarget=\"_blank\"\n\n// For navigation options\ntype=\"link\"\ntarget=\"_blank\"\n:options=\"[\n  { label: 'Documentation', value: 'docs', href: 'https://docs.example.com' },\n  { label: 'Support', value: 'support', href: 'https://support.example.com' }\n]\""
+      }
+    },
+    "openPosition": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Horizontal alignment of the dropdown menu relative to the trigger button.",
+        "typescript": "'left' | 'right' | 'center'",
+        "example": "// Align dropdown to left edge of button\nopenPosition=\"left\"\n\n// Align dropdown to right edge\nopenPosition=\"right\"\n\n// Center dropdown under button\nopenPosition=\"center\""
+      }
+    },
+    "dropdownMenuPosition": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Vertical positioning strategy for the dropdown menu. AUTO detects available space and positions accordingly.",
+        "typescript": "'DROPDOWN_MENU_POSITION_AUTO' | 'DROPDOWN_MENU_POSITION_TOP' | 'DROPDOWN_MENU_POSITION_BOTTOM'",
+        "example": "// Auto-detect best position (default)\ndropdownMenuPosition=\"DROPDOWN_MENU_POSITION_AUTO\"\n\n// Always show above button\ndropdownMenuPosition=\"DROPDOWN_MENU_POSITION_TOP\"\n\n// Always show below button\ndropdownMenuPosition=\"DROPDOWN_MENU_POSITION_BOTTOM\""
+      }
+    },
+    "buttonType": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Visual style variant for the dropdown trigger button.",
+        "typescript": "'primary' | 'secondary' | 'tertiary' | 'danger' | 'success' | 'warning'",
+        "example": "// Primary button style\nbuttonType=\"primary\"\n\n// Secondary style (default)\nbuttonType=\"secondary\"\n\n// Danger for destructive actions\nbuttonType=\"danger\"\ntext=\"Delete Options\"\n\n// Success for positive actions\nbuttonType=\"success\"\ntext=\"Export Success\""
+      }
+    },
+    "icon": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Icon name for the dropdown trigger button. Displayed alongside or instead of button text based on iconPosition.",
+        "typescript": "string",
+        "example": "// Dropdown arrow icon (default)\nicon=\"filled-dropdown-down\"\n\n// Settings gear icon\nicon=\"settings\"\ntext=\"Actions\"\n\n// Menu icon\nicon=\"menu\"\ntext=\"Options\""
+      }
+    },
+    "iconPosition": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Position of the icon relative to button text.",
+        "typescript": "'left' | 'right'",
+        "example": "// Icon on right side (default)\niconPosition=\"right\"\nicon=\"filled-dropdown-down\"\n\n// Icon on left side\niconPosition=\"left\"\nicon=\"filter\"\ntext=\"Filter Options\""
+      }
+    },
+    "extraOption": {
+      "valueFormat": {
+        "structure": "Object",
+        "notes": "Additional option displayed at the top or bottom of the dropdown list with special styling. Typically used for actions like 'Select All', 'Clear Selection', or 'Manage Options'.",
+        "typescript": "{\n  label: string;\n  value: any;\n  icon?: string;\n  position?: 'top' | 'bottom';\n  onClick?: () => void;\n}",
+        "example": "// Select All option at top\n:extraOption=\"{\n  label: 'Select All',\n  value: 'select_all',\n  position: 'top',\n  onClick: selectAllOptions\n}\"\n\n// Clear Selection at bottom\n:extraOption=\"{\n  label: 'Clear Selection',\n  value: 'clear',\n  icon: 'close',\n  position: 'bottom',\n  onClick: clearSelection\n}\"\n\n// Manage Categories\n:extraOption=\"{\n  label: 'Manage Categories',\n  value: 'manage',\n  icon: 'settings',\n  position: 'bottom',\n  onClick: openCategoryManager\n}\""
+      }
+    },
+    "avoidClosingSelectors": {
+      "valueFormat": {
+        "structure": "String | Array<string> | Boolean",
+        "notes": "CSS selectors for elements that should NOT trigger dropdown closure when clicked. Useful for interactive content within dropdown options like checkboxes, buttons, or nested menus.",
+        "typescript": "string | string[] | boolean",
+        "example": "// Single selector\navoidClosingSelectors=\".checkbox-wrapper\"\n\n// Multiple selectors\n:avoidClosingSelectors=\"['.checkbox-input', '.nested-menu', '.action-button']\"\n\n// Keep open on any click\n:avoidClosingSelectors=\"true\"\n\n// Example with checkboxes in options\n:avoidClosingSelectors=\"'.option-checkbox'\"\n:options=\"[\n  {\n    label: 'Option with checkbox',\n    template: '<label class=\"option-checkbox\"><input type=\"checkbox\">Select</label>'\n  }\n]\""
+      }
+    },
+    "isFullWidth": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Makes the dropdown menu match the full width of its container instead of the trigger button width.",
+        "typescript": "boolean",
+        "example": "// Full width dropdown\n:isFullWidth=\"true\"\n\n// Default - matches button width\n:isFullWidth=\"false\""
+      }
+    },
+    "visibleButton": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Controls visibility of the trigger button. When false, dropdown can only be triggered programmatically.",
+        "typescript": "boolean",
+        "example": "// Show button (default)\n:visibleButton=\"true\"\n\n// Hide button - trigger programmatically\n:visibleButton=\"false\"\nref=\"dropdownRef\"\n\n// Later: dropdownRef.value.open()"
+      }
+    },
+    "visibleBorder": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Shows border around the dropdown menu.",
+        "typescript": "boolean",
+        "example": "// With border\n:visibleBorder=\"true\"\n\n// No border (default)\n:visibleBorder=\"false\""
+      }
+    },
+    "isHoverEffectDisabled": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Disables hover effects on dropdown options. Useful for read-only or display-only dropdowns.",
+        "typescript": "boolean",
+        "example": "// Enable hover effects (default)\n:isHoverEffectDisabled=\"false\"\n\n// Disable hover - read-only dropdown\n:isHoverEffectDisabled=\"true\""
+      }
+    },
+    "withTooltip": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Enables tooltip on the trigger button. Shows tooltipText on hover.",
+        "typescript": "boolean",
+        "example": "// With tooltip\n:withTooltip=\"true\"\ntooltipText=\"Click to see more options\"\n\n// No tooltip\n:withTooltip=\"false\""
+      }
+    },
+    "tooltipText": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Tooltip content shown when hovering over the trigger button. Only effective when withTooltip is true.",
+        "typescript": "string",
+        "example": "tooltipText=\"Select export format\"\ntooltipText=\"Choose filter criteria\"\ntooltipText=\"More actions available\""
+      }
+    },
+    "skeletonSizing": {
+      "valueFormat": {
+        "structure": "Object",
+        "notes": "Dimensions for skeleton loader when skeletonStatus is true.",
+        "typescript": "{\n  width?: string | number;\n  height?: string | number;\n}",
+        "example": ":skeletonSizing=\"{ width: '200px', height: '40px' }\"\n:skeletonStatus=\"loading\""
+      }
+    }
+  },
+  "eventEnrichments": {
+    "select": {
+      "description": "Emitted when an option is selected from the dropdown",
+      "payload": "{ label: string, value: any, ...optionData } - The selected option object",
+      "when": "User clicks on an option in the dropdown menu"
+    },
+    "click": {
+      "description": "Emitted when the trigger button is clicked",
+      "payload": "MouseEvent - Click event",
+      "when": "User clicks the dropdown trigger button"
+    },
+    "openList": {
+      "description": "Emitted when the dropdown menu opens",
+      "payload": "void",
+      "when": "Dropdown menu becomes visible"
+    },
+    "closeList": {
+      "description": "Emitted when the dropdown menu closes",
+      "payload": "void",
+      "when": "Dropdown menu is hidden"
+    },
+    "hoverItem": {
+      "description": "Emitted when user hovers over a dropdown option",
+      "payload": "{ label: string, value: any } - The hovered option",
+      "when": "User moves mouse over an option"
+    },
+    "clickExtraOption": {
+      "description": "Emitted when the extra option is clicked (when createNewOptionStatus is true or extraOption is set)",
+      "payload": "{ label: string, value: any } - The extra option object",
+      "when": "User clicks the create new option or extra option"
+    },
+    "selectedInActiveOption": {
+      "description": "Emitted when a disabled option is clicked",
+      "payload": "{ label: string, value: any, disabled: true } - The disabled option",
+      "when": "User attempts to click a disabled option"
+    }
+  },
+  "codeSnippets": {
+    "basicDropdown": {
+      "title": "Basic Action Dropdown",
+      "description": "Simple dropdown with action options",
+      "code": "<template>\n  <InCustomDropDown\n    id=\"actions-dropdown\"\n    text=\"Actions\"\n    buttonType=\"secondary\"\n    icon=\"filled-dropdown-down\"\n    :options=\"actions\"\n    @select=\"handleAction\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { InCustomDropDown } from '@useinsider/design-system-vue';\n\nconst actions = [\n  { label: 'Edit', value: 'edit', icon: 'edit' },\n  { label: 'Duplicate', value: 'duplicate', icon: 'copy' },\n  { label: 'Archive', value: 'archive', icon: 'archive' },\n  { label: 'Delete', value: 'delete', icon: 'delete', disabled: false }\n];\n\nconst handleAction = (option: any) => {\n  console.log('Action selected:', option.value);\n  \n  switch (option.value) {\n    case 'edit':\n      editItem();\n      break;\n    case 'duplicate':\n      duplicateItem();\n      break;\n    case 'archive':\n      archiveItem();\n      break;\n    case 'delete':\n      if (confirm('Delete this item?')) {\n        deleteItem();\n      }\n      break;\n  }\n};\n\nconst editItem = () => console.log('Editing...');\nconst duplicateItem = () => console.log('Duplicating...');\nconst archiveItem = () => console.log('Archiving...');\nconst deleteItem = () => console.log('Deleting...');\n</script>"
+    },
+    "searchableDropdown": {
+      "title": "Searchable Dropdown with Many Options",
+      "description": "Dropdown with search functionality for filtering large option lists",
+      "code": "<template>\n  <InCustomDropDown\n    id=\"country-selector\"\n    text=\"Select Country\"\n    :options=\"countries\"\n    :searchStatus=\"true\"\n    openPosition=\"left\"\n    @select=\"handleCountrySelect\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\nimport { InCustomDropDown } from '@useinsider/design-system-vue';\n\nconst selectedCountry = ref(null);\n\nconst countries = [\n  { label: 'United States', value: 'US', icon: 'flag-us' },\n  { label: 'United Kingdom', value: 'UK', icon: 'flag-uk' },\n  { label: 'Germany', value: 'DE', icon: 'flag-de' },\n  { label: 'France', value: 'FR', icon: 'flag-fr' },\n  { label: 'Spain', value: 'ES', icon: 'flag-es' },\n  { label: 'Italy', value: 'IT', icon: 'flag-it' },\n  { label: 'Canada', value: 'CA', icon: 'flag-ca' },\n  { label: 'Australia', value: 'AU', icon: 'flag-au' },\n  { label: 'Japan', value: 'JP', icon: 'flag-jp' },\n  { label: 'China', value: 'CN', icon: 'flag-cn' }\n  // ... many more countries\n];\n\nconst handleCountrySelect = (option: any) => {\n  selectedCountry.value = option;\n  console.log('Selected country:', option.label);\n};\n</script>"
+    },
+    "createNewOption": {
+      "title": "Dropdown with Create New Option",
+      "description": "Tag selector with ability to create new tags",
+      "code": "<template>\n  <div>\n    <InCustomDropDown\n      id=\"tag-selector\"\n      text=\"Select Tags\"\n      :options=\"tags\"\n      :searchStatus=\"true\"\n      :createNewOptionStatus=\"true\"\n      createNewOptionText=\"+ Create New Tag\"\n      @select=\"handleTagSelect\"\n      @clickExtraOption=\"showCreateTagModal\"\n    />\n\n    <!-- Create Tag Modal (simplified) -->\n    <div v-if=\"isCreatingTag\" class=\"modal\">\n      <input v-model=\"newTagName\" placeholder=\"Enter tag name\" />\n      <button @click=\"createNewTag\">Create</button>\n      <button @click=\"isCreatingTag = false\">Cancel</button>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\nimport { InCustomDropDown } from '@useinsider/design-system-vue';\n\nconst tags = ref([\n  { label: 'Important', value: 'important', icon: 'star' },\n  { label: 'Urgent', value: 'urgent', icon: 'alert' },\n  { label: 'Follow-up', value: 'followup', icon: 'clock' }\n]);\n\nconst isCreatingTag = ref(false);\nconst newTagName = ref('');\n\nconst handleTagSelect = (option: any) => {\n  console.log('Tag selected:', option.label);\n};\n\nconst showCreateTagModal = () => {\n  isCreatingTag.value = true;\n};\n\nconst createNewTag = () => {\n  if (newTagName.value.trim()) {\n    const newTag = {\n      label: newTagName.value,\n      value: newTagName.value.toLowerCase().replace(/\\s+/g, '_'),\n      icon: 'tag'\n    };\n    \n    tags.value.push(newTag);\n    newTagName.value = '';\n    isCreatingTag.value = false;\n    \n    console.log('Created new tag:', newTag);\n  }\n};\n</script>"
+    }
+  },
+  "styling": {
+    "cssVariables": {
+      "notes": "Uses design system variables. Customize via buttonType, openPosition, and visibleBorder props.",
+      "variables": []
+    },
+    "classes": {
+      "notes": "Component applies classes based on buttonType, disabled state, and active state.",
+      "classes": []
+    },
+    "customization": "Use buttonType for color schemes. openPosition and dropdownMenuPosition for layout. visibleBorder for styling. Custom templates in options for full control."
+  },
+  "examples": [
+    {
+      "title": "Advanced Export Options Menu",
+      "description": "Feature-rich dropdown with custom templates, search, extra options, and grouped actions",
+      "code": "<template>\n  <div class=\"export-menu\">\n    <InCustomDropDown\n      id=\"export-dropdown\"\n      text=\"Export Data\"\n      buttonType=\"primary\"\n      icon=\"download\"\n      iconPosition=\"left\"\n      :options=\"exportOptions\"\n      :searchStatus=\"true\"\n      :extraOption=\"selectAllOption\"\n      :avoidClosingSelectors=\"['.format-preview', '.option-checkbox']\"\n      openPosition=\"right\"\n      dropdownMenuPosition=\"DROPDOWN_MENU_POSITION_AUTO\"\n      :isFullWidth=\"false\"\n      :withTooltip=\"true\"\n      tooltipText=\"Export your data in various formats\"\n      @select=\"handleExport\"\n      @clickExtraOption=\"handleSelectAll\"\n      @openList=\"onDropdownOpen\"\n      @closeList=\"onDropdownClose\"\n    />\n\n    <!-- Export Progress -->\n    <div v-if=\"isExporting\" class=\"export-progress\">\n      <p>Exporting {{ exportFormat }}...</p>\n      <div class=\"progress-bar\">\n        <div class=\"progress-fill\" :style=\"{ width: exportProgress + '%' }\"></div>\n      </div>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, computed } from 'vue';\nimport { InCustomDropDown } from '@useinsider/design-system-vue';\n\nconst selectedFormats = ref<string[]>([]);\nconst isExporting = ref(false);\nconst exportProgress = ref(0);\nconst exportFormat = ref('');\n\nconst exportOptions = [\n  {\n    label: 'PDF Document',\n    value: 'pdf',\n    icon: 'file-pdf',\n    metadata: { extension: 'pdf', mimeType: 'application/pdf' },\n    template: `\n      <div class=\"export-option\">\n        <div class=\"option-header\">\n          <input type=\"checkbox\" class=\"option-checkbox\" />\n          <span class=\"icon\">📄</span>\n          <span class=\"label\">PDF Document</span>\n        </div>\n        <div class=\"format-preview\">Portable Document Format - Best for printing</div>\n      </div>\n    `\n  },\n  {\n    label: 'Excel Spreadsheet',\n    value: 'xlsx',\n    icon: 'file-excel',\n    metadata: { extension: 'xlsx', mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' },\n    template: `\n      <div class=\"export-option\">\n        <div class=\"option-header\">\n          <input type=\"checkbox\" class=\"option-checkbox\" />\n          <span class=\"icon\">📊</span>\n          <span class=\"label\">Excel Spreadsheet</span>\n        </div>\n        <div class=\"format-preview\">XLSX format - Includes formulas and formatting</div>\n      </div>\n    `\n  },\n  {\n    label: 'CSV File',\n    value: 'csv',\n    icon: 'file-csv',\n    metadata: { extension: 'csv', mimeType: 'text/csv' },\n    template: `\n      <div class=\"export-option\">\n        <div class=\"option-header\">\n          <input type=\"checkbox\" class=\"option-checkbox\" />\n          <span class=\"icon\">📋</span>\n          <span class=\"label\">CSV File</span>\n        </div>\n        <div class=\"format-preview\">Comma-separated values - Universal format</div>\n      </div>\n    `\n  },\n  {\n    label: 'JSON Data',\n    value: 'json',\n    icon: 'code',\n    metadata: { extension: 'json', mimeType: 'application/json' },\n    template: `\n      <div class=\"export-option\">\n        <div class=\"option-header\">\n          <input type=\"checkbox\" class=\"option-checkbox\" />\n          <span class=\"icon\">{ }</span>\n          <span class=\"label\">JSON Data</span>\n        </div>\n        <div class=\"format-preview\">Structured data format - For developers</div>\n      </div>\n    `\n  },\n  {\n    label: 'XML File',\n    value: 'xml',\n    icon: 'file-code',\n    metadata: { extension: 'xml', mimeType: 'application/xml' },\n    template: `\n      <div class=\"export-option\">\n        <div class=\"option-header\">\n          <input type=\"checkbox\" class=\"option-checkbox\" />\n          <span class=\"icon\">< ></span>\n          <span class=\"label\">XML File</span>\n        </div>\n        <div class=\"format-preview\">Extensible Markup Language - Legacy systems</div>\n      </div>\n    `\n  },\n  {\n    label: 'HTML Report',\n    value: 'html',\n    icon: 'file-html',\n    metadata: { extension: 'html', mimeType: 'text/html' },\n    template: `\n      <div class=\"export-option\">\n        <div class=\"option-header\">\n          <input type=\"checkbox\" class=\"option-checkbox\" />\n          <span class=\"icon\">🌐</span>\n          <span class=\"label\">HTML Report</span>\n        </div>\n        <div class=\"format-preview\">Web page format - Interactive reports</div>\n      </div>\n    `\n  }\n];\n\nconst selectAllOption = {\n  label: 'Select All Formats',\n  value: 'select_all',\n  icon: 'check-all',\n  position: 'top',\n  onClick: () => {\n    selectedFormats.value = exportOptions.map(opt => opt.value);\n  }\n};\n\nconst handleExport = async (option: any) => {\n  exportFormat.value = option.label;\n  isExporting.value = true;\n  exportProgress.value = 0;\n\n  try {\n    // Simulate export progress\n    const interval = setInterval(() => {\n      exportProgress.value += 10;\n      if (exportProgress.value >= 100) {\n        clearInterval(interval);\n        \n        // Trigger download\n        downloadFile(option);\n        \n        // Reset after 1 second\n        setTimeout(() => {\n          isExporting.value = false;\n          exportProgress.value = 0;\n        }, 1000);\n      }\n    }, 200);\n  } catch (error) {\n    console.error('Export failed:', error);\n    isExporting.value = false;\n  }\n};\n\nconst downloadFile = (option: any) => {\n  const { extension, mimeType } = option.metadata;\n  const filename = `export_${Date.now()}.${extension}`;\n  \n  // Create blob and download\n  const blob = new Blob(['Export data here'], { type: mimeType });\n  const url = URL.createObjectURL(blob);\n  const a = document.createElement('a');\n  a.href = url;\n  a.download = filename;\n  a.click();\n  URL.revokeObjectURL(url);\n  \n  console.log(`Downloaded: ${filename}`);\n};\n\nconst handleSelectAll = () => {\n  console.log('Select all clicked');\n};\n\nconst onDropdownOpen = () => {\n  console.log('Export dropdown opened');\n};\n\nconst onDropdownClose = () => {\n  console.log('Export dropdown closed');\n};\n</script>\n\n<style scoped>\n.export-menu {\n  position: relative;\n}\n\n.export-progress {\n  margin-top: 12px;\n  padding: 12px;\n  background: #f8f9fa;\n  border-radius: 4px;\n}\n\n.progress-bar {\n  width: 100%;\n  height: 8px;\n  background: #e9ecef;\n  border-radius: 4px;\n  overflow: hidden;\n  margin-top: 8px;\n}\n\n.progress-fill {\n  height: 100%;\n  background: #007bff;\n  transition: width 0.3s ease;\n}\n\n/* Custom option styles (injected via template) */\n:deep(.export-option) {\n  padding: 8px;\n}\n\n:deep(.option-header) {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  margin-bottom: 4px;\n}\n\n:deep(.format-preview) {\n  font-size: 12px;\n  color: #666;\n  margin-left: 28px;\n}\n\n:deep(.option-checkbox) {\n  margin: 0;\n}\n</style>"
+    }
+  ],
+  "implementationPatterns": [
+    {
+      "name": "Action Menu Pattern",
+      "description": "Dropdown for contextual actions on items or entities",
+      "when": "Need to provide multiple actions for an item (edit, delete, share, etc.)",
+      "code": "<template>\n  <InCustomDropDown\n    text=\"Actions\"\n    buttonType=\"secondary\"\n    :options=\"[\n      { label: 'Edit', value: 'edit', icon: 'edit' },\n      { label: 'Duplicate', value: 'duplicate', icon: 'copy' },\n      { label: 'Share', value: 'share', icon: 'share' },\n      { label: 'Delete', value: 'delete', icon: 'delete' }\n    ]\"\n    @select=\"handleAction\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nconst handleAction = (option) => {\n  const actions = {\n    edit: () => editItem(),\n    duplicate: () => duplicateItem(),\n    share: () => shareItem(),\n    delete: () => confirmDelete()\n  };\n  actions[option.value]?.();\n};\n</script>",
+      "pros": [
+        "Saves screen space",
+        "Familiar interaction pattern",
+        "Scales to many actions",
+        "Easy to add/remove options"
+      ],
+      "cons": [
+        "Actions hidden until clicked",
+        "Requires two clicks to execute",
+        "May not be obvious for new users"
+      ]
+    },
+    {
+      "name": "Filter Dropdown Pattern",
+      "description": "Searchable dropdown for filtering data with custom templates",
+      "when": "Filtering lists, tables, or search results by categories, tags, or attributes",
+      "code": "<template>\n  <InCustomDropDown\n    text=\"Filter by Category\"\n    :options=\"categoryOptions\"\n    :searchStatus=\"true\"\n    :extraOption=\"{\n      label: 'Clear Filter',\n      value: 'clear',\n      onClick: clearFilter\n    }\"\n    @select=\"applyFilter\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nconst categoryOptions = categories.map(cat => ({\n  label: cat.name,\n  value: cat.id,\n  template: `<div>${cat.name} <span>(${cat.count})</span></div>`\n}));\n\nconst applyFilter = (option) => {\n  filterData({ category: option.value });\n};\n</script>",
+      "pros": [
+        "Searchable for many options",
+        "Shows counts or metadata",
+        "Clear filter option",
+        "Visual feedback"
+      ],
+      "cons": [
+        "Requires search for large lists",
+        "May need keyboard shortcuts",
+        "Custom templates add complexity"
+      ]
+    },
+    {
+      "name": "Navigation Menu Pattern",
+      "description": "Dropdown for site navigation or section switching",
+      "when": "Secondary navigation, section switchers, or quick access menus",
+      "code": "<template>\n  <InCustomDropDown\n    text=\"More Pages\"\n    type=\"link\"\n    target=\"_self\"\n    :options=\"[\n      { label: 'Dashboard', value: '/dashboard', href: '/dashboard' },\n      { label: 'Reports', value: '/reports', href: '/reports' },\n      { label: 'Settings', value: '/settings', href: '/settings' }\n    ]\"\n    @select=\"navigate\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { useRouter } from 'vue-router';\nconst router = useRouter();\n\nconst navigate = (option) => {\n  router.push(option.href);\n};\n</script>",
+      "pros": [
+        "Clean navigation UI",
+        "Works with Vue Router",
+        "Supports external links",
+        "Keyboard accessible"
+      ],
+      "cons": [
+        "Not suitable for primary nav",
+        "May hide important links",
+        "Requires good labeling"
+      ]
+    }
+  ],
+  "useCases": [
+    {
+      "title": "Context Menus and Action Lists",
+      "description": "Provide contextual actions for items in lists, tables, or cards",
+      "example": "Table rows with dropdown showing Edit, Duplicate, Archive, Delete options. File managers with Open, Download, Share, Move to Trash. Email lists with Mark as Read, Star, Move to Folder, Delete."
+    },
+    {
+      "title": "Export and Download Options",
+      "description": "Offer multiple export formats or download options for data",
+      "example": "Reports with export to PDF, Excel, CSV, JSON. Charts with download as PNG, SVG, Data. Analytics dashboards with scheduled exports in various formats."
+    },
+    {
+      "title": "Filter and Sort Controls",
+      "description": "Filter or sort content by categories, dates, statuses, or custom criteria",
+      "example": "Product lists filtered by category, price range, brand. Task lists sorted by priority, due date, assignee. Search results filtered by type, date, relevance."
+    },
+    {
+      "title": "User Profile and Settings Menus",
+      "description": "User account actions and quick settings access",
+      "example": "Profile dropdown with My Account, Settings, Billing, Sign Out. Admin menus with Manage Users, System Settings, Logs, Documentation links."
+    },
+    {
+      "title": "Multi-Select with Create New",
+      "description": "Select from existing options or create new ones dynamically",
+      "example": "Tag selectors with + Create New Tag. Category assignment with + Add Category. Template chooser with + Create Custom Template."
+    },
+    {
+      "title": "Quick Navigation and Shortcuts",
+      "description": "Provide shortcuts to different sections or features",
+      "example": "Dashboard switcher for different workspaces. Project selector for switching between projects. View mode selector (List, Grid, Calendar)."
+    }
+  ],
+  "bestPractices": [
+    {
+      "title": "Use Search for Long Option Lists",
+      "description": "Enable searchStatus when dropdown has more than 10-15 options",
+      "code": "// GOOD - searchable for many options\n<InCustomDropDown\n  :options=\"countriesList\" // 200+ countries\n  :searchStatus=\"true\"\n/>\n\n// BAD - no search for long list\n<InCustomDropDown\n  :options=\"countriesList\" // 200+ countries - hard to find!\n  :searchStatus=\"false\"\n/>",
+      "reasoning": "Users can quickly find options instead of scrolling, improves UX significantly for large lists"
+    },
+    {
+      "title": "Provide Clear Action Labels",
+      "description": "Use descriptive, action-oriented labels for dropdown options",
+      "code": "// GOOD - clear action labels\n:options=\"[\n  { label: 'Edit User Profile', value: 'edit' },\n  { label: 'Delete User Account', value: 'delete' }\n]\"\n\n// BAD - vague labels\n:options=\"[\n  { label: 'Edit', value: 'edit' }, // Edit what?\n  { label: 'Remove', value: 'delete' } // Remove what?\n]\"\n\n// GOOD - with icons for clarity\n:options=\"[\n  { label: 'Export as PDF', value: 'pdf', icon: 'file-pdf' },\n  { label: 'Export as Excel', value: 'xlsx', icon: 'file-excel' }\n]\"",
+      "reasoning": "Clear labels reduce confusion, prevent errors, and improve accessibility for screen readers"
+    },
+    {
+      "title": "Handle Errors in Action Callbacks",
+      "description": "Implement proper error handling for dropdown option click handlers",
+      "code": "// GOOD - with error handling\nconst handleDelete = async (option) => {\n  try {\n    await api.deleteItem(option.value);\n    toast.success('Item deleted successfully');\n  } catch (error) {\n    toast.error('Failed to delete: ' + error.message);\n    console.error('Delete error:', error);\n  }\n};\n\n// BAD - no error handling\nconst handleDelete = async (option) => {\n  await api.deleteItem(option.value); // May fail silently\n};\n\n:options=\"[\n  {\n    label: 'Delete',\n    value: item.id,\n    onClick: () => handleDelete(item)\n  }\n]\"",
+      "reasoning": "Prevents silent failures, provides user feedback, improves debugging and reliability"
+    },
+    {
+      "title": "Use avoidClosingSelectors for Interactive Content",
+      "description": "Prevent dropdown from closing when clicking on checkboxes, buttons, or other interactive elements within options",
+      "code": "// GOOD - keeps dropdown open for checkboxes\n<InCustomDropDown\n  :options=\"optionsWithCheckboxes\"\n  :avoidClosingSelectors=\"['.option-checkbox', '.action-button']\"\n/>\n\n// Template with checkboxes\nconst options = [{\n  template: `\n    <label>\n      <input type=\"checkbox\" class=\"option-checkbox\" />\n      <span>Select this option</span>\n    </label>\n  `\n}];\n\n// BAD - dropdown closes on checkbox click\n<InCustomDropDown\n  :options=\"optionsWithCheckboxes\"\n  // No avoidClosingSelectors - frustrating UX!\n/>",
+      "reasoning": "Allows users to interact with multi-select checkboxes, buttons, or nested menus without dropdown closing prematurely"
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Not providing unique values for options",
+      "why": "Component relies on value to identify and track selected options",
+      "impact": "Selection state breaks, multiple options with same value conflict, cannot distinguish options",
+      "fix": "Ensure every option has a unique value property",
+      "severity": "critical",
+      "example": "// WRONG\n:options=\"[\n  { label: 'Edit', value: 'action' },\n  { label: 'Delete', value: 'action' } // Same value!\n]\"\n\n// CORRECT\n:options=\"[\n  { label: 'Edit', value: 'edit' },\n  { label: 'Delete', value: 'delete' }\n]\""
+    },
+    {
+      "mistake": "Forgetting to handle @select event",
+      "why": "Dropdown emits select event when option is clicked, but nothing happens if not handled",
+      "impact": "Users click options but nothing happens, appears broken",
+      "fix": "Always implement @select event handler to respond to user selections",
+      "severity": "high",
+      "example": "// WRONG - no select handler\n<InCustomDropDown :options=\"options\" />\n// User clicks options → nothing happens!\n\n// CORRECT\n<InCustomDropDown\n  :options=\"options\"\n  @select=\"handleSelection\"\n/>\n\nconst handleSelection = (option) => {\n  console.log('Selected:', option);\n  performAction(option.value);\n};"
+    },
+    {
+      "mistake": "Using searchStatus for short lists",
+      "why": "Search input adds unnecessary UI clutter for few options",
+      "impact": "Wasted screen space, slower interaction (must click into search), poor UX",
+      "fix": "Only enable search for lists with 10+ options",
+      "severity": "low",
+      "example": "// WRONG - search for 3 options\n<InCustomDropDown\n  :searchStatus=\"true\"\n  :options=\"[\n    { label: 'Option 1' },\n    { label: 'Option 2' },\n    { label: 'Option 3' }\n  ]\"\n/>\n\n// CORRECT\n<InCustomDropDown\n  :searchStatus=\"false\"\n  :options=\"threeOptions\"\n/>"
+    },
+    {
+      "mistake": "Not setting avoidClosingSelectors for interactive options",
+      "why": "Clicking checkboxes or buttons inside options closes the dropdown",
+      "impact": "Frustrating UX - dropdown closes before user finishes interacting",
+      "fix": "Use avoidClosingSelectors to specify elements that shouldn't trigger closure",
+      "severity": "medium",
+      "example": "// WRONG - closes on checkbox click\n<InCustomDropDown\n  :options=\"[{\n    template: '<label><input type=\"checkbox\"> Select</label>'\n  }]\"\n/>\n\n// CORRECT - stays open\n<InCustomDropDown\n  :options=\"optionsWithCheckboxes\"\n  :avoidClosingSelectors=\"['.checkbox', 'input[type=checkbox]']\"\n/>"
+    },
+    {
+      "mistake": "Missing error handling in onClick callbacks",
+      "why": "Option actions may fail (API errors, validation failures, etc.)",
+      "impact": "Silent failures, no user feedback, appears broken",
+      "fix": "Wrap async operations in try-catch and provide user feedback",
+      "severity": "high",
+      "example": "// WRONG - no error handling\n:options=\"[{\n  label: 'Delete',\n  onClick: async () => {\n    await api.deleteItem(id); // May fail silently\n  }\n}]\"\n\n// CORRECT - with error handling\n:options=\"[{\n  label: 'Delete',\n  onClick: async () => {\n    try {\n      await api.deleteItem(id);\n      toast.success('Deleted');\n    } catch (error) {\n      toast.error('Delete failed: ' + error.message);\n    }\n  }\n}]\""
+    }
+  ],
+  "performanceNotes": [
+    {
+      "topic": "Large Option Lists",
+      "description": "Rendering hundreds of options can cause performance issues",
+      "recommendation": "For 100+ options, consider virtual scrolling or pagination. Use searchStatus to reduce visible options. Lazy load options if fetching from API.",
+      "impact": "200+ options can cause 500ms+ render delay and slow scrolling"
+    },
+    {
+      "topic": "Custom Templates Performance",
+      "description": "Complex HTML templates for each option increase render time",
+      "recommendation": "Keep templates simple. Avoid images or complex CSS in templates. Use CSS classes instead of inline styles. Consider using simple icon + text for most options.",
+      "impact": "Complex templates can double render time for large lists"
+    },
+    {
+      "topic": "Event Handler Memory Leaks",
+      "description": "onClick handlers in option objects can create memory leaks if not cleaned up",
+      "recommendation": "Use @select event handler instead of individual onClick when possible. If using onClick, ensure proper cleanup in component unmount.",
+      "impact": "Memory leaks accumulate over time, especially with dynamic option lists"
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "topic": "Keyboard Navigation",
+      "description": "Dropdown must be fully keyboard navigable",
+      "wcagLevel": "A",
+      "recommendation": "Test with Tab (focus button), Enter/Space (open dropdown), Arrow keys (navigate options), Enter (select), Escape (close). Ensure focus trap within dropdown when open.",
+      "example": "// Component handles keyboard navigation automatically\n// Ensure options have proper labels for screen readers\n:options=\"[\n  { label: 'Edit item', value: 'edit' }, // Clear label\n  { label: 'Delete permanently', value: 'delete' } // Descriptive\n]\""
+    },
+    {
+      "topic": "Screen Reader Support",
+      "description": "Dropdown state and options must be announced to screen readers",
+      "wcagLevel": "A",
+      "recommendation": "Use aria-label on button. Ensure selected option is announced. Use aria-expanded to indicate open/closed state. Provide clear labels for all options.",
+      "example": "<InCustomDropDown\n  text=\"Actions\"\n  aria-label=\"Available actions for this item\"\n  :options=\"options\"\n/>"
+    },
+    {
+      "topic": "Focus Management",
+      "description": "Focus must return to trigger button after selection or escape",
+      "wcagLevel": "AA",
+      "recommendation": "Component should return focus to button after selection. Test Escape key returns focus properly. Ensure dropdown doesn't trap focus indefinitely.",
+      "example": "// Component handles focus management\n// Test: Open dropdown → Select option → Focus returns to button\n// Test: Open dropdown → Press Escape → Focus returns to button"
+    },
+    {
+      "topic": "Disabled Options Indication",
+      "description": "Disabled options must be clearly indicated visually and programmatically",
+      "wcagLevel": "AA",
+      "recommendation": "Use disabled property on options. Ensure disabled options have visual indication (grayed out). Screen readers should announce disabled state.",
+      "example": ":options=\"[\n  { label: 'Edit', value: 'edit' },\n  {\n    label: 'Delete',\n    value: 'delete',\n    disabled: true, // Clearly marked\n    // Screen reader: \"Delete, option, disabled\"\n  }\n]\""
+    }
+  ],
+  "helperFunctions": [
+    {
+      "name": "createOptionsFromArray",
+      "description": "Helper to transform simple arrays or objects into dropdown option format",
+      "code": "export function createOptionsFromArray<T>(\n  items: T[],\n  config: {\n    labelKey?: keyof T | ((item: T) => string);\n    valueKey?: keyof T | ((item: T) => any);\n    iconKey?: keyof T | ((item: T) => string);\n    disabledKey?: keyof T | ((item: T) => boolean);\n  } = {}\n) {\n  const {\n    labelKey = 'label',\n    valueKey = 'value',\n    iconKey,\n    disabledKey\n  } = config;\n\n  return items.map(item => {\n    const getProperty = (key: any) => {\n      if (typeof key === 'function') {\n        return key(item);\n      }\n      return item[key as keyof T];\n    };\n\n    const option: any = {\n      label: getProperty(labelKey),\n      value: getProperty(valueKey)\n    };\n\n    if (iconKey) {\n      option.icon = getProperty(iconKey);\n    }\n\n    if (disabledKey) {\n      option.disabled = getProperty(disabledKey);\n    }\n\n    return option;\n  });\n}",
+      "parameters": [
+        "items: T[] - Array of data to transform",
+        "config: { labelKey, valueKey, iconKey, disabledKey } - Mapping configuration"
+      ],
+      "returnType": "Array<{ label, value, icon?, disabled? }> - Formatted dropdown options",
+      "example": "// From object array\nconst users = [\n  { id: 1, name: 'John Doe', role: 'admin', active: true },\n  { id: 2, name: 'Jane Smith', role: 'user', active: false }\n];\n\nconst userOptions = createOptionsFromArray(users, {\n  labelKey: 'name',\n  valueKey: 'id',\n  disabledKey: (user) => !user.active\n});\n// Result:\n// [\n//   { label: 'John Doe', value: 1, disabled: false },\n//   { label: 'Jane Smith', value: 2, disabled: true }\n// ]\n\n// With custom label function\nconst roleOptions = createOptionsFromArray(users, {\n  labelKey: (user) => `${user.name} (${user.role})`,\n  valueKey: 'id'\n});\n// Result:\n// [\n//   { label: 'John Doe (admin)', value: 1 },\n//   { label: 'Jane Smith (user)', value: 2 }\n// ]"
+    },
+    {
+      "name": "useDropdownState",
+      "description": "Composable for managing dropdown open/close state and selected values",
+      "code": "import { ref, computed } from 'vue';\n\nexport function useDropdownState<T = any>(initialValue: T | null = null) {\n  const isOpen = ref(false);\n  const selectedValue = ref<T | null>(initialValue);\n  const hoveredOption = ref<any>(null);\n\n  const selectedOption = computed(() => {\n    // Would be set from options array\n    return null; // Placeholder\n  });\n\n  const open = () => {\n    isOpen.value = true;\n  };\n\n  const close = () => {\n    isOpen.value = false;\n    hoveredOption.value = null;\n  };\n\n  const toggle = () => {\n    isOpen.value = !isOpen.value;\n  };\n\n  const select = (option: any) => {\n    selectedValue.value = option.value;\n    close();\n  };\n\n  const clear = () => {\n    selectedValue.value = null;\n  };\n\n  const handleHover = (option: any) => {\n    hoveredOption.value = option;\n  };\n\n  return {\n    isOpen,\n    selectedValue,\n    selectedOption,\n    hoveredOption,\n    open,\n    close,\n    toggle,\n    select,\n    clear,\n    handleHover\n  };\n}",
+      "parameters": [
+        "initialValue: T | null - Initial selected value"
+      ],
+      "returnType": "{ isOpen, selectedValue, selectedOption, hoveredOption, open, close, toggle, select, clear, handleHover }",
+      "example": "// Usage in component\nimport { useDropdownState } from './composables/useDropdownState';\n\nconst dropdown = useDropdownState();\n\n// Template\n<InCustomDropDown\n  :options=\"options\"\n  @select=\"dropdown.select\"\n  @openList=\"dropdown.open\"\n  @closeList=\"dropdown.close\"\n  @hoverItem=\"dropdown.handleHover\"\n/>\n\n// Access state\nconsole.log('Is open:', dropdown.isOpen.value);\nconsole.log('Selected:', dropdown.selectedValue.value);"
+    }
+  ]
+}

@@ -312,3 +312,18 @@ export default {
 </script>
 ```
 
+## Common Mistakes
+
+ℹ️ **Not converting dates to Unix timestamps for disabledRange**
+
+ℹ️ **Creating Date objects in template or computed on every render**
+
+ℹ️ **Not handling empty date values**
+
+## Best Practices
+
+- **Use Custom Ranges for Common Periods:** Provide quick shortcuts for frequently used ranges
+- **Set Appropriate Min/Max Dates:** Prevent invalid date selections
+- **Use Consistent Date Format:** Match date format to user's locale
+- **Handle Timezone Properly:** Be aware of timezone issues
+

@@ -231,5 +231,208 @@
       "description": "Use warningMessage and invalidMessage for user feedback",
       "example": "invalid invalid-message=\"Please select at least one option\""
     }
+  ],
+  "codeSnippets": {
+    "basicMultiDropDown": {
+      "title": "Basic Multi-Select Dropdown",
+      "description": "Simple multi-select with checkbox type",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InMultiDropDown } from '@useinsider/design-system-vue';\n\nconst selectedCategories = ref([]);\n\nconst categoryOptions = [\n  { label: 'Electronics', value: 'electronics' },\n  { label: 'Clothing', value: 'clothing' },\n  { label: 'Books', value: 'books' },\n  { label: 'Home & Garden', value: 'home' },\n  { label: 'Sports', value: 'sports' }\n];\n</script>\n\n<template>\n  <InMultiDropDown\n    v-model=\"selectedCategories\"\n    :options=\"categoryOptions\"\n    label=\"Select Categories\"\n    type=\"checkbox\"\n    placeholder=\"Choose categories\"\n  />\n</template>"
+    },
+    "tagTypeMultiSelect": {
+      "title": "Multi-Select with Tag Display",
+      "description": "Display selected items as removable tags",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InMultiDropDown } from '@useinsider/design-system-vue';\n\nconst selectedSkills = ref([]);\n\nconst skillOptions = [\n  { label: 'JavaScript', value: 'js' },\n  { label: 'TypeScript', value: 'ts' },\n  { label: 'Vue.js', value: 'vue' },\n  { label: 'React', value: 'react' },\n  { label: 'Node.js', value: 'node' }\n];\n</script>\n\n<template>\n  <InMultiDropDown\n    v-model=\"selectedSkills\"\n    :options=\"skillOptions\"\n    label=\"Skills\"\n    type=\"tags\"\n    search-status\n    search-placeholder=\"Search skills...\"\n    :max-selectable-item=\"3\"\n  />\n</template>"
+    },
+    "apiMultiDropDown": {
+      "title": "Multi-Select with API Data",
+      "description": "Fetch options from API with search and validation",
+      "code": "<script setup>\nimport { ref, computed } from 'vue';\nimport { InMultiDropDown } from '@useinsider/design-system-vue';\n\nconst selectedUsers = ref([]);\nconst formSubmitted = ref(false);\n\nconst validationState = computed(() => {\n  if (!formSubmitted.value) return {};\n  \n  if (selectedUsers.value.length === 0) {\n    return {\n      invalid: true,\n      invalidMessage: 'Please select at least one user'\n    };\n  }\n  \n  if (selectedUsers.value.length > 5) {\n    return {\n      warning: true,\n      warningMessage: 'Selecting more than 5 users may impact performance'\n    };\n  }\n  \n  return {};\n});\n</script>\n\n<template>\n  <InMultiDropDown\n    v-model=\"selectedUsers\"\n    label=\"Assign Users\"\n    fetch-url=\"/api/users\"\n    response-key=\"data.users\"\n    :custom-options-key=\"['name', 'id']\"\n    search-status\n    query-string=\"search\"\n    type=\"checkbox\"\n    :max-selectable-item=\"10\"\n    v-bind=\"validationState\"\n  />\n</template>"
+    }
+  },
+  "styling": {
+    "cssVariables": {
+      "--multi-dropdown-bg": "Dropdown button background (default: white)",
+      "--multi-dropdown-border": "Border color (default: #d0d5dd)",
+      "--multi-dropdown-text": "Text color (default: #101828)",
+      "--multi-dropdown-placeholder": "Placeholder color (default: #667085)",
+      "--multi-dropdown-hover-bg": "Hover state background (default: #f9fafb)",
+      "--multi-dropdown-focus-border": "Focus border color (default: primary color)",
+      "--multi-dropdown-tag-bg": "Tag background when type='tags' (default: #f2f4f7)",
+      "--multi-dropdown-tag-text": "Tag text color (default: #344054)",
+      "--multi-dropdown-checkbox-checked": "Checked checkbox color (default: primary color)"
+    },
+    "classes": {
+      "in-multi-dropdown": "Root dropdown container",
+      "in-multi-dropdown__button": "Dropdown trigger button",
+      "in-multi-dropdown__label": "Label text above dropdown",
+      "in-multi-dropdown__list": "Dropdown menu list",
+      "in-multi-dropdown__option": "Individual option item",
+      "in-multi-dropdown__checkbox": "Checkbox when type='checkbox'",
+      "in-multi-dropdown__tag": "Selected tag when type='tags'",
+      "in-multi-dropdown__tag-remove": "Remove button on tag",
+      "in-multi-dropdown--invalid": "Applied when invalid=true",
+      "in-multi-dropdown--warning": "Applied when warning=true"
+    },
+    "notes": "Tag styling is automatically applied when type='tags'. Checkbox styling uses design system checkbox component."
+  },
+  "implementationPatterns": [
+    {
+      "name": "Limited Multi-Select",
+      "description": "Multi-select with maximum selection limit",
+      "code": "<script setup>\nimport { ref, computed } from 'vue';\nimport { InMultiDropDown } from '@useinsider/design-system-vue';\n\nconst selectedTags = ref([]);\nconst maxTags = 3;\n\nconst tagOptions = [\n  { label: 'Feature', value: 'feature' },\n  { label: 'Bug', value: 'bug' },\n  { label: 'Enhancement', value: 'enhancement' },\n  { label: 'Documentation', value: 'docs' },\n  { label: 'Testing', value: 'test' }\n];\n\nconst selectionWarning = computed(() => {\n  if (selectedTags.value.length >= maxTags) {\n    return `Maximum ${maxTags} tags allowed`;\n  }\n  return '';\n});\n</script>\n\n<template>\n  <InMultiDropDown\n    v-model=\"selectedTags\"\n    :options=\"tagOptions\"\n    label=\"Issue Tags\"\n    type=\"tags\"\n    :max-selectable-item=\"maxTags\"\n    :warning=\"selectedTags.length >= maxTags\"\n    :warning-message=\"selectionWarning\"\n  />\n</template>",
+      "when": "Use when you need to enforce a maximum number of selections",
+      "pros": ["Prevents over-selection", "Clear user feedback", "Enforces business rules"],
+      "cons": ["May feel restrictive", "Requires clear communication to user"]
+    },
+    {
+      "name": "Grouped Multi-Select with Select All",
+      "description": "Multi-select with group selection functionality",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InMultiDropDown } from '@useinsider/design-system-vue';\n\nconst selectedPermissions = ref([]);\n\nconst permissionGroups = [\n  { label: 'Users', value: 'users_read' },\n  { label: 'Users', value: 'users_write' },\n  { label: 'Users', value: 'users_delete' },\n  { label: 'Posts', value: 'posts_read' },\n  { label: 'Posts', value: 'posts_write' },\n  { label: 'Posts', value: 'posts_delete' }\n];\n\nconst selectAllInGroup = (group: string) => {\n  const groupValues = permissionGroups\n    .filter(p => p.label === group)\n    .map(p => p.value);\n  \n  selectedPermissions.value = [\n    ...new Set([...selectedPermissions.value, ...groupValues])\n  ];\n};\n\nconst deselectAllInGroup = (group: string) => {\n  const groupValues = permissionGroups\n    .filter(p => p.label === group)\n    .map(p => p.value);\n  \n  selectedPermissions.value = selectedPermissions.value.filter(\n    v => !groupValues.includes(v)\n  );\n};\n</script>\n\n<template>\n  <div>\n    <div class=\"group-actions\">\n      <button @click=\"selectAllInGroup('Users')\">Select All Users</button>\n      <button @click=\"deselectAllInGroup('Users')\">Deselect All Users</button>\n    </div>\n    \n    <InMultiDropDown\n      v-model=\"selectedPermissions\"\n      :options=\"permissionGroups\"\n      label=\"Permissions\"\n      type=\"checkbox\"\n    />\n  </div>\n</template>",
+      "when": "Use when options can be logically grouped and bulk selection is needed",
+      "pros": ["Faster selection", "Better UX for grouped data", "Reduces clicks"],
+      "cons": ["More complex implementation", "Requires group management logic"]
+    },
+    {
+      "name": "Dynamic Filter Multi-Select",
+      "description": "Multi-select for filtering with immediate results",
+      "code": "<script setup>\nimport { ref, computed } from 'vue';\nimport { InMultiDropDown } from '@useinsider/design-system-vue';\n\nconst selectedFilters = ref([]);\nconst allProducts = ref([...]);\n\nconst filterOptions = [\n  { label: 'In Stock', value: 'in_stock' },\n  { label: 'On Sale', value: 'on_sale' },\n  { label: 'Free Shipping', value: 'free_shipping' },\n  { label: 'Top Rated', value: 'top_rated' }\n];\n\nconst filteredProducts = computed(() => {\n  if (selectedFilters.value.length === 0) return allProducts.value;\n  \n  return allProducts.value.filter(product => {\n    return selectedFilters.value.every(filter => {\n      switch (filter) {\n        case 'in_stock': return product.stock > 0;\n        case 'on_sale': return product.onSale;\n        case 'free_shipping': return product.freeShipping;\n        case 'top_rated': return product.rating >= 4.5;\n        default: return true;\n      }\n    });\n  });\n});\n</script>\n\n<template>\n  <div>\n    <InMultiDropDown\n      v-model=\"selectedFilters\"\n      :options=\"filterOptions\"\n      label=\"Filter Products\"\n      type=\"tags\"\n      placeholder=\"Apply filters\"\n    />\n    \n    <div class=\"results\">\n      {{ filteredProducts.length }} products found\n    </div>\n  </div>\n</template>",
+      "when": "Use for filtering data with multiple criteria that can be combined",
+      "pros": ["Real-time filtering", "Multiple filter combination", "Clear active filters"],
+      "cons": ["Can be performance-intensive", "Complex filter logic"]
+    }
+  ],
+  "useCases": [
+    {
+      "title": "Tag/Category Selection",
+      "description": "Select multiple tags or categories for content",
+      "example": "Blog post editor with multi-select for tags (JavaScript, Vue, Tutorial) displayed as removable chips, max 5 tags"
+    },
+    {
+      "title": "User/Role Assignment",
+      "description": "Assign multiple users or roles in admin panels",
+      "example": "Project settings with multi-select for team members, fetched from API with search, checkbox type, max 10 users"
+    },
+    {
+      "title": "Filter Controls",
+      "description": "Multi-criteria filtering for data tables or lists",
+      "example": "E-commerce product filters (In Stock, On Sale, Free Shipping) as multi-select with tag display showing active filters"
+    },
+    {
+      "title": "Permission Management",
+      "description": "Select multiple permissions or access rights",
+      "example": "Role editor with multi-select for permissions (Read, Write, Delete) grouped by resource type, checkbox type"
+    }
+  ],
+  "performanceNotes": [
+    {
+      "topic": "Large option lists with checkboxes",
+      "description": "Rendering 100+ checkboxes can slow dropdown opening",
+      "recommendation": "Use fetchUrl with search for large datasets. Limit initial options to 50. Enable search when options > 20 for better UX",
+      "impact": "high"
+    },
+    {
+      "topic": "Tag rendering performance",
+      "description": "Many selected tags (20+) can slow UI updates",
+      "recommendation": "Set reasonable maxSelectableItem limit (5-10). Consider using chip list component for displaying many tags outside dropdown",
+      "impact": "medium"
+    },
+    {
+      "topic": "Real-time filtering with selected values",
+      "description": "Computing filtered results on every selection change",
+      "recommendation": "Debounce filter computations if expensive. Use computed properties with proper dependency tracking. Consider memoization for complex filters",
+      "impact": "medium"
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "topic": "Label requirement",
+      "description": "Multi-selects must have associated labels",
+      "wcagLevel": "A",
+      "recommendation": "Always provide label prop. Component automatically links label to button with aria-labelledby",
+      "example": "label=\"Select Categories\" // Required for accessibility"
+    },
+    {
+      "topic": "Checkbox accessibility",
+      "description": "Checkboxes must be keyboard accessible and properly labeled",
+      "wcagLevel": "A",
+      "recommendation": "Component handles checkbox keyboard interaction (Space to toggle). Each checkbox is linked to its label. Use type='checkbox' for better screen reader support",
+      "example": "type=\"checkbox\" // Better for screen readers than tags"
+    },
+    {
+      "topic": "Selected count announcement",
+      "description": "Screen readers should announce number of selected items",
+      "wcagLevel": "AA",
+      "recommendation": "Component automatically updates aria-label with selected count (e.g., '3 items selected'). Keep maxSelectableItem reasonable for easier tracking",
+      "example": "// Component announces: '3 of 10 items selected'"
+    },
+    {
+      "topic": "Tag removal accessibility",
+      "description": "Tag remove buttons need proper labels",
+      "wcagLevel": "A",
+      "recommendation": "When type='tags', each tag's remove button has aria-label='Remove [option label]'. Keyboard accessible with Delete/Backspace keys",
+      "example": "type=\"tags\" // Auto-labels remove buttons"
+    }
+  ],
+  "helperFunctions": [
+    {
+      "name": "selectAll",
+      "description": "Select all available options programmatically",
+      "code": "function selectAll(options: Array<{value: any}>): any[] {\n  return options.filter(opt => !opt.disabled).map(opt => opt.value);\n}",
+      "parameters": [
+        {
+          "name": "options",
+          "type": "Array<{value: any; disabled?: boolean}>",
+          "description": "Array of dropdown options"
+        }
+      ],
+      "returnType": "any[]",
+      "example": "const allSelected = selectAll(categoryOptions);\nselectedCategories.value = allSelected;"
+    },
+    {
+      "name": "deselectAll",
+      "description": "Clear all selections",
+      "code": "function deselectAll(): any[] {\n  return [];\n}",
+      "parameters": [],
+      "returnType": "any[]",
+      "example": "selectedCategories.value = deselectAll();"
+    },
+    {
+      "name": "toggleSelection",
+      "description": "Toggle a specific option in/out of selection",
+      "code": "function toggleSelection(currentSelection: any[], value: any): any[] {\n  const index = currentSelection.indexOf(value);\n  if (index > -1) {\n    return currentSelection.filter(v => v !== value);\n  }\n  return [...currentSelection, value];\n}",
+      "parameters": [
+        {
+          "name": "currentSelection",
+          "type": "any[]",
+          "description": "Current selected values array"
+        },
+        {
+          "name": "value",
+          "type": "any",
+          "description": "Value to toggle"
+        }
+      ],
+      "returnType": "any[]",
+      "example": "selectedValues.value = toggleSelection(selectedValues.value, 'option1');\n// Adds if not present, removes if present"
+    },
+    {
+      "name": "getSelectedLabels",
+      "description": "Get labels of currently selected options",
+      "code": "function getSelectedLabels(options: Array<{label: string; value: any}>, selectedValues: any[]): string[] {\n  return options\n    .filter(opt => selectedValues.includes(opt.value))\n    .map(opt => opt.label);\n}",
+      "parameters": [
+        {
+          "name": "options",
+          "type": "Array<{label: string; value: any}>",
+          "description": "All available options"
+        },
+        {
+          "name": "selectedValues",
+          "type": "any[]",
+          "description": "Currently selected values"
+        }
+      ],
+      "returnType": "string[]",
+      "example": "const labels = getSelectedLabels(options, selectedCategories.value);\n// Returns: ['Electronics', 'Books']"
+    }
   ]
 }

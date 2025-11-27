@@ -175,26 +175,30 @@ export interface EnrichmentSchema {
 
 /**
  * Required fields for all enrichments
+ * ALL fields are now mandatory for complete enrichment coverage
  */
 export const REQUIRED_FIELDS: (keyof EnrichmentSchema)[] = [
   'component',
   '_metadata',
   'propEnrichments',
+  'eventEnrichments',
+  'codeSnippets',
+  'styling',
+  'examples',
+  'implementationPatterns',
+  'useCases',
+  'bestPractices',
+  'commonMistakes',
+  'performanceNotes',
+  'accessibilityNotes',
+  'helperFunctions',
 ];
 
 /**
  * Recommended fields for comprehensive enrichments
+ * @deprecated All fields are now required
  */
-export const RECOMMENDED_FIELDS: (keyof EnrichmentSchema)[] = [
-  'component',
-  '_metadata',
-  'propEnrichments',
-  'eventEnrichments',
-  'codeSnippets',
-  'examples',
-  'bestPractices',
-  'commonMistakes',
-];
+export const RECOMMENDED_FIELDS: (keyof EnrichmentSchema)[] = REQUIRED_FIELDS;
 
 /**
  * All possible fields in order of importance

@@ -1,0 +1,375 @@
+{
+  "component": "InTagsText",
+  "_metadata": {
+    "lastUpdated": "2025-11-28T00:00:00.000Z",
+    "propsHash": "intagstext-v1-7props",
+    "eventsHash": "intagstext-v1-1event",
+    "propCount": 7,
+    "eventCount": 1
+  },
+  "propEnrichments": {
+    "text": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Display text shown on the tag. Keep concise (1-3 words). This is the visible label users see. Required prop.",
+        "typescript": "string",
+        "example": "'Active'\n'Premium'\n'New'\n'Category: Tech'"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Using long text without setting maxWidth",
+          "why": "Long text can break layout without truncation",
+          "impact": "Tags overflow, break UI alignment",
+          "fix": "Set maxWidth to truncate long text with ellipsis",
+          "severity": "medium",
+          "example": "// Wrong:\ntext=\"This is a very long category name\"\n\n// Correct:\ntext=\"This is a very long category name\"\n:maxWidth=\"150\""
+        }
+      ]
+    },
+    "value": {
+      "valueFormat": {
+        "structure": "String | Number",
+        "notes": "Unique identifier for the tag. Used in click events and for tracking which tag was interacted with. Must be unique within tag group. Required prop.",
+        "typescript": "string | number",
+        "example": "'active-status'\n'category-1'\n123\n'user-premium'"
+      }
+    },
+    "type": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Visual variant determining color scheme. Common values: 'default' (gray), 'primary' (blue), 'success' (green), 'warning' (orange), 'danger' (red), 'info' (cyan). Maps to semantic meanings.",
+        "typescript": "'default' | 'primary' | 'success' | 'warning' | 'danger' | 'info'",
+        "example": "'default' // Neutral gray tag\n'success' // Green for positive status\n'warning' // Orange for caution\n'danger' // Red for errors/critical\n'primary' // Blue for emphasis\n'info' // Cyan for informational"
+      },
+      "possibleValues": [
+        {
+          "value": "default",
+          "description": "Neutral gray tag (default)"
+        },
+        {
+          "value": "primary",
+          "description": "Primary brand color (blue)"
+        },
+        {
+          "value": "success",
+          "description": "Success/positive status (green)"
+        },
+        {
+          "value": "warning",
+          "description": "Warning/caution (orange)"
+        },
+        {
+          "value": "danger",
+          "description": "Error/critical (red)"
+        },
+        {
+          "value": "info",
+          "description": "Informational (cyan)"
+        }
+      ]
+    },
+    "disable": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "When true, tag appears grayed out and click event is disabled. Use for inactive/unavailable states.",
+        "typescript": "boolean",
+        "example": "true // Disabled state\nfalse // Active/clickable (default)"
+      }
+    },
+    "withIcon": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "When true (default), shows an icon based on tag type. Each type has a default icon. Set false for text-only tags.",
+        "typescript": "boolean",
+        "example": "true // Show type-based icon (default)\nfalse // Text-only, no icon"
+      }
+    },
+    "maxWidth": {
+      "valueFormat": {
+        "structure": "Number",
+        "notes": "Maximum width in pixels for tag text. When text exceeds this width, it's truncated with ellipsis (...). Null (default) means no truncation. Use for consistent tag sizing.",
+        "typescript": "number | null",
+        "example": "null // No truncation (default)\n100 // Max 100px wide\n150 // Max 150px wide"
+      }
+    },
+    "preventXss": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "When true (default), sanitizes text to prevent XSS attacks. Should always be true when text comes from user input or untrusted sources.",
+        "typescript": "boolean",
+        "example": "true // Sanitize text (default - recommended)\nfalse // No sanitization (use only for trusted content)"
+      }
+    }
+  },
+  "eventEnrichments": {
+    "click": {
+      "description": "Emitted when user clicks the tag (only if disable=false)",
+      "payload": "{ text: string; value: string | number; type: string; }",
+      "when": "User clicks on an enabled tag. Commonly used for filtering, navigation, or tag removal."
+    }
+  },
+  "codeSnippets": {
+    "basicTag": {
+      "title": "Basic Status Tag",
+      "description": "Simple tag showing status",
+      "code": "<template>\n  <InTagsText\n    text=\"Active\"\n    value=\"status-active\"\n    type=\"success\"\n  />\n</template>"
+    },
+    "clickableFilterTag": {
+      "title": "Clickable Filter Tag",
+      "description": "Tag that filters content when clicked",
+      "code": "<template>\n  <div class=\"filter-tags\">\n    <InTagsText\n      v-for=\"tag in filterTags\"\n      :key=\"tag.value\"\n      :text=\"tag.text\"\n      :value=\"tag.value\"\n      :type=\"tag.type\"\n      @click=\"applyFilter\"\n    />\n  </div>\n</template>\n\n<script setup>\nconst filterTags = ref([\n  { text: 'Active', value: 'active', type: 'success' },\n  { text: 'Pending', value: 'pending', type: 'warning' },\n  { text: 'Inactive', value: 'inactive', type: 'default' }\n]);\n\nconst applyFilter = (tag) => {\n  console.log('Filter by:', tag.value);\n  // Apply filter logic\n};\n</script>"
+    },
+    "truncatedTag": {
+      "title": "Tag with Text Truncation",
+      "description": "Long text truncated with maxWidth",
+      "code": "<template>\n  <InTagsText\n    text=\"Very Long Category Name That Would Break Layout\"\n    value=\"category-123\"\n    type=\"primary\"\n    :maxWidth=\"120\"\n  />\n</template>"
+    }
+  },
+  "styling": {
+    "cssVariables": {
+      "--tag-bg-default": "Background color for default type",
+      "--tag-bg-primary": "Background color for primary type",
+      "--tag-bg-success": "Background color for success type",
+      "--tag-bg-warning": "Background color for warning type",
+      "--tag-bg-danger": "Background color for danger type",
+      "--tag-text-color": "Text color for tags"
+    },
+    "classes": {
+      ".in-tags-text": "Main tag container",
+      ".in-tags-text--default": "Default type modifier",
+      ".in-tags-text--primary": "Primary type modifier",
+      ".in-tags-text--success": "Success type modifier",
+      ".in-tags-text--warning": "Warning type modifier",
+      ".in-tags-text--danger": "Danger type modifier",
+      ".in-tags-text--disabled": "Disabled state",
+      ".in-tags-text__icon": "Icon element",
+      ".in-tags-text__text": "Text element"
+    },
+    "notes": "Tag colors are semantic: green=success, red=danger, orange=warning, blue=primary, gray=default. Icons are automatically chosen based on type."
+  },
+  "examples": [
+    {
+      "title": "Status Tags in Data Table",
+      "description": "Show campaign or item status with colored tags",
+      "code": "<template>\n  <InDataTableV2 :data=\"campaigns\" :columns=\"columns\">\n    <template #status=\"{ row }\">\n      <InTagsText\n        :text=\"row.statusText\"\n        :value=\"row.status\"\n        :type=\"getStatusType(row.status)\"\n        @click=\"filterByStatus\"\n      />\n    </template>\n  </InDataTableV2>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\n\nconst campaigns = ref([\n  { id: 1, name: 'Summer Sale', status: 'active', statusText: 'Active' },\n  { id: 2, name: 'Black Friday', status: 'scheduled', statusText: 'Scheduled' },\n  { id: 3, name: 'Old Campaign', status: 'paused', statusText: 'Paused' },\n  { id: 4, name: 'Failed Test', status: 'failed', statusText: 'Failed' }\n]);\n\nconst getStatusType = (status: string) => {\n  const typeMap = {\n    active: 'success',\n    scheduled: 'info',\n    paused: 'warning',\n    failed: 'danger',\n    draft: 'default'\n  };\n  return typeMap[status] || 'default';\n};\n\nconst filterByStatus = (tag) => {\n  console.log('Filter campaigns by status:', tag.value);\n  // Apply filter\n};\n</script>"
+    },
+    {
+      "title": "Category Tags with Filtering",
+      "description": "Show and filter by categories",
+      "code": "<template>\n  <div class=\"content-view\">\n    <div class=\"category-filters\">\n      <InTagsText\n        v-for=\"category in categories\"\n        :key=\"category.id\"\n        :text=\"category.name\"\n        :value=\"category.id\"\n        :type=\"selectedCategory === category.id ? 'primary' : 'default'\"\n        @click=\"selectCategory\"\n      />\n    </div>\n    \n    <div class=\"items-list\">\n      <!-- Filtered items -->\n      <div v-for=\"item in filteredItems\" :key=\"item.id\">\n        {{ item.name }}\n      </div>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, computed } from 'vue';\n\nconst categories = ref([\n  { id: 'all', name: 'All Items' },\n  { id: 'tech', name: 'Technology' },\n  { id: 'marketing', name: 'Marketing' },\n  { id: 'sales', name: 'Sales' }\n]);\n\nconst selectedCategory = ref('all');\nconst items = ref([\n  { id: 1, name: 'Item 1', category: 'tech' },\n  { id: 2, name: 'Item 2', category: 'marketing' },\n  { id: 3, name: 'Item 3', category: 'tech' }\n]);\n\nconst filteredItems = computed(() => {\n  if (selectedCategory.value === 'all') return items.value;\n  return items.value.filter(item => item.category === selectedCategory.value);\n});\n\nconst selectCategory = (tag) => {\n  selectedCategory.value = tag.value;\n};\n</script>\n\n<style scoped>\n.category-filters {\n  display: flex;\n  gap: 8px;\n  margin-bottom: 20px;\n  flex-wrap: wrap;\n}\n</style>"
+    },
+    {
+      "title": "User Role Tags",
+      "description": "Display user roles or permissions as tags",
+      "code": "<template>\n  <div class=\"user-card\">\n    <div class=\"user-info\">\n      <h3>{{ user.name }}</h3>\n      <p>{{ user.email }}</p>\n    </div>\n    \n    <div class=\"user-roles\">\n      <InTagsText\n        v-for=\"role in user.roles\"\n        :key=\"role.id\"\n        :text=\"role.name\"\n        :value=\"role.id\"\n        :type=\"getRoleType(role.level)\"\n        :disable=\"!canManageRoles\"\n        :maxWidth=\"100\"\n        @click=\"manageRole\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, computed } from 'vue';\nimport { usePermissions } from '@/composables/usePermissions';\n\nconst { hasPermission } = usePermissions();\n\nconst user = ref({\n  name: 'John Doe',\n  email: 'john@example.com',\n  roles: [\n    { id: 'admin', name: 'Administrator', level: 'high' },\n    { id: 'editor', name: 'Content Editor', level: 'medium' },\n    { id: 'viewer', name: 'Viewer', level: 'low' }\n  ]\n});\n\nconst canManageRoles = computed(() => \n  hasPermission('users.manage-roles')\n);\n\nconst getRoleType = (level: string) => {\n  const levelTypes = {\n    high: 'danger',\n    medium: 'warning',\n    low: 'info'\n  };\n  return levelTypes[level] || 'default';\n};\n\nconst manageRole = (tag) => {\n  if (canManageRoles.value) {\n    console.log('Manage role:', tag.value);\n    // Open role management dialog\n  }\n};\n</script>\n\n<style scoped>\n.user-roles {\n  display: flex;\n  gap: 6px;\n  flex-wrap: wrap;\n  margin-top: 10px;\n}\n</style>"
+    }
+  ],
+  "implementationPatterns": [
+    {
+      "name": "Interactive Filter Tags",
+      "description": "Use tags as clickable filters with visual active state",
+      "code": "<InTagsText\n  v-for=\"tag in filters\"\n  :key=\"tag.value\"\n  :text=\"tag.text\"\n  :value=\"tag.value\"\n  :type=\"activeFilter === tag.value ? 'primary' : 'default'\"\n  @click=\"(t) => activeFilter = t.value\"\n/>",
+      "when": "Users need to filter content by categories, statuses, or tags. Common in dashboards, content lists, and search results.",
+      "pros": [
+        "Clear visual feedback for active filter",
+        "Compact, space-efficient filtering",
+        "Familiar UX pattern"
+      ],
+      "cons": [
+        "Limited to single selection without custom logic",
+        "Can be cluttered with many tags"
+      ]
+    },
+    {
+      "name": "Read-Only Status Indicators",
+      "description": "Display status without click interaction",
+      "code": "<InTagsText\n  :text=\"item.status\"\n  :value=\"item.id\"\n  :type=\"getStatusType(item.status)\"\n  :disable=\"true\"\n/>",
+      "when": "Just showing status/category without interaction. Common in tables, cards, and detail views.",
+      "pros": [
+        "Clear visual status indication",
+        "Consistent styling",
+        "Easy to scan"
+      ],
+      "cons": [
+        "No interaction possible",
+        "Might look clickable if disable styling unclear"
+      ]
+    },
+    {
+      "name": "Truncated Label Tags",
+      "description": "Handle long category/label names with truncation",
+      "code": "<InTagsText\n  :text=\"longCategoryName\"\n  :value=\"categoryId\"\n  :maxWidth=\"120\"\n  type=\"primary\"\n/>\n\n// With tooltip on hover\n<InTooltipV2 :text=\"longCategoryName\">\n  <InTagsText\n    :text=\"longCategoryName\"\n    :value=\"categoryId\"\n    :maxWidth=\"120\"\n  />\n</InTooltipV2>",
+      "when": "Category or label names vary in length and can break layout. Common in user-generated content.",
+      "pros": [
+        "Consistent tag sizing",
+        "Prevents layout breaking",
+        "Tooltip shows full text"
+      ],
+      "cons": [
+        "Truncated text may be unclear",
+        "Need tooltip for full text"
+      ]
+    }
+  ],
+  "useCases": [
+    {
+      "title": "Status Indicators in Tables",
+      "description": "Show campaign, user, or item status with colored tags",
+      "example": "Campaign table with status column showing 'Active' (green), 'Paused' (orange), 'Failed' (red) tags. Users can click tags to filter by that status."
+    },
+    {
+      "title": "Category Filters",
+      "description": "Allow users to filter content by clicking category tags",
+      "example": "Blog or content listing with category tags at top: 'All', 'Tech', 'Marketing', 'Sales'. Clicking a tag filters the list. Active tag highlighted in blue."
+    },
+    {
+      "title": "User Role/Permission Display",
+      "description": "Show user roles or permissions as tags",
+      "example": "User profile showing role tags: 'Admin' (red), 'Editor' (orange), 'Viewer' (blue). Admins can click to modify roles, others see disabled tags."
+    },
+    {
+      "title": "Product/Item Properties",
+      "description": "Display product features, tags, or categories",
+      "example": "Product card showing feature tags: 'New', 'Premium', 'Limited Edition'. Tags are read-only visual indicators, not clickable."
+    }
+  ],
+  "bestPractices": [
+    {
+      "title": "Use Semantic Type Colors Consistently",
+      "description": "Map tag types to consistent meanings across the app",
+      "code": "// Good - Consistent mapping:\nsuccess: 'active', 'completed', 'approved'\nwarning: 'pending', 'paused', 'review'\ndanger: 'failed', 'rejected', 'error'\ninfo: 'scheduled', 'processing'\ndefault: 'draft', 'inactive'\n\n// Bad - Inconsistent:\nsuccess: sometimes active, sometimes pending",
+      "reasoning": "Consistent color coding helps users quickly understand status. Changing color meanings confuses users and reduces UX quality."
+    },
+    {
+      "title": "Set maxWidth for User-Generated Content",
+      "description": "Prevent layout breaking from long category names",
+      "code": "// Good:\n<InTagsText\n  :text=\"userCategory\"\n  :maxWidth=\"150\"\n/>\n\n// Bad:\n<InTagsText :text=\"userCategory\" /> // Can break layout",
+      "reasoning": "User-generated content is unpredictable. Long category names break layouts without truncation. Always set maxWidth for UGC."
+    },
+    {
+      "title": "Disable Tags When Interaction Isn't Allowed",
+      "description": "Use disable prop when users shouldn't interact with tag",
+      "code": "// Good:\n<InTagsText\n  :disable=\"!canEditRoles\"\n  @click=\"manageRole\"\n/>\n\n// Bad:\n<InTagsText @click=\"maybeManageRole\" />\n// then check permission inside handler",
+      "reasoning": "Visual feedback (grayed out) tells users they can't interact. Better UX than clickable tags that show error on click."
+    },
+    {
+      "title": "Keep preventXss=true for Safety",
+      "description": "Always sanitize user-generated tag text",
+      "code": "// Good (default):\n<InTagsText\n  :text=\"userInput\"\n  :preventXss=\"true\" // default\n/>\n\n// Unsafe:\n<InTagsText\n  :text=\"userInput\"\n  :preventXss=\"false\" // XSS risk",
+      "reasoning": "preventXss=true is default for security. Only disable for trusted, static content. User input must always be sanitized."
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Not providing unique values for tags",
+      "why": "value prop is used to identify which tag was clicked",
+      "impact": "Can't distinguish which tag was clicked in event handler",
+      "fix": "Ensure each tag has unique value (ID, status code, category slug)",
+      "severity": "high",
+      "example": "// Wrong:\n<InTagsText text=\"Active\" value=\"tag\" />\n<InTagsText text=\"Paused\" value=\"tag\" /> // duplicate!\n\n// Correct:\n<InTagsText text=\"Active\" value=\"active\" />\n<InTagsText text=\"Paused\" value=\"paused\" />"
+    },
+    {
+      "mistake": "Using inconsistent type colors for same status",
+      "why": "Confuses users about what colors mean",
+      "impact": "Users can't rely on color coding, reduces UX quality",
+      "fix": "Create status-to-type mapping and use consistently",
+      "severity": "medium",
+      "example": "// Wrong:\n// Page 1: Active = success\n// Page 2: Active = primary\n\n// Correct: Use same mapping everywhere\nconst STATUS_TYPES = {\n  active: 'success',\n  paused: 'warning'\n};"
+    },
+    {
+      "mistake": "Not handling long text",
+      "why": "User-generated category names can be very long",
+      "impact": "Tags overflow, break grid/flex layouts",
+      "fix": "Set maxWidth and optionally add tooltip for full text",
+      "severity": "medium",
+      "example": "// Wrong:\n<InTagsText :text=\"longUserCategory\" />\n\n// Correct:\n<InTagsText :text=\"longUserCategory\" :maxWidth=\"120\" />"
+    },
+    {
+      "mistake": "Making read-only tags look clickable",
+      "why": "Users expect clickable appearance means clickable",
+      "impact": "Frustrating UX when tags don't respond to clicks",
+      "fix": "Set disable=true for non-interactive tags or remove @click",
+      "severity": "low",
+      "example": "// Wrong (looks clickable but isn't):\n<InTagsText text=\"Status\" value=\"id\" /> // no @click handler\n\n// Correct:\n<InTagsText text=\"Status\" value=\"id\" :disable=\"true\" />"
+    }
+  ],
+  "performanceNotes": [
+    {
+      "topic": "Rendering Many Tags",
+      "description": "Large lists of tags (100+) can impact render performance",
+      "recommendation": "Use virtual scrolling for very long tag lists. Limit visible tags to 20-30 with 'Show More' pagination.",
+      "impact": "Low: Only affects pages with 100+ tags"
+    },
+    {
+      "topic": "XSS Sanitization Performance",
+      "description": "preventXss sanitization has small performance cost per tag",
+      "recommendation": "Keep preventXss=true (default) for safety. For static, trusted content only, can set false if performance critical.",
+      "impact": "Very Low: Negligible unless hundreds of tags"
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "topic": "Keyboard Accessibility",
+      "description": "Clickable tags must be keyboard accessible",
+      "wcagLevel": "A",
+      "recommendation": "Ensure tags are focusable via Tab key and activatable with Enter/Space. Component should handle this by default.",
+      "example": "<InTagsText\n  text=\"Filter\"\n  value=\"id\"\n  @click=\"filter\"\n  tabindex=\"0\"\n  @keydown.enter=\"filter\"\n/>"
+    },
+    {
+      "topic": "Color Not Sole Indicator",
+      "description": "Don't rely only on color to convey information",
+      "wcagLevel": "A",
+      "recommendation": "Include text labels along with colors. For example, not just red tag, but red tag with 'Failed' text.",
+      "example": "// Good: Color + Text\n<InTagsText text=\"Failed\" type=\"danger\" />\n\n// Bad: Color only (no text)\n<InTagsText text=\"\" type=\"danger\" />"
+    },
+    {
+      "topic": "Sufficient Color Contrast",
+      "description": "Tag text must have sufficient contrast against background",
+      "wcagLevel": "AA",
+      "recommendation": "Ensure 4.5:1 contrast ratio. Test all tag types (success, warning, danger, etc.) for contrast compliance.",
+      "example": "Use design system colors that meet WCAG AA standards"
+    },
+    {
+      "topic": "Disabled State Communication",
+      "description": "Screen readers need to know tag is disabled",
+      "wcagLevel": "A",
+      "recommendation": "When disable=true, ensure aria-disabled='true' is set so screen readers announce disabled state.",
+      "example": "<InTagsText\n  :disable=\"true\"\n  aria-disabled=\"true\"\n/>"
+    }
+  ],
+  "helperFunctions": [
+    {
+      "name": "createStatusTagConfig",
+      "description": "Factory function to create consistent status tag configurations",
+      "code": "export function createStatusTagConfig(status: string) {\n  const configs = {\n    active: { text: 'Active', type: 'success' },\n    paused: { text: 'Paused', type: 'warning' },\n    scheduled: { text: 'Scheduled', type: 'info' },\n    failed: { text: 'Failed', type: 'danger' },\n    draft: { text: 'Draft', type: 'default' },\n    completed: { text: 'Completed', type: 'success' },\n    cancelled: { text: 'Cancelled', type: 'default' },\n    pending: { text: 'Pending', type: 'warning' }\n  };\n\n  return configs[status] || { text: status, type: 'default' };\n}",
+      "parameters": [
+        {
+          "name": "status",
+          "type": "string",
+          "description": "Status value (active, paused, etc.)"
+        }
+      ],
+      "returnType": "{ text: string; type: string; }",
+      "example": "const statusConfig = createStatusTagConfig('active');\n// Returns: { text: 'Active', type: 'success' }\n\n<InTagsText\n  v-bind=\"statusConfig\"\n  :value=\"campaign.status\"\n/>"
+    },
+    {
+      "name": "useTagFilters",
+      "description": "Composable for managing tag-based filtering",
+      "code": "export function useTagFilters(items, options = {}) {\n  const { filterKey = 'category', allValue = 'all' } = options;\n  const activeFilter = ref(allValue);\n\n  const filteredItems = computed(() => {\n    if (activeFilter.value === allValue) {\n      return items.value;\n    }\n    return items.value.filter(item => \n      item[filterKey] === activeFilter.value\n    );\n  });\n\n  const setFilter = (tag) => {\n    activeFilter.value = tag.value;\n  };\n\n  const clearFilter = () => {\n    activeFilter.value = allValue;\n  };\n\n  const isActive = (value) => {\n    return activeFilter.value === value;\n  };\n\n  return {\n    activeFilter,\n    filteredItems,\n    setFilter,\n    clearFilter,\n    isActive\n  };\n}",
+      "parameters": [
+        {
+          "name": "items",
+          "type": "Ref<Array>",
+          "description": "Reactive array of items to filter"
+        },
+        {
+          "name": "options",
+          "type": "{ filterKey?: string; allValue?: string; }",
+          "description": "Configuration options"
+        }
+      ],
+      "returnType": "{ activeFilter: Ref<string>, filteredItems: ComputedRef<Array>, setFilter: Function, clearFilter: Function, isActive: Function }",
+      "example": "const campaigns = ref([...]);\nconst categories = ref([\n  { text: 'All', value: 'all' },\n  { text: 'Email', value: 'email' },\n  { text: 'SMS', value: 'sms' }\n]);\n\nconst { filteredItems, setFilter, isActive } = useTagFilters(campaigns, {\n  filterKey: 'type'\n});\n\n// In template:\n<InTagsText\n  v-for=\"cat in categories\"\n  :key=\"cat.value\"\n  :text=\"cat.text\"\n  :value=\"cat.value\"\n  :type=\"isActive(cat.value) ? 'primary' : 'default'\"\n  @click=\"setFilter\"\n/>"
+    }
+  ]
+}

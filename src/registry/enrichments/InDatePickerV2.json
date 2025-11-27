@@ -296,30 +296,183 @@
       "typescript": "convertToLocalFormat(dateStr: string): string"
     }
   ],
-  "performanceNotes": [
+  "codeSnippets": {
+    "basicV2": {
+      "title": "Basic Date Picker V2",
+      "description": "Simple single date selection",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InDatePickerV2 } from '@useinsider/design-system-vue';\n\nconst startDate = ref('');\nconst endDate = ref('');\n</script>\n\n<template>\n  <InDatePickerV2\n    id=\"date-v2\"\n    name=\"date-v2\"\n    label-text=\"Select Date\"\n    v-model:start-date=\"startDate\"\n    v-model:end-date=\"endDate\"\n  />\n</template>"
+    },
+    "rangeV2": {
+      "title": "Range Date Picker V2",
+      "description": "Date range with custom shortcuts",
+      "code": "<script setup>\nimport { ref } from 'vue';\n\nconst startDate = ref('');\nconst endDate = ref('');\n\nconst customRanges = {\n  'Last 7 Days': [\n    new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),\n    new Date()\n  ],\n  'Last 30 Days': [\n    new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),\n    new Date()\n  ],\n  'This Quarter': [\n    new Date(new Date().getFullYear(), Math.floor(new Date().getMonth() / 3) * 3, 1),\n    new Date()\n  ]\n};\n</script>\n\n<template>\n  <InDatePickerV2\n    id=\"range-v2\"\n    name=\"range-v2\"\n    label-text=\"Date Range\"\n    range\n    v-model:start-date=\"startDate\"\n    v-model:end-date=\"endDate\"\n    :custom-ranges=\"customRanges\"\n  />\n</template>"
+    },
+    "compareV2": {
+      "title": "Compare Mode V2",
+      "description": "Compare two date ranges",
+      "code": "<script setup>\nimport { ref } from 'vue';\n\nconst startDate = ref('');\nconst endDate = ref('');\nconst compareStartDate = ref('');\nconst compareEndDate = ref('');\nconst isCompareEnabled = ref(false);\n\nconst handleCompareToggle = (enabled) => {\n  isCompareEnabled.value = enabled;\n  if (!enabled) {\n    compareStartDate.value = '';\n    compareEndDate.value = '';\n  }\n};\n</script>\n\n<template>\n  <InDatePickerV2\n    id=\"compare-v2\"\n    name=\"compare-v2\"\n    label-text=\"Compare Periods\"\n    range\n    compare\n    v-model:start-date=\"startDate\"\n    v-model:end-date=\"endDate\"\n    v-model:compare-start-date=\"compareStartDate\"\n    v-model:compare-end-date=\"compareEndDate\"\n    @compare-toggle=\"handleCompareToggle\"\n  />\n</template>"
+    }
+  },
+  "styling": {
+    "cssVariables": {
+      "--datepicker-v2-bg": "Calendar background (default: white)",
+      "--datepicker-v2-text": "Text color",
+      "--datepicker-v2-border": "Border color",
+      "--datepicker-v2-primary": "Primary brand color for selected dates",
+      "--datepicker-v2-compare": "Compare range color (default: orange)",
+      "--datepicker-v2-range-bg": "Date range background (light blue)",
+      "--datepicker-v2-today": "Today's date highlight color"
+    },
+    "classes": {
+      "in-date-picker-v2": "Root container",
+      "in-date-picker-v2__input": "Input field container",
+      "in-date-picker-v2__calendar": "Calendar dropdown",
+      "in-date-picker-v2__day": "Individual day cell",
+      "in-date-picker-v2__day--selected": "Selected day",
+      "in-date-picker-v2__day--in-range": "Day in primary range",
+      "in-date-picker-v2__day--in-compare-range": "Day in compare range",
+      "in-date-picker-v2__day--today": "Today's date",
+      "in-date-picker-v2__ranges": "Custom ranges sidebar",
+      "in-date-picker-v2__compare-toggle": "Compare mode toggle",
+      "in-date-picker-v2__footer": "Calendar footer actions"
+    },
+    "notes": "V2 uses dual v-model for start/end dates. Compare mode adds visual distinction with different colors."
+  },
+  "implementationPatterns": [
     {
-      "issue": "Recalculating comparedCustomRanges on every render",
-      "impact": "Unnecessary computations",
-      "solution": "Use watch with immediate: false instead of computed",
-      "example": "watch: { startDate() { this.calculateComparedRanges(); } }"
+      "name": "Dashboard Analytics Filter",
+      "description": "Date range filter with comparison for analytics",
+      "code": "<script setup>\nimport { ref, watch } from 'vue';\nimport { InDatePickerV2 } from '@useinsider/design-system-vue';\n\nconst startDate = ref('');\nconst endDate = ref('');\nconst compareStartDate = ref('');\nconst compareEndDate = ref('');\nconst metrics = ref(null);\n\nconst customRanges = {\n  'Today': [new Date(), new Date()],\n  'Yesterday': [\n    new Date(Date.now() - 24 * 60 * 60 * 1000),\n    new Date(Date.now() - 24 * 60 * 60 * 1000)\n  ],\n  'Last 7 Days': [\n    new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),\n    new Date()\n  ],\n  'Last 30 Days': [\n    new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),\n    new Date()\n  ]\n};\n\nconst fetchMetrics = async () => {\n  if (!startDate.value || !endDate.value) return;\n  \n  const params = {\n    start: startDate.value,\n    end: endDate.value\n  };\n  \n  if (compareStartDate.value && compareEndDate.value) {\n    params.compareStart = compareStartDate.value;\n    params.compareEnd = compareEndDate.value;\n  }\n  \n  const response = await fetch('/api/metrics', {\n    method: 'POST',\n    body: JSON.stringify(params)\n  });\n  \n  metrics.value = await response.json();\n};\n\nwatch([startDate, endDate, compareStartDate, compareEndDate], () => {\n  fetchMetrics();\n});\n</script>\n\n<template>\n  <InDatePickerV2\n    id=\"dashboard-filter\"\n    name=\"dashboard-filter\"\n    label-text=\"Date Range\"\n    range\n    compare\n    v-model:start-date=\"startDate\"\n    v-model:end-date=\"endDate\"\n    v-model:compare-start-date=\"compareStartDate\"\n    v-model:compare-end-date=\"compareEndDate\"\n    :custom-ranges=\"customRanges\"\n  />\n</template>",
+      "when": "Building analytics dashboards with period comparison",
+      "pros": ["Dual v-model for clean state", "Built-in comparison UI", "Flexible custom ranges"],
+      "cons": ["More complex than V1", "Requires v-model:start-date and v-model:end-date"]
     },
     {
-      "issue": "Missing reactive key",
-      "impact": "Component doesn't re-render on comparison toggle",
-      "solution": "Add :key=\"`${datePickerKey}-${startDate}-${endDate}`\"",
-      "severity": "medium"
+      "name": "Campaign Date Selection",
+      "description": "Select campaign start and end dates with validation",
+      "code": "<script setup>\nimport { ref, computed } from 'vue';\nimport { InDatePickerV2 } from '@useinsider/design-system-vue';\n\nconst startDate = ref('');\nconst endDate = ref('');\n\nconst minDate = Math.floor(new Date().setHours(0, 0, 0, 0) / 1000);\n\nconst state = computed(() => {\n  if (!startDate.value || !endDate.value) return 'error';\n  \n  const start = new Date(startDate.value);\n  const end = new Date(endDate.value);\n  const diffDays = (end - start) / (1000 * 60 * 60 * 24);\n  \n  if (diffDays < 1) return 'error';\n  if (diffDays > 90) return 'warning';\n  return 'success';\n});\n\nconst stateMessage = computed(() => {\n  if (!startDate.value || !endDate.value) {\n    return 'Please select campaign dates';\n  }\n  \n  const start = new Date(startDate.value);\n  const end = new Date(endDate.value);\n  const diffDays = Math.round((end - start) / (1000 * 60 * 60 * 24));\n  \n  if (diffDays < 1) return 'End date must be after start date';\n  if (diffDays > 90) return 'Campaign duration exceeds 90 days';\n  return `Campaign duration: ${diffDays} days`;\n});\n</script>\n\n<template>\n  <InDatePickerV2\n    id=\"campaign-dates\"\n    name=\"campaign-dates\"\n    label-text=\"Campaign Period\"\n    range\n    v-model:start-date=\"startDate\"\n    v-model:end-date=\"endDate\"\n    :min-date=\"minDate\"\n    :state=\"state\"\n    :state-message=\"stateMessage\"\n  />\n</template>",
+      "when": "Campaign or event scheduling with date validation",
+      "pros": ["Date range validation", "Visual feedback", "Min date restriction"],
+      "cons": ["Complex validation logic", "Multiple computed properties"]
+    },
+    {
+      "name": "Report Generator",
+      "description": "Generate reports with flexible date ranges",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InDatePickerV2 } from '@useinsider/design-system-vue';\n\nconst startDate = ref('');\nconst endDate = ref('');\nconst reportType = ref('daily');\nconst loading = ref(false);\n\nconst customRanges = {\n  'This Week': [\n    new Date(Date.now() - new Date().getDay() * 24 * 60 * 60 * 1000),\n    new Date()\n  ],\n  'This Month': [\n    new Date(new Date().getFullYear(), new Date().getMonth(), 1),\n    new Date()\n  ],\n  'This Quarter': [\n    new Date(new Date().getFullYear(), Math.floor(new Date().getMonth() / 3) * 3, 1),\n    new Date()\n  ],\n  'This Year': [\n    new Date(new Date().getFullYear(), 0, 1),\n    new Date()\n  ]\n};\n\nconst generateReport = async () => {\n  if (!startDate.value || !endDate.value) {\n    alert('Please select date range');\n    return;\n  }\n  \n  loading.value = true;\n  try {\n    const response = await fetch('/api/reports/generate', {\n      method: 'POST',\n      body: JSON.stringify({\n        startDate: startDate.value,\n        endDate: endDate.value,\n        type: reportType.value\n      })\n    });\n    \n    const blob = await response.blob();\n    const url = window.URL.createObjectURL(blob);\n    const a = document.createElement('a');\n    a.href = url;\n    a.download = `report-${startDate.value}-${endDate.value}.pdf`;\n    a.click();\n  } catch (error) {\n    console.error('Report generation failed:', error);\n  } finally {\n    loading.value = false;\n  }\n};\n</script>\n\n<template>\n  <div class=\"report-generator\">\n    <InDatePickerV2\n      id=\"report-dates\"\n      name=\"report-dates\"\n      label-text=\"Report Period\"\n      range\n      v-model:start-date=\"startDate\"\n      v-model:end-date=\"endDate\"\n      :custom-ranges=\"customRanges\"\n    />\n    \n    <button \n      @click=\"generateReport\" \n      :disabled=\"loading || !startDate || !endDate\"\n    >\n      {{ loading ? 'Generating...' : 'Generate Report' }}\n    </button>\n  </div>\n</template>",
+      "when": "Generating date-based reports or exports",
+      "pros": ["Flexible date selection", "Quick presets", "Export functionality"],
+      "cons": ["Requires backend integration", "File download handling"]
+    }
+  ],
+  "useCases": [
+    {
+      "title": "Analytics Dashboard",
+      "description": "Filter analytics with date range and comparison",
+      "example": "<InDatePickerV2\n  label-text=\"Analytics Period\"\n  range\n  compare\n  v-model:start-date=\"startDate\"\n  v-model:end-date=\"endDate\"\n  v-model:compare-start-date=\"compareStart\"\n  v-model:compare-end-date=\"compareEnd\"\n/>"
+    },
+    {
+      "title": "Campaign Scheduler",
+      "description": "Schedule campaign with date validation",
+      "example": "<InDatePickerV2\n  label-text=\"Campaign Period\"\n  range\n  v-model:start-date=\"campaignStart\"\n  v-model:end-date=\"campaignEnd\"\n  :min-date=\"todayTimestamp\"\n  :state=\"validationState\"\n/>"
+    },
+    {
+      "title": "Report Generator",
+      "description": "Select date range for report generation",
+      "example": "<InDatePickerV2\n  label-text=\"Report Period\"\n  range\n  v-model:start-date=\"reportStart\"\n  v-model:end-date=\"reportEnd\"\n  :custom-ranges=\"reportRanges\"\n/>"
+    },
+    {
+      "title": "Sales Comparison",
+      "description": "Compare sales across two periods",
+      "example": "<InDatePickerV2\n  label-text=\"Sales Period\"\n  range\n  compare\n  v-model:start-date=\"salesStart\"\n  v-model:end-date=\"salesEnd\"\n  @compare-toggle=\"handleCompareToggle\"\n/>"
+    }
+  ],
+  "bestPractices": [
+    {
+      "title": "Always Use Dual v-model",
+      "description": "V2 requires separate v-model for start and end dates",
+      "code": "// Correct V2 usage\n<InDatePickerV2\n  v-model:start-date=\"startDate\"\n  v-model:end-date=\"endDate\"\n/>\n\n// Wrong (V1 style)\n<InDatePickerV2 v-model=\"dateRange\" />",
+      "reasoning": "V2 uses dual v-model for better flexibility and state management"
+    },
+    {
+      "title": "Provide Custom Ranges for Analytics",
+      "description": "Include common analytics periods as shortcuts",
+      "code": "const customRanges = {\n  'Today': [new Date(), new Date()],\n  'Last 7 Days': [new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), new Date()],\n  'Last 30 Days': [new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), new Date()],\n  'This Month': [new Date(new Date().getFullYear(), new Date().getMonth(), 1), new Date()],\n  'Last Month': [\n    new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1),\n    new Date(new Date().getFullYear(), new Date().getMonth(), 0)\n  ]\n};",
+      "reasoning": "Common presets improve UX and reduce selection time"
+    },
+    {
+      "title": "Handle Compare Mode Properly",
+      "description": "Clear compare dates when compare is disabled",
+      "code": "const handleCompareToggle = (enabled) => {\n  if (!enabled) {\n    compareStartDate.value = '';\n    compareEndDate.value = '';\n  }\n};",
+      "reasoning": "Prevents stale compare data when toggling compare mode"
+    },
+    {
+      "title": "Set Unique ID and Name",
+      "description": "Required for accessibility and form submissions",
+      "code": "<InDatePickerV2\n  id=\"analytics-date\"\n  name=\"analytics-date\"\n  label-text=\"Date Range\"\n/>",
+      "reasoning": "Improves accessibility and form integration"
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Using single v-model instead of dual v-model",
+      "why": "V2 uses v-model:start-date and v-model:end-date",
+      "impact": "Component won't work, dates won't bind",
+      "fix": "Use v-model:start-date and v-model:end-date",
+      "severity": "critical",
+      "example": "// Wrong:\n<InDatePickerV2 v-model=\"dateRange\" />\n\n// Correct:\n<InDatePickerV2\n  v-model:start-date=\"startDate\"\n  v-model:end-date=\"endDate\"\n/>"
+    },
+    {
+      "mistake": "Not clearing compare dates when toggling off",
+      "why": "Compare dates persist when compare is disabled",
+      "impact": "Stale comparison data sent to API",
+      "fix": "Clear compare dates on @compare-toggle event",
+      "severity": "high",
+      "example": "// Add handler:\n@compare-toggle=\"(enabled) => {\n  if (!enabled) {\n    compareStartDate = '';\n    compareEndDate = '';\n  }\n}\""
+    },
+    {
+      "mistake": "Creating custom ranges in template",
+      "why": "New Date objects created on every render",
+      "impact": "Performance degradation",
+      "fix": "Move to data() or setup() function",
+      "severity": "medium",
+      "example": "// Wrong:\n:custom-ranges=\"{ 'Today': [new Date(), new Date()] }\"\n\n// Correct:\nconst customRanges = { 'Today': [new Date(), new Date()] };"
+    }
+  ],
+  "performanceNotes": [
+    {
+      "topic": "Compared custom ranges recalculation",
+      "description": "Recalculating comparedCustomRanges on every render is inefficient",
+      "recommendation": "Use watch with immediate: false instead of computed",
+      "impact": "low"
+    },
+    {
+      "topic": "Component re-rendering",
+      "description": "Missing reactive key causes component not to re-render on comparison toggle",
+      "recommendation": "Add :key=\"`${datePickerKey}-${startDate}-${endDate}`\" if needed",
+      "impact": "medium"
     }
   ],
   "accessibilityNotes": [
     {
-      "requirement": "Always provide label-text",
-      "reason": "Screen readers need label identification",
-      "severity": "high"
+      "topic": "Label text requirement",
+      "description": "Date picker must have descriptive label",
+      "wcagLevel": "A",
+      "recommendation": "Always provide label-text prop",
+      "example": "<InDatePickerV2 label-text=\"Select Date Range\" />"
     },
     {
-      "requirement": "Set unique id and name",
-      "reason": "Form accessibility and screen reader navigation",
-      "severity": "high"
+      "topic": "Unique ID and name",
+      "description": "Required for screen reader navigation and form accessibility",
+      "wcagLevel": "A",
+      "recommendation": "Set unique id and name props",
+      "example": "<InDatePickerV2\n  id=\"date-range-picker\"\n  name=\"date-range-picker\"\n  label-text=\"Date Range\"\n/>"
+    },
+    {
+      "topic": "Keyboard navigation",
+      "description": "Calendar must be fully keyboard accessible",
+      "wcagLevel": "A",
+      "recommendation": "Arrow keys navigate, Enter selects, Escape closes, Tab moves between inputs",
+      "example": "// Automatically supported by component"
     }
   ]
 }

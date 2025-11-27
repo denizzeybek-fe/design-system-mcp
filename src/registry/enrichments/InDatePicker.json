@@ -308,25 +308,182 @@
       ]
     }
   ],
+  "codeSnippets": {
+    "basicDatePicker": {
+      "title": "Basic Date Picker",
+      "description": "Simple single date selection",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InDatePicker } from '@useinsider/design-system-vue';\n\nconst selectedDate = ref('');\n</script>\n\n<template>\n  <InDatePicker\n    id=\"date-picker\"\n    label=\"Select Date\"\n    v-model=\"selectedDate\"\n    format=\"dd.mm.yyyy\"\n  />\n</template>"
+    },
+    "dateRange": {
+      "title": "Date Range Picker",
+      "description": "Select date range with custom ranges",
+      "code": "<script setup>\nimport { ref } from 'vue';\n\nconst dateRange = ref('');\n\nconst customRanges = {\n  'Last 7 Days': [\n    new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),\n    new Date()\n  ],\n  'Last 30 Days': [\n    new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),\n    new Date()\n  ],\n  'This Month': [\n    new Date(new Date().getFullYear(), new Date().getMonth(), 1),\n    new Date()\n  ]\n};\n</script>\n\n<template>\n  <InDatePicker\n    id=\"range-picker\"\n    label=\"Date Range\"\n    range\n    v-model=\"dateRange\"\n    :custom-ranges=\"customRanges\"\n  />\n</template>"
+    },
+    "compareMode": {
+      "title": "Compare Date Ranges",
+      "description": "Compare two date ranges",
+      "code": "<script setup>\nimport { ref } from 'vue';\n\nconst dateRange = ref('');\nconst compareRange = ref('');\n\nconst handleDateChange = (value) => {\n  console.log('Primary range:', value);\n};\n\nconst handleCompareChange = (value) => {\n  console.log('Compare range:', value);\n};\n</script>\n\n<template>\n  <InDatePicker\n    id=\"compare-picker\"\n    label=\"Compare Periods\"\n    range\n    compare\n    v-model=\"dateRange\"\n    @change=\"handleDateChange\"\n    @compare-change=\"handleCompareChange\"\n  />\n</template>"
+    }
+  },
+  "styling": {
+    "cssVariables": {
+      "--datepicker-bg": "Calendar background (default: white)",
+      "--datepicker-text": "Text color",
+      "--datepicker-border": "Border color",
+      "--datepicker-selected-bg": "Selected date background",
+      "--datepicker-selected-text": "Selected date text color",
+      "--datepicker-range-bg": "Date range background",
+      "--datepicker-today-border": "Today's date border color"
+    },
+    "classes": {
+      "in-date-picker": "Root container",
+      "in-date-picker__input": "Date input field",
+      "in-date-picker__calendar": "Calendar dropdown",
+      "in-date-picker__day": "Individual day cell",
+      "in-date-picker__day--selected": "Selected day",
+      "in-date-picker__day--in-range": "Day within selected range",
+      "in-date-picker__day--today": "Today's date",
+      "in-date-picker__day--disabled": "Disabled date",
+      "in-date-picker__custom-ranges": "Custom range buttons container",
+      "in-date-picker__compare": "Compare range section"
+    },
+    "notes": "Use CSS variables for theming. Component supports custom range styling."
+  },
+  "implementationPatterns": [
+    {
+      "name": "Analytics Date Filter",
+      "description": "Date range picker for analytics dashboard",
+      "code": "<script setup>\nimport { ref, watch } from 'vue';\nimport { InDatePicker } from '@useinsider/design-system-vue';\n\nconst dateRange = ref('');\nconst analyticsData = ref(null);\nconst loading = ref(false);\n\nconst customRanges = {\n  'Today': [new Date(), new Date()],\n  'Yesterday': [\n    new Date(Date.now() - 24 * 60 * 60 * 1000),\n    new Date(Date.now() - 24 * 60 * 60 * 1000)\n  ],\n  'Last 7 Days': [\n    new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),\n    new Date()\n  ],\n  'Last 30 Days': [\n    new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),\n    new Date()\n  ],\n  'This Month': [\n    new Date(new Date().getFullYear(), new Date().getMonth(), 1),\n    new Date()\n  ]\n};\n\nconst fetchAnalytics = async (range) => {\n  if (!range) return;\n  \n  loading.value = true;\n  try {\n    const [start, end] = range.split(' - ');\n    const response = await fetch(`/api/analytics?start=${start}&end=${end}`);\n    analyticsData.value = await response.json();\n  } catch (error) {\n    console.error('Failed to fetch analytics:', error);\n  } finally {\n    loading.value = false;\n  }\n};\n\nwatch(dateRange, (newRange) => {\n  fetchAnalytics(newRange);\n});\n</script>\n\n<template>\n  <div class=\"analytics-filter\">\n    <InDatePicker\n      id=\"analytics-date\"\n      label=\"Date Range\"\n      range\n      v-model=\"dateRange\"\n      :custom-ranges=\"customRanges\"\n    />\n    \n    <div v-if=\"loading\">Loading analytics...</div>\n    <AnalyticsChart v-else :data=\"analyticsData\" />\n  </div>\n</template>",
+      "when": "Building analytics dashboards with date filtering",
+      "pros": ["Quick range selection", "Common presets", "User-friendly"],
+      "cons": ["Requires date range handling", "Timezone considerations"]
+    },
+    {
+      "name": "Booking System",
+      "description": "Date picker with disabled dates for bookings",
+      "code": "<script setup>\nimport { ref, computed } from 'vue';\nimport { InDatePicker } from '@useinsider/design-system-vue';\n\nconst selectedDate = ref('');\nconst bookedDates = ref([\n  '2025-11-28',\n  '2025-11-29',\n  '2025-12-01'\n]);\n\nconst disabledDates = computed(() => {\n  return bookedDates.value.map(dateStr => {\n    const date = new Date(dateStr);\n    return Math.floor(date.getTime() / 1000);\n  });\n});\n\n// Disable past dates\nconst minDate = Math.floor(new Date().setHours(0, 0, 0, 0) / 1000);\n</script>\n\n<template>\n  <InDatePicker\n    id=\"booking-date\"\n    label=\"Select Booking Date\"\n    v-model=\"selectedDate\"\n    :disabled-range=\"disabledDates\"\n    :min-date=\"minDate\"\n    format=\"dd.mm.yyyy\"\n  />\n</template>",
+      "when": "Building booking or reservation systems",
+      "pros": ["Prevents invalid selections", "Clear availability", "User guidance"],
+      "cons": ["Complex disabled date logic", "Performance with many dates"]
+    },
+    {
+      "name": "Report Comparison",
+      "description": "Compare two time periods for reports",
+      "code": "<script setup>\nimport { ref, watch } from 'vue';\nimport { InDatePicker } from '@useinsider/design-system-vue';\n\nconst primaryRange = ref('');\nconst compareRange = ref('');\nconst reportData = ref(null);\n\nconst fetchComparisonReport = async () => {\n  if (!primaryRange.value || !compareRange.value) return;\n  \n  const [primaryStart, primaryEnd] = primaryRange.value.split(' - ');\n  const [compareStart, compareEnd] = compareRange.value.split(' - ');\n  \n  const response = await fetch('/api/report/compare', {\n    method: 'POST',\n    body: JSON.stringify({\n      primary: { start: primaryStart, end: primaryEnd },\n      compare: { start: compareStart, end: compareEnd }\n    })\n  });\n  \n  reportData.value = await response.json();\n};\n\nwatch([primaryRange, compareRange], () => {\n  fetchComparisonReport();\n});\n</script>\n\n<template>\n  <div class=\"report-comparison\">\n    <InDatePicker\n      id=\"report-dates\"\n      label=\"Report Period\"\n      range\n      compare\n      v-model=\"primaryRange\"\n      @compare-change=\"compareRange = $event\"\n    />\n    \n    <ComparisonChart \n      v-if=\"reportData\"\n      :primary=\"reportData.primary\"\n      :compare=\"reportData.compare\"\n    />\n  </div>\n</template>",
+      "when": "Building comparison reports or A/B testing dashboards",
+      "pros": ["Side-by-side comparison", "Flexible date ranges", "Visual comparison"],
+      "cons": ["Complex state management", "Two API calls needed"]
+    }
+  ],
+  "useCases": [
+    {
+      "title": "Event Date Selection",
+      "description": "Select date for event creation",
+      "example": "<InDatePicker\n  label=\"Event Date\"\n  v-model=\"eventDate\"\n  :min-date=\"todayTimestamp\"\n  format=\"dd.mm.yyyy\"\n/>"
+    },
+    {
+      "title": "Analytics Dashboard Filter",
+      "description": "Filter analytics by date range",
+      "example": "<InDatePicker\n  label=\"Date Range\"\n  range\n  v-model=\"dateRange\"\n  :custom-ranges=\"analyticsRanges\"\n/>"
+    },
+    {
+      "title": "Sales Comparison",
+      "description": "Compare sales across two periods",
+      "example": "<InDatePicker\n  label=\"Compare Periods\"\n  range\n  compare\n  v-model=\"salesPeriod\"\n  @compare-change=\"handleCompare\"\n/>"
+    },
+    {
+      "title": "Birthday Input",
+      "description": "Select birth date with max date",
+      "example": "<InDatePicker\n  label=\"Date of Birth\"\n  v-model=\"birthDate\"\n  :max-date=\"todayTimestamp\"\n  format=\"dd.mm.yyyy\"\n/>"
+    }
+  ],
+  "bestPractices": [
+    {
+      "title": "Use Custom Ranges for Common Periods",
+      "description": "Provide quick shortcuts for frequently used ranges",
+      "code": "const customRanges = {\n  'Today': [new Date(), new Date()],\n  'Last 7 Days': [\n    new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),\n    new Date()\n  ],\n  'This Month': [\n    new Date(new Date().getFullYear(), new Date().getMonth(), 1),\n    new Date()\n  ]\n};",
+      "reasoning": "Improves UX by reducing clicks for common selections"
+    },
+    {
+      "title": "Set Appropriate Min/Max Dates",
+      "description": "Prevent invalid date selections",
+      "code": "// Don't allow future dates for birth date\n:max-date=\"Math.floor(Date.now() / 1000)\"\n\n// Don't allow past dates for bookings\n:min-date=\"Math.floor(Date.now() / 1000)\"",
+      "reasoning": "Prevents user errors and invalid data"
+    },
+    {
+      "title": "Use Consistent Date Format",
+      "description": "Match date format to user's locale",
+      "code": "// Turkish users\nformat=\"dd.mm.yyyy\"\n\n// US users\nformat=\"mm/dd/yyyy\"",
+      "reasoning": "Reduces confusion and improves usability"
+    },
+    {
+      "title": "Handle Timezone Properly",
+      "description": "Be aware of timezone issues",
+      "code": "// Convert to UTC before sending to server\nconst utcDate = new Date(selectedDate).toISOString();\n\n// Or use Unix timestamp\nconst timestamp = Math.floor(new Date(selectedDate).getTime() / 1000);",
+      "reasoning": "Prevents timezone-related bugs in international apps"
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Not converting dates to Unix timestamps for disabledRange",
+      "why": "Component expects Unix timestamps in seconds",
+      "impact": "Disabled dates won't work",
+      "fix": "Use Math.floor(new Date(date).getTime() / 1000)",
+      "severity": "high",
+      "example": "// Wrong:\ndisabledRange: [new Date('2025-11-28')]\n\n// Correct:\ndisabledRange: [Math.floor(new Date('2025-11-28').getTime() / 1000)]"
+    },
+    {
+      "mistake": "Creating Date objects in template or computed on every render",
+      "why": "Unnecessary object creation affects performance",
+      "impact": "Performance degradation",
+      "fix": "Move to data() or created() hook",
+      "severity": "medium",
+      "example": "// Wrong:\n<InDatePicker :custom-ranges=\"{ 'Today': [new Date(), new Date()] }\" />\n\n// Correct:\ndata() { return { ranges: { 'Today': [new Date(), new Date()] } }; }"
+    },
+    {
+      "mistake": "Not handling empty date values",
+      "why": "v-model can be empty string initially",
+      "impact": "Errors when processing date",
+      "fix": "Check if value exists before processing",
+      "severity": "medium",
+      "example": "// Wrong:\nconst date = new Date(selectedDate);\n\n// Correct:\nconst date = selectedDate ? new Date(selectedDate) : null;"
+    }
+  ],
   "performanceNotes": [
     {
-      "issue": "Creating new Date objects in customRanges on every render",
-      "impact": "Unnecessary object creation",
-      "solution": "Move customRanges to data() or created() hook",
-      "example": "data() { return { customRanges: { 'Q4': [new Date(...), new Date(...)] } }; }",
-      "severity": "low"
+      "topic": "Custom ranges object creation",
+      "description": "Creating new Date objects in customRanges on every render is inefficient",
+      "recommendation": "Move customRanges to data() or created() hook",
+      "impact": "low"
+    },
+    {
+      "topic": "Large disabled date arrays",
+      "description": "Disabling many individual dates can slow down calendar rendering",
+      "recommendation": "Use date ranges instead of individual dates where possible",
+      "impact": "medium"
     }
   ],
   "accessibilityNotes": [
     {
-      "requirement": "Always provide label prop",
-      "reason": "Screen readers need label for identification",
-      "severity": "high"
+      "topic": "Label requirement",
+      "description": "Date picker must have associated label",
+      "wcagLevel": "A",
+      "recommendation": "Always provide label prop",
+      "example": "<InDatePicker label=\"Select Date\" />"
     },
     {
-      "requirement": "Use meaningful custom range labels",
-      "reason": "Custom range buttons are announced by screen readers",
-      "severity": "medium"
+      "topic": "Custom range labels",
+      "description": "Custom range buttons are announced by screen readers",
+      "wcagLevel": "AA",
+      "recommendation": "Use meaningful labels like 'Last 7 Days' not 'L7D'",
+      "example": "customRanges: { 'Last 7 Days': [...] } // Good\ncustomRanges: { 'L7D': [...] } // Avoid"
+    },
+    {
+      "topic": "Keyboard navigation",
+      "description": "Calendar must be keyboard navigable",
+      "wcagLevel": "A",
+      "recommendation": "Arrow keys navigate dates, Enter selects, Escape closes",
+      "example": "// Automatically supported by component"
     }
   ]
 }

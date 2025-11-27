@@ -1,0 +1,524 @@
+{
+  "component": "InTextInput",
+  "_metadata": {
+    "lastUpdated": "2025-11-28T00:00:00.000Z",
+    "propsHash": "intextinput-v1-31props",
+    "eventsHash": "intextinput-v1-8events",
+    "propCount": 31,
+    "eventCount": 8
+  },
+  "propEnrichments": {
+    "id": {
+      "valueFormat": {
+        "structure": "String (required)",
+        "notes": "Unique identifier for the input element. Required for accessibility (label association), form submission, and DOM manipulation. Must be unique within the page.",
+        "typescript": "string",
+        "example": "// Form field IDs\n'user-email'\n'billing-address'\n'search-query'\n\n// Unique per instance\n`input-${uniqueId()}`\n`field-${index}-${name}`"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Using duplicate IDs across multiple inputs",
+          "why": "Violates HTML spec and breaks label associations",
+          "impact": "Labels click wrong inputs, accessibility tools malfunction, form data conflicts",
+          "fix": "Generate unique IDs using component key, index, or UUID",
+          "severity": "high",
+          "example": "// WRONG - duplicate IDs\n<InTextInput id=\"email\" ... />\n<InTextInput id=\"email\" ... /> <!-- Same ID! -->\n\n// CORRECT - unique IDs\n<InTextInput :id=\"`email-${user.id}`\" ... />\n<InTextInput :id=\"`email-backup-${user.id}`\" ... />"
+        }
+      ]
+    },
+    "name": {
+      "valueFormat": {
+        "structure": "String (required)",
+        "notes": "Name attribute for form submission. Used when submitting forms via standard POST/GET or when using FormData. Groups radio buttons and identifies fields in form data.",
+        "typescript": "string",
+        "example": "// Form field names\n'email'\n'first_name'\n'billing[address]'\n\n// Nested form data\n'user[profile][bio]'\n'settings[notifications][email]'"
+      }
+    },
+    "value": {
+      "valueFormat": {
+        "structure": "String | Number",
+        "notes": "Current input value. Use v-model for two-way binding. Supports both string and number types. For type='number', prefer number values for proper validation.",
+        "typescript": "string | number",
+        "example": "// String values\nvalue=\"john@example.com\"\nvalue=\"John Doe\"\n\n// Number values (for type='number')\n:value=\"25\"\n:value=\"userAge\"\n\n// Two-way binding (recommended)\nv-model=\"email\"\nv-model.number=\"quantity\""
+      }
+    },
+    "type": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "HTML input type. Controls validation, keyboard on mobile, and browser behavior. Common types: text, email, password, number, tel, url, search, date, time.",
+        "typescript": "'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search' | 'date' | 'time' | 'datetime-local' | 'file'",
+        "example": "// Text input (default)\ntype=\"text\"\n\n// Email with validation\ntype=\"email\" // Shows @ on mobile keyboard\n\n// Password (hidden text)\ntype=\"password\"\n\n// Number with +/- controls\ntype=\"number\"\n\n// Phone optimized keyboard\ntype=\"tel\"\n\n// URL validation\ntype=\"url\"\n\n// File upload\ntype=\"file\" :accept=\"'.jpg,.png'\""
+      }
+    },
+    "theme": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Visual theme/color scheme for the input. Affects border, background, and hover states.",
+        "typescript": "'grey' | 'white' | 'blue' | 'transparent'",
+        "example": "// Default grey theme\ntheme=\"grey\"\n\n// White background for dark layouts\ntheme=\"white\"\n\n// Blue accent theme\ntheme=\"blue\"\n\n// Transparent for custom styling\ntheme=\"transparent\""
+      }
+    },
+    "withIcon": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Enables icon display inside the input. Requires iconName prop to specify which icon. Icon can be positioned left or right via iconPosition.",
+        "typescript": "boolean",
+        "example": "// Search input with icon\n:withIcon=\"true\"\niconName=\"search\"\niconPosition=\"left\"\n\n// Email input with icon\n:withIcon=\"true\"\niconName=\"email\"\n\n// Clickable icon\n:withIcon=\"true\"\niconName=\"visibility\"\n@iconClick=\"togglePasswordVisibility\""
+      }
+    },
+    "iconName": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Icon identifier from the design system icon library. Only effective when withIcon is true. Use @iconClick event to make icon interactive.",
+        "typescript": "string",
+        "example": "// Common icons\niconName=\"search\"\niconName=\"email\"\niconName=\"lock\"\niconName=\"user\"\niconName=\"calendar\"\niconName=\"phone\"\niconName=\"link\"\niconName=\"visibility\" // For password toggle\niconName=\"clear\" // For clear button"
+      }
+    },
+    "iconPosition": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Position of the icon within the input field.",
+        "typescript": "'left' | 'right'",
+        "example": "// Search icon on left (common pattern)\niconPosition=\"left\"\niconName=\"search\"\n\n// Action icons on right\niconPosition=\"right\"\niconName=\"clear\"\n@iconClick=\"clearInput\""
+      }
+    },
+    "withSuffix": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Enables suffix text display after the input value. Use suffix prop to specify the text. Common for units (%, $, kg, etc.).",
+        "typescript": "boolean",
+        "example": "// Percentage input\n:withSuffix=\"true\"\nsuffix=\"%\"\n\n// Currency\n:withSuffix=\"true\"\nsuffix=\"USD\"\n\n// Units\n:withSuffix=\"true\"\nsuffix=\"kg\""
+      }
+    },
+    "suffix": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Text to display as suffix when withSuffix is true. Appears after the input value, typically for units or currency symbols.",
+        "typescript": "string",
+        "example": "suffix=\"%\" // Percentage\nsuffix=\"$\" // Dollar\nsuffix=\"€\" // Euro\nsuffix=\"kg\" // Kilogram\nsuffix=\"px\" // Pixels\nsuffix=\"days\" // Time unit"
+      }
+    },
+    "prefix": {
+      "valueFormat": {
+        "structure": "Boolean | String",
+        "notes": "Prefix text or symbol to display before the input value. When boolean true, uses default. When string, displays that text. Common for currency symbols.",
+        "typescript": "boolean | string",
+        "example": "// Enable default prefix\n:prefix=\"true\"\n\n// Custom prefix text\nprefix=\"$\"\nprefix=\"+1\" // Phone country code\nprefix=\"https://\"\nprefix=\"@\" // Username"
+      }
+    },
+    "allowDecimal": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "For type='number', allows decimal point input. When false, restricts to integers only. Works with allowComma to control decimal separator.",
+        "typescript": "boolean",
+        "example": "// Integer only (quantity, count)\n:allowDecimal=\"false\"\ntype=\"number\"\n\n// Allow decimals (price, weight)\n:allowDecimal=\"true\"\ntype=\"number\"\nv-model.number=\"price\""
+      }
+    },
+    "allowComma": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Allows comma as decimal separator (European format: 1,5 instead of 1.5). Only relevant when allowDecimal is true.",
+        "typescript": "boolean",
+        "example": "// US format: 1.5\n:allowDecimal=\"true\"\n:allowComma=\"false\"\n\n// EU format: 1,5\n:allowDecimal=\"true\"\n:allowComma=\"true\""
+      }
+    },
+    "maxLength": {
+      "valueFormat": {
+        "structure": "Number | String",
+        "notes": "Maximum number of characters allowed. Browser enforces this limit. Shows character counter if component supports it.",
+        "typescript": "number | string",
+        "example": "// Username limit\n:maxLength=\"50\"\n\n// Tweet/short message\n:maxLength=\"280\"\n\n// Description\n:maxLength=\"500\"\n\n// String format\nmaxLength=\"100\""
+      }
+    },
+    "min": {
+      "valueFormat": {
+        "structure": "Number | String",
+        "notes": "Minimum value for type='number'. Browser validates on form submission. Use for quantities, ages, prices, etc.",
+        "typescript": "number | string",
+        "example": "// Positive numbers only\n:min=\"0\"\n\n// Age restriction\n:min=\"18\"\ntype=\"number\"\n\n// Price\n:min=\"0.01\"\ntype=\"number\"\n:allowDecimal=\"true\""
+      }
+    },
+    "autoComplete": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "HTML autocomplete attribute. Controls browser autofill behavior. Use 'off' to disable, or specific values for enhanced autofill (email, name, tel, etc.).",
+        "typescript": "'off' | 'on' | 'name' | 'email' | 'username' | 'current-password' | 'new-password' | 'tel' | 'street-address' | 'postal-code' | 'cc-number' | etc.",
+        "example": "// Disable autocomplete\nautoComplete=\"off\"\n\n// Enable email autofill\nautoComplete=\"email\"\ntype=\"email\"\n\n// Password fields\nautoComplete=\"current-password\" // Login\nautoComplete=\"new-password\" // Registration\n\n// Name fields\nautoComplete=\"given-name\" // First name\nautoComplete=\"family-name\" // Last name\n\n// Address\nautoComplete=\"street-address\"\nautoComplete=\"postal-code\"\n\n// Credit card\nautoComplete=\"cc-number\"\nautoComplete=\"cc-exp\""
+      }
+    },
+    "accept": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "For type='file', specifies accepted file types. Comma-separated MIME types or file extensions. Filters file picker dialog.",
+        "typescript": "string",
+        "example": "// Images only\naccept=\"image/*\"\ntype=\"file\"\n\n// Specific image formats\naccept=\".jpg,.jpeg,.png,.gif\"\n\n// Documents\naccept=\".pdf,.doc,.docx\"\n\n// CSV files\naccept=\".csv,text/csv\"\n\n// Multiple types\naccept=\"image/*,.pdf,.doc,.docx\""
+      }
+    },
+    "skeletonSizing": {
+      "valueFormat": {
+        "structure": "Object",
+        "notes": "Dimensions for skeleton loader when skeletonStatus is true. Controls width and height of the skeleton placeholder.",
+        "typescript": "{\n  width?: string | number;\n  height?: string | number;\n}",
+        "example": "// Match input dimensions\n:skeletonSizing=\"{ width: '100%', height: '40px' }\"\n\n// Small input skeleton\n:skeletonSizing=\"{ width: '200px', height: '32px' }\"\n\n// Full width\n:skeletonSizing=\"{ width: '100%', height: '38px' }\""
+      }
+    },
+    "labelTooltip": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Tooltip text shown on label hover. Provides additional context or help text for the input field.",
+        "typescript": "string",
+        "example": "label=\"API Key\"\nlabelTooltip=\"Your secret API key from the dashboard settings\"\n\nlabel=\"Tax ID\"\nlabelTooltip=\"Enter your business tax identification number\"\n\nlabel=\"Webhook URL\"\nlabelTooltip=\"HTTPS endpoint that will receive webhook events\""
+      }
+    },
+    "preventXss": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Enables XSS (Cross-Site Scripting) prevention by sanitizing input value. Default is true. Only disable for trusted admin inputs.",
+        "typescript": "boolean",
+        "example": "// Default - XSS protection enabled (recommended)\n:preventXss=\"true\"\n\n// Trusted admin input only\n:preventXss=\"false\" // Use with extreme caution"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Disabling preventXss for user-generated content",
+          "why": "Creates XSS vulnerability allowing script injection",
+          "impact": "Critical security risk - attackers can steal data, hijack sessions, or deface pages",
+          "fix": "Always keep preventXss: true for any user input. Only disable for trusted admin-only fields.",
+          "severity": "critical",
+          "example": "// WRONG - Critical XSS vulnerability\n<InTextInput v-model=\"userBio\" :preventXss=\"false\" />\n\n// CORRECT - XSS protected\n<InTextInput v-model=\"userBio\" :preventXss=\"true\" />\n// OR rely on default (true)\n<InTextInput v-model=\"userBio\" />"
+        }
+      ]
+    }
+  },
+  "eventEnrichments": {
+    "input": {
+      "description": "Emitted on every input change (keystroke, paste, etc.)",
+      "payload": "Event - Native input event with event.target.value",
+      "when": "User types, pastes, or programmatically changes value"
+    },
+    "change": {
+      "description": "Emitted when input loses focus after value changed",
+      "payload": "Event - Native change event",
+      "when": "Input value changed and user blurs/tabs away from field"
+    },
+    "focus": {
+      "description": "Emitted when input receives focus",
+      "payload": "Event - Native focus event",
+      "when": "User clicks input or tabs into it"
+    },
+    "blur": {
+      "description": "Emitted when input loses focus",
+      "payload": "Event - Native blur event",
+      "when": "User clicks away or tabs out of input"
+    },
+    "enter": {
+      "description": "Emitted when Enter key is pressed",
+      "payload": "Event - Keyboard event",
+      "when": "User presses Enter/Return while input is focused"
+    },
+    "keyup": {
+      "description": "Emitted on key release",
+      "payload": "KeyboardEvent - Contains key, keyCode, modifiers",
+      "when": "User releases any key while input is focused"
+    },
+    "click": {
+      "description": "Emitted when input is clicked",
+      "payload": "MouseEvent - Click event details",
+      "when": "User clicks on the input field"
+    },
+    "iconClick": {
+      "description": "Emitted when icon is clicked (requires withIcon: true)",
+      "payload": "MouseEvent - Icon click event",
+      "when": "User clicks the icon inside the input"
+    }
+  },
+  "codeSnippets": {
+    "basicInput": {
+      "title": "Basic Text Input",
+      "description": "Simple text input with label and validation",
+      "code": "<template>\n  <InTextInput\n    id=\"user-email\"\n    name=\"email\"\n    v-model=\"email\"\n    type=\"email\"\n    label=\"Email Address\"\n    placeholder=\"Enter your email\"\n    :invalid=\"emailError !== ''\"\n    :invalidMessage=\"emailError\"\n    @blur=\"validateEmail\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\nimport { InTextInput } from '@useinsider/design-system-vue';\n\nconst email = ref('');\nconst emailError = ref('');\n\nconst validateEmail = () => {\n  if (!email.value) {\n    emailError.value = 'Email is required';\n  } else if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email.value)) {\n    emailError.value = 'Invalid email format';\n  } else {\n    emailError.value = '';\n  }\n};\n</script>"
+    },
+    "searchInput": {
+      "title": "Search Input with Icon",
+      "description": "Search field with icon and clear functionality",
+      "code": "<template>\n  <InTextInput\n    id=\"search-field\"\n    name=\"search\"\n    v-model=\"searchQuery\"\n    type=\"search\"\n    placeholder=\"Search products...\"\n    :withIcon=\"true\"\n    iconName=\"search\"\n    iconPosition=\"left\"\n    :withLabel=\"false\"\n    autoComplete=\"off\"\n    @input=\"handleSearch\"\n    @enter=\"executeSearch\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\nimport { InTextInput } from '@useinsider/design-system-vue';\nimport { useDebounceFn } from '@vueuse/core';\n\nconst searchQuery = ref('');\n\nconst performSearch = (query: string) => {\n  console.log('Searching for:', query);\n  // API call here\n};\n\nconst handleSearch = useDebounceFn(() => {\n  if (searchQuery.value.length >= 3) {\n    performSearch(searchQuery.value);\n  }\n}, 300);\n\nconst executeSearch = () => {\n  if (searchQuery.value) {\n    performSearch(searchQuery.value);\n  }\n};\n</script>"
+    },
+    "passwordInput": {
+      "title": "Password Input with Toggle Visibility",
+      "description": "Password field with show/hide functionality",
+      "code": "<template>\n  <InTextInput\n    id=\"user-password\"\n    name=\"password\"\n    v-model=\"password\"\n    :type=\"showPassword ? 'text' : 'password'\"\n    label=\"Password\"\n    placeholder=\"Enter password\"\n    :withIcon=\"true\"\n    :iconName=\"showPassword ? 'visibility_off' : 'visibility'\"\n    iconPosition=\"right\"\n    autoComplete=\"current-password\"\n    @iconClick=\"togglePassword\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\nimport { InTextInput } from '@useinsider/design-system-vue';\n\nconst password = ref('');\nconst showPassword = ref(false);\n\nconst togglePassword = () => {\n  showPassword.value = !showPassword.value;\n};\n</script>"
+    },
+    "numberInputWithUnits": {
+      "title": "Number Input with Suffix",
+      "description": "Numeric input with unit suffix and validation",
+      "code": "<template>\n  <InTextInput\n    id=\"discount-rate\"\n    name=\"discount\"\n    v-model.number=\"discount\"\n    type=\"number\"\n    label=\"Discount Rate\"\n    placeholder=\"0\"\n    :withSuffix=\"true\"\n    suffix=\"%\"\n    :min=\"0\"\n    :max=\"100\"\n    :allowDecimal=\"true\"\n    :invalid=\"discount > 100\"\n    invalidMessage=\"Discount cannot exceed 100%\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\nimport { InTextInput } from '@useinsider/design-system-vue';\n\nconst discount = ref(0);\n</script>"
+    }
+  },
+  "styling": {
+    "cssVariables": {
+      "notes": "InTextInput uses design system CSS variables for theming.",
+      "variables": []
+    },
+    "classes": {
+      "notes": "Component applies various classes based on state (disabled, invalid, warning, focused).",
+      "classes": []
+    },
+    "customization": "Use theme prop for color schemes. Override CSS variables for custom styling. Small prop for compact size."
+  },
+  "examples": [
+    {
+      "title": "Complete Registration Form",
+      "description": "Multi-field registration form with validation, icons, and different input types",
+      "code": "<template>\n  <form @submit.prevent=\"handleSubmit\" class=\"registration-form\">\n    <h2>Create Account</h2>\n\n    <!-- Username -->\n    <InTextInput\n      id=\"username\"\n      name=\"username\"\n      v-model=\"form.username\"\n      type=\"text\"\n      label=\"Username\"\n      placeholder=\"Choose a username\"\n      :withIcon=\"true\"\n      iconName=\"user\"\n      iconPosition=\"left\"\n      :maxLength=\"30\"\n      :invalid=\"errors.username !== ''\"\n      :invalidMessage=\"errors.username\"\n      autoComplete=\"username\"\n      @blur=\"validateField('username')\"\n    />\n\n    <!-- Email -->\n    <InTextInput\n      id=\"email\"\n      name=\"email\"\n      v-model=\"form.email\"\n      type=\"email\"\n      label=\"Email Address\"\n      placeholder=\"your@email.com\"\n      :withIcon=\"true\"\n      iconName=\"email\"\n      iconPosition=\"left\"\n      :invalid=\"errors.email !== ''\"\n      :invalidMessage=\"errors.email\"\n      autoComplete=\"email\"\n      @blur=\"validateField('email')\"\n    />\n\n    <!-- Password -->\n    <InTextInput\n      id=\"password\"\n      name=\"password\"\n      v-model=\"form.password\"\n      :type=\"showPassword ? 'text' : 'password'\"\n      label=\"Password\"\n      labelTooltip=\"At least 8 characters with uppercase, lowercase, and numbers\"\n      placeholder=\"Create a strong password\"\n      :withIcon=\"true\"\n      :iconName=\"showPassword ? 'visibility_off' : 'visibility'\"\n      iconPosition=\"right\"\n      :invalid=\"errors.password !== ''\"\n      :invalidMessage=\"errors.password\"\n      autoComplete=\"new-password\"\n      @iconClick=\"showPassword = !showPassword\"\n      @blur=\"validateField('password')\"\n    />\n\n    <!-- Confirm Password -->\n    <InTextInput\n      id=\"confirm-password\"\n      name=\"confirmPassword\"\n      v-model=\"form.confirmPassword\"\n      type=\"password\"\n      label=\"Confirm Password\"\n      placeholder=\"Re-enter your password\"\n      :invalid=\"errors.confirmPassword !== ''\"\n      :invalidMessage=\"errors.confirmPassword\"\n      autoComplete=\"new-password\"\n      @blur=\"validateField('confirmPassword')\"\n    />\n\n    <!-- Phone Number -->\n    <InTextInput\n      id=\"phone\"\n      name=\"phone\"\n      v-model=\"form.phone\"\n      type=\"tel\"\n      label=\"Phone Number (Optional)\"\n      placeholder=\"+1 (555) 123-4567\"\n      :withIcon=\"true\"\n      iconName=\"phone\"\n      :prefix=\"'+1'\"\n      :warning=\"form.phone && !isValidPhone\"\n      warningMessage=\"Phone number format may be invalid\"\n      autoComplete=\"tel\"\n    />\n\n    <!-- Age -->\n    <InTextInput\n      id=\"age\"\n      name=\"age\"\n      v-model.number=\"form.age\"\n      type=\"number\"\n      label=\"Age\"\n      placeholder=\"18\"\n      :min=\"18\"\n      :allowDecimal=\"false\"\n      :invalid=\"errors.age !== ''\"\n      :invalidMessage=\"errors.age\"\n      @blur=\"validateField('age')\"\n    />\n\n    <!-- Submit -->\n    <button type=\"submit\" :disabled=\"!isFormValid || submitting\">\n      {{ submitting ? 'Creating Account...' : 'Create Account' }}\n    </button>\n  </form>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, computed } from 'vue';\nimport { InTextInput } from '@useinsider/design-system-vue';\n\ninterface FormData {\n  username: string;\n  email: string;\n  password: string;\n  confirmPassword: string;\n  phone: string;\n  age: number;\n}\n\nconst form = ref<FormData>({\n  username: '',\n  email: '',\n  password: '',\n  confirmPassword: '',\n  phone: '',\n  age: 0\n});\n\nconst errors = ref({\n  username: '',\n  email: '',\n  password: '',\n  confirmPassword: '',\n  age: ''\n});\n\nconst showPassword = ref(false);\nconst submitting = ref(false);\n\nconst isValidPhone = computed(() => {\n  const phoneRegex = /^\\+?1?\\s?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}$/;\n  return phoneRegex.test(form.value.phone);\n});\n\nconst validateField = (field: keyof typeof errors.value) => {\n  switch (field) {\n    case 'username':\n      if (!form.value.username) {\n        errors.value.username = 'Username is required';\n      } else if (form.value.username.length < 3) {\n        errors.value.username = 'Username must be at least 3 characters';\n      } else if (!/^[a-zA-Z0-9_]+$/.test(form.value.username)) {\n        errors.value.username = 'Username can only contain letters, numbers, and underscores';\n      } else {\n        errors.value.username = '';\n      }\n      break;\n\n    case 'email':\n      if (!form.value.email) {\n        errors.value.email = 'Email is required';\n      } else if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(form.value.email)) {\n        errors.value.email = 'Invalid email format';\n      } else {\n        errors.value.email = '';\n      }\n      break;\n\n    case 'password':\n      if (!form.value.password) {\n        errors.value.password = 'Password is required';\n      } else if (form.value.password.length < 8) {\n        errors.value.password = 'Password must be at least 8 characters';\n      } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)/.test(form.value.password)) {\n        errors.value.password = 'Password must contain uppercase, lowercase, and numbers';\n      } else {\n        errors.value.password = '';\n      }\n      break;\n\n    case 'confirmPassword':\n      if (form.value.confirmPassword !== form.value.password) {\n        errors.value.confirmPassword = 'Passwords do not match';\n      } else {\n        errors.value.confirmPassword = '';\n      }\n      break;\n\n    case 'age':\n      if (form.value.age < 18) {\n        errors.value.age = 'You must be at least 18 years old';\n      } else if (form.value.age > 120) {\n        errors.value.age = 'Please enter a valid age';\n      } else {\n        errors.value.age = '';\n      }\n      break;\n  }\n};\n\nconst isFormValid = computed(() => {\n  return (\n    form.value.username &&\n    form.value.email &&\n    form.value.password &&\n    form.value.confirmPassword &&\n    Object.values(errors.value).every(error => error === '')\n  );\n});\n\nconst handleSubmit = async () => {\n  // Validate all fields\n  Object.keys(errors.value).forEach(field => {\n    validateField(field as keyof typeof errors.value);\n  });\n\n  if (!isFormValid.value) return;\n\n  submitting.value = true;\n\n  try {\n    // API call\n    await new Promise(resolve => setTimeout(resolve, 2000));\n    console.log('Registration successful:', form.value);\n    // Redirect to success page\n  } catch (error) {\n    console.error('Registration failed:', error);\n  } finally {\n    submitting.value = false;\n  }\n};\n</script>\n\n<style scoped>\n.registration-form {\n  max-width: 500px;\n  margin: 0 auto;\n  padding: 24px;\n}\n\n.registration-form > * + * {\n  margin-top: 16px;\n}\n\nbutton[type=\"submit\"] {\n  width: 100%;\n  padding: 12px;\n  margin-top: 24px;\n  background: #007bff;\n  color: white;\n  border: none;\n  border-radius: 4px;\n  font-size: 16px;\n  cursor: pointer;\n}\n\nbutton[type=\"submit\"]:disabled {\n  opacity: 0.5;\n  cursor: not-allowed;\n}\n</style>"
+    },
+    {
+      "title": "Advanced Search Filter Panel",
+      "description": "Search interface with multiple input types, filters, and real-time results",
+      "code": "<template>\n  <div class=\"search-panel\">\n    <div class=\"search-header\">\n      <h3>Product Search</h3>\n      <button @click=\"resetFilters\" class=\"reset-btn\">Reset All</button>\n    </div>\n\n    <!-- Main Search -->\n    <InTextInput\n      id=\"main-search\"\n      name=\"query\"\n      v-model=\"filters.query\"\n      type=\"search\"\n      placeholder=\"Search by name, SKU, or description...\"\n      :withIcon=\"true\"\n      iconName=\"search\"\n      iconPosition=\"left\"\n      :withLabel=\"false\"\n      autoComplete=\"off\"\n      :autoFocus=\"true\"\n      @input=\"handleSearchDebounced\"\n      @enter=\"performSearch\"\n    />\n\n    <div class=\"filters-grid\">\n      <!-- Price Range -->\n      <div class=\"filter-group\">\n        <h4>Price Range</h4>\n        <div class=\"price-inputs\">\n          <InTextInput\n            id=\"price-min\"\n            name=\"priceMin\"\n            v-model.number=\"filters.priceMin\"\n            type=\"number\"\n            placeholder=\"Min\"\n            prefix=\"$\"\n            :min=\"0\"\n            :allowDecimal=\"true\"\n            :small=\"true\"\n            :withLabel=\"false\"\n            @change=\"performSearch\"\n          />\n          <span class=\"separator\">to</span>\n          <InTextInput\n            id=\"price-max\"\n            name=\"priceMax\"\n            v-model.number=\"filters.priceMax\"\n            type=\"number\"\n            placeholder=\"Max\"\n            prefix=\"$\"\n            :min=\"0\"\n            :allowDecimal=\"true\"\n            :small=\"true\"\n            :withLabel=\"false\"\n            @change=\"performSearch\"\n          />\n        </div>\n      </div>\n\n      <!-- SKU -->\n      <InTextInput\n        id=\"sku\"\n        name=\"sku\"\n        v-model=\"filters.sku\"\n        type=\"text\"\n        label=\"SKU\"\n        placeholder=\"e.g., PROD-12345\"\n        :maxLength=\"20\"\n        @change=\"performSearch\"\n      />\n\n      <!-- Stock Quantity -->\n      <InTextInput\n        id=\"stock-min\"\n        name=\"stockMin\"\n        v-model.number=\"filters.stockMin\"\n        type=\"number\"\n        label=\"Minimum Stock\"\n        placeholder=\"0\"\n        :withSuffix=\"true\"\n        suffix=\"units\"\n        :min=\"0\"\n        :allowDecimal=\"false\"\n        @change=\"performSearch\"\n      />\n\n      <!-- Discount -->\n      <InTextInput\n        id=\"discount\"\n        name=\"discount\"\n        v-model.number=\"filters.discount\"\n        type=\"number\"\n        label=\"Min Discount\"\n        placeholder=\"0\"\n        :withSuffix=\"true\"\n        suffix=\"%\"\n        :min=\"0\"\n        :max=\"100\"\n        :allowDecimal=\"false\"\n        @change=\"performSearch\"\n      />\n\n      <!-- Supplier Email -->\n      <InTextInput\n        id=\"supplier-email\"\n        name=\"supplierEmail\"\n        v-model=\"filters.supplierEmail\"\n        type=\"email\"\n        label=\"Supplier Email\"\n        placeholder=\"supplier@example.com\"\n        :withIcon=\"true\"\n        iconName=\"email\"\n        @change=\"performSearch\"\n      />\n\n      <!-- Product URL -->\n      <InTextInput\n        id=\"product-url\"\n        name=\"productUrl\"\n        v-model=\"filters.productUrl\"\n        type=\"url\"\n        label=\"Product URL (Optional)\"\n        placeholder=\"https://example.com/product\"\n        prefix=\"https://\"\n        @change=\"performSearch\"\n      />\n    </div>\n\n    <!-- Results Summary -->\n    <div class=\"results-summary\">\n      <p v-if=\"loading\">Searching...</p>\n      <p v-else-if=\"results.length > 0\">\n        Found {{ results.length }} product{{ results.length === 1 ? '' : 's' }}\n      </p>\n      <p v-else-if=\"hasActiveFilters\">No products match your filters</p>\n      <p v-else>Enter search criteria to find products</p>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, computed } from 'vue';\nimport { InTextInput } from '@useinsider/design-system-vue';\nimport { useDebounceFn } from '@vueuse/core';\n\ninterface Filters {\n  query: string;\n  priceMin: number;\n  priceMax: number;\n  sku: string;\n  stockMin: number;\n  discount: number;\n  supplierEmail: string;\n  productUrl: string;\n}\n\nconst filters = ref<Filters>({\n  query: '',\n  priceMin: 0,\n  priceMax: 0,\n  sku: '',\n  stockMin: 0,\n  discount: 0,\n  supplierEmail: '',\n  productUrl: ''\n});\n\nconst results = ref<any[]>([]);\nconst loading = ref(false);\n\nconst hasActiveFilters = computed(() => {\n  return Object.values(filters.value).some(value => \n    value !== '' && value !== 0\n  );\n});\n\nconst performSearch = async () => {\n  if (!hasActiveFilters.value) {\n    results.value = [];\n    return;\n  }\n\n  loading.value = true;\n\n  try {\n    // Simulate API call\n    await new Promise(resolve => setTimeout(resolve, 500));\n    \n    console.log('Searching with filters:', filters.value);\n    \n    // Mock results\n    results.value = [\n      { id: 1, name: 'Product 1' },\n      { id: 2, name: 'Product 2' }\n    ];\n  } catch (error) {\n    console.error('Search failed:', error);\n    results.value = [];\n  } finally {\n    loading.value = false;\n  }\n};\n\nconst handleSearchDebounced = useDebounceFn(() => {\n  performSearch();\n}, 500);\n\nconst resetFilters = () => {\n  filters.value = {\n    query: '',\n    priceMin: 0,\n    priceMax: 0,\n    sku: '',\n    stockMin: 0,\n    discount: 0,\n    supplierEmail: '',\n    productUrl: ''\n  };\n  results.value = [];\n};\n</script>\n\n<style scoped>\n.search-panel {\n  max-width: 1200px;\n  margin: 0 auto;\n  padding: 24px;\n}\n\n.search-header {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  margin-bottom: 20px;\n}\n\n.reset-btn {\n  padding: 8px 16px;\n  border: 1px solid #ddd;\n  background: white;\n  border-radius: 4px;\n  cursor: pointer;\n}\n\n.filters-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));\n  gap: 16px;\n  margin-top: 20px;\n}\n\n.filter-group h4 {\n  margin: 0 0 8px 0;\n  font-size: 14px;\n  font-weight: 500;\n}\n\n.price-inputs {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\n\n.separator {\n  color: #666;\n  font-size: 14px;\n}\n\n.results-summary {\n  margin-top: 24px;\n  padding: 16px;\n  background: #f8f9fa;\n  border-radius: 4px;\n  text-align: center;\n}\n</style>"
+    }
+  ],
+  "implementationPatterns": [
+    {
+      "name": "Form Field with Validation Pattern",
+      "description": "Standard input with label, validation, and error messaging",
+      "when": "Building forms with user input validation",
+      "code": "<template>\n  <InTextInput\n    :id=\"fieldId\"\n    :name=\"name\"\n    v-model=\"modelValue\"\n    :type=\"type\"\n    :label=\"label\"\n    :placeholder=\"placeholder\"\n    :invalid=\"!!error\"\n    :invalidMessage=\"error\"\n    :required=\"required\"\n    @blur=\"validate\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, computed } from 'vue';\nimport { InTextInput } from '@useinsider/design-system-vue';\n\ninterface Props {\n  modelValue: string;\n  name: string;\n  label: string;\n  type?: string;\n  placeholder?: string;\n  required?: boolean;\n  validator?: (value: string) => string;\n}\n\nconst props = withDefaults(defineProps<Props>(), {\n  type: 'text',\n  placeholder: '',\n  required: false\n});\n\nconst emit = defineEmits(['update:modelValue']);\n\nconst error = ref('');\nconst fieldId = computed(() => `field-${props.name}`);\n\nconst validate = () => {\n  if (props.required && !props.modelValue) {\n    error.value = `${props.label} is required`;\n    return;\n  }\n  \n  if (props.validator) {\n    error.value = props.validator(props.modelValue);\n  } else {\n    error.value = '';\n  }\n};\n</script>",
+      "pros": [
+        "Reusable validation logic",
+        "Consistent error handling",
+        "Clean separation of concerns",
+        "Easy to extend with custom validators"
+      ],
+      "cons": [
+        "Requires wrapper component",
+        "Adds layer of abstraction",
+        "May be overkill for simple forms"
+      ]
+    },
+    {
+      "name": "Search Input with Debouncing Pattern",
+      "description": "Search field that debounces input to reduce API calls",
+      "when": "Implementing search with real-time results or autocomplete",
+      "code": "<template>\n  <InTextInput\n    id=\"search\"\n    name=\"search\"\n    v-model=\"searchQuery\"\n    type=\"search\"\n    placeholder=\"Search...\"\n    :withIcon=\"true\"\n    iconName=\"search\"\n    autoComplete=\"off\"\n    @input=\"handleSearchDebounced\"\n    @enter=\"performImmediateSearch\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\nimport { InTextInput } from '@useinsider/design-system-vue';\nimport { useDebounceFn } from '@vueuse/core';\n\nconst searchQuery = ref('');\n\nconst performSearch = async (query: string) => {\n  if (query.length < 3) return;\n  console.log('Searching:', query);\n  // API call here\n};\n\nconst handleSearchDebounced = useDebounceFn(() => {\n  performSearch(searchQuery.value);\n}, 300);\n\nconst performImmediateSearch = () => {\n  performSearch(searchQuery.value);\n};\n</script>",
+      "pros": [
+        "Reduces API calls significantly",
+        "Better performance and user experience",
+        "Instant search on Enter key",
+        "Lower server costs"
+      ],
+      "cons": [
+        "Slight delay before search starts",
+        "Requires debounce utility",
+        "May feel sluggish on slow networks"
+      ]
+    },
+    {
+      "name": "Dynamic Input with Icon Actions Pattern",
+      "description": "Input with interactive icon for actions like clear, toggle visibility, or submit",
+      "when": "Password visibility toggle, clear button, or inline actions needed",
+      "code": "<template>\n  <InTextInput\n    :id=\"id\"\n    :name=\"name\"\n    v-model=\"localValue\"\n    :type=\"inputType\"\n    :label=\"label\"\n    :placeholder=\"placeholder\"\n    :withIcon=\"true\"\n    :iconName=\"iconName\"\n    iconPosition=\"right\"\n    @iconClick=\"handleIconClick\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, computed } from 'vue';\nimport { InTextInput } from '@useinsider/design-system-vue';\n\ninterface Props {\n  id: string;\n  name: string;\n  modelValue: string;\n  label: string;\n  placeholder?: string;\n  action: 'clear' | 'toggle-password' | 'submit';\n}\n\nconst props = defineProps<Props>();\nconst emit = defineEmits(['update:modelValue', 'submit']);\n\nconst localValue = computed({\n  get: () => props.modelValue,\n  set: (value) => emit('update:modelValue', value)\n});\n\nconst showPassword = ref(false);\n\nconst inputType = computed(() => {\n  if (props.action === 'toggle-password') {\n    return showPassword.value ? 'text' : 'password';\n  }\n  return 'text';\n});\n\nconst iconName = computed(() => {\n  switch (props.action) {\n    case 'clear':\n      return 'close';\n    case 'toggle-password':\n      return showPassword.value ? 'visibility_off' : 'visibility';\n    case 'submit':\n      return 'arrow_forward';\n    default:\n      return 'search';\n  }\n});\n\nconst handleIconClick = () => {\n  switch (props.action) {\n    case 'clear':\n      localValue.value = '';\n      break;\n    case 'toggle-password':\n      showPassword.value = !showPassword.value;\n      break;\n    case 'submit':\n      emit('submit', localValue.value);\n      break;\n  }\n};\n</script>",
+      "pros": [
+        "Enhanced UX with inline actions",
+        "Saves form space",
+        "Familiar interaction patterns",
+        "Accessible keyboard navigation"
+      ],
+      "cons": [
+        "Icon may not be obvious to all users",
+        "Requires careful icon selection",
+        "May conflict with browser autofill UI"
+      ]
+    }
+  ],
+  "useCases": [
+    {
+      "title": "User Registration Forms",
+      "description": "Collect user information with validation for username, email, password, and personal details",
+      "example": "Sign-up forms requiring email validation, password strength checking, age verification, and phone number formatting. Use type='email' for email fields, type='password' for passwords with visibility toggle, and type='number' with min for age."
+    },
+    {
+      "title": "Search and Filter Interfaces",
+      "description": "Search inputs with real-time filtering across product catalogs, user lists, or documentation",
+      "example": "E-commerce product search with debounced autocomplete, admin dashboards with user search, knowledge bases with content search. Use type='search', withIcon for search icon, and debounce @input events."
+    },
+    {
+      "title": "Settings and Configuration Panels",
+      "description": "Application settings requiring various input types like API keys, URLs, numeric thresholds, and text values",
+      "example": "API key inputs with prefix/suffix for format guidance, webhook URL configuration with type='url', timeout settings with type='number' and unit suffix, feature toggles with text explanations."
+    },
+    {
+      "title": "Data Entry Forms",
+      "description": "Business forms for invoices, orders, inventory management requiring structured input",
+      "example": "Invoice forms with price inputs (prefix='$', allowDecimal=true), quantity fields (type='number', allowDecimal=false), SKU/product codes with maxLength, discount percentages with suffix='%'."
+    },
+    {
+      "title": "Login and Authentication",
+      "description": "Secure login forms with username/email and password fields with proper autocomplete",
+      "example": "Login pages with autoComplete='email' and autoComplete='current-password', registration with autoComplete='new-password', password reset flows with validation feedback."
+    },
+    {
+      "title": "Profile and Account Management",
+      "description": "User profile editing with personal information, contact details, and preferences",
+      "example": "Profile pages with name fields, email (type='email'), phone (type='tel' with prefix), bio/description with maxLength, social media URLs (type='url'), age/birthday (type='number' with min)."
+    }
+  ],
+  "bestPractices": [
+    {
+      "title": "Always Provide Unique IDs",
+      "description": "Generate unique id for each input to ensure proper label association and accessibility",
+      "code": "// Generate unique IDs\nimport { useId } from 'vue';\n\nconst fieldId = useId(); // Vue 3.5+\n// OR\nconst fieldId = `input-${Math.random().toString(36).substr(2, 9)}`;\n// OR use component key\nconst fieldId = `email-${userId}`;\n\n<InTextInput :id=\"fieldId\" name=\"email\" label=\"Email\" />",
+      "reasoning": "Unique IDs prevent conflicts, enable proper label clicking, and ensure screen readers correctly associate labels with inputs"
+    },
+    {
+      "title": "Use Appropriate Input Types",
+      "description": "Choose the correct type prop for better validation and mobile keyboard optimization",
+      "code": "// Email - shows @ on mobile keyboard, validates format\n<InTextInput type=\"email\" autoComplete=\"email\" />\n\n// Phone - shows numeric keyboard with symbols\n<InTextInput type=\"tel\" autoComplete=\"tel\" />\n\n// Number - shows numeric keypad, validates range\n<InTextInput type=\"number\" :min=\"0\" :max=\"100\" />\n\n// URL - shows .com shortcut on mobile\n<InTextInput type=\"url\" autoComplete=\"url\" />\n\n// Password - hides text, triggers password managers\n<InTextInput type=\"password\" autoComplete=\"current-password\" />",
+      "reasoning": "Improves mobile UX with optimized keyboards, enables browser validation, and triggers relevant autofill suggestions"
+    },
+    {
+      "title": "Implement Proper Validation",
+      "description": "Validate on blur for better UX, show clear error messages, and prevent invalid form submission",
+      "code": "const email = ref('');\nconst emailError = ref('');\n\nconst validateEmail = () => {\n  if (!email.value) {\n    emailError.value = 'Email is required';\n  } else if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email.value)) {\n    emailError.value = 'Please enter a valid email address';\n  } else {\n    emailError.value = '';\n  }\n};\n\n<InTextInput\n  v-model=\"email\"\n  type=\"email\"\n  :invalid=\"emailError !== ''\"\n  :invalidMessage=\"emailError\"\n  @blur=\"validateEmail\"\n/>",
+      "reasoning": "Blur validation avoids annoying users while typing, clear messages help correct errors, and prevents bad data submission"
+    },
+    {
+      "title": "Debounce Search and Real-time Inputs",
+      "description": "Add debouncing to search inputs and live-update fields to reduce API calls and improve performance",
+      "code": "import { useDebounceFn } from '@vueuse/core';\n\nconst searchQuery = ref('');\n\nconst performSearch = async (query: string) => {\n  if (query.length < 3) return;\n  await api.search(query);\n};\n\nconst debouncedSearch = useDebounceFn(() => {\n  performSearch(searchQuery.value);\n}, 300); // Wait 300ms after typing stops\n\n<InTextInput\n  v-model=\"searchQuery\"\n  @input=\"debouncedSearch\"\n  @enter=\"() => performSearch(searchQuery)\" // Immediate on Enter\n/>",
+      "reasoning": "Prevents excessive API calls, reduces server load and costs, improves performance, and maintains responsive UX"
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Using same ID for multiple inputs",
+      "why": "Violates HTML specification and breaks label associations",
+      "impact": "Clicking labels focuses wrong inputs, accessibility tools malfunction, form data may conflict",
+      "fix": "Generate unique IDs per input using component key, index, or UUID generators",
+      "severity": "high",
+      "example": "// WRONG\n<InTextInput id=\"email\" v-model=\"personalEmail\" />\n<InTextInput id=\"email\" v-model=\"workEmail\" /> <!-- Duplicate! -->\n\n// CORRECT\n<InTextInput id=\"personal-email\" v-model=\"personalEmail\" />\n<InTextInput id=\"work-email\" v-model=\"workEmail\" />"
+    },
+    {
+      "mistake": "Disabling XSS protection for user inputs",
+      "why": "Creates critical security vulnerability allowing malicious script injection",
+      "impact": "Attackers can steal sessions, hijack accounts, steal data, or inject malware",
+      "fix": "Always keep preventXss: true (default) for any user-generated content",
+      "severity": "critical",
+      "example": "// WRONG - Critical security vulnerability\n<InTextInput v-model=\"userBio\" :preventXss=\"false\" />\n\n// CORRECT - XSS protected (default)\n<InTextInput v-model=\"userBio\" />\n// OR explicitly enabled\n<InTextInput v-model=\"userBio\" :preventXss=\"true\" />"
+    },
+    {
+      "mistake": "Not validating on blur, validating on every keystroke instead",
+      "why": "Showing errors while user is still typing is frustrating and annoying",
+      "impact": "Poor UX, users see \"invalid email\" error before finishing typing their email",
+      "fix": "Use @blur for validation, optionally clear errors on @input",
+      "severity": "medium",
+      "example": "// WRONG - validates every keystroke\n<InTextInput @input=\"validateEmail\" />\n// User types \"j\" → \"Invalid email\"\n// User types \"jo\" → \"Invalid email\"  \n// User types \"john@\" → \"Invalid email\"\n// Annoying!\n\n// CORRECT - validates after user finishes\n<InTextInput @blur=\"validateEmail\" />"
+    },
+    {
+      "mistake": "Not debouncing search inputs",
+      "why": "Triggers API call on every keystroke, causing excessive server requests",
+      "impact": "Performance issues, increased server costs, rate limiting, slow UI",
+      "fix": "Debounce @input event by 300-500ms, execute immediately on @enter",
+      "severity": "medium",
+      "example": "// WRONG - API call every keystroke\n<InTextInput @input=\"searchProducts\" />\n// \"laptop\" → 6 API calls (l, la, lap, lapt, lapto, laptop)\n\n// CORRECT - debounced search\nimport { useDebounceFn } from '@vueuse/core';\nconst debouncedSearch = useDebounceFn(searchProducts, 300);\n<InTextInput @input=\"debouncedSearch\" @enter=\"searchProducts\" />\n// \"laptop\" → 1 API call (after 300ms pause)"
+    },
+    {
+      "mistake": "Using type='number' without min/max or allowDecimal settings",
+      "why": "Users can enter negative numbers, decimals when not wanted, or unrealistic values",
+      "impact": "Invalid data like negative quantities, decimal counts, or ages over 200",
+      "fix": "Always set min, and configure allowDecimal based on use case",
+      "severity": "medium",
+      "example": "// WRONG - allows negative and decimals\n<InTextInput type=\"number\" v-model=\"quantity\" />\n// User can enter: -5, 2.7, 999999\n\n// CORRECT - constrained number input\n<InTextInput\n  type=\"number\"\n  :min=\"1\"\n  :allowDecimal=\"false\"\n  v-model.number=\"quantity\"\n/>"
+    },
+    {
+      "mistake": "Forgetting autoComplete attributes",
+      "why": "Browsers can't autofill, forcing users to manually type repetitive information",
+      "impact": "Poor UX, slower form completion, higher abandonment rates",
+      "fix": "Add appropriate autoComplete values for common fields",
+      "severity": "low",
+      "example": "// WRONG - no autocomplete hints\n<InTextInput type=\"email\" />\n<InTextInput type=\"password\" />\n\n// CORRECT - enables browser autofill\n<InTextInput type=\"email\" autoComplete=\"email\" />\n<InTextInput type=\"password\" autoComplete=\"current-password\" />\n<InTextInput type=\"text\" autoComplete=\"given-name\" /> <!-- First name -->\n<InTextInput type=\"tel\" autoComplete=\"tel\" />"
+    }
+  ],
+  "performanceNotes": [
+    {
+      "topic": "Debouncing Input Events",
+      "description": "For inputs triggering expensive operations (API calls, heavy computations), debounce the @input event handler",
+      "recommendation": "Use useDebounceFn with 300-500ms delay for search, 1000ms+ for autosave. Execute immediately on @enter or @blur for better UX.",
+      "impact": "Can reduce API calls by 90%+ and eliminate UI lag during typing"
+    },
+    {
+      "topic": "v-model.number for Numeric Inputs",
+      "description": "Using v-model.number ensures values are stored as numbers, not strings",
+      "recommendation": "Always use v-model.number with type='number' to avoid string-to-number conversions in your code",
+      "impact": "Prevents unnecessary type coercion and comparison bugs (e.g., '10' > '9' is false as strings)"
+    },
+    {
+      "topic": "Validation Performance",
+      "description": "Complex regex or async validation on every keystroke can cause lag",
+      "recommendation": "Validate on @blur for most fields. For real-time validation, debounce by 300ms or use simple checks during typing, complex checks on blur.",
+      "impact": "Eliminates typing lag and improves perceived performance"
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "topic": "Label Association",
+      "description": "Every input must have an associated label for screen readers",
+      "wcagLevel": "A",
+      "recommendation": "Always provide unique id and use label prop. The component handles for attribute automatically. For hidden labels, use aria-label.",
+      "example": "<!-- Visible label (preferred) -->\n<InTextInput id=\"email\" name=\"email\" label=\"Email Address\" />\n\n<!-- Hidden label with aria-label -->\n<InTextInput\n  id=\"search\"\n  name=\"search\"\n  :withLabel=\"false\"\n  aria-label=\"Search products\"\n/>"
+    },
+    {
+      "topic": "Error Announcements",
+      "description": "Validation errors must be announced to screen reader users",
+      "wcagLevel": "AA",
+      "recommendation": "Use invalid and invalidMessage props. Component announces errors via aria-describedby. For critical errors, add aria-live region.",
+      "example": "<InTextInput\n  id=\"email\"\n  :invalid=\"hasError\"\n  :invalidMessage=\"errorMessage\"\n  aria-invalid=\"hasError\"\n/>\n\n<!-- For critical errors -->\n<div aria-live=\"assertive\" v-if=\"criticalError\">\n  {{ criticalError }}\n</div>"
+    },
+    {
+      "topic": "Required Fields",
+      "description": "Required fields must be clearly indicated visually and programmatically",
+      "wcagLevel": "A",
+      "recommendation": "Use HTML5 required attribute and visual indicator (asterisk). Announce requirement in label or aria-label.",
+      "example": "<InTextInput\n  id=\"email\"\n  name=\"email\"\n  label=\"Email Address *\"\n  required\n  aria-required=\"true\"\n/>"
+    },
+    {
+      "topic": "Keyboard Navigation",
+      "description": "All input functionality must be keyboard accessible",
+      "wcagLevel": "A",
+      "recommendation": "Component is keyboard accessible by default. Ensure icon actions work with Enter/Space. Tab order should be logical.",
+      "example": "<!-- Icon click accessible via keyboard -->\n<InTextInput\n  :withIcon=\"true\"\n  iconName=\"clear\"\n  @iconClick=\"handleClear\"\n  @keydown.enter=\"handleClear\" <!-- Also trigger on Enter -->\n/>"
+    }
+  ],
+  "helperFunctions": [
+    {
+      "name": "useFormField",
+      "description": "Composable for managing individual form field state with validation and error handling",
+      "code": "import { ref, computed } from 'vue';\n\nexport function useFormField<T = string>(\n  initialValue: T,\n  validator?: (value: T) => string\n) {\n  const value = ref<T>(initialValue);\n  const error = ref('');\n  const touched = ref(false);\n  const dirty = ref(false);\n\n  const isValid = computed(() => error.value === '');\n  const showError = computed(() => touched.value && error.value !== '');\n\n  const validate = () => {\n    if (validator) {\n      error.value = validator(value.value);\n    } else {\n      error.value = '';\n    }\n    return isValid.value;\n  };\n\n  const handleBlur = () => {\n    touched.value = true;\n    validate();\n  };\n\n  const handleInput = () => {\n    dirty.value = true;\n    if (touched.value) {\n      // Clear errors while typing after initial validation\n      error.value = '';\n    }\n  };\n\n  const reset = () => {\n    value.value = initialValue;\n    error.value = '';\n    touched.value = false;\n    dirty.value = false;\n  };\n\n  return {\n    value,\n    error,\n    touched,\n    dirty,\n    isValid,\n    showError,\n    validate,\n    handleBlur,\n    handleInput,\n    reset\n  };\n}",
+      "parameters": [
+        "initialValue: T - Initial field value",
+        "validator?: (value: T) => string - Optional validation function that returns error message or empty string"
+      ],
+      "returnType": "{ value, error, touched, dirty, isValid, showError, validate, handleBlur, handleInput, reset }",
+      "example": "// Component usage\nimport { useFormField } from './composables/useFormField';\n\nconst emailField = useFormField('', (value) => {\n  if (!value) return 'Email is required';\n  if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(value)) {\n    return 'Invalid email format';\n  }\n  return '';\n});\n\n// Template\n<InTextInput\n  id=\"email\"\n  v-model=\"emailField.value.value\"\n  type=\"email\"\n  label=\"Email\"\n  :invalid=\"emailField.showError.value\"\n  :invalidMessage=\"emailField.error.value\"\n  @blur=\"emailField.handleBlur\"\n  @input=\"emailField.handleInput\"\n/>\n\n// Validate before submit\nif (emailField.validate()) {\n  // Submit form\n}"
+    },
+    {
+      "name": "createPasswordValidator",
+      "description": "Factory function to create password validators with configurable strength requirements",
+      "code": "interface PasswordRequirements {\n  minLength?: number;\n  requireUppercase?: boolean;\n  requireLowercase?: boolean;\n  requireNumbers?: boolean;\n  requireSpecialChars?: boolean;\n  specialChars?: string;\n}\n\nexport function createPasswordValidator(\n  requirements: PasswordRequirements = {}\n) {\n  const {\n    minLength = 8,\n    requireUppercase = true,\n    requireLowercase = true,\n    requireNumbers = true,\n    requireSpecialChars = false,\n    specialChars = '!@#$%^&*()_+-=[]{}|;:,.<>?'\n  } = requirements;\n\n  return (password: string): string => {\n    if (!password) {\n      return 'Password is required';\n    }\n\n    if (password.length < minLength) {\n      return `Password must be at least ${minLength} characters`;\n    }\n\n    if (requireUppercase && !/[A-Z]/.test(password)) {\n      return 'Password must contain at least one uppercase letter';\n    }\n\n    if (requireLowercase && !/[a-z]/.test(password)) {\n      return 'Password must contain at least one lowercase letter';\n    }\n\n    if (requireNumbers && !/\\d/.test(password)) {\n      return 'Password must contain at least one number';\n    }\n\n    if (requireSpecialChars) {\n      const escapedChars = specialChars.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n      const regex = new RegExp(`[${escapedChars}]`);\n      if (!regex.test(password)) {\n        return `Password must contain at least one special character (${specialChars})`;\n      }\n    }\n\n    return ''; // Valid\n  };\n}",
+      "parameters": [
+        "requirements: PasswordRequirements - Configuration object for password strength rules"
+      ],
+      "returnType": "(password: string) => string - Validator function that returns error message or empty string",
+      "example": "// Create custom password validator\nconst validatePassword = createPasswordValidator({\n  minLength: 12,\n  requireUppercase: true,\n  requireLowercase: true,\n  requireNumbers: true,\n  requireSpecialChars: true,\n  specialChars: '!@#$%^&*'\n});\n\n// Use with form field\nconst passwordField = useFormField('', validatePassword);\n\n// Or use directly\nconst error = validatePassword('weak'); \n// Returns: \"Password must be at least 12 characters\"\n\nconst error2 = validatePassword('StrongP@ssw0rd123');\n// Returns: \"\" (valid)\n\n// Template\n<InTextInput\n  id=\"password\"\n  v-model=\"passwordField.value.value\"\n  type=\"password\"\n  label=\"Password\"\n  labelTooltip=\"Must be 12+ characters with uppercase, lowercase, numbers, and special characters\"\n  :invalid=\"passwordField.showError.value\"\n  :invalidMessage=\"passwordField.error.value\"\n  @blur=\"passwordField.handleBlur\"\n/>"
+    },
+    {
+      "name": "useSearchInput",
+      "description": "Composable for search inputs with debouncing, loading state, and clear functionality",
+      "code": "import { ref, computed } from 'vue';\nimport { useDebounceFn } from '@vueuse/core';\n\nexport function useSearchInput<T = any>(\n  searchFn: (query: string) => Promise<T[]>,\n  options: {\n    debounceMs?: number;\n    minLength?: number;\n  } = {}\n) {\n  const { debounceMs = 300, minLength = 3 } = options;\n\n  const query = ref('');\n  const results = ref<T[]>([]);\n  const loading = ref(false);\n  const error = ref<string | null>(null);\n\n  const hasQuery = computed(() => query.value.length >= minLength);\n  const hasResults = computed(() => results.value.length > 0);\n\n  const performSearch = async () => {\n    if (query.value.length < minLength) {\n      results.value = [];\n      return;\n    }\n\n    loading.value = true;\n    error.value = null;\n\n    try {\n      results.value = await searchFn(query.value);\n    } catch (err: any) {\n      error.value = err.message || 'Search failed';\n      results.value = [];\n    } finally {\n      loading.value = false;\n    }\n  };\n\n  const debouncedSearch = useDebounceFn(performSearch, debounceMs);\n\n  const handleInput = () => {\n    if (query.value.length === 0) {\n      results.value = [];\n      error.value = null;\n    } else if (query.value.length >= minLength) {\n      debouncedSearch();\n    }\n  };\n\n  const clear = () => {\n    query.value = '';\n    results.value = [];\n    error.value = null;\n  };\n\n  const executeImmediate = () => {\n    if (hasQuery.value) {\n      performSearch();\n    }\n  };\n\n  return {\n    query,\n    results,\n    loading,\n    error,\n    hasQuery,\n    hasResults,\n    handleInput,\n    executeImmediate,\n    clear\n  };\n}",
+      "parameters": [
+        "searchFn: (query: string) => Promise<T[]> - Async function that performs search and returns results",
+        "options: { debounceMs?: number, minLength?: number } - Configuration options"
+      ],
+      "returnType": "{ query, results, loading, error, hasQuery, hasResults, handleInput, executeImmediate, clear }",
+      "example": "// Define search function\nconst searchProducts = async (query: string) => {\n  const response = await api.get('/products/search', { params: { q: query } });\n  return response.data;\n};\n\n// Use composable\nconst search = useSearchInput(searchProducts, {\n  debounceMs: 300,\n  minLength: 3\n});\n\n// Template\n<div>\n  <InTextInput\n    id=\"product-search\"\n    v-model=\"search.query.value\"\n    type=\"search\"\n    placeholder=\"Search products...\"\n    :withIcon=\"true\"\n    iconName=\"search\"\n    @input=\"search.handleInput\"\n    @enter=\"search.executeImmediate\"\n  />\n  \n  <div v-if=\"search.loading.value\">Searching...</div>\n  <div v-else-if=\"search.error.value\">{{ search.error.value }}</div>\n  <div v-else-if=\"search.hasResults.value\">\n    <div v-for=\"result in search.results.value\" :key=\"result.id\">\n      {{ result.name }}\n    </div>\n  </div>\n  <div v-else-if=\"search.hasQuery.value\">No results found</div>\n</div>"
+    }
+  ]
+}

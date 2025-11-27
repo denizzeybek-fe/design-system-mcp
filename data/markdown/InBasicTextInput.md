@@ -207,3 +207,163 @@
 - `text`
 - `number`
 
+## Examples
+
+### Basic Text Input with Validation
+
+Simple text input with label, placeholder, and error state
+
+```vue
+<InBasicTextInput
+  id="username"
+  name="username"
+  label-text="Username"
+  placeholder-text="Enter your username"
+  v-model="username"
+  :states="usernameError ? 'error' : 'default'"
+  :state-message="usernameError"
+  helper-message="3-20 characters, letters and numbers only"
+  :max-character-length="20"
+  :character-counter-status="true"
+/>
+```
+
+### Number Input with Range Validation
+
+Number input with min/max limits and decimal support
+
+```vue
+<InBasicTextInput
+  id="price"
+  name="price"
+  type="number"
+  label-text="Product Price"
+  placeholder-text="0.00"
+  v-model="price"
+  :prefix-status="true"
+  prefix-text="$"
+  :allow-decimal="true"
+  :allow-comma="true"
+  :min-value="0"
+  :max-value="999999"
+  helper-message="Enter price in USD"
+/>
+```
+
+### Search Input with Icon
+
+Text input with search icon and clear button
+
+```vue
+<InBasicTextInput
+  id="search"
+  name="search"
+  placeholder-text="Search products..."
+  v-model="searchQuery"
+  :left-icon-status="true"
+  left-icon-name="search"
+  :right-icon-status="!!searchQuery"
+  right-icon-name="x"
+  @right-icon-click="clearSearch"
+  @enter="performSearch"
+/>
+```
+
+### Currency Input with Dropdown
+
+Number input with actionable currency prefix selector
+
+```vue
+<InBasicTextInput
+  id="amount"
+  name="amount"
+  type="number"
+  label-text="Amount"
+  placeholder-text="0.00"
+  v-model="amount"
+  :prefix-status="true"
+  :actionable-prefix-status="true"
+  :prefix-dropdown-options="[
+    { text: 'USD ($)', value: 'usd' },
+    { text: 'EUR (€)', value: 'eur' },
+    { text: 'GBP (£)', value: 'gbp' }
+  ]"
+  :allow-decimal="true"
+  @prefix-click="handleCurrencyChange"
+/>
+```
+
+### Password Input with Toggle
+
+Password field with visibility toggle icon
+
+```vue
+<InBasicTextInput
+  id="password"
+  name="password"
+  :type="showPassword ? 'text' : 'password'"
+  label-text="Password"
+  placeholder-text="Enter password"
+  v-model="password"
+  auto-complete="current-password"
+  :right-icon-status="true"
+  :right-icon-name="showPassword ? 'eye-off' : 'eye'"
+  @right-icon-click="showPassword = !showPassword"
+  helper-message="Min 8 characters, 1 uppercase, 1 number"
+  :states="passwordError ? 'error' : 'default'"
+  :state-message="passwordError"
+/>
+```
+
+### Weight Input with Unit Selector
+
+Number input with actionable unit suffix dropdown
+
+```vue
+<InBasicTextInput
+  id="weight"
+  name="weight"
+  type="number"
+  label-text="Weight"
+  placeholder-text="0"
+  v-model="weight"
+  :suffix-status="true"
+  :actionable-suffix-status="true"
+  :suffix-dropdown-options="[
+    { text: 'kg', value: 'kg' },
+    { text: 'lb', value: 'lb' },
+    { text: 'g', value: 'g' }
+  ]"
+  :allow-decimal="true"
+  :min-value="0"
+  @suffix-click="handleUnitChange"
+/>
+```
+
+## Common Mistakes
+
+ℹ️ **Using states='error' without stateMessage**
+
+ℹ️ **Using minValue/maxValue with type='text'**
+
+ℹ️ **Setting actionablePrefixStatus without prefixDropdownOptions**
+
+ℹ️ **Disabling preventXss without server-side validation**
+
+ℹ️ **Using autoFocus on multiple inputs**
+
+ℹ️ **Setting maxCharacterLength without characterCounterStatus**
+
+ℹ️ **Forgetting to handle @enter event for search inputs**
+
+ℹ️ **Using allowDecimal with integer-only scenarios**
+
+## Best Practices
+
+- **undefined:** Provide clear stateMessage for error/warning/success states
+- **undefined:** Show expected format before user makes mistakes
+- **undefined:** Show remaining characters for tweets, SMS, bios
+- **undefined:** Improve UX with browser autofill for common fields
+- **undefined:** Use type='number' with min/max for numeric inputs
+- **undefined:** Security first - only disable with strong justification
+

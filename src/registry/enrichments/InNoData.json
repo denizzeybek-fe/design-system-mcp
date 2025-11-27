@@ -1,0 +1,432 @@
+{
+  "component": "InNoData",
+  "_metadata": {
+    "lastUpdated": "2025-11-28T00:00:00.000Z",
+    "propsHash": "innodata-v1-17props",
+    "eventsHash": "innodata-v1-0events",
+    "propCount": 17,
+    "eventCount": 0
+  },
+  "propEnrichments": {
+    "title": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Main heading text for the empty state. Should be concise and describe what is missing. Keep to 3-7 words for best UX.",
+        "typescript": "string",
+        "example": "'No campaigns found'\n'Your inbox is empty'\n'No results'"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Using generic 'No data' for all empty states",
+          "why": "Generic messages don't provide context about what's missing",
+          "impact": "Users don't understand what they're looking for or why it's empty",
+          "fix": "Use specific, contextual titles like 'No campaigns created yet' instead of 'No data'",
+          "severity": "medium",
+          "example": "// Wrong:\ntitle=\"No data\"\n\n// Correct:\ntitle=\"No campaigns found\""
+        }
+      ]
+    },
+    "description": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Supporting text that explains why the empty state exists and what users can do. Can include HTML if parseAsHtml=true. Should guide users to next action.",
+        "typescript": "string",
+        "example": "'Create your first campaign to start engaging with customers'\n'Try adjusting your filters or search terms'\n'You haven\\'t received any notifications yet'"
+      }
+    },
+    "visibleIcon": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Controls whether to show the empty state icon. Default is true. Set to false for minimal empty states with only text.",
+        "typescript": "boolean",
+        "example": "true // Show icon (default)\nfalse // Text-only empty state"
+      }
+    },
+    "icon": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Icon name from Insider icon system. Default is 'no-data'. Choose contextually appropriate icons (e.g., 'search' for no search results, 'inbox' for empty inbox).",
+        "typescript": "string",
+        "example": "'no-data' // Default empty state icon\n'search' // No search results\n'inbox-empty' // Empty inbox\n'folder-open' // No files"
+      }
+    },
+    "buttonStatus": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "When true, displays a call-to-action button below the description. Use with buttonText to provide primary action (e.g., 'Create Campaign', 'Add Item').",
+        "typescript": "boolean",
+        "example": "true // Show action button\nfalse // No button (default)"
+      }
+    },
+    "buttonText": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Label for the action button (requires buttonStatus=true). Should be action-oriented and specific (e.g., 'Create Campaign' not 'Click here').",
+        "typescript": "string",
+        "example": "'Create Campaign'\n'Add New Item'\n'Clear Filters'\n'Import Data'"
+      }
+    },
+    "buttonProps": {
+      "valueFormat": {
+        "structure": "Object",
+        "notes": "Additional props passed to the InButton component. Can include variant, size, loading, etc. Use to customize button appearance and behavior.",
+        "typescript": "{ variant?: string; size?: string; loading?: boolean; [key: string]: any; }",
+        "example": "{ variant: 'primary', size: 'large' }\n{ variant: 'secondary', icon: 'plus' }\n{ loading: isCreating, disabled: !canCreate }"
+      }
+    },
+    "buttonType": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Button variant type. Default is 'primary'. Common values: 'primary', 'secondary', 'tertiary', 'outline'.",
+        "typescript": "string",
+        "example": "'primary' // Primary action (default)\n'secondary' // Secondary action\n'outline' // Outline button style"
+      }
+    },
+    "isButtonDisabled": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Disables the action button. Use when action is temporarily unavailable (e.g., loading, insufficient permissions). Pair with buttonTooltip to explain why.",
+        "typescript": "boolean",
+        "example": "true // Disable button\nfalse // Enable button (default)"
+      }
+    },
+    "buttonTooltip": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Tooltip text shown on button hover. Especially useful when button is disabled to explain why (e.g., 'Insufficient permissions').",
+        "typescript": "string",
+        "example": "'Insufficient permissions to create campaigns'\n'Complete setup to enable this feature'"
+      }
+    },
+    "buttonTooltipPosition": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Tooltip position relative to button. Default is 'top center'. Format: '{vertical} {horizontal}'.",
+        "typescript": "string",
+        "example": "'top center' // Default\n'bottom center'\n'right center'\n'left center'"
+      }
+    },
+    "parseAsHtml": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "When true, renders description as HTML instead of plain text. Allows links, formatting, etc. Always use with preventXss=true for user-generated content.",
+        "typescript": "boolean",
+        "example": "true // Render HTML\nfalse // Plain text (default)"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Setting parseAsHtml=true without preventXss=true for user content",
+          "why": "Opens XSS vulnerability if description contains user input",
+          "impact": "Security vulnerability - malicious scripts can execute",
+          "fix": "Always enable preventXss=true when parseAsHtml=true with user content",
+          "severity": "critical",
+          "example": "// Vulnerable:\n:description=\"userInput\"\n:parseAsHtml=\"true\"\n\n// Secure:\n:parseAsHtml=\"true\"\n:preventXss=\"true\""
+        }
+      ]
+    },
+    "preventXss": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "When true, sanitizes HTML to prevent XSS attacks. MUST be true when parseAsHtml=true and description contains any user-generated content.",
+        "typescript": "boolean",
+        "example": "true // Sanitize HTML (use with parseAsHtml)\nfalse // No sanitization (default)"
+      }
+    },
+    "backgroundColorClass": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "CSS class for background color. Default is 'b-c-4' (background-color-4 from Insider DS). Use Insider color utility classes.",
+        "typescript": "string",
+        "example": "'b-c-4' // Default light background\n'b-c-white' // White background\n'b-c-transparent' // Transparent"
+      }
+    },
+    "titleColorClass": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "CSS class for title text color. Default is 't-c-1' (text-color-1, darkest text). Use Insider text color utility classes.",
+        "typescript": "string",
+        "example": "'t-c-1' // Default (darkest)\n't-c-2' // Lighter text\n't-c-primary' // Primary color"
+      }
+    },
+    "descriptionColorClass": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "CSS class for description text color. Default is 't-c-2' (text-color-2, secondary text). Use Insider text color utility classes.",
+        "typescript": "string",
+        "example": "'t-c-2' // Default (secondary text)\n't-c-3' // Even lighter\n't-c-muted' // Muted text"
+      }
+    },
+    "iconClass": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "CSS class(es) applied to icon container. Default is 'mb-3' (margin-bottom-3). Use Insider spacing utility classes.",
+        "typescript": "string",
+        "example": "'mb-3' // Default spacing\n'mb-4' // More space below icon\n'mb-2 opacity-50' // Less space, semi-transparent"
+      }
+    }
+  },
+  "eventEnrichments": {},
+  "codeSnippets": {
+    "basicEmptyState": {
+      "title": "Basic Empty State",
+      "description": "Simple empty state with title and description",
+      "code": "<template>\n  <InNoData\n    title=\"No campaigns found\"\n    description=\"Create your first campaign to start engaging with customers\"\n  />\n</template>"
+    },
+    "emptyStateWithAction": {
+      "title": "Empty State with Call-to-Action",
+      "description": "Empty state with action button",
+      "code": "<template>\n  <InNoData\n    title=\"No segments created yet\"\n    description=\"Create audience segments to target specific customer groups\"\n    icon=\"users\"\n    :buttonStatus=\"true\"\n    buttonText=\"Create Segment\"\n    :buttonProps=\"{ variant: 'primary', size: 'medium' }\"\n    @button-click=\"createSegment\"\n  />\n</template>\n\n<script setup>\nconst createSegment = () => {\n  router.push('/segments/create');\n};\n</script>"
+    },
+    "htmlDescription": {
+      "title": "Empty State with HTML Description",
+      "description": "Rich description with links and formatting",
+      "code": "<template>\n  <InNoData\n    title=\"No results found\"\n    :description=\"htmlDescription\"\n    :parseAsHtml=\"true\"\n    :preventXss=\"true\"\n    icon=\"search\"\n  />\n</template>\n\n<script setup>\nconst htmlDescription = `\n  Try adjusting your search or \n  <a href=\"/help/search\" class=\"link-primary\">learn search tips</a>.\n  You can also <a href=\"/filters\" class=\"link-primary\">clear all filters</a>.\n`;\n</script>"
+    }
+  },
+  "styling": {
+    "cssVariables": {
+      "--nodata-bg": "Background color for empty state container",
+      "--nodata-icon-size": "Size of the empty state icon",
+      "--nodata-title-size": "Font size for title text",
+      "--nodata-desc-size": "Font size for description text"
+    },
+    "classes": {
+      ".in-no-data": "Main container",
+      ".in-no-data__icon": "Icon container",
+      ".in-no-data__title": "Title text element",
+      ".in-no-data__description": "Description text element",
+      ".in-no-data__button": "Action button wrapper"
+    },
+    "notes": "Component uses Insider Design System utility classes for colors and spacing. Customize via backgroundColorClass, titleColorClass, descriptionColorClass props."
+  },
+  "examples": [
+    {
+      "title": "Empty Table/List State",
+      "description": "Show when data table or list has no items",
+      "code": "<template>\n  <div class=\"data-table-container\">\n    <InDataTableV2\n      v-if=\"campaigns.length > 0\"\n      :data=\"campaigns\"\n      :columns=\"columns\"\n    />\n    <InNoData\n      v-else\n      title=\"No campaigns found\"\n      :description=\"getEmptyStateDescription()\"\n      icon=\"campaign\"\n      :buttonStatus=\"canCreateCampaign\"\n      buttonText=\"Create Campaign\"\n      :buttonProps=\"{ variant: 'primary', icon: 'plus' }\"\n      @button-click=\"openCampaignCreator\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, computed } from 'vue';\nimport { useRouter } from 'vue-router';\nimport { usePermissions } from '@/composables/usePermissions';\n\nconst router = useRouter();\nconst { hasPermission } = usePermissions();\n\nconst campaigns = ref([]);\nconst hasFilters = ref(false);\n\nconst canCreateCampaign = computed(() => \n  hasPermission('campaigns.create')\n);\n\nconst getEmptyStateDescription = () => {\n  if (hasFilters.value) {\n    return 'No campaigns match your current filters. Try adjusting your search criteria.';\n  }\n  return 'Create your first campaign to start reaching your audience.';\n};\n\nconst openCampaignCreator = () => {\n  router.push('/campaigns/create');\n};\n</script>"
+    },
+    {
+      "title": "Search No Results State",
+      "description": "Show when search returns no results",
+      "code": "<template>\n  <div class=\"search-results\">\n    <div class=\"search-header\">\n      <InBasicTextInput\n        v-model=\"searchQuery\"\n        placeholder=\"Search...\"\n        @input=\"handleSearch\"\n      />\n    </div>\n    \n    <div v-if=\"isSearching\" class=\"loading\">\n      <InProgress variant=\"indeterminate\" />\n    </div>\n    \n    <div v-else-if=\"hasSearched\">\n      <div v-if=\"results.length > 0\" class=\"results-list\">\n        <!-- Show results -->\n      </div>\n      <InNoData\n        v-else\n        :title=\"`No results for \\\"${searchQuery}\\\"`\"\n        :description=\"searchSuggestions\"\n        :parseAsHtml=\"true\"\n        :preventXss=\"true\"\n        icon=\"search\"\n        :buttonStatus=\"true\"\n        buttonText=\"Clear Search\"\n        :buttonProps=\"{ variant: 'secondary' }\"\n        @button-click=\"clearSearch\"\n      />\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, computed } from 'vue';\n\nconst searchQuery = ref('');\nconst results = ref([]);\nconst isSearching = ref(false);\nconst hasSearched = ref(false);\n\nconst searchSuggestions = computed(() => `\n  <p>Try:</p>\n  <ul class=\"mt-2\">\n    <li>Using different keywords</li>\n    <li>Checking for spelling errors</li>\n    <li>Using more general terms</li>\n  </ul>\n`);\n\nconst handleSearch = async () => {\n  if (!searchQuery.value.trim()) return;\n  \n  isSearching.value = true;\n  hasSearched.value = true;\n  \n  try {\n    results.value = await searchAPI(searchQuery.value);\n  } finally {\n    isSearching.value = false;\n  }\n};\n\nconst clearSearch = () => {\n  searchQuery.value = '';\n  results.value = [];\n  hasSearched.value = false;\n};\n</script>"
+    },
+    {
+      "title": "Permission-Based Empty State",
+      "description": "Different empty states based on user permissions",
+      "code": "<template>\n  <div class=\"dashboard\">\n    <InNoData\n      v-if=\"!hasViewPermission\"\n      title=\"Access Restricted\"\n      description=\"You don't have permission to view this content. Contact your administrator to request access.\"\n      icon=\"lock\"\n      :buttonStatus=\"false\"\n      backgroundColorClass=\"b-c-warning-light\"\n    />\n    \n    <InNoData\n      v-else-if=\"data.length === 0 && !hasCreatePermission\"\n      title=\"No data available\"\n      description=\"There is no data to display. Contact your administrator to add content.\"\n      icon=\"inbox-empty\"\n      :buttonStatus=\"false\"\n    />\n    \n    <InNoData\n      v-else-if=\"data.length === 0 && hasCreatePermission\"\n      title=\"Get started\"\n      description=\"You haven't created any items yet. Create your first item to get started.\"\n      icon=\"sparkles\"\n      :buttonStatus=\"true\"\n      buttonText=\"Create Item\"\n      :buttonProps=\"{ variant: 'primary', size: 'large' }\"\n      @button-click=\"createItem\"\n    />\n    \n    <!-- Show data if available -->\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, computed } from 'vue';\nimport { usePermissions } from '@/composables/usePermissions';\n\nconst { hasPermission } = usePermissions();\nconst data = ref([]);\n\nconst hasViewPermission = computed(() => \n  hasPermission('content.view')\n);\n\nconst hasCreatePermission = computed(() => \n  hasPermission('content.create')\n);\n\nconst createItem = () => {\n  // Open creation modal/page\n};\n</script>"
+    }
+  ],
+  "implementationPatterns": [
+    {
+      "name": "Conditional Empty States",
+      "description": "Show different messages based on context (filters active, permissions, first-time user)",
+      "code": "<InNoData\n  :title=\"getEmptyTitle()\"\n  :description=\"getEmptyDescription()\"\n  :buttonStatus=\"shouldShowAction()\"\n  :buttonText=\"getActionText()\"\n/>\n\nconst getEmptyTitle = () => {\n  if (hasActiveFilters.value) return 'No matches found';\n  if (isFirstTime.value) return 'Welcome! Get started';\n  return 'No items yet';\n};",
+      "when": "Data can be empty for different reasons (filters, permissions, no data created). Each reason needs different messaging and actions.",
+      "pros": [
+        "Contextual, helpful messaging",
+        "Guides users to correct action",
+        "Better UX than generic 'No data'"
+      ],
+      "cons": [
+        "More complex logic",
+        "Need to track multiple states"
+      ]
+    },
+    {
+      "name": "Empty State with Quick Actions",
+      "description": "Provide multiple action options in description via HTML links",
+      "code": "<InNoData\n  title=\"No campaigns\"\n  :description=\"quickActionsHtml\"\n  :parseAsHtml=\"true\"\n  :preventXss=\"true\"\n/>\n\nconst quickActionsHtml = `\n  <p>Get started by:</p>\n  <ul>\n    <li><a href=\"#\" @click=\"createFromTemplate\">Using a template</a></li>\n    <li><a href=\"#\" @click=\"createBlank\">Creating from scratch</a></li>\n    <li><a href=\"#\" @click=\"importData\">Importing existing data</a></li>\n  </ul>\n`;",
+      "when": "Users have multiple ways to resolve empty state. Providing options reduces friction.",
+      "pros": [
+        "Multiple pathways to resolution",
+        "Reduces clicks to action",
+        "Educational for new users"
+      ],
+      "cons": [
+        "Requires HTML parsing",
+        "More complex to maintain"
+      ]
+    },
+    {
+      "name": "Progressive Empty States",
+      "description": "Different empty states for first-time vs returning users",
+      "code": "<InNoData\n  v-if=\"isFirstVisit\"\n  title=\"Welcome!\"\n  description=\"Let's create your first campaign\"\n  icon=\"sparkles\"\n  buttonText=\"Get Started\"\n/>\n\n<InNoData\n  v-else\n  title=\"All caught up\"\n  description=\"You've completed all tasks\"\n  icon=\"check-circle\"\n  :buttonStatus=\"false\"\n/>",
+      "when": "First-time users need onboarding, returning users need confirmation. Different messages for different user states.",
+      "pros": [
+        "Personalized experience",
+        "Reduces confusion",
+        "Encourages engagement"
+      ],
+      "cons": [
+        "Need to track user state",
+        "More components to maintain"
+      ]
+    }
+  ],
+  "useCases": [
+    {
+      "title": "Empty Data Table",
+      "description": "Show when table/list has no items to display",
+      "example": "Campaign list with no campaigns created yet. Show 'No campaigns found' with 'Create Campaign' button. Change message to 'No matches found' when filters are active."
+    },
+    {
+      "title": "Search No Results",
+      "description": "Display when search query returns no results",
+      "example": "User searches for 'widgets' but no results found. Show 'No results for \"widgets\"' with search tips and 'Clear Search' button."
+    },
+    {
+      "title": "Permission Denied State",
+      "description": "Inform users they lack permission to view content",
+      "example": "User without 'view reports' permission tries to access reports. Show 'Access Restricted' with explanation, no action button."
+    },
+    {
+      "title": "First-Time User Onboarding",
+      "description": "Welcome new users and guide them to first action",
+      "example": "New user's dashboard is empty. Show 'Welcome! Get Started' with encouraging description and prominent 'Create First Campaign' button."
+    }
+  ],
+  "bestPractices": [
+    {
+      "title": "Use Specific, Contextual Titles",
+      "description": "Avoid generic 'No data' - describe what's specifically missing",
+      "code": "// Good:\ntitle=\"No campaigns found\"\ntitle=\"No search results\"\ntitle=\"Your inbox is empty\"\n\n// Bad:\ntitle=\"No data\"\ntitle=\"Empty\"",
+      "reasoning": "Specific titles help users understand what they're looking at and reduce confusion. Generic messages provide no context."
+    },
+    {
+      "title": "Provide Actionable Descriptions",
+      "description": "Guide users on what to do next, don't just state the problem",
+      "code": "// Good:\ndescription=\"Create your first campaign to start reaching customers\"\ndescription=\"Try different search terms or clear filters\"\n\n// Bad:\ndescription=\"There is no data\"\ndescription=\"Empty state\"",
+      "reasoning": "Users need guidance, not just problem statements. Tell them how to resolve the empty state."
+    },
+    {
+      "title": "Show Action Buttons Strategically",
+      "description": "Only show action buttons when user can and should take action",
+      "code": "// Show button when user can create\n:buttonStatus=\"hasCreatePermission\"\nbuttonText=\"Create Campaign\"\n\n// Hide button for permission issues\n:buttonStatus=\"false\" // when user lacks permission",
+      "reasoning": "Don't show action buttons users can't use. It's frustrating. For permission issues, explain in description instead."
+    },
+    {
+      "title": "Always Sanitize User-Generated HTML",
+      "description": "Use preventXss=true when parseAsHtml=true with any user input",
+      "code": "// Secure:\n:description=\"userGeneratedContent\"\n:parseAsHtml=\"true\"\n:preventXss=\"true\"\n\n// Unsafe:\n:parseAsHtml=\"true\" // without preventXss",
+      "reasoning": "XSS vulnerabilities can compromise entire application. Always sanitize user-generated HTML content."
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Using same generic empty state everywhere",
+      "why": "Different contexts need different messaging",
+      "impact": "Users confused about what's missing and what to do",
+      "fix": "Create contextual empty states with specific titles and descriptions",
+      "severity": "medium",
+      "example": "// Wrong:\ntitle=\"No data\"\n\n// Correct:\ntitle=\"No campaigns found\" // for campaign list\ntitle=\"No search results\" // for search\ntitle=\"Your inbox is empty\" // for inbox"
+    },
+    {
+      "mistake": "Enabling parseAsHtml without preventXss for user content",
+      "why": "Creates XSS security vulnerability",
+      "impact": "Malicious users can inject scripts and compromise security",
+      "fix": "Always use preventXss=true with parseAsHtml=true when content includes user input",
+      "severity": "critical",
+      "example": "// Vulnerable:\n:description=\"userInput\"\n:parseAsHtml=\"true\"\n\n// Secure:\n:parseAsHtml=\"true\"\n:preventXss=\"true\""
+    },
+    {
+      "mistake": "Not handling filtered empty states differently",
+      "why": "Empty because of filters vs truly empty are different scenarios",
+      "impact": "Users don't know if they should create data or adjust filters",
+      "fix": "Check if filters are active and adjust message accordingly",
+      "severity": "medium",
+      "example": "// Better:\nconst description = computed(() => {\n  if (hasFilters) return 'No matches. Try adjusting filters.';\n  return 'Create your first campaign to get started.';\n});"
+    },
+    {
+      "mistake": "Showing action button when user lacks permission",
+      "why": "User clicks button but gets permission error",
+      "impact": "Frustrating UX, wasted clicks",
+      "fix": "Hide button or disable it with tooltip explaining why",
+      "severity": "low",
+      "example": "// Wrong:\n:buttonStatus=\"true\" // always show\n\n// Correct:\n:buttonStatus=\"hasCreatePermission\"\n:isButtonDisabled=\"!hasCreatePermission\"\nbuttonTooltip=\"Insufficient permissions\""
+    }
+  ],
+  "performanceNotes": [
+    {
+      "topic": "HTML Sanitization Performance",
+      "description": "HTML sanitization (preventXss) has performance cost for large content",
+      "recommendation": "Use parseAsHtml only when necessary. For simple text, use plain strings. Cache sanitized HTML if content doesn't change often.",
+      "impact": "Low: Only affects complex HTML descriptions"
+    },
+    {
+      "topic": "Conditional Rendering",
+      "description": "Show empty state only when truly needed using v-if",
+      "recommendation": "Use v-if instead of v-show for empty states since they're shown rarely. Prevents rendering when data exists.",
+      "impact": "Low: Minor optimization for data-heavy pages"
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "topic": "Semantic HTML Structure",
+      "description": "Empty state should have proper heading hierarchy",
+      "wcagLevel": "A",
+      "recommendation": "Ensure title uses appropriate heading level (h2, h3) based on page structure. Don't skip heading levels.",
+      "example": "<InNoData title=\"No campaigns\" /> should render as <h2> or <h3> depending on context"
+    },
+    {
+      "topic": "Descriptive Action Buttons",
+      "description": "Button text should be descriptive, not generic",
+      "wcagLevel": "A",
+      "recommendation": "Use specific button text like 'Create Campaign' instead of 'Click Here' or 'Get Started'",
+      "example": "buttonText=\"Create Campaign\" // Good\nbuttonText=\"Click Here\" // Bad - not descriptive"
+    },
+    {
+      "topic": "Icon Alternative Text",
+      "description": "Empty state icon needs proper alt text for screen readers",
+      "wcagLevel": "A",
+      "recommendation": "Ensure icon has aria-label or is marked as decorative with aria-hidden='true' if purely visual",
+      "example": "icon=\"campaign\" aria-label=\"No campaigns illustration\""
+    },
+    {
+      "topic": "HTML Content Accessibility",
+      "description": "When using parseAsHtml, ensure HTML is accessible",
+      "wcagLevel": "AA",
+      "recommendation": "Links in HTML descriptions need descriptive text. Avoid 'click here'. Lists should use proper <ul>/<ol> markup.",
+      "example": "// Good:\n<a href=\"/help\">Learn about search filters</a>\n\n// Bad:\n<a href=\"/help\">Click here</a>"
+    }
+  ],
+  "helperFunctions": [
+    {
+      "name": "createEmptyState",
+      "description": "Factory function for creating contextual empty state configurations",
+      "code": "export function createEmptyState(type, options = {}) {\n  const configs = {\n    search: {\n      title: `No results for \"${options.query}\"`,\n      description: 'Try different keywords or clear filters',\n      icon: 'search',\n      buttonStatus: true,\n      buttonText: 'Clear Search'\n    },\n    filtered: {\n      title: 'No matches found',\n      description: 'No items match your current filters. Try adjusting your criteria.',\n      icon: 'filter',\n      buttonStatus: true,\n      buttonText: 'Clear Filters'\n    },\n    empty: {\n      title: options.title || 'No items yet',\n      description: options.description || 'Create your first item to get started',\n      icon: options.icon || 'inbox-empty',\n      buttonStatus: options.canCreate ?? true,\n      buttonText: options.createText || 'Create Item'\n    },\n    permission: {\n      title: 'Access Restricted',\n      description: 'You don\\'t have permission to view this content',\n      icon: 'lock',\n      buttonStatus: false\n    },\n    error: {\n      title: 'Unable to load data',\n      description: options.error || 'An error occurred while loading. Please try again.',\n      icon: 'alert-triangle',\n      buttonStatus: true,\n      buttonText: 'Retry'\n    }\n  };\n\n  return { ...configs[type], ...options };\n}",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "'search' | 'filtered' | 'empty' | 'permission' | 'error'",
+          "description": "Type of empty state"
+        },
+        {
+          "name": "options",
+          "type": "object",
+          "description": "Override default configuration"
+        }
+      ],
+      "returnType": "{ title: string; description: string; icon: string; buttonStatus: boolean; buttonText?: string; }",
+      "example": "const searchEmpty = createEmptyState('search', { query: 'widgets' });\nconst permissionEmpty = createEmptyState('permission');\nconst customEmpty = createEmptyState('empty', {\n  title: 'No campaigns',\n  description: 'Create your first campaign',\n  createText: 'Create Campaign'\n});"
+    },
+    {
+      "name": "useEmptyState",
+      "description": "Composable for managing empty state logic with filtering and permissions",
+      "code": "export function useEmptyState(data, options = {}) {\n  const { canCreate = true, hasFilters = ref(false) } = options;\n\n  const isEmpty = computed(() => data.value.length === 0);\n  \n  const emptyStateConfig = computed(() => {\n    if (!isEmpty.value) return null;\n\n    if (hasFilters.value) {\n      return {\n        title: 'No matches found',\n        description: 'Try adjusting your filters or search criteria',\n        icon: 'filter',\n        buttonStatus: true,\n        buttonText: 'Clear Filters'\n      };\n    }\n\n    return {\n      title: options.emptyTitle || 'No items yet',\n      description: options.emptyDescription || 'Create your first item to get started',\n      icon: options.emptyIcon || 'inbox-empty',\n      buttonStatus: canCreate,\n      buttonText: options.createText || 'Create Item'\n    };\n  });\n\n  return {\n    isEmpty,\n    emptyStateConfig\n  };\n}",
+      "parameters": [
+        {
+          "name": "data",
+          "type": "Ref<Array>",
+          "description": "Reactive array of data"
+        },
+        {
+          "name": "options",
+          "type": "object",
+          "description": "Configuration options"
+        }
+      ],
+      "returnType": "{ isEmpty: ComputedRef<boolean>; emptyStateConfig: ComputedRef<object | null>; }",
+      "example": "const campaigns = ref([]);\nconst hasFilters = ref(false);\n\nconst { isEmpty, emptyStateConfig } = useEmptyState(campaigns, {\n  hasFilters,\n  canCreate: hasPermission('create'),\n  emptyTitle: 'No campaigns',\n  emptyDescription: 'Create your first campaign',\n  createText: 'Create Campaign'\n});\n\n// In template:\n<InNoData v-if=\"isEmpty\" v-bind=\"emptyStateConfig\" />"
+    }
+  ]
+}

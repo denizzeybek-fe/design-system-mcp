@@ -1,0 +1,413 @@
+{
+  "component": "InDrawer",
+  "_metadata": {
+    "lastUpdated": "2025-11-28T00:00:00.000Z",
+    "propsHash": "indrawer-v1-13props",
+    "eventsHash": "indrawer-v1-1event",
+    "propCount": 13,
+    "eventCount": 1
+  },
+  "propEnrichments": {
+    "status": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Controls drawer visibility. When true, drawer is open/visible. When false, drawer is closed/hidden. Use v-model:status for two-way binding to reactively control drawer state.",
+        "typescript": "boolean",
+        "example": "true // Show drawer\nfalse // Hide drawer"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Not using v-model:status for two-way binding",
+          "why": "Drawer needs to sync state when user closes it (via X button or outside click)",
+          "impact": "Drawer can't be reopened after user closes it, state out of sync",
+          "fix": "Use v-model:status instead of :status for two-way binding",
+          "severity": "critical",
+          "example": "// Wrong:\n<InDrawer :status=\"isOpen\" />\n\n// Correct:\n<InDrawer v-model:status=\"isOpen\" />"
+        }
+      ]
+    },
+    "size": {
+      "valueFormat": {
+        "structure": "'small' | 'medium' | 'large'",
+        "notes": "Drawer width. Required prop. 'small' (~400px), 'medium' (~600px), 'large' (~800px). Choose based on content complexity - use small for simple forms, large for complex multi-column layouts.",
+        "typescript": "'small' | 'medium' | 'large'",
+        "example": "'small' // ~400px - Quick forms, filters\n'medium' // ~600px - Standard forms, details\n'large' // ~800px - Complex forms, multi-column"
+      },
+      "possibleValues": [
+        {
+          "value": "small",
+          "description": "~400px width - Quick forms, filters, simple content"
+        },
+        {
+          "value": "medium",
+          "description": "~600px width - Standard forms, detail views (default)"
+        },
+        {
+          "value": "large",
+          "description": "~800px width - Complex forms, multi-column layouts"
+        }
+      ]
+    },
+    "titleText": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Drawer header title. Required prop. Keep concise (2-5 words). Describes drawer purpose/content. Shown in header alongside close button.",
+        "typescript": "string",
+        "example": "'Edit Campaign'\n'User Details'\n'Filter Options'\n'Add New Item'"
+      }
+    },
+    "state": {
+      "valueFormat": {
+        "structure": "'default' | 'danger' | 'warning'",
+        "notes": "Visual state affecting header color. 'default' (neutral), 'danger' (red - for destructive actions), 'warning' (orange - for caution). Use to indicate drawer intent.",
+        "typescript": "'default' | 'danger' | 'warning'",
+        "example": "'default' // Neutral drawer\n'danger' // Delete confirmation, destructive action\n'warning' // Warning, caution required"
+      },
+      "possibleValues": [
+        {
+          "value": "default",
+          "description": "Neutral state (gray/blue header)"
+        },
+        {
+          "value": "danger",
+          "description": "Destructive action (red header)"
+        },
+        {
+          "value": "warning",
+          "description": "Caution/warning (orange header)"
+        }
+      ]
+    },
+    "descriptionText": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Optional subtitle/description shown below title in header. Provides additional context about drawer purpose. Keep to 1-2 sentences.",
+        "typescript": "string",
+        "example": "'Edit campaign settings and schedule'\n'View and manage user permissions'\n'Configure advanced filter criteria'"
+      }
+    },
+    "descriptionStatus": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "When true (default), shows descriptionText below title. Set false to hide description even if descriptionText is provided.",
+        "typescript": "boolean",
+        "example": "true // Show description (default)\nfalse // Hide description"
+      }
+    },
+    "closeButtonStatus": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "When true (default), shows X close button in header. Set false to force user to use footer buttons (for critical workflows requiring confirmation).",
+        "typescript": "boolean",
+        "example": "true // Show close button (default)\nfalse // Hide close button (force footer actions)"
+      }
+    },
+    "closeOnOutsideClick": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "When true (default), clicking overlay (outside drawer) closes drawer. Set false for critical workflows where accidental closure should be prevented.",
+        "typescript": "boolean",
+        "example": "true // Click outside to close (default)\nfalse // Prevent outside click close"
+      }
+    },
+    "overlayStatus": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "When true (default), shows dark overlay behind drawer. Set false for non-modal drawers that allow interaction with background content.",
+        "typescript": "boolean",
+        "example": "true // Show overlay (default, modal)\nfalse // No overlay (non-modal)"
+      }
+    },
+    "footerStatus": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "When true (default), shows footer with action buttons. Set false to hide footer for read-only/info drawers.",
+        "typescript": "boolean",
+        "example": "true // Show footer with buttons (default)\nfalse // Hide footer (info/read-only drawer)"
+      }
+    },
+    "footerButtonGroupOptions": {
+      "valueFormat": {
+        "structure": "Object",
+        "notes": "Configuration for footer action buttons. Defines button labels, variants, and click handlers. Common patterns: Cancel + Save, Close, Back + Next.",
+        "typescript": "{\n  primaryButton?: { text: string; onClick: Function; variant?: string; disabled?: boolean; loading?: boolean; };\n  secondaryButton?: { text: string; onClick: Function; variant?: string; };\n  cancelButton?: { text: string; onClick: Function; };\n}",
+        "example": "{\n  primaryButton: { text: 'Save', onClick: handleSave, loading: isSaving },\n  secondaryButton: { text: 'Cancel', onClick: handleCancel }\n}\n\n// Multi-step wizard\n{\n  primaryButton: { text: 'Next', onClick: nextStep },\n  secondaryButton: { text: 'Back', onClick: prevStep }\n}"
+      }
+    },
+    "fullWidthContentStatus": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "When true, content area has no padding, allowing full-width components (tables, images). Default false adds standard padding.",
+        "typescript": "boolean",
+        "example": "true // No padding, full width\nfalse // Standard padding (default)"
+      }
+    }
+  },
+  "eventEnrichments": {
+    "onCloseEvent": {
+      "description": "Emitted when drawer is closed (via close button, outside click, or ESC key)",
+      "payload": "void",
+      "when": "User closes drawer by any method. Use to cleanup state, reset forms, or trigger side effects on close."
+    }
+  },
+  "codeSnippets": {
+    "basicDrawer": {
+      "title": "Basic Drawer with Form",
+      "description": "Simple drawer with form and action buttons",
+      "code": "<template>\n  <InDrawer\n    v-model:status=\"showDrawer\"\n    size=\"medium\"\n    titleText=\"Edit Campaign\"\n    descriptionText=\"Update campaign settings\"\n    :footerButtonGroupOptions=\"{\n      primaryButton: { text: 'Save', onClick: handleSave, loading: isSaving },\n      secondaryButton: { text: 'Cancel', onClick: () => showDrawer = false }\n    }\"\n    @onCloseEvent=\"handleClose\"\n  >\n    <template #contentSlot>\n      <InBasicTextInput v-model=\"form.name\" label=\"Campaign Name\" />\n      <InTextArea v-model=\"form.description\" label=\"Description\" />\n    </template>\n  </InDrawer>\n</template>\n\n<script setup>\nconst showDrawer = ref(false);\nconst isSaving = ref(false);\nconst form = ref({ name: '', description: '' });\n\nconst handleSave = async () => {\n  isSaving.value = true;\n  await api.updateCampaign(form.value);\n  isSaving.value = false;\n  showDrawer.value = false;\n};\n\nconst handleClose = () => {\n  // Reset form on close\n  form.value = { name: '', description: '' };\n};\n</script>"
+    },
+    "dangerDrawer": {
+      "title": "Destructive Action Drawer",
+      "description": "Drawer for delete confirmation",
+      "code": "<template>\n  <InDrawer\n    v-model:status=\"showDeleteDrawer\"\n    size=\"small\"\n    titleText=\"Delete Campaign\"\n    descriptionText=\"This action cannot be undone\"\n    state=\"danger\"\n    :closeOnOutsideClick=\"false\"\n    :footerButtonGroupOptions=\"{\n      primaryButton: { \n        text: 'Delete', \n        onClick: handleDelete,\n        variant: 'danger'\n      },\n      secondaryButton: { \n        text: 'Cancel', \n        onClick: () => showDeleteDrawer = false \n      }\n    }\"\n  >\n    <template #contentSlot>\n      <p>Are you sure you want to delete <strong>{{ campaign.name }}</strong>?</p>\n      <p>All associated data will be permanently removed.</p>\n    </template>\n  </InDrawer>\n</template>"
+    },
+    "fullWidthTableDrawer": {
+      "title": "Drawer with Full-Width Table",
+      "description": "Large drawer with data table using full width",
+      "code": "<template>\n  <InDrawer\n    v-model:status=\"showTableDrawer\"\n    size=\"large\"\n    titleText=\"Campaign Analytics\"\n    :fullWidthContentStatus=\"true\"\n    :footerStatus=\"false\"\n  >\n    <template #contentSlot>\n      <InDataTableV2\n        :data=\"analyticsData\"\n        :columns=\"columns\"\n      />\n    </template>\n  </InDrawer>\n</template>"
+    }
+  },
+  "styling": {
+    "cssVariables": {
+      "--drawer-width-small": "Width for small drawer (~400px)",
+      "--drawer-width-medium": "Width for medium drawer (~600px)",
+      "--drawer-width-large": "Width for large drawer (~800px)",
+      "--drawer-header-bg-default": "Header background for default state",
+      "--drawer-header-bg-danger": "Header background for danger state",
+      "--drawer-header-bg-warning": "Header background for warning state",
+      "--drawer-overlay-bg": "Overlay background color"
+    },
+    "classes": {
+      ".in-drawer": "Main drawer container",
+      ".in-drawer__overlay": "Background overlay",
+      ".in-drawer__panel": "Drawer panel (slides in from right)",
+      ".in-drawer__header": "Header section with title",
+      ".in-drawer__content": "Content area (scrollable)",
+      ".in-drawer__footer": "Footer with action buttons",
+      ".in-drawer--small": "Small size modifier",
+      ".in-drawer--medium": "Medium size modifier",
+      ".in-drawer--large": "Large size modifier"
+    },
+    "notes": "Drawer slides in from right side with overlay. State colors (danger, warning) only affect header background. Content area is scrollable if content exceeds viewport height."
+  },
+  "examples": [
+    {
+      "title": "Multi-Step Wizard Drawer",
+      "description": "Drawer with stepped workflow and navigation",
+      "code": "<template>\n  <InDrawer\n    v-model:status=\"showWizard\"\n    size=\"medium\"\n    :titleText=\"currentStep.title\"\n    :descriptionText=\"currentStep.description\"\n    :closeButtonStatus=\"false\"\n    :closeOnOutsideClick=\"false\"\n    :footerButtonGroupOptions=\"footerButtons\"\n  >\n    <template #contentSlot>\n      <!-- Step indicator -->\n      <div class=\"wizard-steps\">\n        <div \n          v-for=\"(step, index) in steps\" \n          :key=\"index\"\n          :class=\"{ active: currentStepIndex === index, completed: currentStepIndex > index }\"\n          class=\"step\"\n        >\n          {{ step.title }}\n        </div>\n      </div>\n      \n      <!-- Step content -->\n      <component :is=\"currentStep.component\" v-model=\"formData\" />\n    </template>\n  </InDrawer>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, computed } from 'vue';\n\nconst showWizard = ref(false);\nconst currentStepIndex = ref(0);\nconst formData = ref({});\n\nconst steps = [\n  { title: 'Basic Info', description: 'Enter campaign details', component: BasicInfoStep },\n  { title: 'Target Audience', description: 'Select audience segments', component: AudienceStep },\n  { title: 'Content', description: 'Design campaign content', component: ContentStep },\n  { title: 'Review', description: 'Review and confirm', component: ReviewStep }\n];\n\nconst currentStep = computed(() => steps[currentStepIndex.value]);\n\nconst isFirstStep = computed(() => currentStepIndex.value === 0);\nconst isLastStep = computed(() => currentStepIndex.value === steps.length - 1);\n\nconst footerButtons = computed(() => ({\n  primaryButton: {\n    text: isLastStep.value ? 'Create Campaign' : 'Next',\n    onClick: isLastStep.value ? handleSubmit : nextStep\n  },\n  secondaryButton: isFirstStep.value ? {\n    text: 'Cancel',\n    onClick: () => showWizard.value = false\n  } : {\n    text: 'Back',\n    onClick: prevStep\n  }\n}));\n\nconst nextStep = () => {\n  if (currentStepIndex.value < steps.length - 1) {\n    currentStepIndex.value++;\n  }\n};\n\nconst prevStep = () => {\n  if (currentStepIndex.value > 0) {\n    currentStepIndex.value--;\n  }\n};\n\nconst handleSubmit = async () => {\n  await api.createCampaign(formData.value);\n  showWizard.value = false;\n};\n</script>"
+    },
+    {
+      "title": "Filter Panel Drawer",
+      "description": "Drawer for complex filtering with apply/reset",
+      "code": "<template>\n  <InDrawer\n    v-model:status=\"showFilters\"\n    size=\"small\"\n    titleText=\"Filters\"\n    descriptionText=\"Refine your search results\"\n    :footerButtonGroupOptions=\"{\n      primaryButton: { text: 'Apply Filters', onClick: applyFilters },\n      secondaryButton: { text: 'Reset', onClick: resetFilters }\n    }\"\n  >\n    <template #contentSlot>\n      <div class=\"filter-section\">\n        <h4>Status</h4>\n        <InCheckBoxV2\n          v-for=\"status in statusOptions\"\n          :key=\"status.value\"\n          v-model=\"filters.status\"\n          :value=\"status.value\"\n          :label=\"status.label\"\n        />\n      </div>\n      \n      <div class=\"filter-section\">\n        <h4>Date Range</h4>\n        <InDatePickerV2\n          v-model=\"filters.dateRange\"\n          range\n        />\n      </div>\n      \n      <div class=\"filter-section\">\n        <h4>Category</h4>\n        <InMultiSelect\n          v-model=\"filters.categories\"\n          :options=\"categoryOptions\"\n          placeholder=\"Select categories\"\n        />\n      </div>\n    </template>\n  </InDrawer>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\n\nconst showFilters = ref(false);\nconst filters = ref({\n  status: [],\n  dateRange: null,\n  categories: []\n});\n\nconst statusOptions = [\n  { value: 'active', label: 'Active' },\n  { value: 'paused', label: 'Paused' },\n  { value: 'completed', label: 'Completed' }\n];\n\nconst categoryOptions = [\n  { value: 'email', label: 'Email' },\n  { value: 'sms', label: 'SMS' },\n  { value: 'push', label: 'Push Notification' }\n];\n\nconst applyFilters = () => {\n  // Apply filters to main view\n  emit('filtersApplied', filters.value);\n  showFilters.value = false;\n};\n\nconst resetFilters = () => {\n  filters.value = {\n    status: [],\n    dateRange: null,\n    categories: []\n  };\n};\n</script>"
+    },
+    {
+      "title": "Detail View Drawer",
+      "description": "Read-only drawer showing entity details",
+      "code": "<template>\n  <InDrawer\n    v-model:status=\"showDetails\"\n    size=\"medium\"\n    :titleText=\"user.name\"\n    :descriptionText=\"user.email\"\n    :footerStatus=\"false\"\n  >\n    <template #headerRightSlot>\n      <InButton\n        variant=\"secondary\"\n        size=\"small\"\n        @click=\"editUser\"\n      >\n        Edit\n      </InButton>\n    </template>\n    \n    <template #contentSlot>\n      <div class=\"detail-section\">\n        <h3>Profile Information</h3>\n        <div class=\"detail-row\">\n          <span class=\"label\">Role:</span>\n          <InTagsText :text=\"user.role\" type=\"primary\" />\n        </div>\n        <div class=\"detail-row\">\n          <span class=\"label\">Department:</span>\n          <span>{{ user.department }}</span>\n        </div>\n        <div class=\"detail-row\">\n          <span class=\"label\">Joined:</span>\n          <span>{{ formatDate(user.joinedDate) }}</span>\n        </div>\n      </div>\n      \n      <div class=\"detail-section\">\n        <h3>Permissions</h3>\n        <InTagsText\n          v-for=\"permission in user.permissions\"\n          :key=\"permission\"\n          :text=\"permission\"\n          type=\"info\"\n          class=\"mr-2\"\n        />\n      </div>\n      \n      <div class=\"detail-section\">\n        <h3>Recent Activity</h3>\n        <InDataTableV2\n          :data=\"user.recentActivity\"\n          :columns=\"activityColumns\"\n        />\n      </div>\n    </template>\n  </InDrawer>\n</template>"
+    }
+  ],
+  "implementationPatterns": [
+    {
+      "name": "Form Drawer Pattern",
+      "description": "Use drawer for forms that don't require full page, with save/cancel actions",
+      "code": "<InDrawer\n  v-model:status=\"showForm\"\n  size=\"medium\"\n  titleText=\"Edit Item\"\n  :footerButtonGroupOptions=\"{\n    primaryButton: { text: 'Save', onClick: save, loading: isSaving },\n    secondaryButton: { text: 'Cancel', onClick: () => showForm = false }\n  }\"\n>\n  <template #contentSlot>\n    <form @submit.prevent=\"save\">\n      <!-- Form fields -->\n    </form>\n  </template>\n</InDrawer>",
+      "when": "Editing items, creating new entities, updating settings - any form that doesn't need full page context",
+      "pros": [
+        "Maintains page context",
+        "Quick access without navigation",
+        "Clean separation of concerns"
+      ],
+      "cons": [
+        "Limited space for complex forms",
+        "Can't see related data while editing"
+      ]
+    },
+    {
+      "name": "Detail/Preview Drawer",
+      "description": "Show entity details without navigating away from list view",
+      "code": "<InDrawer\n  v-model:status=\"showDetails\"\n  size=\"medium\"\n  :titleText=\"item.name\"\n  :footerStatus=\"false\"\n>\n  <template #headerRightSlot>\n    <InButton @click=\"edit\">Edit</InButton>\n  </template>\n  <template #contentSlot>\n    <!-- Detail view -->\n  </template>\n</InDrawer>",
+      "when": "Preview details from table/list, quick info access, read-only views",
+      "pros": [
+        "Quick preview without navigation",
+        "Maintains list context",
+        "Can close and open next item easily"
+      ],
+      "cons": [
+        "Limited space for complex details",
+        "Can't see full context"
+      ]
+    },
+    {
+      "name": "Multi-Step Wizard Drawer",
+      "description": "Guide users through stepped workflow with back/next navigation",
+      "code": "const currentStep = ref(0);\nconst footerButtons = computed(() => ({\n  primaryButton: {\n    text: isLastStep ? 'Finish' : 'Next',\n    onClick: isLastStep ? submit : nextStep\n  },\n  secondaryButton: {\n    text: isFirstStep ? 'Cancel' : 'Back',\n    onClick: isFirstStep ? close : prevStep\n  }\n}));",
+      "when": "Multi-step processes: onboarding, complex forms, guided workflows",
+      "pros": [
+        "Breaks complex task into manageable steps",
+        "Clear progress indication",
+        "Can go back to fix errors"
+      ],
+      "cons": [
+        "More complex state management",
+        "Users can't see all steps at once"
+      ]
+    }
+  ],
+  "useCases": [
+    {
+      "title": "Edit Form Drawer",
+      "description": "Edit entity without leaving current page/list view",
+      "example": "Campaign list with edit drawer. Click edit button on row opens drawer with campaign form. Save updates list without page reload."
+    },
+    {
+      "title": "Filter Panel",
+      "description": "Complex filtering UI in a drawer",
+      "example": "Dashboard with filter button. Opens drawer with checkboxes, date range, multi-select for advanced filtering. Apply button closes drawer and updates results."
+    },
+    {
+      "title": "Detail Preview",
+      "description": "Quick preview of entity details from list",
+      "example": "User list with view button. Opens drawer showing user profile, permissions, recent activity. Footer-less drawer with Edit button in header."
+    },
+    {
+      "title": "Multi-Step Creation Wizard",
+      "description": "Guide users through complex creation flow",
+      "example": "Create campaign wizard: Basic Info → Audience → Content → Review. Each step in drawer with Back/Next buttons. Last step shows Finish."
+    }
+  ],
+  "bestPractices": [
+    {
+      "title": "Use v-model:status for Two-Way Binding",
+      "description": "Always use v-model:status to sync drawer state when user closes it",
+      "code": "// Good:\n<InDrawer v-model:status=\"isOpen\" />\n\n// Bad:\n<InDrawer :status=\"isOpen\" @onCloseEvent=\"isOpen = false\" />",
+      "reasoning": "v-model handles close event automatically. Using :status without v-model breaks re-opening after user closes drawer."
+    },
+    {
+      "title": "Choose Appropriate Size for Content",
+      "description": "Match drawer size to content complexity",
+      "code": "// Simple forms - small\nsize=\"small\" // Quick edits, filters\n\n// Standard forms - medium  \nsize=\"medium\" // Most forms, details\n\n// Complex layouts - large\nsize=\"large\" // Multi-column, tables, complex forms",
+      "reasoning": "Too small = cramped content. Too large = wasted space. Choose size that fits content comfortably."
+    },
+    {
+      "title": "Use Danger State for Destructive Actions",
+      "description": "Set state='danger' for delete/destructive confirmations",
+      "code": "<InDrawer\n  state=\"danger\"\n  titleText=\"Delete Campaign\"\n  :closeOnOutsideClick=\"false\"\n/>",
+      "reasoning": "Red header warns users of destructive action. Disabling outside click prevents accidental deletion."
+    },
+    {
+      "title": "Disable Close for Critical Workflows",
+      "description": "Prevent accidental closure during important processes",
+      "code": "<InDrawer\n  :closeButtonStatus=\"false\"\n  :closeOnOutsideClick=\"false\"\n  titleText=\"Payment Processing\"\n/>",
+      "reasoning": "Critical workflows (payments, multi-step forms) shouldn't be accidentally closed. Force users to use Cancel button."
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Not using v-model:status for two-way binding",
+      "why": "Drawer needs to sync state when user closes it",
+      "impact": "Critical - drawer can't be reopened after user closes it",
+      "fix": "Use v-model:status instead of :status",
+      "severity": "critical",
+      "example": "// Wrong:\n<InDrawer :status=\"isOpen\" />\n\n// Correct:\n<InDrawer v-model:status=\"isOpen\" />"
+    },
+    {
+      "mistake": "Using large drawer for simple content",
+      "why": "Wastes space, feels empty",
+      "impact": "Poor UX, awkward empty space",
+      "fix": "Use small/medium for simple forms",
+      "severity": "medium",
+      "example": "// Wrong: Simple 2-field form in large drawer\nsize=\"large\"\n\n// Correct:\nsize=\"small\""
+    },
+    {
+      "mistake": "Not handling close event cleanup",
+      "why": "Form data or state persists between opens",
+      "impact": "Old data shows when drawer reopens",
+      "fix": "Reset state in @onCloseEvent handler",
+      "severity": "medium",
+      "example": "@onCloseEvent=\"() => form.value = {}\""
+    },
+    {
+      "mistake": "Allowing outside click close for critical actions",
+      "why": "Users can accidentally close during important workflows",
+      "impact": "Lost work, interrupted processes",
+      "fix": "Set closeOnOutsideClick=false for critical drawers",
+      "severity": "high",
+      "example": "// For payment, multi-step forms:\n:closeOnOutsideClick=\"false\""
+    }
+  ],
+  "performanceNotes": [
+    {
+      "topic": "Lazy Load Drawer Content",
+      "description": "Don't render drawer content until drawer is opened",
+      "recommendation": "Use v-if on InDrawer or lazy load heavy content inside drawer. Prevents rendering unused components.",
+      "impact": "Medium: Saves initial render time, especially with multiple drawers"
+    },
+    {
+      "topic": "Cleanup on Close",
+      "description": "Clear heavy data structures when drawer closes",
+      "recommendation": "In onCloseEvent handler, clear large datasets, cancel pending requests, reset computed values.",
+      "impact": "Low: Prevents memory leaks in long-running sessions"
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "topic": "Focus Management",
+      "description": "Focus should move to drawer when opened, return to trigger when closed",
+      "wcagLevel": "A",
+      "recommendation": "When drawer opens, focus first interactive element (close button or first input). When closes, return focus to button that opened it.",
+      "example": "// On open:\nawait nextTick();\ndrawerEl.querySelector('input')?.focus();\n\n// On close:\ntriggerButton.focus();"
+    },
+    {
+      "topic": "Keyboard Navigation",
+      "description": "Drawer should support ESC key to close and trap focus",
+      "wcagLevel": "A",
+      "recommendation": "ESC key should close drawer (unless closeButtonStatus=false for critical flow). Tab key should cycle through drawer elements only, not background.",
+      "example": "Press ESC to close drawer"
+    },
+    {
+      "topic": "ARIA Labels for Role",
+      "description": "Drawer should have appropriate ARIA role and labels",
+      "wcagLevel": "A",
+      "recommendation": "Drawer should have role='dialog' and aria-label matching titleText. Overlay should have aria-hidden='true'.",
+      "example": "<div role=\"dialog\" aria-label=\"Edit Campaign\" aria-modal=\"true\">"
+    },
+    {
+      "topic": "Screen Reader Announcements",
+      "description": "Opening drawer should announce to screen readers",
+      "wcagLevel": "AA",
+      "recommendation": "Use aria-live region or focus management to announce drawer opening to screen reader users.",
+      "example": "<div aria-live=\"polite\">Edit Campaign drawer opened</div>"
+    }
+  ],
+  "helperFunctions": [
+    {
+      "name": "useDrawerManager",
+      "description": "Composable for managing drawer state and lifecycle",
+      "code": "export function useDrawerManager(options = {}) {\n  const { onOpen, onClose, resetOnClose = true } = options;\n  \n  const isOpen = ref(false);\n  const data = ref(null);\n\n  const open = (initialData) => {\n    data.value = initialData || {};\n    isOpen.value = true;\n    onOpen?.();\n  };\n\n  const close = () => {\n    isOpen.value = false;\n    if (resetOnClose) {\n      setTimeout(() => {\n        data.value = null;\n      }, 300); // Wait for close animation\n    }\n    onClose?.();\n  };\n\n  const toggle = () => {\n    if (isOpen.value) {\n      close();\n    } else {\n      open();\n    }\n  };\n\n  return {\n    isOpen,\n    data,\n    open,\n    close,\n    toggle\n  };\n}",
+      "parameters": [
+        {
+          "name": "options",
+          "type": "{ onOpen?: Function; onClose?: Function; resetOnClose?: boolean; }",
+          "description": "Configuration options"
+        }
+      ],
+      "returnType": "{ isOpen: Ref<boolean>, data: Ref<any>, open: Function, close: Function, toggle: Function }",
+      "example": "const editDrawer = useDrawerManager({\n  onClose: () => console.log('Drawer closed'),\n  resetOnClose: true\n});\n\n// Open with data\neditDrawer.open({ id: 1, name: 'Campaign' });\n\n// In template:\n<InDrawer\n  v-model:status=\"editDrawer.isOpen.value\"\n  @onCloseEvent=\"editDrawer.close\"\n/>"
+    },
+    {
+      "name": "createWizardSteps",
+      "description": "Helper for managing multi-step wizard state in drawer",
+      "code": "export function createWizardSteps(steps) {\n  const currentStepIndex = ref(0);\n  \n  const currentStep = computed(() => steps[currentStepIndex.value]);\n  const isFirstStep = computed(() => currentStepIndex.value === 0);\n  const isLastStep = computed(() => currentStepIndex.value === steps.length - 1);\n  const progress = computed(() => ((currentStepIndex.value + 1) / steps.length) * 100);\n\n  const nextStep = () => {\n    if (!isLastStep.value) {\n      currentStepIndex.value++;\n    }\n  };\n\n  const prevStep = () => {\n    if (!isFirstStep.value) {\n      currentStepIndex.value--;\n    }\n  };\n\n  const goToStep = (index) => {\n    if (index >= 0 && index < steps.length) {\n      currentStepIndex.value = index;\n    }\n  };\n\n  const reset = () => {\n    currentStepIndex.value = 0;\n  };\n\n  const footerButtons = computed(() => ({\n    primaryButton: {\n      text: isLastStep.value ? 'Finish' : 'Next',\n      onClick: nextStep\n    },\n    secondaryButton: {\n      text: isFirstStep.value ? 'Cancel' : 'Back',\n      onClick: prevStep\n    }\n  }));\n\n  return {\n    currentStepIndex,\n    currentStep,\n    isFirstStep,\n    isLastStep,\n    progress,\n    nextStep,\n    prevStep,\n    goToStep,\n    reset,\n    footerButtons\n  };\n}",
+      "parameters": [
+        {
+          "name": "steps",
+          "type": "Array<{ title: string; description?: string; component?: Component; }>",
+          "description": "Array of wizard steps"
+        }
+      ],
+      "returnType": "{ currentStepIndex: Ref<number>, currentStep: ComputedRef<object>, isFirstStep: ComputedRef<boolean>, isLastStep: ComputedRef<boolean>, progress: ComputedRef<number>, nextStep: Function, prevStep: Function, goToStep: Function, reset: Function, footerButtons: ComputedRef<object> }",
+      "example": "const steps = [\n  { title: 'Basic Info', component: BasicInfoStep },\n  { title: 'Details', component: DetailsStep },\n  { title: 'Review', component: ReviewStep }\n];\n\nconst wizard = createWizardSteps(steps);\n\n// In template:\n<InDrawer\n  :titleText=\"wizard.currentStep.value.title\"\n  :footerButtonGroupOptions=\"wizard.footerButtons.value\"\n/>"
+    }
+  ]
+}

@@ -337,6 +337,121 @@
       "code": "const getSelectedOptions = (allOptions, selectedValues) => {\n  return allOptions.filter(opt => selectedValues.includes(opt.value));\n};"
     }
   ],
+  "codeSnippets": {
+    "basicMenu": {
+      "title": "Basic Action Menu",
+      "description": "Simple dropdown with actions",
+      "code": "<InDropdownMenu\n  id=\"actions\"\n  button-label=\"Actions\"\n  :options=\"[\n    { text: 'Edit', value: 'edit', icon: 'pencil' },\n    { text: 'Delete', value: 'delete', icon: 'trash' }\n  ]\"\n  @optionClick=\"handleAction\"\n/>"
+    },
+    "multiSelect": {
+      "title": "Multi-Select with Select All",
+      "description": "Multiple selection with checkboxes",
+      "code": "<InDropdownMenu\n  id=\"filters\"\n  button-label=\"Filters\"\n  selection-type=\"multiple\"\n  :pre-selected-values=\"selected\"\n  select-all-option-status\n  :options=\"filterOptions\"\n  @optionClick=\"handleFilter\"\n  @selectAllOptions=\"selectAll\"\n  @resetAllOptions=\"clearAll\"\n/>"
+    },
+    "searchable": {
+      "title": "Searchable Menu",
+      "description": "Large menu with search",
+      "code": "<InDropdownMenu\n  id=\"countries\"\n  button-label=\"Select Country\"\n  search-status\n  :options=\"filteredCountries\"\n  @search=\"filterCountries\"\n  @optionClick=\"selectCountry\"\n/>"
+    }
+  },
+  "styling": {
+    "cssVariables": {
+      "--dropdown-menu-bg": "Menu background color (default: white)",
+      "--dropdown-menu-text": "Text color",
+      "--dropdown-menu-hover-bg": "Hover background color",
+      "--dropdown-menu-max-height": "Maximum height before scrolling (default: 300px)",
+      "--dropdown-menu-width": "Menu width (default: auto)",
+      "--dropdown-menu-border-radius": "Border radius (default: 4px)",
+      "--dropdown-menu-shadow": "Box shadow"
+    },
+    "classes": {
+      "in-dropdown-menu": "Root container",
+      "in-dropdown-menu__button": "Trigger button",
+      "in-dropdown-menu__menu": "Dropdown menu panel",
+      "in-dropdown-menu__item": "Menu item",
+      "in-dropdown-menu__item--selected": "Selected item (multiple mode)",
+      "in-dropdown-menu__item--disabled": "Disabled menu item",
+      "in-dropdown-menu__search": "Search input container",
+      "in-dropdown-menu__secondary-button": "Secondary action button on item",
+      "in-dropdown-menu__icon": "Item icon",
+      "in-dropdown-menu__description": "Item description text"
+    },
+    "notes": "Use CSS variables to customize appearance. Max-height creates scrollable menu for long lists."
+  },
+  "implementationPatterns": [
+    {
+      "name": "Table Row Actions",
+      "description": "Action menu for each table row",
+      "code": "<script setup>\nimport { InDropdownMenu } from '@useinsider/design-system-vue';\n\nconst rowActions = [\n  { text: 'View Details', value: 'view', icon: 'eye' },\n  { text: 'Edit', value: 'edit', icon: 'pencil' },\n  { text: 'Delete', value: 'delete', icon: 'trash' }\n];\n\nconst handleRowAction = (action, row) => {\n  switch(action.value) {\n    case 'view':\n      router.push(`/users/${row.id}`);\n      break;\n    case 'edit':\n      openEditModal(row);\n      break;\n    case 'delete':\n      confirmDelete(row);\n      break;\n  }\n};\n</script>\n\n<template>\n  <tr v-for=\"row in tableData\" :key=\"row.id\">\n    <td>{{ row.name }}</td>\n    <td>\n      <InDropdownMenu\n        :id=\"`row-actions-${row.id}`\"\n        button-label=\"Actions\"\n        :options=\"rowActions\"\n        @optionClick=\"action => handleRowAction(action, row)\"\n      />\n    </td>\n  </tr>\n</template>",
+      "when": "Adding actions to table rows or list items",
+      "pros": ["Space-efficient", "Consistent UI", "Easy to extend actions"],
+      "cons": ["Requires click to see options", "Not discoverable without hover"]
+    },
+    {
+      "name": "Column Filter Menu",
+      "description": "Multi-select filter for table columns",
+      "code": "<script setup>\nimport { ref, computed } from 'vue';\nimport { InDropdownMenu } from '@useinsider/design-system-vue';\n\nconst allColumns = [\n  { text: 'Name', value: 'name' },\n  { text: 'Email', value: 'email' },\n  { text: 'Status', value: 'status' },\n  { text: 'Created', value: 'created' }\n];\n\nconst visibleColumns = ref(['name', 'email', 'status']);\n\nconst toggleColumn = (column) => {\n  const index = visibleColumns.value.indexOf(column.value);\n  if (index === -1) {\n    visibleColumns.value.push(column.value);\n  } else {\n    visibleColumns.value.splice(index, 1);\n  }\n};\n\nconst selectAll = (columns) => {\n  visibleColumns.value = columns.map(c => c.value);\n};\n\nconst clearAll = () => {\n  visibleColumns.value = [];\n};\n</script>\n\n<template>\n  <InDropdownMenu\n    id=\"column-filter\"\n    button-label=\"Columns\"\n    selection-type=\"multiple\"\n    :options=\"allColumns\"\n    :pre-selected-values=\"visibleColumns\"\n    select-all-option-status\n    @optionClick=\"toggleColumn\"\n    @selectAllOptions=\"selectAll\"\n    @resetAllOptions=\"clearAll\"\n  />\n</template>",
+      "when": "Implementing customizable table column visibility",
+      "pros": ["User-controlled columns", "Persistent selection", "Batch select/deselect"],
+      "cons": ["State management needed", "Can hide important columns"]
+    },
+    {
+      "name": "Bulk Actions Menu",
+      "description": "Actions for multiple selected items",
+      "code": "<script setup>\nimport { ref, computed } from 'vue';\nimport { InDropdownMenu } from '@useinsider/design-system-vue';\n\nconst selectedItems = ref<number[]>([]);\n\nconst bulkActions = computed(() => {\n  const count = selectedItems.value.length;\n  return [\n    { \n      text: `Delete ${count} items`, \n      value: 'delete', \n      icon: 'trash',\n      disabled: count === 0\n    },\n    { \n      text: `Export ${count} items`, \n      value: 'export', \n      icon: 'download',\n      disabled: count === 0\n    },\n    { \n      text: 'Mark as read', \n      value: 'mark-read', \n      icon: 'check',\n      disabled: count === 0\n    }\n  ];\n});\n\nconst handleBulkAction = async (action) => {\n  const ids = selectedItems.value;\n  \n  switch(action.value) {\n    case 'delete':\n      await bulkDelete(ids);\n      selectedItems.value = [];\n      break;\n    case 'export':\n      await bulkExport(ids);\n      break;\n    case 'mark-read':\n      await bulkMarkRead(ids);\n      break;\n  }\n};\n</script>\n\n<template>\n  <InDropdownMenu\n    id=\"bulk-actions\"\n    :button-label=\"`Bulk Actions (${selectedItems.length})`\"\n    :options=\"bulkActions\"\n    :disabled=\"selectedItems.length === 0\"\n    @optionClick=\"handleBulkAction\"\n  />\n</template>",
+      "when": "Providing actions for multiple selected items",
+      "pros": ["Efficient for batch operations", "Dynamic based on selection", "Clear action count"],
+      "cons": ["Requires selection tracking", "Can be complex with mixed item types"]
+    }
+  ],
+  "useCases": [
+    {
+      "title": "Context Menus",
+      "description": "Right-click or three-dot menu for items",
+      "example": "<InDropdownMenu\n  id=\"context-menu\"\n  button-icon=\"three-dots\"\n  :options=\"[\n    { text: 'Edit', value: 'edit' },\n    { text: 'Duplicate', value: 'duplicate' },\n    { text: 'Delete', value: 'delete' }\n  ]\"\n  @optionClick=\"handleContextAction\"\n/>"
+    },
+    {
+      "title": "Filter Selection",
+      "description": "Multi-select filters for data tables",
+      "example": "<InDropdownMenu\n  button-label=\"Status Filter\"\n  selection-type=\"multiple\"\n  :options=\"statusOptions\"\n  :pre-selected-values=\"activeFilters\"\n  @optionClick=\"toggleFilter\"\n/>"
+    },
+    {
+      "title": "Export Options",
+      "description": "Different export formats",
+      "example": "<InDropdownMenu\n  button-label=\"Export\"\n  :options=\"[\n    { text: 'CSV', value: 'csv', icon: 'file' },\n    { text: 'Excel', value: 'xlsx', icon: 'file-excel' },\n    { text: 'PDF', value: 'pdf', icon: 'file-pdf' }\n  ]\"\n  @optionClick=\"handleExport\"\n/>"
+    },
+    {
+      "title": "Settings Menu",
+      "description": "User or app settings",
+      "example": "<InDropdownMenu\n  button-icon=\"settings\"\n  :options=\"[\n    { text: 'Profile', value: 'profile', icon: 'user' },\n    { text: 'Preferences', value: 'preferences', icon: 'sliders' },\n    { text: 'Logout', value: 'logout', icon: 'sign-out' }\n  ]\"\n  @optionClick=\"handleSettings\"\n/>"
+    }
+  ],
+  "bestPractices": [
+    {
+      "title": "Use Descriptive Button Labels",
+      "description": "Button label should clearly indicate menu purpose",
+      "code": "// Good\n<InDropdownMenu button-label=\"Actions\" />\n<InDropdownMenu button-label=\"Export Options\" />\n\n// Avoid\n<InDropdownMenu button-label=\"...\" />\n<InDropdownMenu button-label=\"Menu\" />",
+      "reasoning": "Users should know what to expect before opening the menu"
+    },
+    {
+      "title": "Group Related Actions",
+      "description": "Organize menu items logically",
+      "code": "const options = [\n  // Primary actions\n  { text: 'Edit', value: 'edit', icon: 'pencil' },\n  { text: 'Duplicate', value: 'duplicate', icon: 'copy' },\n  // Destructive action last\n  { text: 'Delete', value: 'delete', icon: 'trash' }\n];",
+      "reasoning": "Logical grouping improves usability and reduces errors"
+    },
+    {
+      "title": "Handle All Option Values",
+      "description": "Always handle every possible option value",
+      "code": "const handleAction = (option) => {\n  switch(option.value) {\n    case 'edit':\n      editItem();\n      break;\n    case 'delete':\n      deleteItem();\n      break;\n    default:\n      console.warn('Unhandled action:', option.value);\n  }\n};",
+      "reasoning": "Prevents silent failures when options are clicked"
+    },
+    {
+      "title": "Disable Unavailable Actions",
+      "description": "Use disabled property instead of hiding options",
+      "code": "const options = computed(() => [\n  { \n    text: 'Edit', \n    value: 'edit',\n    disabled: !canEdit.value \n  },\n  { \n    text: 'Delete', \n    value: 'delete',\n    disabled: !canDelete.value\n  }\n]);",
+      "reasoning": "Shows what's available but not currently accessible, better UX"
+    }
+  ],
   "commonMistakes": [
     {
       "mistake": "Using InDropdownMenu for data selection instead of InSelect/InMultiSelect",
@@ -353,18 +468,39 @@
   ],
   "performanceNotes": [
     {
-      "note": "Large menus (50+ items) can cause rendering issues",
-      "recommendation": "Use lazyLoad or group related items into sub-menus"
+      "topic": "Large option lists",
+      "description": "Menus with 50+ items can cause rendering lag",
+      "recommendation": "Use lazyLoad or virtual scrolling for large lists, or break into sub-menus",
+      "impact": "high"
+    },
+    {
+      "topic": "Search filtering",
+      "description": "Client-side filtering is fast up to ~200 items",
+      "recommendation": "For larger datasets, use externalSearch with debounced API calls",
+      "impact": "medium"
     }
   ],
   "accessibilityNotes": [
     {
-      "note": "Dropdown menus must be keyboard accessible",
-      "recommendation": "Use Arrow keys to navigate, Enter to select, Escape to close"
+      "topic": "Keyboard navigation",
+      "description": "Dropdown menus must be fully keyboard accessible",
+      "wcagLevel": "A",
+      "recommendation": "Arrow keys navigate, Enter selects, Escape closes. Tab moves focus out.",
+      "example": "<InDropdownMenu\n  id=\"accessible-menu\"\n  button-label=\"Actions\"\n  :options=\"options\"\n/>\n// Automatically supports: Tab, Arrow Up/Down, Enter, Escape"
     },
     {
-      "note": "Icon-only menu items need text labels",
-      "recommendation": "Always provide text property, even if only icon is shown visually"
+      "topic": "Screen reader support",
+      "description": "Icon-only buttons need accessible labels",
+      "wcagLevel": "A",
+      "recommendation": "Always provide button-label even if using button-icon",
+      "example": "<InDropdownMenu\n  button-icon=\"three-dots\"\n  button-label=\"Actions\"\n  :options=\"options\"\n/>"
+    },
+    {
+      "topic": "Focus management",
+      "description": "Focus should return to trigger button after menu closes",
+      "wcagLevel": "AA",
+      "recommendation": "Component handles this automatically, no additional code needed",
+      "example": "// Focus returns to button after Escape or selection"
     }
   ]
 }

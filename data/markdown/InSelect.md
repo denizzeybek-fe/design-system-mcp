@@ -442,3 +442,18 @@ export default {
 </script>
 ```
 
+## Common Mistakes
+
+ℹ️ **Using 'label' instead of 'text' in options**
+
+ℹ️ **Passing single value instead of array**
+
+ℹ️ **Not handling empty selection**
+
+## Best Practices
+
+- **Always Provide Label Text:** Every select needs a descriptive label
+- **Use Search for Long Lists:** Enable search for 10+ options
+- **Provide Meaningful Option Text:** Option text should be clear and descriptive
+- **Handle Empty State:** Show message when no options available
+

@@ -1,0 +1,479 @@
+{
+  "component": "InCodeSnippet",
+  "_metadata": {
+    "lastUpdated": "2025-11-28T00:00:00.000Z",
+    "propsHash": "incodesnippet-v1-35props",
+    "eventsHash": "incodesnippet-v1-8events",
+    "propCount": 35,
+    "eventCount": 8
+  },
+  "propEnrichments": {
+    "code": {
+      "valueFormat": {
+        "structure": "String (required)",
+        "notes": "The code content to display and edit. Supports HTML, CSS, JavaScript, and other syntax highlighting via CodeMirror. Can include dynamic content placeholders (e.g., {{user.name}}) when canAddDynamicContent is enabled.",
+        "typescript": "string",
+        "example": "// JavaScript example\nconst greeting = 'Hello {{user.name}}';\n\n// HTML example\n<div class=\"user-card\">\n  <h2>{{user.firstName}} {{user.lastName}}</h2>\n  <p>{{user.email}}</p>\n</div>\n\n// CSS example\n.theme-color {\n  color: {{brand.primaryColor}};\n}"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Not escaping special characters in code content",
+          "why": "CodeMirror may interpret certain characters as control sequences",
+          "impact": "Code rendering issues or unexpected behavior",
+          "fix": "Use proper escaping or enable preventXss for user-generated content",
+          "severity": "medium",
+          "example": "// WRONG\nconst code = userInput; // May contain unescaped characters\n\n// CORRECT\nconst code = sanitizeCode(userInput);\n// OR\n<InCodeSnippet :code=\"userCode\" :preventXss=\"true\" />"
+        }
+      ]
+    },
+    "options": {
+      "valueFormat": {
+        "structure": "Object",
+        "notes": "CodeMirror editor configuration. Controls syntax highlighting mode, theme, line numbers, indentation, and other editor features. See CodeMirror documentation for full options.",
+        "typescript": "{\n  mode?: string; // 'javascript' | 'htmlmixed' | 'css' | 'python' | etc.\n  theme?: string; // 'default' | 'monokai' | 'dracula' | etc.\n  lineNumbers?: boolean;\n  lineWrapping?: boolean;\n  tabSize?: number;\n  indentUnit?: number;\n  readOnly?: boolean | 'nocursor';\n  autofocus?: boolean;\n  extraKeys?: Record<string, string | Function>;\n}",
+        "example": "// JavaScript editor with line numbers\n{\n  mode: 'javascript',\n  theme: 'monokai',\n  lineNumbers: true,\n  tabSize: 2,\n  indentUnit: 2\n}\n\n// HTML editor with word wrap\n{\n  mode: 'htmlmixed',\n  lineWrapping: true,\n  lineNumbers: true\n}\n\n// Read-only CSS display\n{\n  mode: 'css',\n  readOnly: true,\n  lineNumbers: false\n}"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Setting readOnly: true but allowing canEdit: true",
+          "why": "Conflicting props create confusing UX",
+          "impact": "Users see edit UI but cannot edit code",
+          "fix": "Use canEdit: false for read-only mode, or use options.readOnly for CodeMirror-level control",
+          "severity": "medium",
+          "example": "// WRONG - conflicting settings\n<InCodeSnippet :options=\"{ readOnly: true }\" :canEdit=\"true\" />\n\n// CORRECT - consistent read-only\n<InCodeSnippet :options=\"{ readOnly: true }\" :canEdit=\"false\" />\n\n// CORRECT - editable\n<InCodeSnippet :options=\"{ readOnly: false }\" :canEdit=\"true\" />"
+        }
+      ]
+    },
+    "size": {
+      "valueFormat": {
+        "structure": "Object",
+        "notes": "Editor dimensions. Controls width and height of the CodeMirror editor. Use usePercentageSize: true for responsive sizing.",
+        "typescript": "{\n  width?: string | number; // CSS width value\n  height?: string | number; // CSS height value\n}",
+        "example": "// Fixed pixel size\n{ width: '800px', height: '400px' }\n\n// Full width with fixed height\n{ width: '100%', height: '300px' }\n\n// Percentage-based (requires usePercentageSize: true)\n{ width: '100%', height: '50vh' }\n\n// Number values (converted to pixels)\n{ width: 600, height: 400 }"
+      }
+    },
+    "canAddDynamicContent": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Enables dynamic content (merge tags) insertion. When true, shows UI for inserting placeholders like {{user.name}}, {{product.price}}, etc. Requires dynamicContentBoxProps to configure available tags.",
+        "typescript": "boolean",
+        "example": "// Enable dynamic content for email templates\n<InCodeSnippet\n  :code=\"emailTemplate\"\n  :canAddDynamicContent=\"true\"\n  :dynamicContentBoxProps=\"{\n    contentObject: [\n      { name: 'user.name', label: 'User Name' },\n      { name: 'user.email', label: 'User Email' },\n      { name: 'order.total', label: 'Order Total' }\n    ]\n  }\"\n/>"
+      }
+    },
+    "dynamicContentBoxProps": {
+      "valueFormat": {
+        "structure": "Object",
+        "notes": "Configuration for dynamic content insertion UI. Defines available merge tags, their labels, and categories. Only effective when canAddDynamicContent is true.",
+        "typescript": "{\n  contentObject: Array<{\n    name: string; // Tag identifier (e.g., 'user.name')\n    label: string; // Display label\n    category?: string; // Optional grouping\n    description?: string; // Optional tooltip\n  }>;\n  groupBy?: string; // Group tags by this field\n  searchable?: boolean; // Enable search\n}",
+        "example": "{\n  contentObject: [\n    // User attributes\n    { name: 'user.firstName', label: 'First Name', category: 'User' },\n    { name: 'user.lastName', label: 'Last Name', category: 'User' },\n    { name: 'user.email', label: 'Email', category: 'User' },\n    \n    // Product attributes\n    { name: 'product.name', label: 'Product Name', category: 'Product' },\n    { name: 'product.price', label: 'Price', category: 'Product' },\n    \n    // Event attributes\n    { name: 'event.timestamp', label: 'Event Time', category: 'Event' }\n  ],\n  groupBy: 'category',\n  searchable: true\n}"
+      }
+    },
+    "replaceDynamicContentMap": {
+      "valueFormat": {
+        "structure": "Object",
+        "notes": "Maps dynamic content placeholders to actual values for preview. Used to show how the code will look with real data instead of {{placeholders}}.",
+        "typescript": "Record<string, string | number>",
+        "example": "{\n  'user.name': 'John Doe',\n  'user.email': 'john@example.com',\n  'product.name': 'Premium Plan',\n  'product.price': 99.99,\n  'order.total': '$149.99'\n}\n\n// Template:\n// Hello {{user.name}}, your order total is {{order.total}}\n//\n// Previews as:\n// Hello John Doe, your order total is $149.99"
+      }
+    },
+    "syntaxCheck": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Enables real-time syntax validation. When true, highlights syntax errors and emits checkSyntaxError events. Uses CodeMirror's built-in linting.",
+        "typescript": "boolean",
+        "example": "// Enable syntax checking for JavaScript\n<InCodeSnippet\n  :code=\"jsCode\"\n  :syntaxCheck=\"true\"\n  :options=\"{ mode: 'javascript' }\"\n  @checkSyntaxError=\"handleSyntaxError\"\n/>\n\n// Handler\nconst handleSyntaxError = (errors) => {\n  if (errors.length > 0) {\n    console.log('Syntax errors found:', errors);\n  }\n};"
+      }
+    },
+    "warningTags": {
+      "valueFormat": {
+        "structure": "Array<string>",
+        "notes": "List of dynamic content tags that should show warning state. Useful for deprecated or soon-to-expire attributes.",
+        "typescript": "string[]",
+        "example": "// Mark deprecated tags with warnings\n[\n  'user.oldField',\n  'product.legacyId',\n  'event.deprecatedAttribute'\n]\n\n// These tags will be highlighted in yellow/warning color"
+      }
+    },
+    "errorTags": {
+      "valueFormat": {
+        "structure": "Array<string>",
+        "notes": "List of dynamic content tags that should show error state. Useful for removed or invalid attributes.",
+        "typescript": "string[]",
+        "example": "// Mark invalid tags with errors\n[\n  'user.removedField',\n  'product.invalidAttribute',\n  'event.notExistingField'\n]\n\n// These tags will be highlighted in red/error color"
+      }
+    },
+    "markNotExistDynamicContent": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Automatically marks dynamic content tags that don't exist in dynamicContentBoxProps. Helps identify typos or removed attributes.",
+        "typescript": "boolean",
+        "example": "// Auto-detect invalid tags\n<InCodeSnippet\n  :code=\"'Hello {{user.name}} {{user.typo}}'\"\n  :canAddDynamicContent=\"true\"\n  :markNotExistDynamicContent=\"true\"\n  :dynamicContentBoxProps=\"{\n    contentObject: [{ name: 'user.name', label: 'Name' }]\n  }\"\n/>\n// {{user.typo}} will be marked as error automatically"
+      }
+    },
+    "validateTagsWithFallback": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "When true, validates dynamic content tags against fallbackOptions instead of dynamicContentBoxProps. Useful for multi-environment templates.",
+        "typescript": "boolean",
+        "example": "// Validate against fallback list\n<InCodeSnippet\n  :validateTagsWithFallback=\"true\"\n  :fallbackOptions=\"{\n    contentObject: [\n      { name: 'user.id', label: 'User ID' },\n      { name: 'user.email', label: 'Email' }\n    ]\n  }\"\n/>"
+      }
+    },
+    "notExistingAttributeWhiteListRegExp": {
+      "valueFormat": {
+        "structure": "RegExp",
+        "notes": "Regex pattern to whitelist certain dynamic content tags from validation. Useful for allowing custom/user-defined attributes.",
+        "typescript": "RegExp",
+        "example": "// Allow custom_* attributes without validation\nconst whitelistPattern = /^custom_.*$/;\n\n<InCodeSnippet\n  :markNotExistDynamicContent=\"true\"\n  :notExistingAttributeWhiteListRegExp=\"whitelistPattern\"\n/>\n\n// These won't be marked as errors:\n// {{custom_field_1}}\n// {{custom_user_attribute}}"
+      }
+    },
+    "saveButtonCallback": {
+      "valueFormat": {
+        "structure": "Function",
+        "notes": "Custom callback function for the save button. When provided, overrides default save behavior. Receives the current code as parameter.",
+        "typescript": "(code: string) => void | Promise<void>",
+        "example": "const handleSave = async (code) => {\n  try {\n    await api.saveTemplate({ content: code });\n    toast.success('Template saved successfully');\n  } catch (error) {\n    toast.error('Failed to save template');\n  }\n};\n\n<InCodeSnippet\n  v-model:code=\"template\"\n  :saveButtonCallback=\"handleSave\"\n/>"
+      }
+    },
+    "position": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Position of action buttons (save/cancel). Controls where the button group appears relative to the editor.",
+        "typescript": "'top' | 'bottom' | 'left' | 'right'",
+        "example": "// Buttons at bottom (default)\n<InCodeSnippet position=\"bottom\" />\n\n// Buttons at top for long editors\n<InCodeSnippet\n  :size=\"{ height: '800px' }\"\n  position=\"top\"\n/>"
+      }
+    },
+    "fallbackOptions": {
+      "valueFormat": {
+        "structure": "Object",
+        "notes": "Alternative configuration for dynamic content when primary source is unavailable. Used as fallback for validation and suggestions.",
+        "typescript": "{\n  contentObject: Array<{\n    name: string;\n    label: string;\n    category?: string;\n  }>;\n}",
+        "example": "{\n  contentObject: [\n    { name: 'fallback.userEmail', label: 'Email (Fallback)' },\n    { name: 'fallback.userName', label: 'Name (Fallback)' }\n  ]\n}"
+      }
+    },
+    "preventXss": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Enables XSS prevention for user-generated code content. Sanitizes dangerous HTML/JavaScript patterns. CRITICAL for security when displaying user input.",
+        "typescript": "boolean",
+        "example": "// ALWAYS use for user-generated content\n<InCodeSnippet\n  :code=\"userSubmittedCode\"\n  :preventXss=\"true\"\n/>\n\n// Safe to disable for trusted/admin content\n<InCodeSnippet\n  :code=\"trustedTemplateCode\"\n  :preventXss=\"false\"\n/>"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Displaying user-generated code without preventXss: true",
+          "why": "Users can inject malicious scripts that execute in other users' browsers",
+          "impact": "Critical XSS security vulnerability, data theft, account compromise",
+          "fix": "Always set preventXss: true when displaying any user-generated content",
+          "severity": "critical",
+          "example": "// WRONG - XSS vulnerability\n<InCodeSnippet :code=\"userCode\" />\n\n// CORRECT - XSS protected\n<InCodeSnippet :code=\"userCode\" :preventXss=\"true\" />"
+        }
+      ]
+    }
+  },
+  "eventEnrichments": {
+    "input": {
+      "description": "Emitted when code content changes",
+      "payload": "string - The updated code content",
+      "when": "User types, pastes, or modifies code in the editor"
+    },
+    "checkSyntaxError": {
+      "description": "Emitted when syntax validation detects errors",
+      "payload": "Array<{ line: number, message: string, severity: string }> - List of syntax errors",
+      "when": "syntaxCheck is true and syntax errors are detected"
+    },
+    "markedTags": {
+      "description": "Emitted when dynamic content tags are validated and marked",
+      "payload": "{ valid: string[], invalid: string[], warnings: string[] } - Categorized tags",
+      "when": "canAddDynamicContent is true and tags are validated"
+    },
+    "ready": {
+      "description": "Emitted when CodeMirror editor is initialized and ready",
+      "payload": "CodeMirror instance - The editor instance",
+      "when": "Editor finishes initialization"
+    },
+    "cursorActivity": {
+      "description": "Emitted when cursor position changes in the editor",
+      "payload": "{ line: number, ch: number } - Cursor position",
+      "when": "User moves cursor or selects text"
+    },
+    "addDynamicAttribute": {
+      "description": "Emitted when user inserts a dynamic content tag",
+      "payload": "{ name: string, label: string } - The inserted tag",
+      "when": "User clicks to insert dynamic content from the picker"
+    },
+    "updateEventPersistent": {
+      "description": "Emitted when event-related dynamic content is updated",
+      "payload": "Object - Event persistence data",
+      "when": "Dynamic content related to events is modified"
+    },
+    "updateProductAttributePersistent": {
+      "description": "Emitted when product attribute dynamic content is updated",
+      "payload": "Object - Product attribute persistence data",
+      "when": "Dynamic content related to product attributes is modified"
+    }
+  },
+  "codeSnippets": {
+    "basicEditor": {
+      "title": "Basic JavaScript Editor",
+      "description": "Simple JavaScript code editor with syntax highlighting and line numbers",
+      "code": "<template>\n  <InCodeSnippet\n    v-model:code=\"jsCode\"\n    :options=\"editorOptions\"\n    :size=\"{ width: '100%', height: '400px' }\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\nimport { InCodeSnippet } from '@useinsider/design-system-vue';\n\nconst jsCode = ref(`function greet(name) {\n  return \\`Hello, \\${name}!\\`;\n}\n\nconsole.log(greet('World'));`);\n\nconst editorOptions = {\n  mode: 'javascript',\n  theme: 'monokai',\n  lineNumbers: true,\n  tabSize: 2,\n  indentUnit: 2\n};\n</script>"
+    },
+    "htmlEditorWithValidation": {
+      "title": "HTML Editor with Syntax Validation",
+      "description": "HTML editor with real-time syntax checking and error display",
+      "code": "<template>\n  <div>\n    <InCodeSnippet\n      v-model:code=\"htmlCode\"\n      :options=\"htmlOptions\"\n      :syntaxCheck=\"true\"\n      :size=\"{ width: '100%', height: '300px' }\"\n      :invalid=\"hasSyntaxErrors\"\n      :invalidMessage=\"errorMessage\"\n      @checkSyntaxError=\"handleSyntaxErrors\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\nimport { InCodeSnippet } from '@useinsider/design-system-vue';\n\nconst htmlCode = ref(`<!DOCTYPE html>\n<html>\n  <head>\n    <title>My Page</title>\n  </head>\n  <body>\n    <h1>Hello World</h1>\n  </body>\n</html>`);\n\nconst htmlOptions = {\n  mode: 'htmlmixed',\n  lineNumbers: true,\n  lineWrapping: true\n};\n\nconst hasSyntaxErrors = ref(false);\nconst errorMessage = ref('');\n\nconst handleSyntaxErrors = (errors: any[]) => {\n  if (errors.length > 0) {\n    hasSyntaxErrors.value = true;\n    errorMessage.value = `${errors.length} syntax error(s) found`;\n  } else {\n    hasSyntaxErrors.value = false;\n    errorMessage.value = '';\n  }\n};\n</script>"
+    },
+    "dynamicContentEditor": {
+      "title": "Email Template Editor with Dynamic Content",
+      "description": "Code editor with dynamic content insertion for email templates",
+      "code": "<template>\n  <InCodeSnippet\n    v-model:code=\"emailTemplate\"\n    :options=\"{ mode: 'htmlmixed', lineWrapping: true }\"\n    :size=\"{ width: '100%', height: '500px' }\"\n    :canAddDynamicContent=\"true\"\n    :dynamicContentBoxProps=\"dynamicContentConfig\"\n    :replaceDynamicContentMap=\"previewData\"\n    :markNotExistDynamicContent=\"true\"\n    :warningTags=\"deprecatedTags\"\n    :errorTags=\"removedTags\"\n    dynamicContentButtonText=\"Insert Merge Tag\"\n    @addDynamicAttribute=\"handleTagInserted\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\nimport { InCodeSnippet } from '@useinsider/design-system-vue';\n\nconst emailTemplate = ref(`<div>\n  <h1>Hello {{user.firstName}} {{user.lastName}}</h1>\n  <p>Your order #{{order.id}} has been confirmed!</p>\n  <p>Total: {{order.total}}</p>\n  <p>Shipping to: {{user.address}}</p>\n</div>`);\n\nconst dynamicContentConfig = {\n  contentObject: [\n    { name: 'user.firstName', label: 'First Name', category: 'User' },\n    { name: 'user.lastName', label: 'Last Name', category: 'User' },\n    { name: 'user.email', label: 'Email', category: 'User' },\n    { name: 'user.address', label: 'Address', category: 'User' },\n    { name: 'order.id', label: 'Order ID', category: 'Order' },\n    { name: 'order.total', label: 'Order Total', category: 'Order' },\n    { name: 'order.items', label: 'Order Items', category: 'Order' }\n  ],\n  groupBy: 'category',\n  searchable: true\n};\n\nconst previewData = {\n  'user.firstName': 'John',\n  'user.lastName': 'Doe',\n  'user.email': 'john@example.com',\n  'user.address': '123 Main St, City, State 12345',\n  'order.id': 'ORD-123456',\n  'order.total': '$299.99',\n  'order.items': '3 items'\n};\n\nconst deprecatedTags = ['user.oldField'];\nconst removedTags = ['user.removedField'];\n\nconst handleTagInserted = (tag: any) => {\n  console.log('Tag inserted:', tag);\n};\n</script>"
+    }
+  },
+  "styling": {
+    "cssVariables": {
+      "notes": "InCodeSnippet uses CodeMirror's theming system. Apply custom themes via the options.theme prop.",
+      "variables": []
+    },
+    "classes": {
+      "notes": "Component wraps CodeMirror editor. Style the wrapper or use CodeMirror theme customization.",
+      "classes": []
+    },
+    "customization": "Use CodeMirror themes (monokai, dracula, material, etc.) or create custom themes. Apply via options: { theme: 'your-theme' }. Import theme CSS from CodeMirror library."
+  },
+  "examples": [
+    {
+      "title": "Multi-Language Code Playground",
+      "description": "Code editor supporting multiple programming languages with language switcher",
+      "code": "<template>\n  <div class=\"code-playground\">\n    <div class=\"toolbar\">\n      <label>Language:</label>\n      <select v-model=\"selectedLanguage\" @change=\"updateMode\">\n        <option value=\"javascript\">JavaScript</option>\n        <option value=\"python\">Python</option>\n        <option value=\"css\">CSS</option>\n        <option value=\"htmlmixed\">HTML</option>\n        <option value=\"sql\">SQL</option>\n      </select>\n      <button @click=\"runCode\" :disabled=\"!canRun\">Run Code</button>\n      <button @click=\"resetCode\">Reset</button>\n    </div>\n\n    <InCodeSnippet\n      v-model:code=\"code\"\n      :options=\"editorOptions\"\n      :size=\"editorSize\"\n      :syntaxCheck=\"true\"\n      :focusEditor=\"true\"\n      @checkSyntaxError=\"handleErrors\"\n      @ready=\"onEditorReady\"\n    />\n\n    <div v-if=\"output\" class=\"output\">\n      <h4>Output:</h4>\n      <pre>{{ output }}</pre>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, computed } from 'vue';\nimport { InCodeSnippet } from '@useinsider/design-system-vue';\n\nconst selectedLanguage = ref('javascript');\nconst code = ref(`function fibonacci(n) {\n  if (n <= 1) return n;\n  return fibonacci(n - 1) + fibonacci(n - 2);\n}\n\nconsole.log(fibonacci(10));`);\n\nconst output = ref('');\nconst editorInstance = ref(null);\n\nconst editorOptions = computed(() => ({\n  mode: selectedLanguage.value,\n  theme: 'monokai',\n  lineNumbers: true,\n  lineWrapping: true,\n  tabSize: 2,\n  indentUnit: 2,\n  extraKeys: {\n    'Ctrl-Enter': () => runCode(),\n    'Cmd-Enter': () => runCode()\n  }\n}));\n\nconst editorSize = {\n  width: '100%',\n  height: '400px'\n};\n\nconst canRun = computed(() => selectedLanguage.value === 'javascript');\n\nconst languageTemplates: Record<string, string> = {\n  javascript: `function example() {\\n  console.log('Hello, World!');\\n}\\n\\nexample();`,\n  python: `def example():\\n    print('Hello, World!')\\n\\nexample()`,\n  css: `.example {\\n  color: #333;\\n  background: #fff;\\n}`,\n  htmlmixed: `<!DOCTYPE html>\\n<html>\\n  <body>\\n    <h1>Hello, World!</h1>\\n  </body>\\n</html>`,\n  sql: `SELECT * FROM users\\nWHERE active = true\\nORDER BY created_at DESC;`\n};\n\nconst updateMode = () => {\n  // Optionally update code to language template\n  if (confirm('Load example code for this language?')) {\n    code.value = languageTemplates[selectedLanguage.value] || '';\n  }\n};\n\nconst runCode = () => {\n  if (selectedLanguage.value === 'javascript') {\n    try {\n      // Capture console.log output\n      const logs: string[] = [];\n      const originalLog = console.log;\n      console.log = (...args) => {\n        logs.push(args.map(String).join(' '));\n      };\n\n      // Execute code\n      eval(code.value);\n\n      // Restore console.log\n      console.log = originalLog;\n\n      output.value = logs.join('\\n') || 'Code executed successfully (no output)';\n    } catch (error: any) {\n      output.value = `Error: ${error.message}`;\n    }\n  }\n};\n\nconst resetCode = () => {\n  code.value = languageTemplates[selectedLanguage.value];\n  output.value = '';\n};\n\nconst handleErrors = (errors: any[]) => {\n  if (errors.length > 0) {\n    console.warn('Syntax errors:', errors);\n  }\n};\n\nconst onEditorReady = (instance: any) => {\n  editorInstance.value = instance;\n  console.log('Editor ready');\n};\n</script>\n\n<style scoped>\n.code-playground {\n  display: flex;\n  flex-direction: column;\n  gap: 16px;\n}\n\n.toolbar {\n  display: flex;\n  align-items: center;\n  gap: 12px;\n  padding: 12px;\n  background: #f5f5f5;\n  border-radius: 4px;\n}\n\n.output {\n  padding: 16px;\n  background: #1e1e1e;\n  color: #d4d4d4;\n  border-radius: 4px;\n  font-family: 'Courier New', monospace;\n}\n\n.output pre {\n  margin: 0;\n  white-space: pre-wrap;\n}\n</style>"
+    },
+    {
+      "title": "Advanced Email Template Builder",
+      "description": "Sophisticated email template editor with dynamic content, validation, preview, and save functionality",
+      "code": "<template>\n  <div class=\"template-builder\">\n    <div class=\"header\">\n      <h2>Email Template Editor</h2>\n      <div class=\"actions\">\n        <button @click=\"togglePreview\">{{ showPreview ? 'Edit' : 'Preview' }}</button>\n        <button @click=\"validateTemplate\" :disabled=\"validating\">Validate</button>\n        <button @click=\"saveTemplate\" :disabled=\"saving || !isValid\">Save Template</button>\n      </div>\n    </div>\n\n    <div class=\"editor-container\">\n      <div v-if=\"!showPreview\" class=\"editor-section\">\n        <InCodeSnippet\n          v-model:code=\"template\"\n          :options=\"editorOptions\"\n          :size=\"editorSize\"\n          :canAddDynamicContent=\"true\"\n          :dynamicContentBoxProps=\"dynamicContentConfig\"\n          :replaceDynamicContentMap=\"previewData\"\n          :markNotExistDynamicContent=\"true\"\n          :notExistingAttributeHasErrorState=\"true\"\n          :warningTags=\"warningTags\"\n          :errorTags=\"errorTags\"\n          :validateTagsWithFallback=\"false\"\n          :preventXss=\"true\"\n          :syntaxCheck=\"true\"\n          :saveButtonCallback=\"saveTemplate\"\n          position=\"top\"\n          dynamicContentButtonText=\"Insert Merge Tag\"\n          replaceDynamicContentText=\"Available Merge Tags\"\n          @addDynamicAttribute=\"handleTagAdded\"\n          @markedTags=\"handleTagsValidated\"\n          @checkSyntaxError=\"handleSyntaxErrors\"\n          @input=\"handleCodeChange\"\n        />\n      </div>\n\n      <div v-else class=\"preview-section\">\n        <div class=\"preview-content\" v-html=\"renderedPreview\"></div>\n      </div>\n    </div>\n\n    <div v-if=\"validationResult\" class=\"validation-result\" :class=\"validationResult.type\">\n      <h4>{{ validationResult.title }}</h4>\n      <ul v-if=\"validationResult.issues.length > 0\">\n        <li v-for=\"(issue, index) in validationResult.issues\" :key=\"index\">\n          {{ issue }}\n        </li>\n      </ul>\n      <p v-else>{{ validationResult.message }}</p>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, computed } from 'vue';\nimport { InCodeSnippet } from '@useinsider/design-system-vue';\n\nconst template = ref(`<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Order Confirmation</title>\n</head>\n<body style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;\">\n  <div style=\"background: #f8f9fa; padding: 20px; border-radius: 8px;\">\n    <h1 style=\"color: #333;\">Hello {{user.firstName}}!</h1>\n    \n    <p>Thank you for your order. Here are the details:</p>\n    \n    <div style=\"background: white; padding: 15px; border-radius: 4px; margin: 20px 0;\">\n      <p><strong>Order ID:</strong> {{order.id}}</p>\n      <p><strong>Total:</strong> {{order.total}}</p>\n      <p><strong>Items:</strong> {{order.itemCount}}</p>\n    </div>\n    \n    <p>Shipping to:</p>\n    <address style=\"font-style: normal;\">\n      {{user.firstName}} {{user.lastName}}<br>\n      {{user.address}}<br>\n      {{user.city}}, {{user.state}} {{user.zipCode}}\n    </address>\n    \n    <p style=\"margin-top: 30px;\">\n      <a href=\"{{order.trackingUrl}}\" style=\"background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px;\">Track Your Order</a>\n    </p>\n  </div>\n</body>\n</html>`);\n\nconst showPreview = ref(false);\nconst validating = ref(false);\nconst saving = ref(false);\nconst isValid = ref(true);\nconst validationResult = ref<any>(null);\n\nconst editorOptions = {\n  mode: 'htmlmixed',\n  theme: 'monokai',\n  lineNumbers: true,\n  lineWrapping: true,\n  tabSize: 2,\n  indentUnit: 2\n};\n\nconst editorSize = {\n  width: '100%',\n  height: '600px'\n};\n\nconst dynamicContentConfig = {\n  contentObject: [\n    // User fields\n    { name: 'user.firstName', label: 'First Name', category: 'User' },\n    { name: 'user.lastName', label: 'Last Name', category: 'User' },\n    { name: 'user.email', label: 'Email', category: 'User' },\n    { name: 'user.address', label: 'Street Address', category: 'User' },\n    { name: 'user.city', label: 'City', category: 'User' },\n    { name: 'user.state', label: 'State', category: 'User' },\n    { name: 'user.zipCode', label: 'Zip Code', category: 'User' },\n    \n    // Order fields\n    { name: 'order.id', label: 'Order ID', category: 'Order' },\n    { name: 'order.total', label: 'Order Total', category: 'Order' },\n    { name: 'order.itemCount', label: 'Item Count', category: 'Order' },\n    { name: 'order.trackingUrl', label: 'Tracking URL', category: 'Order' },\n    { name: 'order.date', label: 'Order Date', category: 'Order' }\n  ],\n  groupBy: 'category',\n  searchable: true\n};\n\nconst previewData = {\n  'user.firstName': 'Sarah',\n  'user.lastName': 'Johnson',\n  'user.email': 'sarah.j@example.com',\n  'user.address': '456 Oak Avenue',\n  'user.city': 'San Francisco',\n  'user.state': 'CA',\n  'user.zipCode': '94102',\n  'order.id': 'ORD-789012',\n  'order.total': '$387.50',\n  'order.itemCount': '5',\n  'order.trackingUrl': 'https://tracking.example.com/ORD-789012',\n  'order.date': 'November 28, 2025'\n};\n\nconst warningTags = ref<string[]>([]);\nconst errorTags = ref<string[]>([]);\n\nconst renderedPreview = computed(() => {\n  let preview = template.value;\n  // Replace all dynamic content tags with preview data\n  Object.entries(previewData).forEach(([key, value]) => {\n    const regex = new RegExp(`{{${key}}}`, 'g');\n    preview = preview.replace(regex, String(value));\n  });\n  return preview;\n});\n\nconst togglePreview = () => {\n  showPreview.value = !showPreview.value;\n};\n\nconst validateTemplate = async () => {\n  validating.value = true;\n  validationResult.value = null;\n\n  // Simulate validation\n  await new Promise(resolve => setTimeout(resolve, 1000));\n\n  const issues: string[] = [];\n\n  // Check for missing tags\n  const tagPattern = /{{([^}]+)}}/g;\n  const usedTags = new Set<string>();\n  let match;\n  while ((match = tagPattern.exec(template.value)) !== null) {\n    usedTags.add(match[1]);\n  }\n\n  const availableTags = new Set(\n    dynamicContentConfig.contentObject.map(item => item.name)\n  );\n\n  usedTags.forEach(tag => {\n    if (!availableTags.has(tag)) {\n      issues.push(`Unknown merge tag: {{${tag}}}`);\n      if (!errorTags.value.includes(tag)) {\n        errorTags.value.push(tag);\n      }\n    }\n  });\n\n  // Check for basic HTML structure\n  if (!template.value.includes('<!DOCTYPE html>')) {\n    issues.push('Missing DOCTYPE declaration');\n  }\n\n  if (!template.value.includes('<html>')) {\n    issues.push('Missing HTML tag');\n  }\n\n  isValid.value = issues.length === 0;\n  validationResult.value = {\n    type: isValid.value ? 'success' : 'error',\n    title: isValid.value ? 'Validation Passed' : 'Validation Failed',\n    message: isValid.value ? 'Template is valid and ready to use.' : '',\n    issues\n  };\n\n  validating.value = false;\n};\n\nconst saveTemplate = async () => {\n  saving.value = true;\n\n  try {\n    // Simulate API call\n    await new Promise(resolve => setTimeout(resolve, 1500));\n    \n    console.log('Template saved:', template.value);\n    \n    validationResult.value = {\n      type: 'success',\n      title: 'Template Saved',\n      message: 'Your email template has been saved successfully.',\n      issues: []\n    };\n  } catch (error: any) {\n    validationResult.value = {\n      type: 'error',\n      title: 'Save Failed',\n      message: error.message,\n      issues: []\n    };\n  } finally {\n    saving.value = false;\n  }\n};\n\nconst handleTagAdded = (tag: any) => {\n  console.log('Merge tag inserted:', tag);\n};\n\nconst handleTagsValidated = (tags: any) => {\n  console.log('Tags validated:', tags);\n  if (tags.invalid && tags.invalid.length > 0) {\n    errorTags.value = tags.invalid;\n  }\n};\n\nconst handleSyntaxErrors = (errors: any[]) => {\n  if (errors.length > 0) {\n    isValid.value = false;\n  }\n};\n\nconst handleCodeChange = (newCode: string) => {\n  // Reset validation when code changes\n  validationResult.value = null;\n};\n</script>\n\n<style scoped>\n.template-builder {\n  display: flex;\n  flex-direction: column;\n  gap: 20px;\n}\n\n.header {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 16px;\n  background: #f8f9fa;\n  border-radius: 8px;\n}\n\n.actions {\n  display: flex;\n  gap: 12px;\n}\n\n.editor-container {\n  min-height: 600px;\n}\n\n.preview-section {\n  padding: 20px;\n  background: white;\n  border: 1px solid #ddd;\n  border-radius: 8px;\n}\n\n.preview-content {\n  max-width: 600px;\n  margin: 0 auto;\n}\n\n.validation-result {\n  padding: 16px;\n  border-radius: 8px;\n  border-left: 4px solid;\n}\n\n.validation-result.success {\n  background: #d4edda;\n  border-color: #28a745;\n  color: #155724;\n}\n\n.validation-result.error {\n  background: #f8d7da;\n  border-color: #dc3545;\n  color: #721c24;\n}\n\n.validation-result ul {\n  margin: 8px 0 0 20px;\n}\n\nbutton:disabled {\n  opacity: 0.5;\n  cursor: not-allowed;\n}\n</style>"
+    }
+  ],
+  "implementationPatterns": [
+    {
+      "name": "Read-Only Code Display Pattern",
+      "description": "Display code snippets for documentation or tutorials without editing capability",
+      "when": "Showing code examples, documentation, or read-only snippets",
+      "code": "<template>\n  <InCodeSnippet\n    :code=\"exampleCode\"\n    :options=\"{\n      mode: 'javascript',\n      theme: 'monokai',\n      lineNumbers: true,\n      readOnly: true\n    }\"\n    :canEdit=\"false\"\n    :size=\"{ width: '100%', height: '300px' }\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\nimport { InCodeSnippet } from '@useinsider/design-system-vue';\n\nconst exampleCode = ref(`// Example: Array methods\nconst numbers = [1, 2, 3, 4, 5];\nconst doubled = numbers.map(n => n * 2);\nconsole.log(doubled); // [2, 4, 6, 8, 10]`);\n</script>",
+      "pros": [
+        "Clean presentation without edit controls",
+        "Prevents accidental modifications",
+        "Optimized for display performance",
+        "Focuses user attention on content"
+      ],
+      "cons": [
+        "No copy/paste convenience for users",
+        "Cannot test or modify examples",
+        "Limited interactivity"
+      ]
+    },
+    {
+      "name": "Template Editor with Dynamic Content",
+      "description": "Editable template with dynamic content insertion for emails, messages, or documents",
+      "when": "Building email templates, notification messages, or any content with placeholders",
+      "code": "<template>\n  <div>\n    <InCodeSnippet\n      v-model:code=\"template\"\n      :options=\"{ mode: 'htmlmixed', lineWrapping: true }\"\n      :canAddDynamicContent=\"true\"\n      :dynamicContentBoxProps=\"{\n        contentObject: availableTags,\n        groupBy: 'category',\n        searchable: true\n      }\"\n      :replaceDynamicContentMap=\"sampleData\"\n      :markNotExistDynamicContent=\"true\"\n      :saveButtonCallback=\"handleSave\"\n      @addDynamicAttribute=\"logTagInsertion\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\nimport { InCodeSnippet } from '@useinsider/design-system-vue';\nimport { useTemplateManager } from './composables/useTemplateManager';\n\nconst { template, availableTags, sampleData, saveTemplate } = useTemplateManager();\n\nconst handleSave = async (code: string) => {\n  await saveTemplate(code);\n};\n\nconst logTagInsertion = (tag: any) => {\n  console.log('Inserted tag:', tag);\n};\n</script>",
+      "pros": [
+        "Visual merge tag insertion",
+        "Real-time preview with sample data",
+        "Validation of used tags",
+        "Category-based organization"
+      ],
+      "cons": [
+        "Complex configuration",
+        "Requires tag management system",
+        "Higher learning curve"
+      ]
+    },
+    {
+      "name": "Code Editor with Validation Pattern",
+      "description": "Interactive code editor with real-time syntax checking and error feedback",
+      "when": "Building code playgrounds, configuration editors, or any input requiring validation",
+      "code": "<template>\n  <div class=\"validated-editor\">\n    <InCodeSnippet\n      v-model:code=\"code\"\n      :options=\"{\n        mode: language,\n        lineNumbers: true,\n        theme: 'monokai'\n      }\"\n      :syntaxCheck=\"true\"\n      :invalid=\"hasErrors\"\n      :invalidMessage=\"errorSummary\"\n      @checkSyntaxError=\"handleValidation\"\n      @input=\"onCodeChange\"\n    />\n    \n    <div v-if=\"errors.length > 0\" class=\"error-list\">\n      <h4>Errors Found:</h4>\n      <ul>\n        <li v-for=\"(error, idx) in errors\" :key=\"idx\">\n          Line {{ error.line }}: {{ error.message }}\n        </li>\n      </ul>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, computed } from 'vue';\nimport { InCodeSnippet } from '@useinsider/design-system-vue';\n\nconst code = ref('');\nconst language = ref('javascript');\nconst errors = ref<any[]>([]);\n\nconst hasErrors = computed(() => errors.value.length > 0);\nconst errorSummary = computed(() => \n  hasErrors.value ? `${errors.value.length} error(s) found` : ''\n);\n\nconst handleValidation = (errorList: any[]) => {\n  errors.value = errorList;\n};\n\nconst onCodeChange = () => {\n  // Clear errors when user starts typing\n  if (hasErrors.value) {\n    errors.value = [];\n  }\n};\n</script>",
+      "pros": [
+        "Immediate error feedback",
+        "Improved code quality",
+        "Better user experience",
+        "Prevents invalid submissions"
+      ],
+      "cons": [
+        "May slow down editor for large files",
+        "Language-specific validation required",
+        "Can be distracting for experienced users"
+      ]
+    }
+  ],
+  "useCases": [
+    {
+      "title": "API Documentation Code Examples",
+      "description": "Display code examples in API documentation with syntax highlighting for multiple languages",
+      "example": "Technical documentation sites showing endpoint examples in JavaScript, Python, cURL, etc. Read-only mode prevents editing while maintaining syntax highlighting and line numbers."
+    },
+    {
+      "title": "Email Campaign Template Editor",
+      "description": "Create and edit marketing email templates with dynamic content placeholders for personalization",
+      "example": "Marketing platform where users build email templates with merge tags like {{user.name}}, {{product.title}}, {{discount.code}}. Preview shows rendered output with sample data."
+    },
+    {
+      "title": "Configuration File Editor",
+      "description": "Edit JSON, YAML, or other configuration files with syntax validation and error highlighting",
+      "example": "DevOps dashboard for editing Kubernetes configs, CI/CD pipelines, or application settings. Real-time validation prevents invalid configurations from being saved."
+    },
+    {
+      "title": "SQL Query Builder",
+      "description": "Write and edit SQL queries with syntax highlighting and validation before execution",
+      "example": "Database management tool where users write queries. Syntax checking catches errors before running queries against production databases."
+    },
+    {
+      "title": "Code Learning Platform",
+      "description": "Interactive coding exercises with editable examples and instant feedback",
+      "example": "Educational platform showing code challenges. Students edit code, run it, and see output. Syntax validation guides learning."
+    },
+    {
+      "title": "Webhook Payload Template Editor",
+      "description": "Design webhook payloads with dynamic content from events and user data",
+      "example": "Integration platform for creating webhook templates. Users insert event attributes, user properties, and custom fields. Validation ensures all tags exist."
+    }
+  ],
+  "bestPractices": [
+    {
+      "title": "Always Enable XSS Protection for User Content",
+      "description": "Set preventXss: true when displaying any user-generated or untrusted code content",
+      "code": "// CRITICAL: Protect against XSS attacks\n<InCodeSnippet\n  :code=\"userSubmittedCode\"\n  :preventXss=\"true\" // Always for user content\n/>\n\n// Safe to disable only for trusted/admin content\n<InCodeSnippet\n  :code=\"systemTemplate\"\n  :preventXss=\"false\"\n/>",
+      "reasoning": "Prevents malicious script injection that could compromise user security and data"
+    },
+    {
+      "title": "Use Appropriate Editor Size",
+      "description": "Set editor dimensions based on expected content length and available screen space",
+      "code": "// Short snippets (< 20 lines)\n:size=\"{ width: '100%', height: '200px' }\"\n\n// Medium code blocks (20-50 lines)\n:size=\"{ width: '100%', height: '400px' }\"\n\n// Full templates/documents (50+ lines)\n:size=\"{ width: '100%', height: '600px' }\"\n\n// Responsive with viewport height\n:size=\"{ width: '100%', height: '60vh' }\"\n:usePercentageSize=\"true\"",
+      "reasoning": "Optimizes readability and reduces unnecessary scrolling while preventing wasted space"
+    },
+    {
+      "title": "Validate Dynamic Content Tags",
+      "description": "Enable tag validation to catch typos and removed attributes before content is sent",
+      "code": "<InCodeSnippet\n  :canAddDynamicContent=\"true\"\n  :markNotExistDynamicContent=\"true\" // Auto-detect invalid tags\n  :warningTags=\"deprecatedTags\" // Mark deprecated tags\n  :errorTags=\"removedTags\" // Mark removed tags\n  :dynamicContentBoxProps=\"availableTags\"\n  @markedTags=\"handleValidationResults\"\n/>",
+      "reasoning": "Prevents sending emails/messages with broken placeholders that display as {{user.unknown}}"
+    },
+    {
+      "title": "Configure Syntax Checking for Critical Code",
+      "description": "Enable syntax validation for configuration files, SQL queries, and production code",
+      "code": "<InCodeSnippet\n  :syntaxCheck=\"true\"\n  :options=\"{\n    mode: 'javascript', // or 'sql', 'python', etc.\n    lint: true // Enable linting\n  }\"\n  @checkSyntaxError=\"preventSaveIfErrors\"\n/>\n\nconst preventSaveIfErrors = (errors: any[]) => {\n  if (errors.length > 0) {\n    canSave.value = false;\n    showErrorMessage('Fix syntax errors before saving');\n  }\n};",
+      "reasoning": "Catches errors before they cause runtime failures or break production systems"
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Displaying user-generated code without XSS protection",
+      "why": "Users can inject malicious scripts that execute in viewers' browsers",
+      "impact": "Critical security vulnerability - account hijacking, data theft, malware injection",
+      "fix": "Always set preventXss: true when code content comes from users or untrusted sources",
+      "severity": "critical",
+      "example": "// WRONG - Critical XSS vulnerability\n<InCodeSnippet :code=\"userCode\" />\n\n// CORRECT - XSS protected\n<InCodeSnippet :code=\"userCode\" :preventXss=\"true\" />"
+    },
+    {
+      "mistake": "Conflicting canEdit and readOnly settings",
+      "why": "canEdit controls UI buttons, options.readOnly controls editor itself - both must align",
+      "impact": "Confusing UX - users see edit buttons but cannot edit, or vice versa",
+      "fix": "Keep settings consistent: both false for read-only, both true for editable",
+      "severity": "high",
+      "example": "// WRONG - conflicting settings\n<InCodeSnippet :canEdit=\"true\" :options=\"{ readOnly: true }\" />\n\n// CORRECT - consistent read-only\n<InCodeSnippet :canEdit=\"false\" :options=\"{ readOnly: true }\" />\n\n// CORRECT - consistent editable\n<InCodeSnippet :canEdit=\"true\" :options=\"{ readOnly: false }\" />"
+    },
+    {
+      "mistake": "Not validating dynamic content tags before sending",
+      "why": "Typos or removed attributes result in broken placeholders in sent content",
+      "impact": "Users receive emails with {{user.namee}} or {{removed.field}} instead of actual data",
+      "fix": "Enable markNotExistDynamicContent and validate tags before save/send",
+      "severity": "high",
+      "example": "// WRONG - no validation\n<InCodeSnippet :canAddDynamicContent=\"true\" />\n\n// CORRECT - validates tags\n<InCodeSnippet\n  :canAddDynamicContent=\"true\"\n  :markNotExistDynamicContent=\"true\"\n  :dynamicContentBoxProps=\"availableTags\"\n  @markedTags=\"validateBeforeSave\"\n/>"
+    },
+    {
+      "mistake": "Using fixed pixel sizes for responsive layouts",
+      "why": "Editor becomes too small on mobile or too large on desktop",
+      "impact": "Poor mobile experience, wasted space on large screens",
+      "fix": "Use percentage-based or viewport-relative sizes with usePercentageSize: true",
+      "severity": "medium",
+      "example": "// WRONG - fixed size breaks on mobile\n<InCodeSnippet :size=\"{ width: '1200px', height: '600px' }\" />\n\n// CORRECT - responsive sizing\n<InCodeSnippet\n  :size=\"{ width: '100%', height: '60vh' }\"\n  :usePercentageSize=\"true\"\n/>"
+    },
+    {
+      "mistake": "Not handling saveButtonCallback errors",
+      "why": "Users think save succeeded when it actually failed",
+      "impact": "Data loss - users close editor thinking changes were saved",
+      "fix": "Implement proper error handling in save callback with user feedback",
+      "severity": "high",
+      "example": "// WRONG - ignores errors\nconst save = async (code) => {\n  await api.save(code); // May fail silently\n};\n\n// CORRECT - handles errors\nconst save = async (code) => {\n  try {\n    await api.save(code);\n    toast.success('Saved successfully');\n  } catch (error) {\n    toast.error('Save failed: ' + error.message);\n    throw error; // Prevent editor from closing\n  }\n};"
+    }
+  ],
+  "performanceNotes": [
+    {
+      "topic": "Large File Handling",
+      "description": "CodeMirror can slow down with very large files (>5000 lines)",
+      "recommendation": "Consider paginating content, using virtual scrolling, or warning users about large files. Disable syntax checking for files over 10,000 lines.",
+      "impact": "Significant performance degradation with large files can freeze UI"
+    },
+    {
+      "topic": "Dynamic Content Validation",
+      "description": "Validating hundreds of tags on every keystroke impacts performance",
+      "recommendation": "Debounce validation by 300-500ms or validate only on blur/save for templates with many tags",
+      "impact": "Can cause typing lag in templates with 50+ dynamic content tags"
+    },
+    {
+      "topic": "Syntax Checking Performance",
+      "description": "Real-time syntax checking runs on every code change",
+      "recommendation": "For complex languages or large files, debounce syntax checking or disable it entirely. Enable only for critical use cases.",
+      "impact": "Continuous syntax checking can cause 100-300ms lag on each keystroke for large files"
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "topic": "Keyboard Navigation",
+      "description": "CodeMirror provides full keyboard navigation within the editor",
+      "wcagLevel": "A",
+      "recommendation": "Ensure focus is visible when entering editor. Use focusEditor prop to auto-focus for better keyboard-only navigation.",
+      "example": "<InCodeSnippet :focusEditor=\"true\" />"
+    },
+    {
+      "topic": "Screen Reader Support",
+      "description": "Code editors can be difficult for screen readers to navigate line by line",
+      "wcagLevel": "AA",
+      "recommendation": "Provide alternative text view option or textarea fallback for screen reader users. Consider aria-label describing the editor purpose.",
+      "example": "<div>\n  <label id=\"code-editor-label\">JavaScript Code Editor</label>\n  <InCodeSnippet aria-labelledby=\"code-editor-label\" />\n</div>"
+    },
+    {
+      "topic": "Error Announcements",
+      "description": "Syntax errors should be announced to screen reader users",
+      "wcagLevel": "AA",
+      "recommendation": "Use aria-live region to announce validation errors. Set invalid and invalidMessage props for error state.",
+      "example": "<div>\n  <InCodeSnippet\n    :invalid=\"hasErrors\"\n    :invalidMessage=\"errorMessage\"\n    @checkSyntaxError=\"updateErrorMessage\"\n  />\n  <div aria-live=\"polite\" aria-atomic=\"true\">\n    {{ hasErrors ? errorMessage : '' }}\n  </div>\n</div>"
+    },
+    {
+      "topic": "Color Contrast for Syntax Highlighting",
+      "description": "Syntax highlighting themes may have insufficient contrast",
+      "wcagLevel": "AA",
+      "recommendation": "Choose high-contrast themes or customize colors to meet WCAG AA contrast ratios (4.5:1 for normal text). Test themes with contrast checkers.",
+      "example": "// Use high-contrast themes\n:options=\"{ theme: 'default' }\" // Built-in with good contrast\n\n// Or test custom themes for contrast\n:options=\"{ theme: 'custom-high-contrast' }\""
+    }
+  ],
+  "helperFunctions": [
+    {
+      "name": "useCodeEditor",
+      "description": "Composable for managing code editor state with save, reset, and validation functionality",
+      "code": "import { ref, computed } from 'vue';\n\nexport function useCodeEditor(initialCode = '', options = {}) {\n  const {\n    onSave,\n    onValidate,\n    autoSave = false,\n    autoSaveDelay = 2000\n  } = options;\n\n  const code = ref(initialCode);\n  const originalCode = ref(initialCode);\n  const syntaxErrors = ref([]);\n  const saving = ref(false);\n  const saveError = ref(null);\n  \n  const isDirty = computed(() => code.value !== originalCode.value);\n  const hasErrors = computed(() => syntaxErrors.value.length > 0);\n  const canSave = computed(() => isDirty.value && !hasErrors.value && !saving.value);\n\n  let autoSaveTimer = null;\n\n  const handleCodeChange = (newCode: string) => {\n    code.value = newCode;\n    saveError.value = null;\n\n    if (autoSave && canSave.value) {\n      clearTimeout(autoSaveTimer);\n      autoSaveTimer = setTimeout(() => {\n        save();\n      }, autoSaveDelay);\n    }\n  };\n\n  const handleSyntaxErrors = (errors: any[]) => {\n    syntaxErrors.value = errors;\n    if (onValidate) {\n      onValidate(errors);\n    }\n  };\n\n  const save = async () => {\n    if (!canSave.value) return;\n\n    saving.value = true;\n    saveError.value = null;\n\n    try {\n      if (onSave) {\n        await onSave(code.value);\n      }\n      originalCode.value = code.value;\n      return true;\n    } catch (error: any) {\n      saveError.value = error.message;\n      throw error;\n    } finally {\n      saving.value = false;\n    }\n  };\n\n  const reset = () => {\n    code.value = originalCode.value;\n    syntaxErrors.value = [];\n    saveError.value = null;\n  };\n\n  const setCode = (newCode: string) => {\n    code.value = newCode;\n    originalCode.value = newCode;\n  };\n\n  return {\n    code,\n    isDirty,\n    hasErrors,\n    canSave,\n    saving,\n    saveError,\n    syntaxErrors,\n    handleCodeChange,\n    handleSyntaxErrors,\n    save,\n    reset,\n    setCode\n  };\n}",
+      "parameters": [
+        "initialCode: string - Initial code content",
+        "options: { onSave?: Function, onValidate?: Function, autoSave?: boolean, autoSaveDelay?: number }"
+      ],
+      "returnType": "{ code, isDirty, hasErrors, canSave, saving, saveError, syntaxErrors, handleCodeChange, handleSyntaxErrors, save, reset, setCode }",
+      "example": "// Component usage\nimport { useCodeEditor } from './composables/useCodeEditor';\n\nconst {\n  code,\n  isDirty,\n  hasErrors,\n  canSave,\n  saving,\n  handleCodeChange,\n  handleSyntaxErrors,\n  save,\n  reset\n} = useCodeEditor(\n  'console.log(\"Hello\");',\n  {\n    onSave: async (code) => {\n      await api.saveCode(code);\n    },\n    autoSave: true,\n    autoSaveDelay: 3000\n  }\n);\n\n// Template\n<InCodeSnippet\n  :code=\"code\"\n  @input=\"handleCodeChange\"\n  @checkSyntaxError=\"handleSyntaxErrors\"\n  :saveButtonCallback=\"save\"\n/>\n<button @click=\"reset\" :disabled=\"!isDirty\">Reset</button>"
+    },
+    {
+      "name": "createDynamicContentConfig",
+      "description": "Helper to create dynamic content configuration from attribute lists with automatic categorization",
+      "code": "interface Attribute {\n  name: string;\n  label: string;\n  type?: string;\n  category?: string;\n  description?: string;\n}\n\nexport function createDynamicContentConfig(\n  attributes: Attribute[],\n  options: {\n    groupBy?: string;\n    searchable?: boolean;\n    autoCategorizeFn?: (attr: Attribute) => string;\n  } = {}\n) {\n  const { groupBy = 'category', searchable = true, autoCategorizeFn } = options;\n\n  // Auto-categorize if function provided\n  const categorizedAttributes = attributes.map(attr => {\n    if (!attr.category && autoCategorizeFn) {\n      return { ...attr, category: autoCategorizeFn(attr) };\n    }\n    return attr;\n  });\n\n  // Sort by category and then by label\n  const sortedAttributes = [...categorizedAttributes].sort((a, b) => {\n    const categoryCompare = (a.category || '').localeCompare(b.category || '');\n    if (categoryCompare !== 0) return categoryCompare;\n    return a.label.localeCompare(b.label);\n  });\n\n  return {\n    contentObject: sortedAttributes.map(({ name, label, category, description }) => ({\n      name,\n      label,\n      category,\n      description\n    })),\n    groupBy,\n    searchable\n  };\n}\n\n// Auto-categorization helper\nexport function autoCategorizeBydotNotation(attr: Attribute): string {\n  const parts = attr.name.split('.');\n  if (parts.length > 1) {\n    // Capitalize first part: 'user.name' -> 'User'\n    return parts[0].charAt(0).toUpperCase() + parts[0].slice(1);\n  }\n  return 'Other';\n}",
+      "parameters": [
+        "attributes: Attribute[] - List of attributes with name, label, optional category",
+        "options: { groupBy?: string, searchable?: boolean, autoCategorizeFn?: Function }"
+      ],
+      "returnType": "{ contentObject: Array<{ name, label, category, description }>, groupBy: string, searchable: boolean }",
+      "example": "// Define attributes\nconst userAttributes = [\n  { name: 'user.firstName', label: 'First Name', description: 'User first name' },\n  { name: 'user.lastName', label: 'Last Name' },\n  { name: 'user.email', label: 'Email Address' },\n  { name: 'order.id', label: 'Order ID' },\n  { name: 'order.total', label: 'Order Total' },\n  { name: 'product.name', label: 'Product Name' }\n];\n\n// Auto-categorize by prefix\nconst dynamicConfig = createDynamicContentConfig(\n  userAttributes,\n  {\n    searchable: true,\n    autoCategorizeFn: autoCategorizeBydotNotation\n  }\n);\n\n// Result:\n// {\n//   contentObject: [\n//     { name: 'order.id', label: 'Order ID', category: 'Order' },\n//     { name: 'order.total', label: 'Order Total', category: 'Order' },\n//     { name: 'product.name', label: 'Product Name', category: 'Product' },\n//     { name: 'user.email', label: 'Email Address', category: 'User' },\n//     { name: 'user.firstName', label: 'First Name', category: 'User' },\n//     { name: 'user.lastName', label: 'Last Name', category: 'User' }\n//   ],\n//   groupBy: 'category',\n//   searchable: true\n// }\n\n// Use in component\n<InCodeSnippet\n  :canAddDynamicContent=\"true\"\n  :dynamicContentBoxProps=\"dynamicConfig\"\n/>"
+    }
+  ]
+}

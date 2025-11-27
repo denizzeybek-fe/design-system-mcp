@@ -317,6 +317,171 @@
       "language": "vue"
     }
   ],
+  "codeSnippets": {
+    "basicMultiSelect": {
+      "title": "Basic Multi-Select",
+      "description": "Simple multi-select with change handler",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InMultiSelect } from '@useinsider/design-system-vue';\n\nconst options = [\n  { text: 'Option 1', value: 1 },\n  { text: 'Option 2', value: 2 },\n  { text: 'Option 3', value: 3 }\n];\n\nconst selected = ref([]);\n</script>\n\n<template>\n  <InMultiSelect\n    id=\"multi-select\"\n    label-text=\"Select Multiple\"\n    :options=\"options\"\n    :value=\"selected\"\n    @change=\"selected = $event\"\n  />\n</template>"
+    },
+    "withSearch": {
+      "title": "Searchable Multi-Select",
+      "description": "Large list with search filtering",
+      "code": "<script setup>\nimport { ref, computed } from 'vue';\n\nconst allOptions = ref(/* 100+ options */);\nconst searchQuery = ref('');\nconst selected = ref([]);\n\nconst filteredOptions = computed(() => {\n  if (!searchQuery.value) return allOptions.value;\n  return allOptions.value.filter(opt => \n    opt.text.toLowerCase().includes(searchQuery.value.toLowerCase())\n  );\n});\n</script>\n\n<template>\n  <InMultiSelect\n    label-text=\"Search and Select\"\n    search-status\n    :options=\"filteredOptions\"\n    :value=\"selected\"\n    @search=\"searchQuery = $event\"\n    @change=\"selected = $event\"\n  />\n</template>"
+    },
+    "withLimit": {
+      "title": "Limited Selection",
+      "description": "Limit maximum selections with validation",
+      "code": "<script setup>\nimport { ref, computed } from 'vue';\n\nconst selected = ref([]);\nconst maxItems = 3;\n\nconst state = computed(() => \n  selected.value.length >= maxItems ? 'warning' : 'default'\n);\n\nconst stateMessage = computed(() => \n  selected.value.length >= maxItems \n    ? `Maximum ${maxItems} items selected` \n    : ''\n);\n</script>\n\n<template>\n  <InMultiSelect\n    label-text=\"Select up to 3\"\n    :options=\"options\"\n    :value=\"selected\"\n    :max-selectable-item=\"maxItems\"\n    :state=\"state\"\n    :state-message=\"stateMessage\"\n    @change=\"selected = $event\"\n  />\n</template>"
+    }
+  },
+  "styling": {
+    "cssVariables": {
+      "--multi-select-bg": "Dropdown background (default: white)",
+      "--multi-select-text": "Text color",
+      "--multi-select-border": "Border color",
+      "--multi-select-tag-bg": "Selected tag background",
+      "--multi-select-tag-text": "Selected tag text color",
+      "--multi-select-max-height": "Dropdown max height (default: 300px)",
+      "--multi-select-option-hover": "Option hover background"
+    },
+    "classes": {
+      "in-multi-select": "Root container",
+      "in-multi-select__label": "Label text",
+      "in-multi-select__tags": "Selected tags container",
+      "in-multi-select__tag": "Individual selected tag",
+      "in-multi-select__tag-remove": "Remove tag button (X)",
+      "in-multi-select__dropdown": "Dropdown panel",
+      "in-multi-select__option": "Dropdown option item",
+      "in-multi-select__option--selected": "Selected option",
+      "in-multi-select__option--disabled": "Disabled option",
+      "in-multi-select__search": "Search input",
+      "in-multi-select__select-all": "'Select All' button"
+    },
+    "notes": "Selected items displayed as removable tags. Use CSS variables to match your design system."
+  },
+  "implementationPatterns": [
+    {
+      "name": "Form Multi-Select with Validation",
+      "description": "Multi-select in form with validation",
+      "code": "<script setup>\nimport { ref, computed } from 'vue';\nimport { InMultiSelect } from '@useinsider/design-system-vue';\n\nconst selectedCategories = ref([]);\nconst minRequired = 2;\n\nconst state = computed(() => {\n  if (selectedCategories.value.length === 0) return 'default';\n  if (selectedCategories.value.length < minRequired) return 'error';\n  return 'success';\n});\n\nconst stateMessage = computed(() => {\n  if (selectedCategories.value.length < minRequired) {\n    return `Please select at least ${minRequired} categories`;\n  }\n  return '';\n});\n\nconst categories = [\n  { text: 'Technology', value: 'tech' },\n  { text: 'Business', value: 'business' },\n  { text: 'Science', value: 'science' },\n  { text: 'Arts', value: 'arts' }\n];\n</script>\n\n<template>\n  <form>\n    <InMultiSelect\n      id=\"categories\"\n      label-text=\"Select Categories\"\n      :options=\"categories\"\n      :value=\"selectedCategories\"\n      :state=\"state\"\n      :state-message=\"stateMessage\"\n      @change=\"selectedCategories = $event\"\n    />\n  </form>\n</template>",
+      "when": "Multi-select with minimum/maximum requirements",
+      "pros": ["Clear validation feedback", "User-friendly error messages", "Real-time validation"],
+      "cons": ["Requires state management", "Can be verbose for complex rules"]
+    },
+    {
+      "name": "Filter Multi-Select",
+      "description": "Multi-select for filtering data tables",
+      "code": "<script setup>\nimport { ref, computed } from 'vue';\nimport { InMultiSelect } from '@useinsider/design-system-vue';\n\nconst allData = ref([\n  { name: 'John', status: 'active', role: 'admin' },\n  { name: 'Jane', status: 'pending', role: 'user' },\n  // ... more data\n]);\n\nconst statusFilter = ref([]);\nconst roleFilter = ref([]);\n\nconst statusOptions = [\n  { text: 'Active', value: 'active' },\n  { text: 'Pending', value: 'pending' },\n  { text: 'Inactive', value: 'inactive' }\n];\n\nconst roleOptions = [\n  { text: 'Admin', value: 'admin' },\n  { text: 'User', value: 'user' },\n  { text: 'Guest', value: 'guest' }\n];\n\nconst filteredData = computed(() => {\n  let data = allData.value;\n  \n  if (statusFilter.value.length > 0) {\n    const statuses = statusFilter.value.map(s => s.value);\n    data = data.filter(item => statuses.includes(item.status));\n  }\n  \n  if (roleFilter.value.length > 0) {\n    const roles = roleFilter.value.map(r => r.value);\n    data = data.filter(item => roles.includes(item.role));\n  }\n  \n  return data;\n});\n</script>\n\n<template>\n  <div class=\"filters\">\n    <InMultiSelect\n      id=\"status-filter\"\n      label-text=\"Filter by Status\"\n      :options=\"statusOptions\"\n      :value=\"statusFilter\"\n      select-all-option-status\n      @change=\"statusFilter = $event\"\n    />\n    \n    <InMultiSelect\n      id=\"role-filter\"\n      label-text=\"Filter by Role\"\n      :options=\"roleOptions\"\n      :value=\"roleFilter\"\n      select-all-option-status\n      @change=\"roleFilter = $event\"\n    />\n  </div>\n  \n  <DataTable :data=\"filteredData\" />\n</template>",
+      "when": "Building multi-criteria filters for data",
+      "pros": ["Multiple filter dimensions", "Clear selected filters", "Easy to clear all"],
+      "cons": ["Can be complex with many filters", "Performance with large datasets"]
+    },
+    {
+      "name": "Tag Management",
+      "description": "Create and manage tags with multi-select",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InMultiSelect } from '@useinsider/design-system-vue';\n\nconst allTags = ref([\n  { text: 'Important', value: 'important' },\n  { text: 'Urgent', value: 'urgent' },\n  { text: 'Review', value: 'review' }\n]);\n\nconst itemTags = ref([]);\n\nconst createTag = (tagName: string) => {\n  const newTag = {\n    text: tagName,\n    value: tagName.toLowerCase().replace(/\\s+/g, '-')\n  };\n  \n  // Add to available tags\n  allTags.value.push(newTag);\n  \n  // Auto-select the new tag\n  itemTags.value.push(newTag);\n};\n</script>\n\n<template>\n  <InMultiSelect\n    id=\"tag-manager\"\n    label-text=\"Tags\"\n    :options=\"allTags\"\n    :value=\"itemTags\"\n    create-option-status\n    option-validation-type=\"text\"\n    create-button-label=\"Create Tag\"\n    search-status\n    @change=\"itemTags = $event\"\n    @addOption=\"createTag\"\n  />\n</template>",
+      "when": "User-generated tags or categories",
+      "pros": ["Flexible tag creation", "Reusable tags", "Search existing tags"],
+      "cons": ["Risk of duplicate/similar tags", "Needs validation"]
+    }
+  ],
+  "useCases": [
+    {
+      "title": "Multi-Country Selection",
+      "description": "Select multiple countries for targeting",
+      "example": "<InMultiSelect\n  label-text=\"Target Countries\"\n  :options=\"countries\"\n  :value=\"selectedCountries\"\n  search-status\n  select-all-option-status\n  @change=\"selectedCountries = $event\"\n/>"
+    },
+    {
+      "title": "Permission Assignment",
+      "description": "Assign multiple permissions to a role",
+      "example": "<InMultiSelect\n  label-text=\"Permissions\"\n  :options=\"permissions\"\n  :value=\"rolePermissions\"\n  @change=\"rolePermissions = $event\"\n/>"
+    },
+    {
+      "title": "Filter by Multiple Criteria",
+      "description": "Filter data by multiple statuses or categories",
+      "example": "<InMultiSelect\n  label-text=\"Filter Status\"\n  :options=\"statusOptions\"\n  :value=\"activeFilters\"\n  select-all-option-status\n  @change=\"applyFilters\"\n/>"
+    },
+    {
+      "title": "Email Recipients",
+      "description": "Select multiple email recipients",
+      "example": "<InMultiSelect\n  label-text=\"To:\"\n  :options=\"contacts\"\n  :value=\"recipients\"\n  create-option-status\n  option-validation-type=\"email\"\n  @change=\"recipients = $event\"\n/>"
+    }
+  ],
+  "bestPractices": [
+    {
+      "title": "Provide Clear Label and Placeholder",
+      "description": "Help users understand what to select",
+      "code": "// Good\n<InMultiSelect\n  label-text=\"Select Target Countries\"\n  placeholder=\"Search countries...\"\n/>\n\n// Avoid\n<InMultiSelect label-text=\"Select\" />",
+      "reasoning": "Clear labels improve usability and accessibility"
+    },
+    {
+      "title": "Use Select All for Long Lists",
+      "description": "Enable select-all for lists with 5+ items",
+      "code": "<InMultiSelect\n  :options=\"longList\"\n  select-all-option-status\n  @selectAllOptions=\"handleSelectAll\"\n  @resetAllOptions=\"handleReset\"\n/>",
+      "reasoning": "Saves time when users need most/all options"
+    },
+    {
+      "title": "Set Reasonable Limits",
+      "description": "Prevent overwhelming selections",
+      "code": "<InMultiSelect\n  :max-selectable-item=\"10\"\n  :state=\"selectedCount >= 10 ? 'warning' : 'default'\"\n  :state-message=\"selectedCount >= 10 ? 'Maximum 10 items' : ''\"\n/>",
+      "reasoning": "Limits prevent UI/performance issues with too many selections"
+    },
+    {
+      "title": "Handle Empty States",
+      "description": "Guide users when no options available",
+      "code": "<InMultiSelect\n  v-if=\"options.length > 0\"\n  :options=\"options\"\n/>\n<p v-else class=\"empty-state\">\n  No options available. Try adjusting your search.\n</p>",
+      "reasoning": "Better UX when filtering results in no matches"
+    }
+  ],
+  "helperFunctions": [
+    {
+      "name": "transformToOptions",
+      "description": "Convert simple array to multi-select options format",
+      "code": "function transformToOptions(items: string[]) {\n  return items.map(item => ({\n    text: item,\n    value: item.toLowerCase().replace(/\\s+/g, '-')\n  }));\n}",
+      "parameters": [
+        {
+          "name": "items",
+          "type": "string[]",
+          "description": "Array of string values"
+        }
+      ],
+      "returnType": "Array<{ text: string, value: string }>",
+      "example": "const options = transformToOptions(['Turkey', 'USA', 'UK']);\n// Returns: [{ text: 'Turkey', value: 'turkey' }, ...]"
+    },
+    {
+      "name": "getSelectedValues",
+      "description": "Extract just the values from selected options",
+      "code": "function getSelectedValues(selected: Array<{ text: string, value: any }>) {\n  return selected.map(item => item.value);\n}",
+      "parameters": [
+        {
+          "name": "selected",
+          "type": "Array<{ text: string, value: any }>",
+          "description": "Selected options array"
+        }
+      ],
+      "returnType": "Array<any>",
+      "example": "const values = getSelectedValues(selected);\n// If selected = [{ text: 'Turkey', value: 'TR' }]\n// Returns: ['TR']"
+    },
+    {
+      "name": "isMaxSelectionReached",
+      "description": "Check if maximum selection limit is reached",
+      "code": "function isMaxSelectionReached(selected: any[], max: number | undefined) {\n  if (!max) return false;\n  return selected.length >= max;\n}",
+      "parameters": [
+        {
+          "name": "selected",
+          "type": "any[]",
+          "description": "Current selected items"
+        },
+        {
+          "name": "max",
+          "type": "number | undefined",
+          "description": "Maximum allowed selections"
+        }
+      ],
+      "returnType": "boolean",
+      "example": "if (isMaxSelectionReached(selected, 5)) {\n  showWarning('Maximum 5 items allowed');\n}"
+    }
+  ],
   "commonMistakes": [
     {
       "mistake": "Using InMultiSelect like InSelect (single selection)",
@@ -333,22 +498,45 @@
   ],
   "performanceNotes": [
     {
-      "note": "Large option lists (100+) can cause performance issues",
-      "recommendation": "Use lazyLoad prop with pagination for large datasets"
+      "topic": "Large option lists",
+      "description": "Lists with 100+ options can cause rendering lag",
+      "recommendation": "Use lazyLoad prop with pagination, or implement virtual scrolling",
+      "impact": "high"
     },
     {
-      "note": "Search filtering done client-side by default",
-      "recommendation": "Use lazyLoadSearch for server-side filtering with large datasets"
+      "topic": "Search filtering performance",
+      "description": "Client-side filtering is fast up to ~200 items",
+      "recommendation": "For larger datasets, use lazyLoadSearch with server-side filtering",
+      "impact": "medium"
+    },
+    {
+      "topic": "Tag rendering",
+      "description": "Rendering many selected tags (20+) can slow down UI",
+      "recommendation": "Consider showing count after certain threshold: '15 items selected'",
+      "impact": "low"
     }
   ],
   "accessibilityNotes": [
     {
-      "note": "Multi-select requires clear indication of selected items",
-      "recommendation": "Selected items shown as tags above dropdown - ensure adequate color contrast"
+      "topic": "Selected items visibility",
+      "description": "Multi-select must clearly show selected items",
+      "wcagLevel": "A",
+      "recommendation": "Selected items shown as tags with adequate color contrast (4.5:1)",
+      "example": "<InMultiSelect\n  :value=\"selected\"\n/>\n// Tags auto-rendered with remove buttons"
     },
     {
-      "note": "Keyboard navigation for multi-select",
-      "recommendation": "Use Space to select/deselect, Enter to close, Backspace to remove last tag"
+      "topic": "Keyboard navigation",
+      "description": "Full keyboard support for multi-select",
+      "wcagLevel": "A",
+      "recommendation": "Arrow keys navigate, Space selects/deselects, Backspace removes last tag, Enter closes",
+      "example": "// Automatically supported:\n// Tab - Focus dropdown\n// Arrow Up/Down - Navigate options\n// Space - Toggle selection\n// Backspace - Remove last tag\n// Escape - Close dropdown"
+    },
+    {
+      "topic": "Screen reader announcements",
+      "description": "Announce selection changes to screen readers",
+      "wcagLevel": "AA",
+      "recommendation": "Component announces 'X items selected' when selection changes",
+      "example": "// Automatically announces:\n// '3 items selected: Turkey, USA, UK'"
     }
   ]
 }

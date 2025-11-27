@@ -281,3 +281,10 @@ Large menu with search functionality
 
 ℹ️ **Not closing menu after action in selectionType='single'**
 
+## Best Practices
+
+- **Use Descriptive Button Labels:** Button label should clearly indicate menu purpose
+- **Group Related Actions:** Organize menu items logically
+- **Handle All Option Values:** Always handle every possible option value
+- **Disable Unavailable Actions:** Use disabled property instead of hiding options
+

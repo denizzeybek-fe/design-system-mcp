@@ -301,17 +301,173 @@
       "code": "<script setup>\nimport { ref } from 'vue';\nimport { debounce } from 'lodash-es';\n\nconst searchQuery = ref('');\nconst searchResults = ref([]);\nconst recentSearches = ref(\n  JSON.parse(localStorage.getItem('recentSearches') || '[]')\n);\n\nconst performSearch = async (query) => {\n  if (!query) {\n    searchResults.value = [];\n    return;\n  }\n  \n  // Simulate API call\n  const results = await api.search(query);\n  searchResults.value = results.slice(0, 10);\n  \n  // Add to recent searches\n  const updated = [query, ...recentSearches.value.filter(s => s !== query)].slice(0, 10);\n  recentSearches.value = updated;\n  localStorage.setItem('recentSearches', JSON.stringify(updated));\n};\n\nconst debouncedSearch = debounce(performSearch, 300);\n\nconst handleSearch = (query) => {\n  searchQuery.value = query;\n  debouncedSearch(query);\n};\n\nconst handleSearchResultClick = (result) => {\n  router.push(result.path);\n};\n</script>\n\n<template>\n  <InSidebarV2 \n    :routes=\"routes\"\n    :search-results=\"searchResults\"\n    :recent-searches=\"recentSearches\"\n    @search=\"handleSearch\"\n    @search-result-click=\"handleSearchResultClick\"\n  />\n</template>"
     }
   ],
-  "helperFunctions": [],
+  "codeSnippets": {
+    "basicSetup": {
+      "title": "Basic Sidebar Setup",
+      "description": "Simple sidebar with navigation routes",
+      "code": "const routes = [\n  { id: 'home', label: 'Home', path: '/', icon: 'home' },\n  { id: 'inbox', label: 'Inbox', path: '/inbox', icon: 'mail', badge: 3 }\n];\n\n<InSidebarV2 :routes=\"routes\" @navigate=\"handleNavigate\" />"
+    },
+    "nestedRoutes": {
+      "title": "Nested Routes with Children",
+      "description": "Collapsible parent routes with nested children",
+      "code": "const routes = [\n  {\n    id: 'admin',\n    label: 'Admin',\n    icon: 'lock',\n    children: [\n      { id: 'users', label: 'Users', path: '/admin/users' },\n      { id: 'settings', label: 'Settings', path: '/admin/settings' }\n    ]\n  }\n];"
+    },
+    "searchIntegration": {
+      "title": "Search with Debouncing",
+      "description": "Implement search with API integration",
+      "code": "import { debounce } from 'lodash-es';\n\nconst debouncedSearch = debounce(async (query) => {\n  const results = await api.search(query);\n  searchResults.value = results;\n}, 300);\n\n<InSidebarV2 \n  :search-results=\"searchResults\"\n  @search=\"debouncedSearch\"\n/>"
+    }
+  },
+  "styling": {
+    "cssVariables": {
+      "--sidebar-width": "Sidebar width (default: 240px)",
+      "--sidebar-bg": "Background color",
+      "--sidebar-text": "Text color",
+      "--sidebar-item-hover": "Hover background color",
+      "--sidebar-item-active": "Active item background"
+    },
+    "classes": {
+      "in-sidebar-v2": "Root sidebar container",
+      "in-sidebar-v2__header": "Header section with logo",
+      "in-sidebar-v2__search": "Search input area",
+      "in-sidebar-v2__nav": "Navigation items container",
+      "in-sidebar-v2__item": "Individual navigation item",
+      "in-sidebar-v2__item--active": "Active navigation item",
+      "in-sidebar-v2__badge": "Badge/counter on nav items"
+    },
+    "notes": "Sidebar uses CSS Grid for layout. Customize width via --sidebar-width variable. Active state is automatically applied based on route matching."
+  },
+  "implementationPatterns": [
+    {
+      "name": "Route-based navigation",
+      "description": "Integrate with Vue Router for automatic active state",
+      "code": "import { useRoute } from 'vue-router';\n\nconst route = useRoute();\nconst routes = computed(() => [\n  { \n    id: 'home', \n    label: 'Home', \n    path: '/',\n    active: route.path === '/'\n  }\n]);",
+      "when": "Building SPA with Vue Router",
+      "pros": ["Automatic active state", "Synchronized with browser navigation"],
+      "cons": ["Requires Vue Router dependency"]
+    },
+    {
+      "name": "Lazy-loaded nested routes",
+      "description": "Load child routes on parent expansion",
+      "code": "const loadChildren = async (parentId) => {\n  const children = await api.getChildRoutes(parentId);\n  const parent = routes.value.find(r => r.id === parentId);\n  if (parent) parent.children = children;\n};\n\nconst handleExpand = (route) => {\n  if (!route.children) loadChildren(route.id);\n};",
+      "when": "Large nested menu structures",
+      "pros": ["Reduces initial load time", "Loads data on demand"],
+      "cons": ["Adds complexity", "Requires loading states"]
+    },
+    {
+      "name": "Search with history",
+      "description": "Persist recent searches in localStorage",
+      "code": "const saveSearch = (query) => {\n  const recent = JSON.parse(localStorage.getItem('searches') || '[]');\n  const updated = [query, ...recent.filter(s => s !== query)].slice(0, 10);\n  localStorage.setItem('searches', JSON.stringify(updated));\n  recentSearches.value = updated;\n};\n\nconst handleSearchResultClick = (result) => {\n  saveSearch(result.query);\n  router.push(result.path);\n};",
+      "when": "Improving search UX",
+      "pros": ["Better user experience", "Quick access to common searches"],
+      "cons": ["Privacy consideration with localStorage"]
+    }
+  ],
+  "useCases": [
+    {
+      "title": "Admin Dashboard Navigation",
+      "description": "Multi-level navigation for admin panel",
+      "implementation": "const routes = [\n  { id: 'dashboard', label: 'Dashboard', path: '/', icon: 'home' },\n  {\n    id: 'users',\n    label: 'User Management',\n    icon: 'users',\n    children: [\n      { id: 'all-users', label: 'All Users', path: '/users' },\n      { id: 'roles', label: 'Roles & Permissions', path: '/users/roles' }\n    ]\n  },\n  { id: 'settings', label: 'Settings', path: '/settings', icon: 'cog' }\n];",
+      "notes": "Use nested routes for hierarchical admin sections"
+    },
+    {
+      "title": "App with Global Search",
+      "description": "Sidebar with integrated search functionality",
+      "implementation": "<InSidebarV2\n  :routes=\"navigationRoutes\"\n  :search-results=\"searchResults\"\n  :recent-searches=\"recentSearches\"\n  @search=\"handleSearch\"\n  @search-result-click=\"navigateToResult\"\n/>",
+      "notes": "Debounce search input (300ms) and limit recent searches to 10 items"
+    },
+    {
+      "title": "E-commerce Category Navigation",
+      "description": "Product categories with badges showing item counts",
+      "implementation": "const categories = [\n  { id: 'electronics', label: 'Electronics', path: '/cat/electronics', badge: 145 },\n  { id: 'clothing', label: 'Clothing', path: '/cat/clothing', badge: 89 },\n  {\n    id: 'home',\n    label: 'Home & Garden',\n    children: [\n      { id: 'furniture', label: 'Furniture', badge: 34 },\n      { id: 'decor', label: 'Decor', badge: 56 }\n    ]\n  }\n];",
+      "notes": "Use badge prop to show product counts per category"
+    }
+  ],
+  "helperFunctions": [
+    {
+      "name": "createRoute",
+      "description": "Create sidebar route object with defaults",
+      "code": "function createRoute(id: string, label: string, path: string, options = {}) {\n  return {\n    id,\n    label,\n    path,\n    icon: null,\n    badge: null,\n    active: false,\n    children: null,\n    ...options\n  };\n}",
+      "parameters": [
+        { "name": "id", "type": "string", "description": "Unique route identifier" },
+        { "name": "label", "type": "string", "description": "Display text" },
+        { "name": "path", "type": "string", "description": "Navigation path" },
+        { "name": "options", "type": "object", "description": "Additional route options (optional)" }
+      ],
+      "returnType": "object",
+      "example": "const homeRoute = createRoute('home', 'Home', '/', { icon: 'home', active: true });"
+    },
+    {
+      "name": "findActiveRoute",
+      "description": "Find active route by current path",
+      "code": "function findActiveRoute(routes: any[], currentPath: string): any | null {\n  for (const route of routes) {\n    if (route.path === currentPath) return route;\n    if (route.children) {\n      const found = findActiveRoute(route.children, currentPath);\n      if (found) return found;\n    }\n  }\n  return null;\n}",
+      "parameters": [
+        { "name": "routes", "type": "Array<any>", "description": "Routes array (can be nested)" },
+        { "name": "currentPath", "type": "string", "description": "Current active path" }
+      ],
+      "returnType": "object | null",
+      "example": "const active = findActiveRoute(routes, '/admin/users');"
+    },
+    {
+      "name": "updateRouteBadges",
+      "description": "Update badge counts for multiple routes",
+      "code": "function updateRouteBadges(routes: any[], badgeMap: Record<string, number>) {\n  return routes.map(route => ({\n    ...route,\n    badge: badgeMap[route.id] || route.badge,\n    children: route.children ? updateRouteBadges(route.children, badgeMap) : route.children\n  }));\n}",
+      "parameters": [
+        { "name": "routes", "type": "Array<any>", "description": "Routes array" },
+        { "name": "badgeMap", "type": "Record<string, number>", "description": "Map of route IDs to badge counts" }
+      ],
+      "returnType": "Array<any>",
+      "example": "const updated = updateRouteBadges(routes, { inbox: 5, notifications: 12 });"
+    }
+  ],
   "performanceNotes": [
-    "Large route arrays (>50 routes) may impact initial render - consider lazy loading nested routes",
-    "Search should always be debounced (300-500ms) to avoid excessive API calls",
-    "Recent searches should be limited to 10-20 items for performance",
-    "Use computed properties for route active states to avoid unnecessary re-renders"
+    {
+      "topic": "Large route arrays",
+      "description": "Rendering 50+ routes at once can impact initial load time.",
+      "recommendation": "Consider lazy loading nested routes or virtualizing long lists. Load children on parent expansion.",
+      "impact": "medium"
+    },
+    {
+      "topic": "Search debouncing",
+      "description": "Search triggers on every keystroke without debouncing causes excessive API calls.",
+      "recommendation": "Always debounce search handler (300-500ms) to reduce API load and improve performance.",
+      "impact": "high"
+    },
+    {
+      "topic": "Recent searches storage",
+      "description": "Storing unlimited recent searches in localStorage can cause performance issues.",
+      "recommendation": "Limit recent searches to 10-20 items maximum. Clear old entries periodically.",
+      "impact": "low"
+    }
   ],
   "accessibilityNotes": [
-    "Sidebar navigation automatically includes ARIA landmarks",
-    "Route labels should be clear and descriptive for screen readers",
-    "Keyboard navigation is supported by default (Tab, Enter, Arrow keys)",
-    "Search results should announce count to screen readers"
+    {
+      "topic": "ARIA landmarks",
+      "description": "Sidebar automatically includes navigation landmark for screen readers.",
+      "wcagLevel": "A",
+      "recommendation": "No action needed - component handles ARIA roles internally.",
+      "example": "<nav role=\"navigation\" aria-label=\"Main navigation\">"
+    },
+    {
+      "topic": "Route labels",
+      "description": "Navigation labels should be clear and descriptive for screen readers.",
+      "wcagLevel": "A",
+      "recommendation": "Avoid vague labels like 'Item 1'. Use descriptive text: 'User Management', 'Dashboard'.",
+      "example": "{ label: 'User Management' } // Good\n{ label: 'Users' } // Acceptable\n{ label: 'Item 1' } // Bad"
+    },
+    {
+      "topic": "Keyboard navigation",
+      "description": "Sidebar supports full keyboard navigation with Tab, Enter, and Arrow keys.",
+      "wcagLevel": "A",
+      "recommendation": "No action needed - component handles keyboard interaction internally.",
+      "example": "Tab to navigate, Enter to select, Arrow keys for nested items"
+    },
+    {
+      "topic": "Search result announcement",
+      "description": "Search result count should be announced to screen readers.",
+      "wcagLevel": "AA",
+      "recommendation": "Use aria-live region to announce result count: 'Found 5 results for query'.",
+      "example": "<div aria-live=\"polite\">Found {{ results.length }} results</div>"
+    }
   ]
 }

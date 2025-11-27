@@ -305,3 +305,10 @@ Allow creating new options on the fly
 
 ℹ️ **Not providing feedback on selection limit**
 
+## Best Practices
+
+- **Provide Clear Label and Placeholder:** Help users understand what to select
+- **Use Select All for Long Lists:** Enable select-all for lists with 5+ items
+- **Set Reasonable Limits:** Prevent overwhelming selections
+- **Handle Empty States:** Guide users when no options available
+

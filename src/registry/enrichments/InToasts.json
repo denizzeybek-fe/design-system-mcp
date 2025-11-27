@@ -1,0 +1,385 @@
+{
+  "component": "InToasts",
+  "_metadata": {
+    "lastUpdated": "2025-11-28T00:00:00.000Z",
+    "propsHash": "intoasts-v1-9props",
+    "eventsHash": "intoasts-v1-0events",
+    "propCount": 9,
+    "eventCount": 0
+  },
+  "propEnrichments": {
+    "text": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Message text displayed in the toast. Keep concise (1-2 sentences max). Can include HTML if preventXss is properly configured. Use action-oriented language.",
+        "typescript": "string",
+        "example": "'Campaign saved successfully'\n'Error: Unable to connect to server'\n'3 items added to cart'\n'<strong>Warning:</strong> Changes not saved'"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Writing long, verbose toast messages",
+          "why": "Toasts auto-dismiss and users don't have time to read long text",
+          "impact": "Users miss important information, frustration",
+          "fix": "Keep to 1-2 short sentences, max 60-80 characters",
+          "severity": "medium",
+          "example": "// Wrong:\ntext=\"Your campaign has been successfully saved to the database and you can now proceed to the next step of the workflow\"\n\n// Correct:\ntext=\"Campaign saved successfully\""
+        }
+      ]
+    },
+    "type": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Toast variant determining color scheme and semantic meaning. Common values: 'light' (default, neutral), 'success' (green), 'error' (red), 'warning' (yellow/orange), 'info' (blue). Affects background color and default icon.",
+        "typescript": "'light' | 'success' | 'error' | 'warning' | 'info'",
+        "example": "'success' // Green, checkmark icon\n'error' // Red, error icon\n'warning' // Orange, warning icon\n'info' // Blue, info icon\n'light' // Neutral (default)"
+      },
+      "possibleValues": [
+        {
+          "value": "light",
+          "description": "Neutral/default toast (gray background)"
+        },
+        {
+          "value": "success",
+          "description": "Success confirmation (green, checkmark icon)"
+        },
+        {
+          "value": "error",
+          "description": "Error/failure notification (red, error icon)"
+        },
+        {
+          "value": "warning",
+          "description": "Warning/caution message (orange, warning icon)"
+        },
+        {
+          "value": "info",
+          "description": "Informational message (blue, info icon)"
+        }
+      ]
+    },
+    "status": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Controls toast visibility. Set to true to show toast, false to hide. Use v-model:status for reactive control. Toast typically auto-dismisses after timeout.",
+        "typescript": "boolean",
+        "example": "true // Show toast\nfalse // Hide toast"
+      }
+    },
+    "icon": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Custom icon name from Insider icon system. Overrides default type-based icon. Leave empty to use default icon based on type (success=checkmark, error=alert, etc.).",
+        "typescript": "string",
+        "example": "'' // Use default type icon\n'check-circle' // Custom success icon\n'alert-triangle' // Custom warning icon\n'info-circle' // Custom info icon"
+      }
+    },
+    "withIcon": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "When true (default), shows icon alongside text. Set false for text-only toasts without icon. Icons help users quickly identify toast type (success, error, etc.).",
+        "typescript": "boolean",
+        "example": "true // Show icon (default)\nfalse // Text-only toast"
+      }
+    },
+    "actionButtonsConfig": {
+      "valueFormat": {
+        "structure": "Array<{ text: string; variant?: string; onClick: Function; }>",
+        "notes": "Array of action buttons shown in toast. Each button has text (label), optional variant (button style), and onClick handler. Use for actionable toasts like 'Undo', 'Retry', 'View Details'.",
+        "typescript": "Array<{\n  text: string;\n  variant?: 'primary' | 'secondary' | 'tertiary';\n  onClick: () => void;\n}>",
+        "example": "[\n  { text: 'Undo', variant: 'secondary', onClick: undoAction },\n  { text: 'View', onClick: viewDetails }\n]\n\n// Retry button for errors\n[{ text: 'Retry', variant: 'primary', onClick: retryOperation }]"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Adding too many action buttons (3+)",
+          "why": "Toasts have limited space and auto-dismiss",
+          "impact": "Cluttered UI, users can't click all buttons before toast dismisses",
+          "fix": "Limit to 1-2 action buttons maximum",
+          "severity": "medium",
+          "example": "// Wrong:\nactionButtonsConfig: [\n  { text: 'Undo' }, { text: 'Retry' }, \n  { text: 'View' }, { text: 'Share' }\n]\n\n// Correct:\nactionButtonsConfig: [{ text: 'Undo', onClick: undo }]"
+        }
+      ]
+    },
+    "preventXss": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "When true, sanitizes HTML in text prop to prevent XSS attacks. MUST be true if text contains any user-generated content or HTML from untrusted sources.",
+        "typescript": "boolean",
+        "example": "true // Sanitize HTML\nfalse // No sanitization (default)"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Showing user input in toast without preventXss=true",
+          "why": "User input can contain malicious HTML/scripts",
+          "impact": "XSS vulnerability - serious security risk",
+          "fix": "Always use preventXss=true when text includes user-generated content",
+          "severity": "critical",
+          "example": "// Vulnerable:\ntext=\"User ${userName} commented\"\n\n// Secure:\ntext=\"User ${userName} commented\"\n:preventXss=\"true\""
+        }
+      ]
+    },
+    "withoutLeftMargin": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "When true, removes left margin/padding. Use when positioning toast in custom containers where default spacing isn't needed.",
+        "typescript": "boolean",
+        "example": "true // Remove left margin\nfalse // Default spacing (default)"
+      }
+    }
+  },
+  "eventEnrichments": {},
+  "codeSnippets": {
+    "basicToast": {
+      "title": "Basic Success Toast",
+      "description": "Simple success notification",
+      "code": "<template>\n  <InToasts\n    v-model:status=\"showToast\"\n    text=\"Campaign saved successfully\"\n    type=\"success\"\n  />\n</template>\n\n<script setup>\nconst showToast = ref(false);\n\nconst saveCampaign = async () => {\n  await api.save();\n  showToast.value = true;\n  \n  // Auto-dismiss after 3 seconds\n  setTimeout(() => {\n    showToast.value = false;\n  }, 3000);\n};\n</script>"
+    },
+    "toastWithAction": {
+      "title": "Toast with Action Buttons",
+      "description": "Actionable toast with Undo button",
+      "code": "<template>\n  <InToasts\n    v-model:status=\"showToast\"\n    :text=\"toastMessage\"\n    type=\"success\"\n    :actionButtonsConfig=\"[\n      { text: 'Undo', variant: 'secondary', onClick: handleUndo }\n    ]\"\n  />\n</template>\n\n<script setup>\nconst showToast = ref(false);\nconst toastMessage = ref('');\nlet deletedItem = null;\n\nconst deleteItem = (item) => {\n  deletedItem = item;\n  // Perform delete\n  api.delete(item.id);\n  \n  toastMessage.value = `${item.name} deleted`;\n  showToast.value = true;\n  \n  setTimeout(() => {\n    showToast.value = false;\n    deletedItem = null;\n  }, 5000);\n};\n\nconst handleUndo = () => {\n  if (deletedItem) {\n    api.restore(deletedItem.id);\n    showToast.value = false;\n  }\n};\n</script>"
+    },
+    "errorToastWithRetry": {
+      "title": "Error Toast with Retry",
+      "description": "Error notification with retry action",
+      "code": "<template>\n  <InToasts\n    v-model:status=\"showErrorToast\"\n    text=\"Failed to save campaign\"\n    type=\"error\"\n    :actionButtonsConfig=\"[\n      { text: 'Retry', variant: 'primary', onClick: retrySave }\n    ]\"\n  />\n</template>\n\n<script setup>\nconst showErrorToast = ref(false);\n\nconst saveCampaign = async () => {\n  try {\n    await api.save();\n  } catch (error) {\n    showErrorToast.value = true;\n  }\n};\n\nconst retrySave = () => {\n  showErrorToast.value = false;\n  saveCampaign();\n};\n</script>"
+    }
+  },
+  "styling": {
+    "cssVariables": {
+      "--toast-bg-success": "Background color for success toasts",
+      "--toast-bg-error": "Background color for error toasts",
+      "--toast-bg-warning": "Background color for warning toasts",
+      "--toast-bg-info": "Background color for info toasts",
+      "--toast-bg-light": "Background color for neutral toasts"
+    },
+    "classes": {
+      ".in-toasts": "Main toast container",
+      ".in-toasts--success": "Success variant modifier",
+      ".in-toasts--error": "Error variant modifier",
+      ".in-toasts--warning": "Warning variant modifier",
+      ".in-toasts--info": "Info variant modifier",
+      ".in-toasts__icon": "Icon element",
+      ".in-toasts__text": "Message text element",
+      ".in-toasts__actions": "Action buttons container"
+    },
+    "notes": "Toast colors are semantic - green for success, red for error, orange for warning, blue for info. Default 'light' type is neutral gray."
+  },
+  "examples": [
+    {
+      "title": "Toast Manager with Queue",
+      "description": "Manage multiple toasts with queuing system",
+      "code": "<template>\n  <div class=\"toast-container\">\n    <TransitionGroup name=\"toast\">\n      <InToasts\n        v-for=\"toast in activeToasts\"\n        :key=\"toast.id\"\n        :status=\"true\"\n        :text=\"toast.text\"\n        :type=\"toast.type\"\n        :actionButtonsConfig=\"toast.actions\"\n        @close=\"removeToast(toast.id)\"\n      />\n    </TransitionGroup>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\n\ninterface Toast {\n  id: string;\n  text: string;\n  type: 'success' | 'error' | 'warning' | 'info' | 'light';\n  duration?: number;\n  actions?: Array<{ text: string; onClick: () => void }>;\n}\n\nconst activeToasts = ref<Toast[]>([]);\nlet toastIdCounter = 0;\n\nconst showToast = (toast: Omit<Toast, 'id'>) => {\n  const id = `toast-${toastIdCounter++}`;\n  const duration = toast.duration || 3000;\n  \n  const newToast: Toast = {\n    ...toast,\n    id\n  };\n  \n  activeToasts.value.push(newToast);\n  \n  // Auto-dismiss\n  setTimeout(() => {\n    removeToast(id);\n  }, duration);\n  \n  return id;\n};\n\nconst removeToast = (id: string) => {\n  const index = activeToasts.value.findIndex(t => t.id === id);\n  if (index !== -1) {\n    activeToasts.value.splice(index, 1);\n  }\n};\n\n// Expose methods\ndefineExpose({\n  success: (text: string, actions?) => showToast({ text, type: 'success', actions }),\n  error: (text: string, actions?) => showToast({ text, type: 'error', actions, duration: 5000 }),\n  warning: (text: string, actions?) => showToast({ text, type: 'warning', actions }),\n  info: (text: string, actions?) => showToast({ text, type: 'info', actions })\n});\n</script>\n\n<style scoped>\n.toast-container {\n  position: fixed;\n  top: 20px;\n  right: 20px;\n  z-index: 9999;\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n}\n\n.toast-enter-active,\n.toast-leave-active {\n  transition: all 0.3s ease;\n}\n\n.toast-enter-from {\n  opacity: 0;\n  transform: translateX(100%);\n}\n\n.toast-leave-to {\n  opacity: 0;\n  transform: translateX(100%);\n}\n</style>"
+    },
+    {
+      "title": "Form Validation Toasts",
+      "description": "Show validation errors and success messages",
+      "code": "<template>\n  <div class=\"form-container\">\n    <form @submit.prevent=\"handleSubmit\">\n      <!-- Form fields -->\n      <button type=\"submit\">Save</button>\n    </form>\n    \n    <InToasts\n      v-model:status=\"showSuccessToast\"\n      text=\"Form saved successfully\"\n      type=\"success\"\n    />\n    \n    <InToasts\n      v-model:status=\"showErrorToast\"\n      :text=\"errorMessage\"\n      type=\"error\"\n      :actionButtonsConfig=\"[\n        { text: 'Dismiss', onClick: () => showErrorToast = false }\n      ]\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\n\nconst showSuccessToast = ref(false);\nconst showErrorToast = ref(false);\nconst errorMessage = ref('');\n\nconst handleSubmit = async () => {\n  try {\n    // Validate\n    const errors = validateForm();\n    if (errors.length > 0) {\n      errorMessage.value = `Please fix ${errors.length} error(s)`;\n      showErrorToast.value = true;\n      return;\n    }\n    \n    // Save\n    await api.save();\n    \n    showSuccessToast.value = true;\n    setTimeout(() => {\n      showSuccessToast.value = false;\n    }, 3000);\n  } catch (error) {\n    errorMessage.value = error.message || 'Failed to save form';\n    showErrorToast.value = true;\n  }\n};\n\nconst validateForm = () => {\n  // Return validation errors\n  return [];\n};\n</script>"
+    },
+    {
+      "title": "Background Task Notifications",
+      "description": "Notify users about background operations completion",
+      "code": "<template>\n  <div>\n    <button @click=\"startExport\">Export Data</button>\n    \n    <InToasts\n      v-model:status=\"showExportToast\"\n      :text=\"exportMessage\"\n      :type=\"exportStatus\"\n      :actionButtonsConfig=\"exportActions\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, computed } from 'vue';\n\nconst showExportToast = ref(false);\nconst exportMessage = ref('');\nconst exportStatus = ref<'success' | 'error' | 'info'>('info');\nconst downloadUrl = ref('');\n\nconst exportActions = computed(() => {\n  if (exportStatus.value === 'success' && downloadUrl.value) {\n    return [\n      { \n        text: 'Download', \n        variant: 'primary',\n        onClick: () => window.open(downloadUrl.value, '_blank')\n      }\n    ];\n  }\n  if (exportStatus.value === 'error') {\n    return [\n      { text: 'Retry', onClick: startExport }\n    ];\n  }\n  return [];\n});\n\nconst startExport = async () => {\n  exportMessage.value = 'Exporting data...';\n  exportStatus.value = 'info';\n  showExportToast.value = true;\n  \n  try {\n    const result = await api.exportData();\n    \n    exportMessage.value = 'Export completed successfully';\n    exportStatus.value = 'success';\n    downloadUrl.value = result.downloadUrl;\n    \n    // Keep toast open for download\n    setTimeout(() => {\n      showExportToast.value = false;\n    }, 10000);\n  } catch (error) {\n    exportMessage.value = 'Export failed. Please try again.';\n    exportStatus.value = 'error';\n    \n    setTimeout(() => {\n      showExportToast.value = false;\n    }, 5000);\n  }\n};\n</script>"
+    }
+  ],
+  "implementationPatterns": [
+    {
+      "name": "Global Toast Service",
+      "description": "Centralized toast management using composable or global state",
+      "code": "// useToast.ts\nexport function useToast() {\n  const toasts = ref([]);\n  \n  const show = (text, type = 'light', options = {}) => {\n    const id = Date.now();\n    toasts.value.push({ id, text, type, ...options });\n    \n    setTimeout(() => {\n      remove(id);\n    }, options.duration || 3000);\n  };\n  \n  const remove = (id) => {\n    toasts.value = toasts.value.filter(t => t.id !== id);\n  };\n  \n  return { toasts, show, remove };\n}\n\n// Usage:\nconst { show } = useToast();\nshow('Saved!', 'success');",
+      "when": "Need to show toasts from anywhere in the app without passing props through component tree. Common in large applications.",
+      "pros": [
+        "Centralized toast logic",
+        "Can trigger from any component",
+        "Easy to test and maintain"
+      ],
+      "cons": [
+        "Global state management needed",
+        "Slightly more complex setup"
+      ]
+    },
+    {
+      "name": "Toast with Undo Pattern",
+      "description": "Allow users to undo destructive actions before they're committed",
+      "code": "const deleteWithUndo = (item) => {\n  // Mark for deletion\n  markedForDeletion.value = item;\n  \n  showToast.value = true;\n  toastMessage.value = `${item.name} will be deleted`;\n  \n  // Actually delete after delay\n  const timeoutId = setTimeout(() => {\n    api.delete(item.id);\n    markedForDeletion.value = null;\n  }, 5000);\n  \n  // Undo handler\n  const undo = () => {\n    clearTimeout(timeoutId);\n    markedForDeletion.value = null;\n    showToast.value = false;\n  };\n  \n  actionButtons.value = [{ text: 'Undo', onClick: undo }];\n};",
+      "when": "Destructive actions like delete, archive, bulk operations. Gives users safety net to reverse mistakes.",
+      "pros": [
+        "Prevents accidental data loss",
+        "Better UX than confirmation modals",
+        "Non-blocking workflow"
+      ],
+      "cons": [
+        "Need to manage pending state",
+        "Complexity in cleanup logic"
+      ]
+    },
+    {
+      "name": "Stacked Toast Queue",
+      "description": "Show multiple toasts simultaneously in a stack",
+      "code": "const toastQueue = ref([]);\n\nconst addToast = (toast) => {\n  const id = Date.now();\n  toastQueue.value.push({ ...toast, id });\n  \n  // Auto-remove\n  setTimeout(() => {\n    toastQueue.value = toastQueue.value.filter(t => t.id !== id);\n  }, toast.duration || 3000);\n};\n\n// Template:\n<div class=\"toast-stack\">\n  <InToasts\n    v-for=\"toast in toastQueue\"\n    :key=\"toast.id\"\n    v-bind=\"toast\"\n  />\n</div>",
+      "when": "Multiple operations happening simultaneously (batch processing, websocket notifications). Users need to see all updates.",
+      "pros": [
+        "Shows all notifications",
+        "Good for real-time updates",
+        "Clear visual feedback"
+      ],
+      "cons": [
+        "Can overwhelm screen with many toasts",
+        "Need max limit (3-5 toasts)"
+      ]
+    }
+  ],
+  "useCases": [
+    {
+      "title": "CRUD Operation Feedback",
+      "description": "Confirm create, update, delete operations",
+      "example": "User saves a campaign: show 'Campaign saved successfully' (success). User deletes item: show 'Item deleted' with Undo button (success + action)."
+    },
+    {
+      "title": "Form Validation Results",
+      "description": "Notify users of validation errors or successful submission",
+      "example": "Form submit fails validation: show 'Please fix 3 errors' (error). Form saves successfully: show 'Form submitted' (success)."
+    },
+    {
+      "title": "Background Task Completion",
+      "description": "Notify when async operations complete (exports, imports, processing)",
+      "example": "Data export starts: show 'Exporting...' (info). Export completes: show 'Export ready' with Download button (success + action). Export fails: show 'Export failed' with Retry button (error + action)."
+    },
+    {
+      "title": "Real-Time Notifications",
+      "description": "Display incoming notifications from websockets or polling",
+      "example": "New message received: show 'New message from John' with View button (info + action). System maintenance scheduled: show 'Scheduled maintenance in 10 minutes' (warning)."
+    }
+  ],
+  "bestPractices": [
+    {
+      "title": "Keep Messages Concise",
+      "description": "Toast messages should be 1-2 short sentences, max 60-80 characters",
+      "code": "// Good:\ntext=\"Campaign saved\"\ntext=\"3 items deleted\"\ntext=\"Connection lost. Retrying...\"\n\n// Bad:\ntext=\"Your campaign has been successfully saved to the database and you can now proceed\"",
+      "reasoning": "Toasts auto-dismiss after 3-5 seconds. Users don't have time to read long messages. Brief messages are clearer."
+    },
+    {
+      "title": "Use Appropriate Types for Context",
+      "description": "Match toast type to action result - success for confirmations, error for failures",
+      "code": "// Good:\ntype=\"success\" // for save, create, complete\ntype=\"error\" // for failures, errors\ntype=\"warning\" // for cautions, non-critical issues\ntype=\"info\" // for FYI messages\n\n// Bad:\ntype=\"light\" // for everything",
+      "reasoning": "Color coding helps users quickly understand message severity. Consistent type usage builds user expectations."
+    },
+    {
+      "title": "Limit Action Buttons to 1-2 Maximum",
+      "description": "Too many buttons clutter toast and users can't click before auto-dismiss",
+      "code": "// Good:\nactionButtonsConfig: [{ text: 'Undo', onClick: undo }]\nactionButtonsConfig: [\n  { text: 'View', onClick: view },\n  { text: 'Dismiss', onClick: dismiss }\n]\n\n// Bad:\nactionButtonsConfig: [\n  { text: 'Undo' }, { text: 'Retry' },\n  { text: 'View' }, { text: 'Share' }\n]",
+      "reasoning": "Limited space and auto-dismiss timing. Users can only reasonably interact with 1-2 buttons before toast disappears."
+    },
+    {
+      "title": "Adjust Duration Based on Importance",
+      "description": "Critical errors stay longer, simple confirmations dismiss quickly",
+      "code": "// Quick dismissal (2-3s):\nsuccess toasts: 3000ms\ninfo toasts: 3000ms\n\n// Longer duration (5-7s):\nerror toasts: 5000ms\nwarning toasts: 5000ms\ntoasts with actions: 5000ms+",
+      "reasoning": "Errors need time for users to read and act. Success confirmations can disappear quickly. Action buttons need time to click."
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Not auto-dismissing toasts",
+      "why": "Toasts should be temporary, self-dismissing notifications",
+      "impact": "Toasts stack up on screen, clutter interface",
+      "fix": "Always set timeout to dismiss toast after 3-5 seconds",
+      "severity": "high",
+      "example": "// Wrong:\nshowToast.value = true; // never dismissed\n\n// Correct:\nshowToast.value = true;\nsetTimeout(() => showToast.value = false, 3000);"
+    },
+    {
+      "mistake": "Using toasts for critical information",
+      "why": "Toasts auto-dismiss, users might miss important info",
+      "impact": "Critical information lost, users confused",
+      "fix": "Use modals for critical info that requires acknowledgment",
+      "severity": "high",
+      "example": "// Wrong: Critical error in toast\ntype=\"error\"\ntext=\"Payment failed. Transaction cancelled.\"\n\n// Correct: Use modal for critical errors\n<InModalV2 title=\"Payment Failed\" />"
+    },
+    {
+      "mistake": "Showing generic 'Success' or 'Error' messages",
+      "why": "Users need to know what succeeded or failed",
+      "impact": "Unclear feedback, user confusion",
+      "fix": "Be specific about what happened",
+      "severity": "medium",
+      "example": "// Wrong:\ntext=\"Success\"\ntext=\"Error\"\n\n// Correct:\ntext=\"Campaign created successfully\"\ntext=\"Failed to save changes\""
+    },
+    {
+      "mistake": "Not sanitizing user-generated content",
+      "why": "User input can contain malicious HTML/scripts",
+      "impact": "XSS vulnerability",
+      "fix": "Use preventXss=true when displaying user content",
+      "severity": "critical",
+      "example": "// Vulnerable:\ntext=\"User ${userName} commented\"\n\n// Secure:\n:preventXss=\"true\"\ntext=\"User ${sanitizedName} commented\""
+    }
+  ],
+  "performanceNotes": [
+    {
+      "topic": "Toast Queue Management",
+      "description": "Showing too many toasts simultaneously impacts performance",
+      "recommendation": "Limit active toasts to 3-5 maximum. Queue additional toasts and show as others dismiss.",
+      "impact": "Medium: Multiple animated toasts can slow older devices"
+    },
+    {
+      "topic": "Memory Leaks from Timers",
+      "description": "Toast auto-dismiss timers must be cleaned up",
+      "recommendation": "Clear timeouts in onBeforeUnmount. Store timeout IDs and clear when component unmounts or toast is manually dismissed.",
+      "impact": "Medium: Uncleaned timers cause memory leaks over time"
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "topic": "ARIA Live Regions",
+      "description": "Toasts must announce to screen readers using aria-live",
+      "wcagLevel": "A",
+      "recommendation": "Toast container should have role='alert' or aria-live='polite' (for non-critical) or aria-live='assertive' (for errors)",
+      "example": "<div role=\"alert\" aria-live=\"assertive\">\n  <InToasts type=\"error\" text=\"Error occurred\" />\n</div>"
+    },
+    {
+      "topic": "Keyboard Accessibility for Actions",
+      "description": "Action buttons in toasts must be keyboard accessible",
+      "wcagLevel": "A",
+      "recommendation": "Ensure action buttons can be reached via Tab key. Toast should pause auto-dismiss when focused.",
+      "example": "// Pause auto-dismiss on focus\n@focus=\"pauseDismiss\"\n@blur=\"resumeDismiss\""
+    },
+    {
+      "topic": "Sufficient Contrast",
+      "description": "Toast text must have sufficient contrast against background",
+      "wcagLevel": "AA",
+      "recommendation": "Ensure 4.5:1 contrast ratio for text. Test all toast types (success, error, warning, info) for contrast.",
+      "example": "Use design system color tokens that meet WCAG AA standards"
+    },
+    {
+      "topic": "Timing Flexibility",
+      "description": "Users need time to read and act on toasts",
+      "wcagLevel": "AAA",
+      "recommendation": "Provide at least 5 seconds for toasts with action buttons. Allow users to pause/extend timeout on hover or focus.",
+      "example": "// Extend timeout on hover\n@mouseenter=\"pauseDismiss\"\n@mouseleave=\"resumeDismiss\""
+    }
+  ],
+  "helperFunctions": [
+    {
+      "name": "useToastManager",
+      "description": "Composable for global toast management with queue and auto-dismiss",
+      "code": "export function useToastManager() {\n  const toasts = ref([]);\n  const maxToasts = 5;\n  let toastId = 0;\n\n  const show = (options) => {\n    const id = toastId++;\n    const duration = options.duration || (options.type === 'error' ? 5000 : 3000);\n    \n    const toast = {\n      id,\n      status: true,\n      ...options\n    };\n    \n    // Remove oldest if at max\n    if (toasts.value.length >= maxToasts) {\n      toasts.value.shift();\n    }\n    \n    toasts.value.push(toast);\n    \n    // Auto-dismiss\n    const timeoutId = setTimeout(() => {\n      remove(id);\n    }, duration);\n    \n    // Return controls\n    return {\n      id,\n      dismiss: () => {\n        clearTimeout(timeoutId);\n        remove(id);\n      }\n    };\n  };\n\n  const remove = (id) => {\n    const index = toasts.value.findIndex(t => t.id === id);\n    if (index !== -1) {\n      toasts.value.splice(index, 1);\n    }\n  };\n\n  const success = (text, actions?) => \n    show({ text, type: 'success', actionButtonsConfig: actions });\n  \n  const error = (text, actions?) => \n    show({ text, type: 'error', actionButtonsConfig: actions });\n  \n  const warning = (text, actions?) => \n    show({ text, type: 'warning', actionButtonsConfig: actions });\n  \n  const info = (text, actions?) => \n    show({ text, type: 'info', actionButtonsConfig: actions });\n\n  return {\n    toasts,\n    show,\n    remove,\n    success,\n    error,\n    warning,\n    info\n  };\n}",
+      "parameters": [],
+      "returnType": "{ toasts: Ref<Array>, show: Function, remove: Function, success: Function, error: Function, warning: Function, info: Function }",
+      "example": "const toast = useToastManager();\n\n// Show toasts\ntoast.success('Saved successfully');\ntoast.error('Failed to load', [\n  { text: 'Retry', onClick: retryLoad }\n]);\n\n// Manual control\nconst { dismiss } = toast.info('Processing...');\nsetTimeout(dismiss, 2000);"
+    },
+    {
+      "name": "createUndoToast",
+      "description": "Helper for creating undo-able action toasts",
+      "code": "export function createUndoToast(toastManager, config) {\n  const { \n    message, \n    onUndo, \n    onCommit, \n    undoText = 'Undo',\n    duration = 5000 \n  } = config;\n  \n  let committed = false;\n  \n  // Show toast with undo button\n  const { dismiss } = toastManager.show({\n    text: message,\n    type: 'success',\n    duration,\n    actionButtonsConfig: [\n      {\n        text: undoText,\n        onClick: () => {\n          onUndo();\n          dismiss();\n          committed = true;\n        }\n      }\n    ]\n  });\n  \n  // Commit after duration if not undone\n  setTimeout(() => {\n    if (!committed) {\n      onCommit();\n    }\n  }, duration);\n}",
+      "parameters": [
+        {
+          "name": "toastManager",
+          "type": "ToastManager",
+          "description": "Toast manager instance"
+        },
+        {
+          "name": "config",
+          "type": "{ message: string; onUndo: Function; onCommit: Function; undoText?: string; duration?: number; }",
+          "description": "Undo toast configuration"
+        }
+      ],
+      "returnType": "void",
+      "example": "const toast = useToastManager();\n\nconst deleteItem = (item) => {\n  // Optimistic UI update\n  items.value = items.value.filter(i => i.id !== item.id);\n  \n  createUndoToast(toast, {\n    message: `${item.name} deleted`,\n    onUndo: () => {\n      // Restore item\n      items.value.push(item);\n    },\n    onCommit: () => {\n      // Permanently delete\n      api.delete(item.id);\n    },\n    duration: 5000\n  });\n};"
+    }
+  ]
+}

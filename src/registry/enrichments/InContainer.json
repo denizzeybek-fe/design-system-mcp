@@ -453,5 +453,76 @@
       "correct": "<InContainer :full-width-content-status=\"false\"><!-- Has padding --></InContainer>",
       "impact": "Content touches container edges, no spacing"
     }
+  ],
+  "performanceNotes": [
+    {
+      "topic": "Lightweight wrapper component",
+      "description": "InContainer is a pure layout component with minimal overhead. No heavy computations or watchers.",
+      "recommendation": "Safe to use liberally throughout the application without performance concerns.",
+      "impact": "low"
+    },
+    {
+      "topic": "Slot content rendering",
+      "description": "Content in slots is only rendered when the slot is used. Unused slots don't add DOM overhead.",
+      "recommendation": "Use conditional slots (header, footer) only when needed to minimize DOM size.",
+      "impact": "low"
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "topic": "Semantic HTML structure",
+      "description": "InContainer provides proper semantic structure with header, main content, and footer sections.",
+      "wcagLevel": "A",
+      "recommendation": "Use semantic slot names (headerTitle, contentArea, footer) to maintain document outline.",
+      "example": "<InContainer header-status><template #headerTitle><h2>Section Title</h2></template></InContainer>"
+    },
+    {
+      "topic": "Keyboard navigation",
+      "description": "Container itself is not interactive, but provides structure for focusable content inside.",
+      "wcagLevel": "A",
+      "recommendation": "Ensure interactive elements inside container are keyboard accessible.",
+      "example": "Use proper tab order for form elements inside container."
+    },
+    {
+      "topic": "Color contrast",
+      "description": "Container background uses design system colors. Verify contrast with content.",
+      "wcagLevel": "AA",
+      "recommendation": "Test text contrast against container background, especially with custom themes.",
+      "example": "Use design system text colors that meet WCAG AA standards (4.5:1 ratio)."
+    }
+  ],
+  "helperFunctions": [
+    {
+      "name": "createContainerConfig",
+      "description": "Create container configuration with common settings",
+      "code": "function createContainerConfig(hasHeader = false, hasFooter = false, options = {}) {\n  return {\n    headerStatus: hasHeader,\n    footerStatus: hasFooter,\n    fullWidthContentStatus: false,\n    ...options\n  };\n}",
+      "parameters": [
+        { "name": "hasHeader", "type": "boolean", "description": "Show header section (default: false)" },
+        { "name": "hasFooter", "type": "boolean", "description": "Show footer section (default: false)" },
+        { "name": "options", "type": "object", "description": "Additional container options (optional)" }
+      ],
+      "returnType": "object",
+      "example": "const config = createContainerConfig(true, true, { fullWidthContentStatus: true });"
+    },
+    {
+      "name": "createCardLayout",
+      "description": "Create card-style container configuration",
+      "code": "function createCardLayout(title?: string) {\n  return {\n    headerStatus: !!title,\n    footerStatus: false,\n    fullWidthContentStatus: false,\n    title\n  };\n}",
+      "parameters": [
+        { "name": "title", "type": "string", "description": "Optional card title for header (optional)" }
+      ],
+      "returnType": "object",
+      "example": "const cardConfig = createCardLayout('User Profile');"
+    },
+    {
+      "name": "createFormContainer",
+      "description": "Create container configuration optimized for forms",
+      "code": "function createFormContainer(withFooterActions = true) {\n  return {\n    headerStatus: true,\n    footerStatus: withFooterActions,\n    fullWidthContentStatus: false\n  };\n}",
+      "parameters": [
+        { "name": "withFooterActions", "type": "boolean", "description": "Include footer for action buttons (default: true)" }
+      ],
+      "returnType": "object",
+      "example": "const formConfig = createFormContainer(true); // Header + footer with actions"
+    }
   ]
 }

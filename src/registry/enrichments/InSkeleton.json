@@ -1,0 +1,311 @@
+{
+  "component": "InSkeleton",
+  "_metadata": {
+    "lastUpdated": "2025-11-28T00:00:00.000Z",
+    "propsHash": "inskeleton-v1-3props",
+    "eventsHash": "inskeleton-v1-0events",
+    "propCount": 3,
+    "eventCount": 0
+  },
+  "propEnrichments": {
+    "status": {
+      "valueFormat": {
+        "structure": "Boolean",
+        "notes": "Controls skeleton visibility. When true (default), shows skeleton loader. When false, hides skeleton (typically showing actual content instead). Use to toggle between loading and loaded states.",
+        "typescript": "boolean",
+        "example": "true // Show skeleton (loading)\nfalse // Hide skeleton (content loaded)"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Not toggling status when data loads",
+          "why": "Skeleton should disappear when real content is available",
+          "impact": "Users see skeleton indefinitely, can't access actual content",
+          "fix": "Set status=false after data successfully loads",
+          "severity": "critical",
+          "example": "// Wrong:\n<InSkeleton :status=\"true\" /> // always true\n\n// Correct:\n<InSkeleton :status=\"isLoading\" />\n// Set isLoading = false after data loads"
+        }
+      ]
+    },
+    "sizing": {
+      "valueFormat": {
+        "structure": "Object",
+        "notes": "Defines skeleton dimensions and shape. Required prop. Contains width, height, and optional shape properties. Use to match skeleton to actual content layout (text lines, avatars, cards, etc.).",
+        "typescript": "{\n  width?: string | number; // CSS width (px, %, rem, etc.)\n  height?: string | number; // CSS height\n  minWidth?: string | number; // Min width\n  maxWidth?: string | number; // Max width\n  borderRadius?: string | number; // Border radius for rounded skeletons\n}",
+        "example": "// Text line\n{ width: '100%', height: '16px' }\n\n// Avatar circle\n{ width: '40px', height: '40px', borderRadius: '50%' }\n\n// Card\n{ width: '300px', height: '200px', borderRadius: '8px' }\n\n// Responsive width\n{ width: '80%', height: '20px', maxWidth: '400px' }"
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Not matching skeleton size to actual content",
+          "why": "Causes layout shift when skeleton is replaced with content",
+          "impact": "Poor UX - content jumps/shifts causing disorientation",
+          "fix": "Measure actual content dimensions and use same sizes in skeleton",
+          "severity": "high",
+          "example": "// Wrong: Random sizes\n{ width: '200px', height: '100px' }\n// Then actual content is 400px × 50px\n\n// Correct: Match actual content\n{ width: '400px', height: '50px' }"
+        }
+      ]
+    },
+    "name": {
+      "valueFormat": {
+        "structure": "String",
+        "notes": "Optional identifier for the skeleton. Useful for debugging, tracking, or applying custom styles to specific skeleton instances.",
+        "typescript": "string",
+        "example": "'user-avatar'\n'campaign-title'\n'data-table-row'\n'card-thumbnail'"
+      }
+    }
+  },
+  "eventEnrichments": {},
+  "codeSnippets": {
+    "basicTextSkeleton": {
+      "title": "Text Line Skeleton",
+      "description": "Skeleton for text content",
+      "code": "<template>\n  <InSkeleton\n    v-if=\"isLoading\"\n    :status=\"true\"\n    :sizing=\"{ width: '100%', height: '16px' }\"\n  />\n  <p v-else>{{ loadedText }}</p>\n</template>\n\n<script setup>\nconst isLoading = ref(true);\nconst loadedText = ref('');\n\nonMounted(async () => {\n  loadedText.value = await fetchText();\n  isLoading.value = false;\n});\n</script>"
+    },
+    "avatarSkeleton": {
+      "title": "Circular Avatar Skeleton",
+      "description": "Round skeleton for avatars",
+      "code": "<template>\n  <InSkeleton\n    v-if=\"isLoading\"\n    :status=\"true\"\n    :sizing=\"{ width: '48px', height: '48px', borderRadius: '50%' }\"\n    name=\"user-avatar\"\n  />\n  <img v-else :src=\"user.avatar\" class=\"avatar\" />\n</template>"
+    },
+    "cardSkeleton": {
+      "title": "Card Skeleton Layout",
+      "description": "Multiple skeletons mimicking card structure",
+      "code": "<template>\n  <div class=\"card\">\n    <template v-if=\"isLoading\">\n      <!-- Thumbnail -->\n      <InSkeleton\n        :status=\"true\"\n        :sizing=\"{ width: '100%', height: '200px', borderRadius: '8px' }\"\n      />\n      <!-- Title -->\n      <InSkeleton\n        :status=\"true\"\n        :sizing=\"{ width: '80%', height: '24px', borderRadius: '4px' }\"\n        class=\"mt-3\"\n      />\n      <!-- Description lines -->\n      <InSkeleton\n        :status=\"true\"\n        :sizing=\"{ width: '100%', height: '16px', borderRadius: '4px' }\"\n        class=\"mt-2\"\n      />\n      <InSkeleton\n        :status=\"true\"\n        :sizing=\"{ width: '60%', height: '16px', borderRadius: '4px' }\"\n        class=\"mt-2\"\n      />\n    </template>\n    \n    <template v-else>\n      <img :src=\"content.image\" />\n      <h3>{{ content.title }}</h3>\n      <p>{{ content.description }}</p>\n    </template>\n  </div>\n</template>"
+    }
+  },
+  "styling": {
+    "cssVariables": {
+      "--skeleton-bg": "Background color of skeleton",
+      "--skeleton-shimmer": "Shimmer animation color",
+      "--skeleton-animation-duration": "Duration of shimmer animation"
+    },
+    "classes": {
+      ".in-skeleton": "Main skeleton container",
+      ".in-skeleton--animated": "Skeleton with shimmer animation",
+      ".in-skeleton--pulse": "Pulse animation variant"
+    },
+    "notes": "Skeleton typically has gray background with shimmer/pulse animation to indicate loading. Animation draws attention while being subtle enough not to distract."
+  },
+  "examples": [
+    {
+      "title": "Data Table Loading Skeleton",
+      "description": "Show skeleton rows while table data loads",
+      "code": "<template>\n  <div class=\"data-table\">\n    <template v-if=\"isLoading\">\n      <div v-for=\"i in 5\" :key=\"i\" class=\"table-row-skeleton\">\n        <InSkeleton\n          :status=\"true\"\n          :sizing=\"{ width: '100%', height: '48px', borderRadius: '4px' }\"\n          class=\"mb-2\"\n        />\n      </div>\n    </template>\n    \n    <InDataTableV2\n      v-else\n      :data=\"tableData\"\n      :columns=\"columns\"\n    />\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, onMounted } from 'vue';\n\nconst isLoading = ref(true);\nconst tableData = ref([]);\n\nconst columns = [\n  { field: 'name', header: 'Name' },\n  { field: 'status', header: 'Status' },\n  { field: 'date', header: 'Date' }\n];\n\nonMounted(async () => {\n  try {\n    tableData.value = await fetchTableData();\n  } finally {\n    isLoading.value = false;\n  }\n});\n\nconst fetchTableData = async () => {\n  // Simulate API call\n  await new Promise(resolve => setTimeout(resolve, 2000));\n  return [\n    { name: 'Campaign 1', status: 'Active', date: '2025-01-15' },\n    { name: 'Campaign 2', status: 'Paused', date: '2025-01-10' }\n  ];\n};\n</script>"
+    },
+    {
+      "title": "User Profile Card Skeleton",
+      "description": "Detailed skeleton matching profile card layout",
+      "code": "<template>\n  <div class=\"profile-card\">\n    <template v-if=\"isLoading\">\n      <div class=\"profile-header\">\n        <!-- Avatar -->\n        <InSkeleton\n          :status=\"true\"\n          :sizing=\"{ width: '80px', height: '80px', borderRadius: '50%' }\"\n        />\n        \n        <div class=\"profile-info\">\n          <!-- Name -->\n          <InSkeleton\n            :status=\"true\"\n            :sizing=\"{ width: '150px', height: '24px', borderRadius: '4px' }\"\n          />\n          <!-- Role -->\n          <InSkeleton\n            :status=\"true\"\n            :sizing=\"{ width: '100px', height: '16px', borderRadius: '4px' }\"\n            class=\"mt-2\"\n          />\n        </div>\n      </div>\n      \n      <div class=\"profile-stats\">\n        <div v-for=\"i in 3\" :key=\"i\" class=\"stat-item\">\n          <InSkeleton\n            :status=\"true\"\n            :sizing=\"{ width: '60px', height: '20px', borderRadius: '4px' }\"\n          />\n        </div>\n      </div>\n      \n      <div class=\"profile-bio\">\n        <InSkeleton\n          v-for=\"i in 3\" :key=\"i\"\n          :status=\"true\"\n          :sizing=\"{ width: i === 3 ? '70%' : '100%', height: '14px', borderRadius: '4px' }\"\n          class=\"mb-2\"\n        />\n      </div>\n    </template>\n    \n    <template v-else>\n      <div class=\"profile-header\">\n        <img :src=\"user.avatar\" class=\"avatar\" />\n        <div class=\"profile-info\">\n          <h2>{{ user.name }}</h2>\n          <p>{{ user.role }}</p>\n        </div>\n      </div>\n      <div class=\"profile-stats\">\n        <div class=\"stat-item\">\n          <span>{{ user.campaigns }}</span> Campaigns\n        </div>\n        <div class=\"stat-item\">\n          <span>{{ user.followers }}</span> Followers\n        </div>\n        <div class=\"stat-item\">\n          <span>{{ user.engagement }}</span> Engagement\n        </div>\n      </div>\n      <p class=\"profile-bio\">{{ user.bio }}</p>\n    </template>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, onMounted } from 'vue';\n\nconst isLoading = ref(true);\nconst user = ref(null);\n\nonMounted(async () => {\n  user.value = await fetchUserProfile();\n  isLoading.value = false;\n});\n</script>\n\n<style scoped>\n.profile-header {\n  display: flex;\n  gap: 16px;\n  align-items: center;\n  margin-bottom: 20px;\n}\n\n.profile-stats {\n  display: flex;\n  gap: 24px;\n  margin-bottom: 16px;\n}\n</style>"
+    },
+    {
+      "title": "List Item Skeletons",
+      "description": "Show multiple skeleton items in list view",
+      "code": "<template>\n  <div class=\"items-list\">\n    <template v-if=\"isLoading\">\n      <div v-for=\"i in skeletonCount\" :key=\"i\" class=\"list-item-skeleton\">\n        <InSkeleton\n          :status=\"true\"\n          :sizing=\"{ width: '40px', height: '40px', borderRadius: '8px' }\"\n        />\n        <div class=\"item-content\">\n          <InSkeleton\n            :status=\"true\"\n            :sizing=\"{ width: '60%', height: '18px', borderRadius: '4px' }\"\n          />\n          <InSkeleton\n            :status=\"true\"\n            :sizing=\"{ width: '40%', height: '14px', borderRadius: '4px' }\"\n            class=\"mt-2\"\n          />\n        </div>\n      </div>\n    </template>\n    \n    <div v-else v-for=\"item in items\" :key=\"item.id\" class=\"list-item\">\n      <img :src=\"item.thumbnail\" class=\"thumbnail\" />\n      <div class=\"item-content\">\n        <h4>{{ item.title }}</h4>\n        <p>{{ item.subtitle }}</p>\n      </div>\n    </div>\n  </div>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, onMounted } from 'vue';\n\nconst isLoading = ref(true);\nconst items = ref([]);\nconst skeletonCount = 5; // Show 5 skeleton items\n\nonMounted(async () => {\n  items.value = await fetchItems();\n  isLoading.value = false;\n});\n</script>\n\n<style scoped>\n.list-item-skeleton,\n.list-item {\n  display: flex;\n  gap: 12px;\n  padding: 12px;\n  margin-bottom: 8px;\n}\n\n.item-content {\n  flex: 1;\n}\n</style>"
+    }
+  ],
+  "implementationPatterns": [
+    {
+      "name": "Component-Level Skeleton States",
+      "description": "Each component manages its own skeleton during loading",
+      "code": "<template>\n  <div class=\"user-card\">\n    <InSkeleton v-if=\"isLoading\" :status=\"true\" :sizing=\"cardSizing\" />\n    <div v-else>{{ userData }}</div>\n  </div>\n</template>\n\nconst isLoading = ref(true);\nconst cardSizing = { width: '300px', height: '200px' };",
+      "when": "Simple components with single loading state. Each component independently fetches and displays data.",
+      "pros": [
+        "Simple to implement",
+        "Self-contained loading logic",
+        "Easy to understand"
+      ],
+      "cons": [
+        "Can cause staggered loading (some skeletons disappear before others)",
+        "Repetitive skeleton definitions"
+      ]
+    },
+    {
+      "name": "Layout-Matching Skeleton Structure",
+      "description": "Skeleton structure mirrors actual content layout exactly",
+      "code": "<template>\n  <div class=\"card\">\n    <template v-if=\"isLoading\">\n      <!-- Header -->\n      <InSkeleton :sizing=\"{ width: '100%', height: '60px' }\" />\n      <!-- Content rows -->\n      <InSkeleton v-for=\"i in 3\" :sizing=\"{ width: '100%', height: '20px' }\" />\n      <!-- Footer -->\n      <InSkeleton :sizing=\"{ width: '100%', height: '40px' }\" />\n    </template>\n    <template v-else>\n      <!-- Actual content with same structure -->\n    </template>\n  </div>\n</template>",
+      "when": "Complex layouts where layout shift would be jarring. Common in cards, profiles, dashboards.",
+      "pros": [
+        "Zero layout shift",
+        "Accurate loading preview",
+        "Professional UX"
+      ],
+      "cons": [
+        "More skeleton code",
+        "Must maintain skeleton when layout changes",
+        "Duplication of structure"
+      ]
+    },
+    {
+      "name": "Reusable Skeleton Components",
+      "description": "Create reusable skeleton components for common patterns",
+      "code": "// SkeletonCard.vue\n<template>\n  <div class=\"skeleton-card\">\n    <InSkeleton :sizing=\"{ width: '100%', height: '200px' }\" />\n    <InSkeleton :sizing=\"{ width: '80%', height: '24px' }\" class=\"mt-2\" />\n    <InSkeleton :sizing=\"{ width: '60%', height: '16px' }\" class=\"mt-2\" />\n  </div>\n</template>\n\n// Usage:\n<SkeletonCard v-if=\"isLoading\" />\n<ActualCard v-else :data=\"data\" />",
+      "when": "Repeated skeleton patterns across app. Common layouts like cards, list items, table rows.",
+      "pros": [
+        "DRY - no duplication",
+        "Consistent skeleton UX",
+        "Easy to update globally"
+      ],
+      "cons": [
+        "Extra components to maintain",
+        "Less flexible for unique layouts"
+      ]
+    }
+  ],
+  "useCases": [
+    {
+      "title": "Data Table Loading",
+      "description": "Show skeleton rows while table data loads from API",
+      "example": "Dashboard with data table showing 5 skeleton rows (48px height each) while fetching campaign data. Skeletons disappear when real data arrives, preventing blank table."
+    },
+    {
+      "title": "Profile/Card Loading",
+      "description": "Display skeleton matching profile card layout during load",
+      "example": "User profile page showing circular avatar skeleton (80px), name skeleton (150px wide), bio skeletons (3 lines), and stat skeletons. Prevents layout shift when actual profile loads."
+    },
+    {
+      "title": "List/Feed Loading",
+      "description": "Show multiple skeleton list items while content loads",
+      "example": "Content feed showing 5-10 skeleton list items (thumbnail + 2 text lines). Gives users loading feedback and prevents jarring empty-to-full transition."
+    },
+    {
+      "title": "Form Field Loading",
+      "description": "Display skeleton for dynamic form fields loading from API",
+      "example": "Settings form where field options load from API. Show skeleton inputs matching field dimensions while loading, then replace with actual form controls."
+    }
+  ],
+  "bestPractices": [
+    {
+      "title": "Match Skeleton Dimensions to Actual Content",
+      "description": "Measure and match skeleton sizes to prevent layout shift",
+      "code": "// Bad - Random sizes\n<InSkeleton :sizing=\"{ width: '200px', height: '50px' }\" />\n<!-- Then content is 400px × 100px → layout shift! -->\n\n// Good - Match actual content\n<InSkeleton :sizing=\"{ width: '400px', height: '100px' }\" />\n<!-- Same size as content → no shift -->\n",
+      "reasoning": "Layout shift (CLS) is poor UX and bad for SEO. Matching skeleton to content creates seamless transition and professional experience."
+    },
+    {
+      "title": "Show Multiple Skeleton Items for Lists",
+      "description": "Display 3-5 skeleton items to indicate list/collection",
+      "code": "// Good - Show multiple items\n<div v-for=\"i in 5\" :key=\"i\">\n  <InSkeleton :sizing=\"{ width: '100%', height: '60px' }\" />\n</div>\n\n// Bad - Single skeleton for list\n<InSkeleton :sizing=\"{ width: '100%', height: '60px' }\" />",
+      "reasoning": "Single skeleton doesn't indicate list/multiple items. 3-5 skeletons clearly show collection is loading and set expectations."
+    },
+    {
+      "title": "Always Toggle status When Data Loads",
+      "description": "Set status=false or use v-if to hide skeleton when content ready",
+      "code": "// Good\n<InSkeleton v-if=\"isLoading\" :status=\"true\" :sizing=\"sizing\" />\n<div v-else>{{ content }}</div>\n\n// Also good\n<InSkeleton :status=\"isLoading\" :sizing=\"sizing\" />\n\n// Bad - Skeleton never hides\n<InSkeleton :status=\"true\" :sizing=\"sizing\" />",
+      "reasoning": "Forgetting to hide skeleton is critical bug. Users can't access content. Always tie skeleton visibility to loading state."
+    },
+    {
+      "title": "Use Appropriate Shapes for Content Type",
+      "description": "Circles for avatars, rectangles for text, rounded for cards",
+      "code": "// Avatar - circle\n{ width: '40px', height: '40px', borderRadius: '50%' }\n\n// Text line - rectangle\n{ width: '100%', height: '16px', borderRadius: '4px' }\n\n// Card - rounded rectangle  \n{ width: '300px', height: '200px', borderRadius: '8px' }",
+      "reasoning": "Shape hints at content type. Circles suggest avatars/icons, rectangles suggest text. Helps users anticipate what's loading."
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Not hiding skeleton after data loads",
+      "why": "Skeleton state isn't toggled when data arrives",
+      "impact": "Critical - users can't see content, skeleton blocks everything",
+      "fix": "Set status=false or use v-if with loading state",
+      "severity": "critical",
+      "example": "// Wrong:\n<InSkeleton :status=\"true\" /> // Always true\n\n// Correct:\n<InSkeleton :status=\"isLoading\" />\nisLoading.value = false // after data loads"
+    },
+    {
+      "mistake": "Skeleton dimensions don't match content",
+      "why": "Using arbitrary sizes instead of measuring actual content",
+      "impact": "Layout shift when skeleton replaced with content - jarring UX",
+      "fix": "Measure actual content dimensions and use same sizes",
+      "severity": "high",
+      "example": "// Wrong: Guess at sizes\n{ width: '200px', height: '50px' }\n\n// Correct: Match content\n{ width: '400px', height: '120px' } // same as real content"
+    },
+    {
+      "mistake": "Single skeleton for list of items",
+      "why": "Doesn't indicate multiple items are loading",
+      "impact": "Users don't know list is loading vs single item",
+      "fix": "Show 3-5 skeleton items for lists/collections",
+      "severity": "medium",
+      "example": "// Wrong:\n<InSkeleton :sizing=\"itemSize\" /> // 1 item\n\n// Correct:\n<InSkeleton v-for=\"i in 5\" :sizing=\"itemSize\" />"
+    },
+    {
+      "mistake": "Overly complex skeleton animations",
+      "why": "Custom animations distract or cause performance issues",
+      "impact": "Distracting UX, possible performance degradation",
+      "fix": "Use default shimmer/pulse animation, keep it subtle",
+      "severity": "low",
+      "example": "// Avoid complex custom animations\n// Use default skeleton animation instead"
+    }
+  ],
+  "performanceNotes": [
+    {
+      "topic": "Limit Skeleton Count",
+      "description": "Too many skeleton elements impact render performance",
+      "recommendation": "Limit to 5-10 skeleton items max. For long lists, use virtualization or lazy loading instead of 100+ skeletons.",
+      "impact": "Medium: 50+ skeleton elements can slow rendering on low-end devices"
+    },
+    {
+      "topic": "Skeleton Animation Performance",
+      "description": "CSS shimmer animations use GPU, can impact battery/performance",
+      "recommendation": "Use subtle animations. Consider disabling animations on low-power mode or older devices using prefers-reduced-motion.",
+      "impact": "Low: Only affects battery life on mobile, not critical"
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "topic": "ARIA Live Region for Loading",
+      "description": "Screen readers should announce loading state",
+      "wcagLevel": "A",
+      "recommendation": "Wrap skeleton in aria-live='polite' region or use aria-busy='true' on parent to announce loading to screen readers.",
+      "example": "<div aria-busy=\"true\" aria-label=\"Loading content\">\n  <InSkeleton :status=\"isLoading\" :sizing=\"sizing\" />\n</div>"
+    },
+    {
+      "topic": "Reduced Motion Support",
+      "description": "Respect user's motion preferences for animations",
+      "wcagLevel": "AAA",
+      "recommendation": "Disable shimmer/pulse animations when user has prefers-reduced-motion enabled.",
+      "example": "@media (prefers-reduced-motion: reduce) {\n  .in-skeleton {\n    animation: none;\n  }\n}"
+    },
+    {
+      "topic": "Skeleton as Decorative",
+      "description": "Skeleton should be marked as decorative for screen readers",
+      "wcagLevel": "A",
+      "recommendation": "Add aria-hidden='true' to skeleton elements so screen readers skip them and only announce loading state via parent.",
+      "example": "<InSkeleton aria-hidden=\"true\" :status=\"true\" :sizing=\"sizing\" />"
+    }
+  ],
+  "helperFunctions": [
+    {
+      "name": "createSkeletonConfig",
+      "description": "Factory to create common skeleton size configurations",
+      "code": "export function createSkeletonConfig(type: string, options = {}) {\n  const configs = {\n    avatar: {\n      width: options.size || '40px',\n      height: options.size || '40px',\n      borderRadius: '50%'\n    },\n    textLine: {\n      width: options.width || '100%',\n      height: options.height || '16px',\n      borderRadius: '4px'\n    },\n    heading: {\n      width: options.width || '60%',\n      height: '24px',\n      borderRadius: '4px'\n    },\n    card: {\n      width: options.width || '300px',\n      height: options.height || '200px',\n      borderRadius: '8px'\n    },\n    button: {\n      width: options.width || '120px',\n      height: '36px',\n      borderRadius: '4px'\n    },\n    thumbnail: {\n      width: options.width || '80px',\n      height: options.height || '80px',\n      borderRadius: '8px'\n    }\n  };\n\n  return configs[type] || configs.textLine;\n}",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "'avatar' | 'textLine' | 'heading' | 'card' | 'button' | 'thumbnail'",
+          "description": "Type of skeleton to create"
+        },
+        {
+          "name": "options",
+          "type": "{ size?: string; width?: string; height?: string; }",
+          "description": "Override default dimensions"
+        }
+      ],
+      "returnType": "{ width: string; height: string; borderRadius?: string; }",
+      "example": "// Avatar skeleton\nconst avatarSizing = createSkeletonConfig('avatar', { size: '60px' });\n\n// Text line\nconst textSizing = createSkeletonConfig('textLine');\n\n// Custom card\nconst cardSizing = createSkeletonConfig('card', { width: '400px', height: '250px' });"
+    },
+    {
+      "name": "useSkeletonLoader",
+      "description": "Composable for managing skeleton loading states",
+      "code": "export function useSkeletonLoader(fetchFn, options = {}) {\n  const { skeletonCount = 5, minLoadingTime = 500 } = options;\n  \n  const isLoading = ref(true);\n  const data = ref(null);\n  const error = ref(null);\n\n  const load = async () => {\n    isLoading.value = true;\n    error.value = null;\n    \n    const startTime = Date.now();\n    \n    try {\n      data.value = await fetchFn();\n    } catch (e) {\n      error.value = e;\n    } finally {\n      // Ensure minimum skeleton display time\n      const elapsed = Date.now() - startTime;\n      const remaining = minLoadingTime - elapsed;\n      \n      if (remaining > 0) {\n        await new Promise(resolve => setTimeout(resolve, remaining));\n      }\n      \n      isLoading.value = false;\n    }\n  };\n\n  const reload = () => {\n    load();\n  };\n\n  // Auto-load on mount\n  onMounted(load);\n\n  return {\n    isLoading,\n    data,\n    error,\n    reload,\n    skeletonCount\n  };\n}",
+      "parameters": [
+        {
+          "name": "fetchFn",
+          "type": "() => Promise<any>",
+          "description": "Async function to fetch data"
+        },
+        {
+          "name": "options",
+          "type": "{ skeletonCount?: number; minLoadingTime?: number; }",
+          "description": "Configuration options"
+        }
+      ],
+      "returnType": "{ isLoading: Ref<boolean>, data: Ref<any>, error: Ref<any>, reload: Function, skeletonCount: number }",
+      "example": "const { isLoading, data, error, skeletonCount } = useSkeletonLoader(\n  () => fetchCampaigns(),\n  { skeletonCount: 5, minLoadingTime: 500 }\n);\n\n// In template:\n<div v-for=\"i in skeletonCount\" v-if=\"isLoading\">\n  <InSkeleton :status=\"true\" :sizing=\"sizing\" />\n</div>\n<div v-else v-for=\"item in data\">\n  {{ item }}\n</div>"
+    }
+  ]
+}

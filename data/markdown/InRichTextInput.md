@@ -466,22 +466,15 @@ Full-featured editor with fallback handling
 
 ## Common Mistakes
 
-ℹ️ **Using attributeList instead of dynamicContentList**
+ℹ️ **Not sanitizing HTML output before saving**
 
-ℹ️ **Using textValidateConfig instead of helperTextValidationConfig**
+ℹ️ **Incorrect character counting with HTML tags**
 
-ℹ️ **Using invalid/warning booleans**
-
-ℹ️ **Using isCounter instead of characterCounterStatus**
-
-ℹ️ **Using hasEmoji instead of emojiButtonStatus**
-
-ℹ️ **Not handling @purify event**
+ℹ️ **Not handling merge tag max lengths**
 
 ## Best Practices
 
-- **undefined:** Only show relevant toolbar buttons for the use case
-- **undefined:** Use @save-fall-back-option to persist fallback values
-- **undefined:** Mark deprecated or invalid tags with visual feedback
-- **undefined:** Show users validation feedback in real-time
+- **Always Handle Purify Event:** Sanitize HTML content before saving
+- **Group Merge Tags Logically:** Use dynamicContentBoxProps.groups for better UX
+- **Implement Character Limits:** Use helper text validation for length constraints
 

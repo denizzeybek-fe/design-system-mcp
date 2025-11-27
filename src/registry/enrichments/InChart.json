@@ -1,0 +1,395 @@
+{
+  "_metadata": {
+    "lastUpdated": "2025-11-28T00:00:00.000Z",
+    "propsHash": "generated",
+    "eventsHash": "generated",
+    "propCount": 34,
+    "eventCount": 0
+  },
+  "component": "InChart",
+  "propEnrichments": {
+    "type": {
+      "description": "Chart type (line, bar, pie, doughnut, etc.)",
+      "valueFormat": {
+        "structure": "string",
+        "notes": "REQUIRED. Determines the visualization type using Chart.js types. Common values: 'line' for time series, 'bar' for comparisons, 'pie'/'doughnut' for proportions, 'radar' for multi-dimensional data. Each type has different data structure requirements.",
+        "typescript": "string",
+        "possibleValues": ["line", "bar", "pie", "doughnut", "radar", "polarArea", "scatter"],
+        "example": "type=\"line\""
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Using wrong data structure for chart type",
+          "impact": "Chart fails to render or shows incorrect visualization",
+          "fix": "Line/bar charts need {x, y} or array values, pie charts need single array",
+          "severity": "high"
+        }
+      ]
+    },
+    "labels": {
+      "description": "X-axis labels or categories",
+      "valueFormat": {
+        "structure": "Array of strings or dates",
+        "notes": "REQUIRED. Labels for X-axis (line/bar charts) or category names (pie charts). For time series, use date strings or Date objects. Length must match data array length. Labels are automatically truncated based on labelLimit prop.",
+        "typescript": "Array<string | Date>",
+        "example": ":labels=\"['Jan', 'Feb', 'Mar', 'Apr', 'May']\""
+      }
+    },
+    "data": {
+      "description": "Chart data values",
+      "valueFormat": {
+        "structure": "Array of numbers or array of arrays",
+        "notes": "REQUIRED. Data points for visualization. Single array for single dataset, array of arrays for multiple datasets. For line/bar charts: numbers or {x, y} objects. For pie/doughnut: array of numbers. Must match labels length.",
+        "typescript": "Array<number> | Array<Array<number>> | Array<{x: any, y: number}>",
+        "example": ":data=\"[[10, 20, 30, 40, 50], [15, 25, 35, 45, 55]]\""
+      },
+      "commonMistakes": [
+        {
+          "mistake": "Data and labels length mismatch",
+          "impact": "Chart renders incorrectly or shows warnings",
+          "fix": "Ensure data array length matches labels array length",
+          "severity": "high"
+        }
+      ]
+    },
+    "theme": {
+      "description": "Color theme preset",
+      "valueFormat": {
+        "structure": "string",
+        "notes": "Predefined color scheme for chart. 'blue' (default) uses blue tones, other themes provide different color palettes. Overridden by colorPalette if provided.",
+        "typescript": "string",
+        "possibleValues": ["blue", "green", "red", "purple", "orange"],
+        "example": "theme=\"blue\""
+      }
+    },
+    "colorPalette": {
+      "description": "Custom color array for datasets",
+      "valueFormat": {
+        "structure": "Array of color strings",
+        "notes": "Custom colors for chart elements. Hex codes, RGB, or named colors. For multi-dataset charts, one color per dataset. For pie/doughnut, one color per slice. Overrides theme setting.",
+        "typescript": "Array<string>",
+        "example": ":color-palette=\"['#FF6384', '#36A2EB', '#FFCE56']\""
+      }
+    },
+    "legendSettings": {
+      "description": "Legend configuration object",
+      "valueFormat": {
+        "structure": "Object with display, position, labels settings",
+        "notes": "Controls legend appearance and behavior. Common options: {display: boolean, position: 'top'|'bottom'|'left'|'right', labels: {fontSize, fontColor}}. Use to customize or hide legend.",
+        "typescript": "{ display?: boolean; position?: string; labels?: object; }",
+        "example": ":legend-settings=\"{ display: true, position: 'bottom' }\""
+      }
+    },
+    "tooltipsExtraSettings": {
+      "description": "Tooltip customization object",
+      "valueFormat": {
+        "structure": "Chart.js tooltips configuration",
+        "notes": "Extends default tooltip behavior. Options: enabled, backgroundColor, titleColor, bodyColor, callbacks for custom formatting. Use callbacks to format displayed values (e.g., add currency symbols).",
+        "typescript": "object",
+        "example": ":tooltips-extra-settings=\"{ callbacks: { label: (ctx) => `$${ctx.parsed.y}` } }\""
+      }
+    },
+    "chartAnnotations": {
+      "description": "Annotations/lines to draw on chart",
+      "valueFormat": {
+        "structure": "Array of annotation objects",
+        "notes": "Adds reference lines, boxes, or points to chart. Each annotation has type ('line', 'box', 'point'), value (y-axis position), and styling. Useful for thresholds, targets, or highlighting regions.",
+        "typescript": "Array<{ type: string; value: number; borderColor?: string; label?: object; }>",
+        "example": ":chart-annotations=\"[{ type: 'line', value: 100, borderColor: 'red', label: { content: 'Target' } }]\""
+      }
+    },
+    "step": {
+      "description": "Y-axis step/interval configuration",
+      "valueFormat": {
+        "structure": "Object with stepSize",
+        "notes": "Controls Y-axis tick intervals. {stepSize: number} sets the distance between ticks. Useful for ensuring consistent scales across charts or showing specific intervals.",
+        "typescript": "{ stepSize?: number; }",
+        "example": ":step=\"{ stepSize: 10 }\""
+      }
+    },
+    "datasetSettings": {
+      "description": "Per-dataset configuration array",
+      "valueFormat": {
+        "structure": "Array of dataset config objects",
+        "notes": "Customizes each dataset independently. Options: label, borderColor, backgroundColor, borderWidth, fill, tension (for line smoothing). Array index matches data array index.",
+        "typescript": "Array<{ label?: string; borderColor?: string; backgroundColor?: string; borderWidth?: number; fill?: boolean; tension?: number; }>",
+        "example": ":dataset-settings=\"[{ label: 'Sales', borderColor: 'blue', fill: false }]\""
+      }
+    }
+  },
+  "eventEnrichments": {},
+  "examples": [
+    {
+      "title": "Sales Trend Analysis",
+      "description": "Line chart showing monthly sales with target annotation",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InChart } from '@useinsider/design-system-vue';\n\nconst labels = ref(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']);\nconst salesData = ref([[120, 150, 140, 180, 200, 190]]);\n\nconst targetLine = ref([{\n  type: 'line',\n  value: 150,\n  borderColor: 'red',\n  label: { content: 'Target', enabled: true }\n}]);\n</script>\n\n<template>\n  <InChart\n    type=\"line\"\n    :labels=\"labels\"\n    :data=\"salesData\"\n    :chart-annotations=\"targetLine\"\n    :width=\"800\"\n    :height=\"400\"\n    theme=\"blue\"\n  />\n</template>"
+    },
+    {
+      "title": "Traffic Source Distribution",
+      "description": "Pie chart showing website traffic sources",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InChart } from '@useinsider/design-system-vue';\n\nconst sources = ref(['Direct', 'Organic', 'Paid', 'Social']);\nconst traffic = ref([[45, 30, 15, 10]]);\nconst colors = ref(['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']);\n</script>\n\n<template>\n  <InChart\n    type=\"pie\"\n    :labels=\"sources\"\n    :data=\"traffic\"\n    :color-palette=\"colors\"\n    :legend-settings=\"{ position: 'bottom' }\"\n  />\n</template>"
+    },
+    {
+      "title": "Multi-Year Comparison",
+      "description": "Bar chart comparing quarterly revenue across years",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InChart } from '@useinsider/design-system-vue';\n\nconst quarters = ref(['Q1', 'Q2', 'Q3', 'Q4']);\nconst revenue = ref([\n  [100, 120, 140, 160], // 2023\n  [110, 130, 150, 170]  // 2024\n]);\n\nconst datasets = ref([\n  { label: '2023', backgroundColor: '#36A2EB' },\n  { label: '2024', backgroundColor: '#FF6384' }\n]);\n</script>\n\n<template>\n  <InChart\n    type=\"bar\"\n    :labels=\"quarters\"\n    :data=\"revenue\"\n    :dataset-settings=\"datasets\"\n  />\n</template>"
+    }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Not matching data and labels array lengths",
+      "why": "Chart.js requires equal length arrays for proper rendering",
+      "impact": "Chart renders incorrectly with missing or extra data points",
+      "fix": "Always ensure data[0].length === labels.length for each dataset",
+      "severity": "high",
+      "example": "// Wrong:\nconst labels = ['A', 'B', 'C'];\nconst data = [[1, 2]]; // Missing one value\n\n// Correct:\nconst labels = ['A', 'B', 'C'];\nconst data = [[1, 2, 3]]; // Matches labels length"
+    },
+    {
+      "mistake": "Using single array instead of nested array for data",
+      "why": "Component expects data as array of arrays even for single dataset",
+      "impact": "Chart fails to render or shows errors",
+      "fix": "Wrap single dataset in outer array: [[values]] instead of [values]",
+      "severity": "high",
+      "example": "// Wrong:\n:data=\"[10, 20, 30]\"\n\n// Correct:\n:data=\"[[10, 20, 30]]\""
+    },
+    {
+      "mistake": "Forgetting to set width/height for responsive charts",
+      "why": "Chart may not render properly without dimensions",
+      "impact": "Chart appears too small or doesn't resize correctly",
+      "fix": "Set width and height props, or set both to 0 for full container size",
+      "severity": "medium",
+      "example": ":width=\"0\" :height=\"0\" // Full container\n// or\n:width=\"800\" :height=\"400\" // Fixed size"
+    },
+    {
+      "mistake": "Not providing color palette for multi-dataset charts",
+      "why": "Default colors may not be distinguishable or match design",
+      "impact": "Poor visual distinction between datasets",
+      "fix": "Always provide colorPalette or datasetSettings with custom colors",
+      "severity": "medium",
+      "example": ":color-palette=\"['#FF6384', '#36A2EB', '#FFCE56']\"\n// or use datasetSettings for more control"
+    }
+  ],
+  "bestPractices": [
+    {
+      "title": "Always Provide Accessible Labels",
+      "description": "Add aria-label to chart container for screen reader users",
+      "code": "<div aria-label=\"Monthly sales chart showing upward trend from January to June\">\n  <InChart\n    type=\"line\"\n    :labels=\"months\"\n    :data=\"sales\"\n  />\n</div>",
+      "reasoning": "Canvas-based charts are not accessible by default. Descriptive labels help screen reader users understand the data"
+    },
+    {
+      "title": "Use Annotations for Important Thresholds",
+      "description": "Highlight targets, limits, or significant values with annotation lines",
+      "code": "const annotations = ref([{\n  type: 'line',\n  value: 100,\n  borderColor: 'red',\n  borderDash: [5, 5],\n  label: { content: 'Target: 100', enabled: true }\n}]);\n\n<InChart :chart-annotations=\"annotations\" />",
+      "reasoning": "Annotations provide visual context and help users quickly identify important reference points"
+    },
+    {
+      "title": "Aggregate Large Datasets",
+      "description": "Group data into larger time periods for better performance and readability",
+      "code": "// Instead of 365 daily points, use weekly or monthly aggregates\nconst weeklyData = aggregateByPeriod(dailyData, 'week');\n\n<InChart\n  :labels=\"weeklyData.labels\"\n  :data=\"weeklyData.values\"\n/>",
+      "reasoning": "Charts with 100+ data points can be slow and hard to read. Aggregation improves both performance and clarity"
+    },
+    {
+      "title": "Customize Tooltips for Better Context",
+      "description": "Add custom formatting to tooltip values for clarity",
+      "code": "const tooltipSettings = ref({\n  callbacks: {\n    label: (context) => {\n      const value = context.parsed.y;\n      return `Revenue: $${value.toLocaleString()}`;\n    }\n  }\n});\n\n<InChart :tooltips-extra-settings=\"tooltipSettings\" />",
+      "reasoning": "Default tooltips show raw numbers. Custom formatting adds units, currency symbols, or percentages for better understanding"
+    }
+  ],
+  "codeSnippets": {
+    "lineChart": {
+      "title": "Basic Line Chart",
+      "description": "Simple line chart for time series data",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InChart } from '@useinsider/design-system-vue';\n\nconst labels = ref(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']);\nconst salesData = ref([[65, 59, 80, 81, 56, 55]]);\n</script>\n\n<template>\n  <InChart\n    type=\"line\"\n    :labels=\"labels\"\n    :data=\"salesData\"\n    :width=\"600\"\n    :height=\"300\"\n    theme=\"blue\"\n  />\n</template>"
+    },
+    "multiDatasetChart": {
+      "title": "Multi-Dataset Bar Chart",
+      "description": "Bar chart comparing multiple datasets",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InChart } from '@useinsider/design-system-vue';\n\nconst labels = ref(['Q1', 'Q2', 'Q3', 'Q4']);\nconst data = ref([\n  [120, 150, 180, 200], // 2023 data\n  [100, 130, 160, 190]  // 2024 data\n]);\n\nconst datasetSettings = ref([\n  { label: '2023', backgroundColor: '#36A2EB', borderColor: '#36A2EB' },\n  { label: '2024', backgroundColor: '#FF6384', borderColor: '#FF6384' }\n]);\n\nconst legendSettings = ref({\n  display: true,\n  position: 'top'\n});\n</script>\n\n<template>\n  <InChart\n    type=\"bar\"\n    :labels=\"labels\"\n    :data=\"data\"\n    :dataset-settings=\"datasetSettings\"\n    :legend-settings=\"legendSettings\"\n    :width=\"700\"\n    :height=\"400\"\n  />\n</template>"
+    },
+    "chartWithAnnotations": {
+      "title": "Chart with Target Line",
+      "description": "Line chart with annotation showing target threshold",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InChart } from '@useinsider/design-system-vue';\n\nconst labels = ref(['Week 1', 'Week 2', 'Week 3', 'Week 4']);\nconst data = ref([[85, 92, 78, 95]]);\n\nconst annotations = ref([\n  {\n    type: 'line',\n    value: 90,\n    borderColor: 'red',\n    borderWidth: 2,\n    borderDash: [5, 5],\n    label: {\n      content: 'Target: 90%',\n      enabled: true,\n      position: 'end'\n    }\n  }\n]);\n\nconst tooltipsSettings = ref({\n  callbacks: {\n    label: (context) => `Performance: ${context.parsed.y}%`\n  }\n});\n</script>\n\n<template>\n  <InChart\n    type=\"line\"\n    :labels=\"labels\"\n    :data=\"data\"\n    :chart-annotations=\"annotations\"\n    :tooltips-extra-settings=\"tooltipsSettings\"\n    :step=\"{ stepSize: 10 }\"\n  />\n</template>"
+    }
+  },
+  "styling": {
+    "cssVariables": {
+      "--chart-font-family": "Font family for labels and text (default: system font)",
+      "--chart-grid-color": "Grid line color (default: #e0e0e0)",
+      "--chart-text-color": "Default text color for labels (default: #666)"
+    },
+    "classes": {
+      "in-chart": "Root chart container",
+      "in-chart__canvas": "Canvas element where chart renders",
+      "in-chart__no-data": "No data placeholder container",
+      "in-chart__legend": "Legend container"
+    },
+    "notes": "Chart uses Chart.js library internally. Most styling is done through props (theme, colorPalette, legendSettings, etc.) rather than CSS."
+  },
+  "implementationPatterns": [
+    {
+      "name": "Responsive Dashboard Chart",
+      "description": "Chart that adapts to container size with dynamic data updates",
+      "code": "<script setup>\nimport { ref, onMounted, watch } from 'vue';\nimport { InChart } from '@useinsider/design-system-vue';\n\nconst chartData = ref([]);\nconst chartLabels = ref([]);\nconst loading = ref(true);\n\nconst fetchChartData = async () => {\n  loading.value = true;\n  try {\n    const response = await fetch('/api/analytics');\n    const data = await response.json();\n    \n    chartLabels.value = data.map(d => d.date);\n    chartData.value = [data.map(d => d.value)];\n  } finally {\n    loading.value = false;\n  }\n};\n\nonMounted(fetchChartData);\n\n// Auto-refresh every 5 minutes\nconst refreshInterval = setInterval(fetchChartData, 5 * 60 * 1000);\n\nonBeforeUnmount(() => clearInterval(refreshInterval));\n</script>\n\n<template>\n  <div class=\"chart-container\">\n    <InChart\n      v-if=\"!loading && chartData.length\"\n      type=\"line\"\n      :labels=\"chartLabels\"\n      :data=\"chartData\"\n      :width=\"0\"\n      :height=\"0\"\n      theme=\"blue\"\n    />\n    <div v-else-if=\"loading\">Loading...</div>\n    <div v-else>No data available</div>\n  </div>\n</template>\n\n<style scoped>\n.chart-container {\n  width: 100%;\n  height: 400px;\n}\n</style>",
+      "when": "Use for dashboard analytics that need real-time updates and responsive sizing",
+      "pros": ["Auto-updates data", "Responsive to container", "Handles loading states"],
+      "cons": ["Requires polling or WebSocket", "More complex state management"]
+    },
+    {
+      "name": "Multi-Metric Comparison",
+      "description": "Compare multiple metrics with different scales using multiple Y-axes",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InChart } from '@useinsider/design-system-vue';\n\nconst labels = ref(['Jan', 'Feb', 'Mar', 'Apr', 'May']);\nconst data = ref([\n  [1200, 1900, 3000, 5000, 4000], // Revenue\n  [50, 65, 80, 95, 85]             // Conversion Rate %\n]);\n\nconst datasetSettings = ref([\n  {\n    label: 'Revenue ($)',\n    yAxisID: 'y-axis-1',\n    borderColor: '#36A2EB',\n    backgroundColor: 'rgba(54, 162, 235, 0.2)'\n  },\n  {\n    label: 'Conversion Rate (%)',\n    yAxisID: 'y-axis-2',\n    borderColor: '#FF6384',\n    backgroundColor: 'rgba(255, 99, 132, 0.2)'\n  }\n]);\n\nconst labelYAxesTicksExtraSettings = ref({\n  yAxes: [\n    {\n      id: 'y-axis-1',\n      position: 'left',\n      ticks: {\n        callback: (value) => `$${value}`\n      }\n    },\n    {\n      id: 'y-axis-2',\n      position: 'right',\n      ticks: {\n        callback: (value) => `${value}%`\n      }\n    }\n  ]\n});\n</script>\n\n<template>\n  <InChart\n    type=\"line\"\n    :labels=\"labels\"\n    :data=\"data\"\n    :dataset-settings=\"datasetSettings\"\n    :label-y-axes-ticks-extra-settings=\"labelYAxesTicksExtraSettings\"\n  />\n</template>",
+      "when": "Use when comparing metrics with different units or scales (e.g., revenue vs. percentage)",
+      "pros": ["Clear multi-metric visualization", "Separate scales prevent confusion"],
+      "cons": ["Can be complex for users to understand", "Requires careful axis configuration"]
+    },
+    {
+      "name": "Interactive Pie Chart with Tooltips",
+      "description": "Pie chart with custom tooltips and click handling",
+      "code": "<script setup>\nimport { ref } from 'vue';\nimport { InChart } from '@useinsider/design-system-vue';\n\nconst labels = ref(['Direct', 'Organic', 'Paid', 'Social', 'Referral']);\nconst data = ref([[35, 25, 20, 12, 8]]);\n\nconst colorPalette = ref([\n  '#FF6384',\n  '#36A2EB',\n  '#FFCE56',\n  '#4BC0C0',\n  '#9966FF'\n]);\n\nconst tooltipsSettings = ref({\n  callbacks: {\n    label: (context) => {\n      const label = context.label || '';\n      const value = context.parsed;\n      const total = context.dataset.data.reduce((a, b) => a + b, 0);\n      const percentage = ((value / total) * 100).toFixed(1);\n      return `${label}: ${value} (${percentage}%)`;\n    }\n  }\n});\n\nconst dataText = ref([\n  labels.value.map((_, i) => `${data.value[0][i]}%`)\n]);\n</script>\n\n<template>\n  <InChart\n    type=\"pie\"\n    :labels=\"labels\"\n    :data=\"data\"\n    :data-text=\"dataText\"\n    :color-palette=\"colorPalette\"\n    :tooltips-extra-settings=\"tooltipsSettings\"\n    :legend-settings=\"{ position: 'right' }\"\n  />\n</template>",
+      "when": "Use for showing proportional data distribution with detailed breakdowns",
+      "pros": ["Clear proportions", "Custom percentage display", "Interactive tooltips"],
+      "cons": ["Not suitable for time series", "Limited to showing parts of a whole"]
+    }
+  ],
+  "useCases": [
+    {
+      "title": "Analytics Dashboards",
+      "description": "Visualize metrics and KPIs over time",
+      "example": "Line charts showing website traffic, conversion rates, revenue trends with annotations for targets and milestones"
+    },
+    {
+      "title": "Sales Reports",
+      "description": "Compare sales performance across regions or time periods",
+      "example": "Multi-dataset bar charts comparing quarterly sales by region, with custom colors per region and legends"
+    },
+    {
+      "title": "User Distribution",
+      "description": "Show proportional data like user demographics or traffic sources",
+      "example": "Pie or doughnut charts displaying traffic source breakdown (Direct, Organic, Paid) with percentage labels"
+    },
+    {
+      "title": "Performance Monitoring",
+      "description": "Track metrics against targets or thresholds",
+      "example": "Line charts with annotation lines showing SLA targets, performance thresholds, or alert levels"
+    }
+  ],
+  "performanceNotes": [
+    {
+      "topic": "Large datasets",
+      "description": "Rendering 1000+ data points can slow chart rendering",
+      "recommendation": "Aggregate data into larger time buckets (hourly → daily, daily → weekly). Use data decimation or sampling for very large datasets. Consider using chart plugins for better performance with large data",
+      "impact": "high"
+    },
+    {
+      "topic": "Chart re-renders",
+      "description": "Frequent data updates cause full chart re-renders",
+      "recommendation": "Use reactive refs but update chart data in batches. Debounce real-time updates. Consider using chart update methods instead of full re-renders",
+      "impact": "medium"
+    },
+    {
+      "topic": "Multiple charts on page",
+      "description": "Rendering many charts simultaneously impacts performance",
+      "recommendation": "Use lazy loading or virtual scrolling for dashboard pages with many charts. Render charts only when visible (intersection observer)",
+      "impact": "medium"
+    }
+  ],
+  "accessibilityNotes": [
+    {
+      "topic": "Canvas accessibility",
+      "description": "Canvas-based charts are not inherently accessible to screen readers",
+      "wcagLevel": "A",
+      "recommendation": "Always provide text alternatives. Use aria-label on chart container describing the data. Consider providing data table alternative for complex charts",
+      "example": "<div aria-label=\"Sales chart showing increasing trend from January to June\">\n  <InChart ... />\n</div>"
+    },
+    {
+      "topic": "Color contrast",
+      "description": "Chart colors must have sufficient contrast for visibility",
+      "wcagLevel": "AA",
+      "recommendation": "Use colorPalette with high-contrast colors. Avoid relying solely on color to convey information. Use patterns or textures in addition to colors",
+      "example": ":color-palette=\"['#0066CC', '#FF6600', '#00CC66']\" // High contrast colors"
+    },
+    {
+      "topic": "Data table alternative",
+      "description": "Complex charts should have tabular data alternative",
+      "wcagLevel": "A",
+      "recommendation": "Provide a 'View as Table' option that displays the same data in an accessible HTML table format",
+      "example": "<button @click=\"showTable = !showTable\">{{ showTable ? 'Show Chart' : 'View as Table' }}</button>"
+    },
+    {
+      "topic": "Keyboard navigation",
+      "description": "Chart interactions should be keyboard accessible",
+      "wcagLevel": "A",
+      "recommendation": "If chart has interactive elements (click handlers), ensure they're keyboard accessible. Provide keyboard shortcuts for common actions",
+      "example": "// Use native Chart.js keyboard plugin or implement custom keyboard handlers"
+    }
+  ],
+  "helperFunctions": [
+    {
+      "name": "formatChartData",
+      "description": "Convert API response to chart-compatible format",
+      "code": "function formatChartData(apiData: Array<{date: string; value: number}>): { labels: string[]; data: number[][] } {\n  const labels = apiData.map(item => item.date);\n  const data = [apiData.map(item => item.value)];\n  \n  return { labels, data };\n}",
+      "parameters": [
+        {
+          "name": "apiData",
+          "type": "Array<{date: string; value: number}>",
+          "description": "Raw data from API"
+        }
+      ],
+      "returnType": "{ labels: string[]; data: number[][] }",
+      "example": "const { labels, data } = formatChartData(apiResponse);\n// Returns: { labels: ['2024-01', '2024-02'], data: [[100, 150]] }"
+    },
+    {
+      "name": "aggregateByPeriod",
+      "description": "Aggregate data points into larger time periods",
+      "code": "function aggregateByPeriod(data: Array<{date: Date; value: number}>, period: 'day' | 'week' | 'month'): Array<{date: string; value: number}> {\n  const grouped = new Map();\n  \n  data.forEach(item => {\n    let key: string;\n    const date = new Date(item.date);\n    \n    switch (period) {\n      case 'day':\n        key = date.toISOString().split('T')[0];\n        break;\n      case 'week':\n        const weekStart = new Date(date);\n        weekStart.setDate(date.getDate() - date.getDay());\n        key = weekStart.toISOString().split('T')[0];\n        break;\n      case 'month':\n        key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;\n        break;\n    }\n    \n    if (!grouped.has(key)) {\n      grouped.set(key, []);\n    }\n    grouped.get(key).push(item.value);\n  });\n  \n  return Array.from(grouped.entries()).map(([date, values]) => ({\n    date,\n    value: values.reduce((sum, v) => sum + v, 0) / values.length\n  }));\n}",
+      "parameters": [
+        {
+          "name": "data",
+          "type": "Array<{date: Date; value: number}>",
+          "description": "Time series data"
+        },
+        {
+          "name": "period",
+          "type": "'day' | 'week' | 'month'",
+          "description": "Aggregation period"
+        }
+      ],
+      "returnType": "Array<{date: string; value: number}>",
+      "example": "const weekly = aggregateByPeriod(dailyData, 'week');\n// Converts daily data to weekly averages"
+    },
+    {
+      "name": "calculatePercentageChange",
+      "description": "Calculate percentage change between data points",
+      "code": "function calculatePercentageChange(data: number[]): number[] {\n  return data.map((value, index) => {\n    if (index === 0) return 0;\n    const previous = data[index - 1];\n    if (previous === 0) return 0;\n    return ((value - previous) / previous) * 100;\n  });\n}",
+      "parameters": [
+        {
+          "name": "data",
+          "type": "number[]",
+          "description": "Array of numeric values"
+        }
+      ],
+      "returnType": "number[]",
+      "example": "const changes = calculatePercentageChange([100, 120, 110]);\n// Returns: [0, 20, -8.33]"
+    },
+    {
+      "name": "generateColorPalette",
+      "description": "Generate accessible color palette for chart",
+      "code": "function generateColorPalette(count: number, baseHue: number = 200): string[] {\n  const colors: string[] = [];\n  const saturation = 70;\n  const lightness = 50;\n  \n  for (let i = 0; i < count; i++) {\n    const hue = (baseHue + (i * 360 / count)) % 360;\n    colors.push(`hsl(${hue}, ${saturation}%, ${lightness}%)`);\n  }\n  \n  return colors;\n}",
+      "parameters": [
+        {
+          "name": "count",
+          "type": "number",
+          "description": "Number of colors to generate"
+        },
+        {
+          "name": "baseHue",
+          "type": "number",
+          "description": "Starting hue (0-360, default: 200)"
+        }
+      ],
+      "returnType": "string[]",
+      "example": "const palette = generateColorPalette(5, 200);\n// Returns: ['hsl(200, 70%, 50%)', 'hsl(272, 70%, 50%)', ...]"
+    }
+  ]
+}
