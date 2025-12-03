@@ -14,7 +14,10 @@
         "notes": "REQUIRED: The message text to display in the ribbon. Supports HTML when preventXss is false",
         "typescript": "string"
       },
-      "relatedProps": ["preventXss", "isClickableText"],
+      "relatedProps": [
+        "preventXss",
+        "isClickableText"
+      ],
       "commonMistakes": [
         {
           "mistake": "Not providing text prop",
@@ -33,17 +36,43 @@
     "type": {
       "valueFormat": {
         "structure": "string (enum)",
-        "validValues": ["default", "success", "warning", "error"],
+        "validValues": [
+          "default",
+          "success",
+          "warning",
+          "error"
+        ],
         "notes": "Determines the ribbon color theme and default icon",
         "typescript": "'default' | 'success' | 'warning' | 'error'"
       },
-      "relatedProps": ["icon", "withIcon"],
+      "relatedProps": [
+        "icon",
+        "withIcon"
+      ],
       "commonMistakes": [
         {
           "mistake": "Using 'info' instead of 'default' for blue ribbons",
           "impact": "Falls back to default type",
           "fix": "Use type=\"default\" for info/blue ribbons",
           "severity": "medium"
+        }
+      ],
+      "possibleValues": [
+        {
+          "value": "default",
+          "description": "TODO: Add description for 'default'"
+        },
+        {
+          "value": "success",
+          "description": "TODO: Add description for 'success'"
+        },
+        {
+          "value": "warning",
+          "description": "TODO: Add description for 'warning'"
+        },
+        {
+          "value": "error",
+          "description": "TODO: Add description for 'error'"
         }
       ]
     },
@@ -74,7 +103,10 @@
         ],
         "typescript": "string"
       },
-      "relatedProps": ["withIcon", "type"]
+      "relatedProps": [
+        "withIcon",
+        "type"
+      ]
     },
     "withIcon": {
       "valueFormat": {
@@ -82,7 +114,9 @@
         "notes": "Show/hide icon. When false, only text is displayed",
         "typescript": "boolean"
       },
-      "relatedProps": ["icon"]
+      "relatedProps": [
+        "icon"
+      ]
     },
     "isClickableText": {
       "valueFormat": {
@@ -90,7 +124,9 @@
         "notes": "Makes the text clickable with pointer cursor. Emits 'click' event",
         "typescript": "boolean"
       },
-      "relatedProps": ["text"],
+      "relatedProps": [
+        "text"
+      ],
       "commonMistakes": [
         {
           "mistake": "Setting isClickableText=true but not handling @click event",
@@ -106,7 +142,9 @@
         "notes": "SECURITY: Sanitizes HTML in text prop to prevent XSS attacks",
         "typescript": "boolean"
       },
-      "relatedProps": ["text"],
+      "relatedProps": [
+        "text"
+      ],
       "commonMistakes": [
         {
           "mistake": "Not enabling preventXss when displaying user-generated content",
@@ -423,9 +461,21 @@
       "description": "Create ribbon configuration object with defaults",
       "code": "function createRibbon(text: string, type: 'success' | 'error' | 'warning' | 'info' = 'info', options = {}) {\n  return {\n    text,\n    type,\n    hasCloseButton: true,\n    preventXss: true,\n    ...options\n  };\n}",
       "parameters": [
-        { "name": "text", "type": "string", "description": "Ribbon message text" },
-        { "name": "type", "type": "string", "description": "Ribbon type (success, error, warning, info)" },
-        { "name": "options", "type": "object", "description": "Additional ribbon options (optional)" }
+        {
+          "name": "text",
+          "type": "string",
+          "description": "Ribbon message text"
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "description": "Ribbon type (success, error, warning, info)"
+        },
+        {
+          "name": "options",
+          "type": "object",
+          "description": "Additional ribbon options (optional)"
+        }
       ],
       "returnType": "object",
       "example": "const ribbon = createRibbon('Save successful!', 'success', { hasCloseButton: false });"
@@ -435,8 +485,16 @@
       "description": "Display ribbon for a specific duration then auto-hide",
       "code": "function showTemporaryRibbon(ribbonRef: Ref<boolean>, duration = 5000) {\n  ribbonRef.value = true;\n  \n  return setTimeout(() => {\n    ribbonRef.value = false;\n  }, duration);\n}",
       "parameters": [
-        { "name": "ribbonRef", "type": "Ref<boolean>", "description": "Vue ref controlling ribbon visibility" },
-        { "name": "duration", "type": "number", "description": "Duration in milliseconds (default: 5000)" }
+        {
+          "name": "ribbonRef",
+          "type": "Ref<boolean>",
+          "description": "Vue ref controlling ribbon visibility"
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "description": "Duration in milliseconds (default: 5000)"
+        }
       ],
       "returnType": "number",
       "example": "const timerId = showTemporaryRibbon(showRibbon, 3000); // Auto-hide after 3s"
@@ -454,7 +512,11 @@
       "description": "Format API error for ribbon display",
       "code": "function formatErrorMessage(error: any): string {\n  if (typeof error === 'string') return error;\n  if (error.response?.data?.message) return error.response.data.message;\n  if (error.message) return error.message;\n  return 'An unexpected error occurred';\n}",
       "parameters": [
-        { "name": "error", "type": "any", "description": "Error object from API or try-catch" }
+        {
+          "name": "error",
+          "type": "any",
+          "description": "Error object from API or try-catch"
+        }
       ],
       "returnType": "string",
       "example": "const message = formatErrorMessage(apiError);\nshowErrorRibbon(message);"
@@ -464,10 +526,26 @@
       "description": "Create ribbon configuration with clickable action link",
       "code": "function createRibbonWithAction(text: string, actionText: string, onClick: Function, type = 'info') {\n  return {\n    text: `${text} <a href=\"#\" class=\"ribbon-action\">${actionText}</a>`,\n    type,\n    preventXss: false,\n    isClickableText: true,\n    onClick\n  };\n}",
       "parameters": [
-        { "name": "text", "type": "string", "description": "Main ribbon message" },
-        { "name": "actionText", "type": "string", "description": "Clickable action text (e.g., 'Undo', 'View Details')" },
-        { "name": "onClick", "type": "Function", "description": "Click handler for action link" },
-        { "name": "type", "type": "string", "description": "Ribbon type (optional, default: 'info')" }
+        {
+          "name": "text",
+          "type": "string",
+          "description": "Main ribbon message"
+        },
+        {
+          "name": "actionText",
+          "type": "string",
+          "description": "Clickable action text (e.g., 'Undo', 'View Details')"
+        },
+        {
+          "name": "onClick",
+          "type": "Function",
+          "description": "Click handler for action link"
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "description": "Ribbon type (optional, default: 'info')"
+        }
       ],
       "returnType": "object",
       "example": "const ribbon = createRibbonWithAction('Item deleted', 'Undo', handleUndo, 'warning');"

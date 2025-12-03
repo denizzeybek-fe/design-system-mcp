@@ -23,6 +23,28 @@
       "relatedProps": [
         "titleText",
         "descriptionText"
+      ],
+      "possibleValues": [
+        {
+          "value": "default",
+          "description": "TODO: Add description for 'default'"
+        },
+        {
+          "value": "warning",
+          "description": "TODO: Add description for 'warning'"
+        },
+        {
+          "value": "alert",
+          "description": "TODO: Add description for 'alert'"
+        },
+        {
+          "value": "success",
+          "description": "TODO: Add description for 'success'"
+        },
+        {
+          "value": "smart",
+          "description": "TODO: Add description for 'smart'"
+        }
       ]
     },
     "size": {
@@ -35,7 +57,17 @@
         ],
         "notes": "Controls overall component size and spacing",
         "typescript": "'small' | 'medium' | 'large'"
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "small",
+          "description": "TODO: Add description for 'small'"
+        },
+        {
+          "value": "medium",
+          "description": "TODO: Add description for 'medium'"
+        }
+      ]
     }
   },
   "eventEnrichments": {},
@@ -86,24 +118,45 @@
       "description": "Display validation errors at form level",
       "code": "<script setup>\nimport { ref, computed } from 'vue';\nimport { InOnPageMessage } from '@useinsider/design-system-vue';\n\nconst formErrors = ref<string[]>([]);\n\nconst hasErrors = computed(() => formErrors.value.length > 0);\n\nconst validateForm = () => {\n  formErrors.value = [];\n  if (!email.value) formErrors.value.push('Email is required');\n  if (!password.value) formErrors.value.push('Password is required');\n};\n</script>\n\n<template>\n  <div class=\"form\">\n    <InOnPageMessage\n      v-if=\"hasErrors\"\n      type=\"error\"\n      size=\"medium\"\n      title-text=\"Form validation failed\"\n      :description-text=\"formErrors.join(', ')\"\n    />\n    <!-- Form fields -->\n  </div>\n</template>",
       "when": "Showing form-level validation errors",
-      "pros": ["Centralized error display", "Clear user feedback", "Accessible error summary"],
-      "cons": ["May require scrolling to see", "Can become verbose with many errors"]
+      "pros": [
+        "Centralized error display",
+        "Clear user feedback",
+        "Accessible error summary"
+      ],
+      "cons": [
+        "May require scrolling to see",
+        "Can become verbose with many errors"
+      ]
     },
     {
       "name": "API Response Feedback",
       "description": "Show success/error after API calls",
       "code": "<script setup>\nimport { ref } from 'vue';\nimport { InOnPageMessage } from '@useinsider/design-system-vue';\n\nconst message = ref<{ type: string; text: string } | null>(null);\n\nconst saveData = async () => {\n  try {\n    await api.save(data);\n    message.value = {\n      type: 'success',\n      text: 'Data saved successfully'\n    };\n  } catch (error) {\n    message.value = {\n      type: 'error',\n      text: 'Failed to save data. Please try again.'\n    };\n  }\n  \n  // Auto-dismiss after 5 seconds\n  setTimeout(() => {\n    message.value = null;\n  }, 5000);\n};\n</script>\n\n<template>\n  <InOnPageMessage\n    v-if=\"message\"\n    :type=\"message.type\"\n    size=\"medium\"\n    :title-text=\"message.text\"\n  />\n</template>",
       "when": "Providing feedback after async operations",
-      "pros": ["Immediate user feedback", "Auto-dismissible", "Clear success/error states"],
-      "cons": ["Requires state management", "May overlap with content"]
+      "pros": [
+        "Immediate user feedback",
+        "Auto-dismissible",
+        "Clear success/error states"
+      ],
+      "cons": [
+        "Requires state management",
+        "May overlap with content"
+      ]
     },
     {
       "name": "Feature Announcements",
       "description": "Highlight new features or important info",
       "code": "<script setup>\nimport { ref } from 'vue';\nimport { InOnPageMessage } from '@useinsider/design-system-vue';\n\nconst showAnnouncement = ref(true);\n\nconst dismissAnnouncement = () => {\n  showAnnouncement.value = false;\n  localStorage.setItem('feature-announcement-dismissed', 'true');\n};\n\nconst mounted = () => {\n  const dismissed = localStorage.getItem('feature-announcement-dismissed');\n  showAnnouncement.value = !dismissed;\n};\n</script>\n\n<template>\n  <InOnPageMessage\n    v-if=\"showAnnouncement\"\n    type=\"info\"\n    size=\"large\"\n    title-text=\"New feature: Bulk export\"\n    description-text=\"You can now export multiple items at once.\"\n    link-status\n    link-text=\"Learn more\"\n    @link-click=\"openDocs\"\n  >\n    <template #extraMessage>\n      <button @click=\"dismissAnnouncement\">Dismiss</button>\n    </template>\n  </InOnPageMessage>\n</template>",
       "when": "Announcing new features or important updates",
-      "pros": ["Persistent until dismissed", "Non-blocking", "Can include action links"],
-      "cons": ["May be ignored by users", "Requires dismissal logic"]
+      "pros": [
+        "Persistent until dismissed",
+        "Non-blocking",
+        "Can include action links"
+      ],
+      "cons": [
+        "May be ignored by users",
+        "Requires dismissal logic"
+      ]
     }
   ],
   "useCases": [

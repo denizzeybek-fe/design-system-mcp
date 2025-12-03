@@ -56,7 +56,17 @@
         "notes": "Visual theme/color scheme for the input. Affects border, background, and hover states.",
         "typescript": "'grey' | 'white' | 'blue' | 'transparent'",
         "example": "// Default grey theme\ntheme=\"grey\"\n\n// White background for dark layouts\ntheme=\"white\"\n\n// Blue accent theme\ntheme=\"blue\"\n\n// Transparent for custom styling\ntheme=\"transparent\""
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "grey",
+          "description": "TODO: Add description for 'grey'"
+        },
+        {
+          "value": "white",
+          "description": "TODO: Add description for 'white'"
+        }
+      ]
     },
     "withIcon": {
       "valueFormat": {
@@ -80,7 +90,17 @@
         "notes": "Position of the icon within the input field.",
         "typescript": "'left' | 'right'",
         "example": "// Search icon on left (common pattern)\niconPosition=\"left\"\niconName=\"search\"\n\n// Action icons on right\niconPosition=\"right\"\niconName=\"clear\"\n@iconClick=\"clearInput\""
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "left",
+          "description": "TODO: Add description for 'left'"
+        },
+        {
+          "value": "right",
+          "description": "TODO: Add description for 'right'"
+        }
+      ]
     },
     "withSuffix": {
       "valueFormat": {
@@ -144,7 +164,17 @@
         "notes": "HTML autocomplete attribute. Controls browser autofill behavior. Use 'off' to disable, or specific values for enhanced autofill (email, name, tel, etc.).",
         "typescript": "'off' | 'on' | 'name' | 'email' | 'username' | 'current-password' | 'new-password' | 'tel' | 'street-address' | 'postal-code' | 'cc-number' | etc.",
         "example": "// Disable autocomplete\nautoComplete=\"off\"\n\n// Enable email autofill\nautoComplete=\"email\"\ntype=\"email\"\n\n// Password fields\nautoComplete=\"current-password\" // Login\nautoComplete=\"new-password\" // Registration\n\n// Name fields\nautoComplete=\"given-name\" // First name\nautoComplete=\"family-name\" // Last name\n\n// Address\nautoComplete=\"street-address\"\nautoComplete=\"postal-code\"\n\n// Credit card\nautoComplete=\"cc-number\"\nautoComplete=\"cc-exp\""
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "on",
+          "description": "TODO: Add description for 'on'"
+        },
+        {
+          "value": "off",
+          "description": "TODO: Add description for 'off'"
+        }
+      ]
     },
     "accept": {
       "valueFormat": {

@@ -1,0 +1,345 @@
+{
+  "migrationId": "InModals-to-InModalV2",
+  "v1Component": "InModals",
+  "v2Component": "InModalV2",
+  "condition": "type='information' (static text modals only)",
+  "estimatedEffort": "medium",
+  "breakingChanges": 8,
+  "complexity": "medium",
+  "description": "Migration from InModals (V1) type='information' to InModalV2. Use for simple text-based modals. V2 uses footerButtonGroupOptions instead of individual button props and updates event names. For dynamic content or forms, use InModals-to-InDrawer migration instead.",
+
+  "propMigrations": {
+    "status": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "status",
+      "transformCode": "// v-model:status remains the same\nv-model:status=\"isOpen\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": false,
+      "notes": "v-model:status works identically in V2"
+    },
+    "type": {
+      "v1Type": "'information'",
+      "v2Type": "'default' | 'primary' | 'warning' | 'danger'",
+      "v2Prop": "state",
+      "transformCode": "// InModals type='information' becomes InModalV2 state\n// Use modalStatus prop to determine state:\n// modalStatus='default' → state='default'\n// modalStatus='warning' → state='warning'\n// modalStatus='alert' → state='danger'\nstate=\"default\"",
+      "autoMigratable": false,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "type prop removed, use state based on modalStatus value"
+    },
+    "title": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "titleText",
+      "transformCode": "// Rename to titleText\ntitleText=\"Delete User\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Simple rename from 'title' to 'titleText'"
+    },
+    "informationModalDescription": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "descriptionText",
+      "transformCode": "// Rename to descriptionText\ndescriptionText=\"This action cannot be undone\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Renamed to 'descriptionText' for consistency"
+    },
+    "size": {
+      "v1Type": "'small' | 'medium' | 'large' | 'extra-large' | 'full'",
+      "v2Type": "'small' | 'medium' | 'large' | 'x-large'",
+      "v2Prop": "size",
+      "transformCode": "// Map size values\n// 'small' → 'small'\n// 'medium' → 'medium'\n// 'large' → 'large'\n// 'extra-large' → 'x-large'\n// 'full' → use InDrawer instead\nsize=\"large\"",
+      "autoMigratable": false,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "'extra-large' → 'x-large', 'full' size not supported (use InDrawer)"
+    },
+    "acceptButtonText": {
+      "v1Type": "string",
+      "v2Type": "object (footerButtonGroupOptions.primaryButton.labelText)",
+      "v2Prop": "footerButtonGroupOptions",
+      "transformCode": "// Move to footerButtonGroupOptions\n:footerButtonGroupOptions=\"{\n  primaryButton: { labelText: 'Confirm' }\n}\"",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "Individual button props consolidated into footerButtonGroupOptions object"
+    },
+    "cancelButtonText": {
+      "v1Type": "string",
+      "v2Type": "object (footerButtonGroupOptions.cancelButton.labelText)",
+      "v2Prop": "footerButtonGroupOptions",
+      "transformCode": "// Move to footerButtonGroupOptions\n:footerButtonGroupOptions=\"{\n  cancelButton: { labelText: 'Cancel' }\n}\"",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "Moved to footerButtonGroupOptions.cancelButton"
+    },
+    "acceptButtonType": {
+      "v1Type": "'BUTTON_TYPE_PRIMARY' | 'BUTTON_TYPE_SECONDARY' | 'BUTTON_TYPE_DANGER' | 'BUTTON_TYPE_SUCCESS'",
+      "v2Type": "'primary' | 'secondary' | 'danger' (in footerButtonGroupOptions.primaryButton.type)",
+      "v2Prop": "footerButtonGroupOptions",
+      "transformCode": "// Map button type constants\n// 'BUTTON_TYPE_PRIMARY' → 'primary'\n// 'BUTTON_TYPE_DANGER' → 'danger'\n// 'BUTTON_TYPE_SECONDARY' → 'secondary'\n:footerButtonGroupOptions=\"{\n  primaryButton: { type: 'danger' }\n}\"",
+      "autoMigratable": false,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Button type constants changed to lowercase strings"
+    },
+    "acceptButtonDisable": {
+      "v1Type": "boolean",
+      "v2Type": "boolean (footerButtonGroupOptions.primaryButton.disabled)",
+      "v2Prop": "footerButtonGroupOptions",
+      "transformCode": "// Move to footerButtonGroupOptions\n:footerButtonGroupOptions=\"{\n  primaryButton: { disabled: !isValid }\n}\"",
+      "autoMigratable": false,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Moved to footerButtonGroupOptions.primaryButton.disabled"
+    },
+    "isModalAcceptButtonLoading": {
+      "v1Type": "boolean",
+      "v2Type": "boolean (footerButtonGroupOptions.primaryButton.loading)",
+      "v2Prop": "footerButtonGroupOptions",
+      "transformCode": "// Move to footerButtonGroupOptions\n:footerButtonGroupOptions=\"{\n  primaryButton: { loading: isSaving }\n}\"",
+      "autoMigratable": false,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Moved to footerButtonGroupOptions.primaryButton.loading"
+    },
+    "closeButtons": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "closeButtonStatus",
+      "transformCode": "// Rename to closeButtonStatus\n:closeButtonStatus=\"false\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Renamed to closeButtonStatus"
+    },
+    "closeOnOverlayClick": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "closeOnOutsideClick",
+      "transformCode": "// Rename to closeOnOutsideClick\n:closeOnOutsideClick=\"false\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Renamed to closeOnOutsideClick"
+    },
+    "visibleButtons": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "footerStatus",
+      "transformCode": "// Rename to footerStatus\n:footerStatus=\"true\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Renamed to footerStatus"
+    }
+  },
+
+  "eventMigrations": {
+    "@acceptButton": {
+      "v1Event": "@acceptButton",
+      "v2Event": "@primaryButtonEvent",
+      "v1Payload": "void",
+      "v2Payload": "void",
+      "payloadChange": "No change",
+      "breakingChange": true,
+      "complexity": "low",
+      "notes": "Event renamed to @primaryButtonEvent"
+    },
+    "@closeModal": {
+      "v1Event": "@closeModal",
+      "v2Event": "@onCloseEvent",
+      "v1Payload": "void",
+      "v2Payload": "void",
+      "payloadChange": "No change",
+      "breakingChange": true,
+      "complexity": "low",
+      "notes": "Event renamed to @onCloseEvent"
+    },
+    "@back": {
+      "v1Event": "@back",
+      "v2Event": "Not supported (use InDrawer for multi-step)",
+      "v1Payload": "void",
+      "v2Payload": "N/A",
+      "payloadChange": "Feature not in V2",
+      "breakingChange": true,
+      "complexity": "high",
+      "notes": "Multi-step wizards should use InDrawer instead"
+    }
+  },
+
+  "newFeaturesInV2": [
+    {
+      "feature": "Header Description",
+      "props": ["descriptionText", "descriptionStatus"],
+      "description": "Optional description text below title in header",
+      "usage": "descriptionText=\"Additional context\" :descriptionStatus=\"true\""
+    },
+    {
+      "feature": "Secondary Button",
+      "props": ["footerButtonGroupOptions.secondaryButton"],
+      "description": "Support for three buttons (cancel, secondary, primary)",
+      "usage": ":footerButtonGroupOptions=\"{ secondaryButton: { labelText: 'Save Draft' } }\""
+    },
+    {
+      "feature": "Full Width Content",
+      "props": ["fullWidthContentStatus"],
+      "description": "Remove content padding for full-width elements",
+      "usage": ":fullWidthContentStatus=\"true\""
+    }
+  ],
+
+  "migrationSteps": [
+    {
+      "step": 1,
+      "title": "Update import",
+      "before": "import { InModals } from '@useinsider/design-system-vue';",
+      "after": "import { InModalV2 } from '@useinsider/design-system-vue';",
+      "automated": true
+    },
+    {
+      "step": 2,
+      "title": "Update component name",
+      "before": "<InModals ...",
+      "after": "<InModalV2 ...",
+      "automated": true
+    },
+    {
+      "step": 3,
+      "title": "Map type to state",
+      "before": "type=\"warning\"",
+      "after": "state=\"warning\"",
+      "automated": false,
+      "notes": "Map: information→default, confirmation→primary, warning→warning, error→danger, success→primary"
+    },
+    {
+      "step": 4,
+      "title": "Rename title to titleText",
+      "before": "title=\"Delete User\"",
+      "after": "titleText=\"Delete User\"",
+      "automated": true
+    },
+    {
+      "step": 5,
+      "title": "Rename informationModalDescription to descriptionText",
+      "before": "informationModalDescription=\"Cannot be undone\"",
+      "after": "descriptionText=\"Cannot be undone\"",
+      "automated": true
+    },
+    {
+      "step": 6,
+      "title": "Update size enum",
+      "before": "size=\"extra-large\"",
+      "after": "size=\"x-large\"",
+      "automated": false,
+      "notes": "extra-large → x-large, full size not supported"
+    },
+    {
+      "step": 7,
+      "title": "Consolidate button props into footerButtonGroupOptions",
+      "before": "acceptButtonText=\"Delete\"\nacceptButtonType=\"BUTTON_TYPE_DANGER\"\n:acceptButtonDisable=\"!canDelete\"\n:isModalAcceptButtonLoading=\"deleting\"\ncancelButtonText=\"Cancel\"",
+      "after": ":footerButtonGroupOptions=\"{\n  cancelButton: { labelText: 'Cancel' },\n  primaryButton: {\n    labelText: 'Delete',\n    type: 'danger',\n    disabled: !canDelete,\n    loading: deleting\n  }\n}\"",
+      "automated": false,
+      "notes": "Combine all button config into single object"
+    },
+    {
+      "step": 8,
+      "title": "Rename closeButtons to closeButtonStatus",
+      "before": ":closeButtons=\"false\"",
+      "after": ":closeButtonStatus=\"false\"",
+      "automated": true
+    },
+    {
+      "step": 9,
+      "title": "Rename closeOnOverlayClick to closeOnOutsideClick",
+      "before": ":closeOnOverlayClick=\"false\"",
+      "after": ":closeOnOutsideClick=\"false\"",
+      "automated": true
+    },
+    {
+      "step": 10,
+      "title": "Rename visibleButtons to footerStatus",
+      "before": ":visibleButtons=\"true\"",
+      "after": ":footerStatus=\"true\"",
+      "automated": true
+    },
+    {
+      "step": 11,
+      "title": "Update event handlers",
+      "before": "@acceptButton=\"handleConfirm\"\n@closeModal=\"handleClose\"",
+      "after": "@primaryButtonEvent=\"handleConfirm\"\n@onCloseEvent=\"handleClose\"",
+      "automated": true
+    }
+  ],
+
+  "fullExampleBefore": "<!-- V1 InModals - Delete Confirmation -->\n<template>\n  <InModals\n    v-model:status=\"showDeleteModal\"\n    type=\"warning\"\n    size=\"small\"\n    title=\"Delete User\"\n    informationModalDescription=\"This action cannot be undone.\"\n    acceptButtonText=\"Delete\"\n    acceptButtonType=\"BUTTON_TYPE_DANGER\"\n    cancelButtonText=\"Cancel\"\n    :acceptButtonDisable=\"!canDelete\"\n    :isModalAcceptButtonLoading=\"isDeleting\"\n    :closeOnOverlayClick=\"false\"\n    :closeButtons=\"true\"\n    @acceptButton=\"handleDelete\"\n    @closeModal=\"showDeleteModal = false\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\nimport { InModals } from '@useinsider/design-system-vue';\n\nconst showDeleteModal = ref(false);\nconst isDeleting = ref(false);\nconst canDelete = ref(true);\n\nconst handleDelete = async () => {\n  isDeleting.value = true;\n  try {\n    await api.deleteUser();\n    showDeleteModal.value = false;\n  } finally {\n    isDeleting.value = false;\n  }\n};\n</script>",
+
+  "fullExampleAfter": "<!-- V2 InModalV2 - Delete Confirmation -->\n<template>\n  <InModalV2\n    v-model:status=\"showDeleteModal\"\n    state=\"danger\"\n    size=\"small\"\n    titleText=\"Delete User\"\n    descriptionText=\"This action cannot be undone.\"\n    :footerButtonGroupOptions=\"{\n      cancelButton: { labelText: 'Cancel' },\n      primaryButton: {\n        labelText: 'Delete',\n        type: 'danger',\n        disabled: !canDelete,\n        loading: isDeleting\n      }\n    }\"\n    :closeOnOutsideClick=\"false\"\n    :closeButtonStatus=\"true\"\n    @primaryButtonEvent=\"handleDelete\"\n    @onCloseEvent=\"showDeleteModal = false\"\n  />\n</template>\n\n<script setup lang=\"ts\">\nimport { ref } from 'vue';\nimport { InModalV2 } from '@useinsider/design-system-vue';\n\nconst showDeleteModal = ref(false);\nconst isDeleting = ref(false);\nconst canDelete = ref(true);\n\nconst handleDelete = async () => {\n  isDeleting.value = true;\n  try {\n    await api.deleteUser();\n    showDeleteModal.value = false;\n  } finally {\n    isDeleting.value = false;\n  }\n};\n</script>",
+
+  "commonPitfalls": [
+    {
+      "pitfall": "Forgetting to consolidate button props into footerButtonGroupOptions",
+      "impact": "Buttons won't show or work correctly",
+      "solution": "Create footerButtonGroupOptions object with cancelButton and primaryButton"
+    },
+    {
+      "pitfall": "Using old event names (@acceptButton, @closeModal)",
+      "impact": "Event handlers won't fire",
+      "solution": "Update to @primaryButtonEvent and @onCloseEvent"
+    },
+    {
+      "pitfall": "Using type prop instead of state",
+      "impact": "TypeScript error, modal styling won't apply",
+      "solution": "Rename type to state and map values: warning→warning, error→danger, etc."
+    },
+    {
+      "pitfall": "Not updating button type constants",
+      "impact": "Button styling won't apply correctly",
+      "solution": "Change BUTTON_TYPE_DANGER to 'danger', BUTTON_TYPE_PRIMARY to 'primary'"
+    },
+    {
+      "pitfall": "Using size='full' or size='extra-large'",
+      "impact": "Invalid prop value or unexpected size",
+      "solution": "Use size='x-large' or consider InDrawer for full-width content"
+    }
+  ],
+
+  "testingChecklist": [
+    "✓ Modal opens and closes correctly",
+    "✓ Title and description display",
+    "✓ Primary button shows correct text and styling (danger for delete)",
+    "✓ Cancel button shows correct text",
+    "✓ Primary button disabled state works",
+    "✓ Primary button loading state shows spinner",
+    "✓ Close X button shows/hides based on closeButtonStatus",
+    "✓ Outside click behavior matches closeOnOutsideClick",
+    "✓ @primaryButtonEvent fires when primary button clicked",
+    "✓ @onCloseEvent fires when modal closes",
+    "✓ Keyboard navigation works (Tab, Escape)",
+    "✓ Modal state (danger/warning/primary) applies correct colors"
+  ],
+
+  "whenToUseThisMigration": {
+    "use": [
+      "type='information' - Static text/information modals",
+      "Simple text-based alerts and notifications",
+      "Success/error message modals",
+      "Modals showing informationModalDescription text only",
+      "No custom slot content needed"
+    ],
+    "doNotUse": [
+      "type='dynamic' - Use InModals-to-InDrawer migration instead",
+      "type='onboard' - Use InModals-to-InDrawer migration instead",
+      "Forms with input fields - Use InDrawer",
+      "Custom slot content - Use InDrawer",
+      "Multi-step wizards (withPage=true) - Use InDrawer",
+      "Content that needs side-by-side viewing - Use InDrawer"
+    ]
+  }
+}

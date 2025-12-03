@@ -134,7 +134,17 @@
           "tags"
         ],
         "example": "type=\"tags\""
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "text",
+          "description": "TODO: Add description for 'text'"
+        },
+        {
+          "value": "checkbox",
+          "description": "TODO: Add description for 'checkbox'"
+        }
+      ]
     },
     "theme": {
       "description": "Color theme of the dropdown",
@@ -148,7 +158,35 @@
           "dark"
         ],
         "example": "theme=\"dark\""
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "white",
+          "description": "TODO: Add description for 'white'"
+        },
+        {
+          "value": "grey",
+          "description": "TODO: Add description for 'grey'"
+        }
+      ]
+    },
+    "searchableContent": {
+      "valueFormat": {
+        "structure": "'all' | 'number'",
+        "notes": "TODO: Add usage notes",
+        "typescript": "'all' | 'number'",
+        "example": "TODO: Add example for all"
+      },
+      "possibleValues": [
+        {
+          "value": "all",
+          "description": "TODO: Add description for 'all'"
+        },
+        {
+          "value": "number",
+          "description": "TODO: Add description for 'number'"
+        }
+      ]
     }
   },
   "eventEnrichments": {
@@ -281,24 +319,45 @@
       "description": "Multi-select with maximum selection limit",
       "code": "<script setup>\nimport { ref, computed } from 'vue';\nimport { InMultiDropDown } from '@useinsider/design-system-vue';\n\nconst selectedTags = ref([]);\nconst maxTags = 3;\n\nconst tagOptions = [\n  { label: 'Feature', value: 'feature' },\n  { label: 'Bug', value: 'bug' },\n  { label: 'Enhancement', value: 'enhancement' },\n  { label: 'Documentation', value: 'docs' },\n  { label: 'Testing', value: 'test' }\n];\n\nconst selectionWarning = computed(() => {\n  if (selectedTags.value.length >= maxTags) {\n    return `Maximum ${maxTags} tags allowed`;\n  }\n  return '';\n});\n</script>\n\n<template>\n  <InMultiDropDown\n    v-model=\"selectedTags\"\n    :options=\"tagOptions\"\n    label=\"Issue Tags\"\n    type=\"tags\"\n    :max-selectable-item=\"maxTags\"\n    :warning=\"selectedTags.length >= maxTags\"\n    :warning-message=\"selectionWarning\"\n  />\n</template>",
       "when": "Use when you need to enforce a maximum number of selections",
-      "pros": ["Prevents over-selection", "Clear user feedback", "Enforces business rules"],
-      "cons": ["May feel restrictive", "Requires clear communication to user"]
+      "pros": [
+        "Prevents over-selection",
+        "Clear user feedback",
+        "Enforces business rules"
+      ],
+      "cons": [
+        "May feel restrictive",
+        "Requires clear communication to user"
+      ]
     },
     {
       "name": "Grouped Multi-Select with Select All",
       "description": "Multi-select with group selection functionality",
       "code": "<script setup>\nimport { ref } from 'vue';\nimport { InMultiDropDown } from '@useinsider/design-system-vue';\n\nconst selectedPermissions = ref([]);\n\nconst permissionGroups = [\n  { label: 'Users', value: 'users_read' },\n  { label: 'Users', value: 'users_write' },\n  { label: 'Users', value: 'users_delete' },\n  { label: 'Posts', value: 'posts_read' },\n  { label: 'Posts', value: 'posts_write' },\n  { label: 'Posts', value: 'posts_delete' }\n];\n\nconst selectAllInGroup = (group: string) => {\n  const groupValues = permissionGroups\n    .filter(p => p.label === group)\n    .map(p => p.value);\n  \n  selectedPermissions.value = [\n    ...new Set([...selectedPermissions.value, ...groupValues])\n  ];\n};\n\nconst deselectAllInGroup = (group: string) => {\n  const groupValues = permissionGroups\n    .filter(p => p.label === group)\n    .map(p => p.value);\n  \n  selectedPermissions.value = selectedPermissions.value.filter(\n    v => !groupValues.includes(v)\n  );\n};\n</script>\n\n<template>\n  <div>\n    <div class=\"group-actions\">\n      <button @click=\"selectAllInGroup('Users')\">Select All Users</button>\n      <button @click=\"deselectAllInGroup('Users')\">Deselect All Users</button>\n    </div>\n    \n    <InMultiDropDown\n      v-model=\"selectedPermissions\"\n      :options=\"permissionGroups\"\n      label=\"Permissions\"\n      type=\"checkbox\"\n    />\n  </div>\n</template>",
       "when": "Use when options can be logically grouped and bulk selection is needed",
-      "pros": ["Faster selection", "Better UX for grouped data", "Reduces clicks"],
-      "cons": ["More complex implementation", "Requires group management logic"]
+      "pros": [
+        "Faster selection",
+        "Better UX for grouped data",
+        "Reduces clicks"
+      ],
+      "cons": [
+        "More complex implementation",
+        "Requires group management logic"
+      ]
     },
     {
       "name": "Dynamic Filter Multi-Select",
       "description": "Multi-select for filtering with immediate results",
       "code": "<script setup>\nimport { ref, computed } from 'vue';\nimport { InMultiDropDown } from '@useinsider/design-system-vue';\n\nconst selectedFilters = ref([]);\nconst allProducts = ref([...]);\n\nconst filterOptions = [\n  { label: 'In Stock', value: 'in_stock' },\n  { label: 'On Sale', value: 'on_sale' },\n  { label: 'Free Shipping', value: 'free_shipping' },\n  { label: 'Top Rated', value: 'top_rated' }\n];\n\nconst filteredProducts = computed(() => {\n  if (selectedFilters.value.length === 0) return allProducts.value;\n  \n  return allProducts.value.filter(product => {\n    return selectedFilters.value.every(filter => {\n      switch (filter) {\n        case 'in_stock': return product.stock > 0;\n        case 'on_sale': return product.onSale;\n        case 'free_shipping': return product.freeShipping;\n        case 'top_rated': return product.rating >= 4.5;\n        default: return true;\n      }\n    });\n  });\n});\n</script>\n\n<template>\n  <div>\n    <InMultiDropDown\n      v-model=\"selectedFilters\"\n      :options=\"filterOptions\"\n      label=\"Filter Products\"\n      type=\"tags\"\n      placeholder=\"Apply filters\"\n    />\n    \n    <div class=\"results\">\n      {{ filteredProducts.length }} products found\n    </div>\n  </div>\n</template>",
       "when": "Use for filtering data with multiple criteria that can be combined",
-      "pros": ["Real-time filtering", "Multiple filter combination", "Clear active filters"],
-      "cons": ["Can be performance-intensive", "Complex filter logic"]
+      "pros": [
+        "Real-time filtering",
+        "Multiple filter combination",
+        "Clear active filters"
+      ],
+      "cons": [
+        "Can be performance-intensive",
+        "Complex filter logic"
+      ]
     }
   ],
   "useCases": [

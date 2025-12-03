@@ -56,7 +56,33 @@
         "notes": "Defines the behavior of dropdown options. 'link' makes options act as links (with href), 'button' makes them act as buttons triggering onClick.",
         "typescript": "'link' | 'button'",
         "example": "// Link type - navigates on click\ntype=\"link\"\n:options=\"[\n  { label: 'Dashboard', value: '/dashboard', href: '/dashboard' },\n  { label: 'Settings', value: '/settings', href: '/settings' }\n]\"\n\n// Button type - triggers action\ntype=\"button\"\n:options=\"[\n  { label: 'Export', value: 'export', onClick: exportData },\n  { label: 'Delete', value: 'delete', onClick: deleteItem }\n]\""
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "link",
+          "description": "TODO: Add description for 'link'"
+        },
+        {
+          "value": "text",
+          "description": "TODO: Add description for 'text'"
+        },
+        {
+          "value": "checkbox",
+          "description": "TODO: Add description for 'checkbox'"
+        },
+        {
+          "value": "category",
+          "description": "TODO: Add description for 'category'"
+        },
+        {
+          "value": "icon",
+          "description": "TODO: Add description for 'icon'"
+        },
+        {
+          "value": "categoryWithIcon",
+          "description": "TODO: Add description for 'categoryWithIcon'"
+        }
+      ]
     },
     "target": {
       "valueFormat": {
@@ -64,7 +90,25 @@
         "notes": "HTML anchor target attribute for link-type options. Controls where links open.",
         "typescript": "'_self' | '_blank' | '_parent' | '_top'",
         "example": "// Open in same tab (default)\ntarget=\"_self\"\n\n// Open in new tab\ntarget=\"_blank\"\n\n// For navigation options\ntype=\"link\"\ntarget=\"_blank\"\n:options=\"[\n  { label: 'Documentation', value: 'docs', href: 'https://docs.example.com' },\n  { label: 'Support', value: 'support', href: 'https://support.example.com' }\n]\""
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "_self",
+          "description": "TODO: Add description for '_self'"
+        },
+        {
+          "value": "_blank",
+          "description": "TODO: Add description for '_blank'"
+        },
+        {
+          "value": "_parent",
+          "description": "TODO: Add description for '_parent'"
+        },
+        {
+          "value": "_top",
+          "description": "TODO: Add description for '_top'"
+        }
+      ]
     },
     "openPosition": {
       "valueFormat": {
@@ -72,7 +116,17 @@
         "notes": "Horizontal alignment of the dropdown menu relative to the trigger button.",
         "typescript": "'left' | 'right' | 'center'",
         "example": "// Align dropdown to left edge of button\nopenPosition=\"left\"\n\n// Align dropdown to right edge\nopenPosition=\"right\"\n\n// Center dropdown under button\nopenPosition=\"center\""
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "left",
+          "description": "TODO: Add description for 'left'"
+        },
+        {
+          "value": "right",
+          "description": "TODO: Add description for 'right'"
+        }
+      ]
     },
     "dropdownMenuPosition": {
       "valueFormat": {
@@ -80,7 +134,21 @@
         "notes": "Vertical positioning strategy for the dropdown menu. AUTO detects available space and positions accordingly.",
         "typescript": "'DROPDOWN_MENU_POSITION_AUTO' | 'DROPDOWN_MENU_POSITION_TOP' | 'DROPDOWN_MENU_POSITION_BOTTOM'",
         "example": "// Auto-detect best position (default)\ndropdownMenuPosition=\"DROPDOWN_MENU_POSITION_AUTO\"\n\n// Always show above button\ndropdownMenuPosition=\"DROPDOWN_MENU_POSITION_TOP\"\n\n// Always show below button\ndropdownMenuPosition=\"DROPDOWN_MENU_POSITION_BOTTOM\""
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "auto",
+          "description": "TODO: Add description for 'auto'"
+        },
+        {
+          "value": "top",
+          "description": "TODO: Add description for 'top'"
+        },
+        {
+          "value": "bottom",
+          "description": "TODO: Add description for 'bottom'"
+        }
+      ]
     },
     "buttonType": {
       "valueFormat": {
@@ -88,7 +156,17 @@
         "notes": "Visual style variant for the dropdown trigger button.",
         "typescript": "'primary' | 'secondary' | 'tertiary' | 'danger' | 'success' | 'warning'",
         "example": "// Primary button style\nbuttonType=\"primary\"\n\n// Secondary style (default)\nbuttonType=\"secondary\"\n\n// Danger for destructive actions\nbuttonType=\"danger\"\ntext=\"Delete Options\"\n\n// Success for positive actions\nbuttonType=\"success\"\ntext=\"Export Success\""
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "secondary",
+          "description": "TODO: Add description for 'secondary'"
+        },
+        {
+          "value": "text",
+          "description": "TODO: Add description for 'text'"
+        }
+      ]
     },
     "icon": {
       "valueFormat": {
@@ -104,7 +182,17 @@
         "notes": "Position of the icon relative to button text.",
         "typescript": "'left' | 'right'",
         "example": "// Icon on right side (default)\niconPosition=\"right\"\nicon=\"filled-dropdown-down\"\n\n// Icon on left side\niconPosition=\"left\"\nicon=\"filter\"\ntext=\"Filter Options\""
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "left",
+          "description": "TODO: Add description for 'left'"
+        },
+        {
+          "value": "right",
+          "description": "TODO: Add description for 'right'"
+        }
+      ]
     },
     "extraOption": {
       "valueFormat": {
@@ -177,6 +265,40 @@
         "typescript": "{\n  width?: string | number;\n  height?: string | number;\n}",
         "example": ":skeletonSizing=\"{ width: '200px', height: '40px' }\"\n:skeletonStatus=\"loading\""
       }
+    },
+    "status": {
+      "valueFormat": {
+        "structure": "'default' | 'secondary' | 'success' | 'warning' | 'alert' | 'disabled'",
+        "notes": "TODO: Add usage notes",
+        "typescript": "'default' | 'secondary' | 'success' | 'warning' | 'alert' | 'disabled'",
+        "example": "TODO: Add example for default"
+      },
+      "possibleValues": [
+        {
+          "value": "default",
+          "description": "TODO: Add description for 'default'"
+        },
+        {
+          "value": "secondary",
+          "description": "TODO: Add description for 'secondary'"
+        },
+        {
+          "value": "success",
+          "description": "TODO: Add description for 'success'"
+        },
+        {
+          "value": "warning",
+          "description": "TODO: Add description for 'warning'"
+        },
+        {
+          "value": "alert",
+          "description": "TODO: Add description for 'alert'"
+        },
+        {
+          "value": "disabled",
+          "description": "TODO: Add description for 'disabled'"
+        }
+      ]
     }
   },
   "eventEnrichments": {

@@ -31,7 +31,12 @@
         "structure": "string enum",
         "notes": "Controls modal appearance and context. 'default' (neutral gray), 'primary' (blue, info), 'warning' (yellow, caution), 'danger' (red, destructive actions). Affects header color and footer button styling.",
         "typescript": "'default' | 'primary' | 'warning' | 'danger'",
-        "possibleValues": ["default", "primary", "warning", "danger"],
+        "possibleValues": [
+          "default",
+          "primary",
+          "warning",
+          "danger"
+        ],
         "example": "state=\"danger\" // For delete confirmations"
       }
     },
@@ -41,9 +46,28 @@
         "structure": "string enum",
         "notes": "Determines modal width. 'small' (~400px, forms), 'medium' (~600px, default), 'large' (~800px, detailed content), 'x-large' (~1000px, complex forms). Responsive on mobile - all sizes become full-width.",
         "typescript": "'small' | 'medium' | 'large' | 'x-large'",
-        "possibleValues": ["small", "medium", "large", "x-large"],
+        "possibleValues": [
+          "small",
+          "medium",
+          "large",
+          "x-large"
+        ],
         "example": "size=\"large\""
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "small",
+          "description": "TODO: Add description for 'small'"
+        },
+        {
+          "value": "medium",
+          "description": "TODO: Add description for 'medium'"
+        },
+        {
+          "value": "large",
+          "description": "TODO: Add description for 'large'"
+        }
+      ]
     },
     "titleText": {
       "description": "Modal header title",
@@ -263,24 +287,45 @@
       "description": "Multi-step form flow within a single modal",
       "code": "<script setup>\nimport { ref, computed } from 'vue';\nimport { InModalV2 } from '@useinsider/design-system-vue';\n\nconst isOpen = ref(false);\nconst currentStep = ref(1);\nconst formData = ref({ name: '', email: '', role: '' });\n\nconst steps = [\n  { title: 'Personal Info', description: 'Enter your details' },\n  { title: 'Account Setup', description: 'Choose your role' },\n  { title: 'Confirmation', description: 'Review your information' }\n];\n\nconst currentStepData = computed(() => steps[currentStep.value - 1]);\n\nconst footerButtons = computed(() => ({\n  cancelButton: { labelText: currentStep.value === 1 ? 'Cancel' : 'Back' },\n  primaryButton: {\n    labelText: currentStep.value === 3 ? 'Finish' : 'Next',\n    type: 'primary'\n  }\n}));\n\nconst handlePrimary = () => {\n  if (currentStep.value === 3) {\n    // Submit form\n    console.log('Submit:', formData.value);\n    isOpen.value = false;\n    currentStep.value = 1;\n  } else {\n    currentStep.value++;\n  }\n};\n\nconst handleCancel = () => {\n  if (currentStep.value === 1) {\n    isOpen.value = false;\n  } else {\n    currentStep.value--;\n  }\n};\n</script>\n\n<template>\n  <InModalV2\n    v-model:status=\"isOpen\"\n    :title-text=\"currentStepData.title\"\n    :description-text=\"currentStepData.description\"\n    :footer-button-group-options=\"footerButtons\"\n    :close-on-outside-click=\"false\"\n    @primaryButtonEvent=\"handlePrimary\"\n    @cancelOrBackButtonEvent=\"handleCancel\"\n  >\n    <div v-if=\"currentStep === 1\">\n      <input v-model=\"formData.name\" placeholder=\"Name\" />\n      <input v-model=\"formData.email\" placeholder=\"Email\" />\n    </div>\n    <div v-else-if=\"currentStep === 2\">\n      <select v-model=\"formData.role\">\n        <option value=\"admin\">Admin</option>\n        <option value=\"user\">User</option>\n      </select>\n    </div>\n    <div v-else>\n      <p>Name: {{ formData.name }}</p>\n      <p>Email: {{ formData.email }}</p>\n      <p>Role: {{ formData.role }}</p>\n    </div>\n  </InModalV2>\n</template>",
       "when": "Use for multi-step processes that fit in modal context (user creation, settings wizard)",
-      "pros": ["Keeps user in context", "Progressive disclosure", "Easy navigation between steps"],
-      "cons": ["Can become complex", "Not suitable for very long flows"]
+      "pros": [
+        "Keeps user in context",
+        "Progressive disclosure",
+        "Easy navigation between steps"
+      ],
+      "cons": [
+        "Can become complex",
+        "Not suitable for very long flows"
+      ]
     },
     {
       "name": "Confirmation with Async Validation",
       "description": "Modal that validates before allowing action",
       "code": "<script setup>\nimport { ref, computed } from 'vue';\nimport { InModalV2 } from '@useinsider/design-system-vue';\n\nconst showDeleteModal = ref(false);\nconst confirmText = ref('');\nconst isValidating = ref(false);\n\nconst isValid = computed(() => confirmText.value === 'DELETE');\n\nconst footerButtons = computed(() => ({\n  cancelButton: { labelText: 'Cancel' },\n  primaryButton: {\n    labelText: 'Delete',\n    type: 'danger',\n    disabled: !isValid.value,\n    loading: isValidating.value\n  }\n}));\n\nconst handleDelete = async () => {\n  if (!isValid.value) return;\n  \n  isValidating.value = true;\n  try {\n    await api.deleteResource();\n    showDeleteModal.value = false;\n    confirmText.value = '';\n  } catch (error) {\n    console.error(error);\n  } finally {\n    isValidating.value = false;\n  }\n};\n</script>\n\n<template>\n  <InModalV2\n    v-model:status=\"showDeleteModal\"\n    state=\"danger\"\n    title-text=\"Delete Resource\"\n    description-text=\"This action cannot be undone\"\n    :footer-button-group-options=\"footerButtons\"\n    :close-on-outside-click=\"false\"\n    @primaryButtonEvent=\"handleDelete\"\n    @cancelOrBackButtonEvent=\"showDeleteModal = false\"\n  >\n    <p>Type DELETE to confirm:</p>\n    <input v-model=\"confirmText\" placeholder=\"Type DELETE\" />\n  </InModalV2>\n</template>",
       "when": "Use for critical destructive actions that need extra confirmation",
-      "pros": ["Prevents accidental deletions", "Clear user intent", "Extra safety layer"],
-      "cons": ["Extra friction for user", "Can be annoying if overused"]
+      "pros": [
+        "Prevents accidental deletions",
+        "Clear user intent",
+        "Extra safety layer"
+      ],
+      "cons": [
+        "Extra friction for user",
+        "Can be annoying if overused"
+      ]
     },
     {
       "name": "Stacked Modals Pattern",
       "description": "Opening a modal from within another modal",
       "code": "<script setup>\nimport { ref } from 'vue';\nimport { InModalV2 } from '@useinsider/design-system-vue';\n\nconst showEditModal = ref(false);\nconst showConfirmModal = ref(false);\nconst hasUnsavedChanges = ref(true);\n\nconst handleCloseEdit = () => {\n  if (hasUnsavedChanges.value) {\n    showConfirmModal.value = true;\n  } else {\n    showEditModal.value = false;\n  }\n};\n\nconst handleConfirmDiscard = () => {\n  showConfirmModal.value = false;\n  showEditModal.value = false;\n  hasUnsavedChanges.value = false;\n};\n</script>\n\n<template>\n  <!-- Main edit modal -->\n  <InModalV2\n    v-model:status=\"showEditModal\"\n    title-text=\"Edit Profile\"\n    @onCloseEvent=\"handleCloseEdit\"\n  >\n    <form>\n      <!-- Form fields -->\n    </form>\n  </InModalV2>\n  \n  <!-- Confirmation modal (stacked on top) -->\n  <InModalV2\n    v-model:status=\"showConfirmModal\"\n    state=\"warning\"\n    size=\"small\"\n    title-text=\"Unsaved Changes\"\n    description-text=\"You have unsaved changes. Discard them?\"\n    :footer-button-group-options=\"{\n      cancelButton: { labelText: 'Keep Editing' },\n      primaryButton: { labelText: 'Discard', type: 'warning' }\n    }\"\n    @primaryButtonEvent=\"handleConfirmDiscard\"\n    @cancelOrBackButtonEvent=\"showConfirmModal = false\"\n  />\n</template>",
       "when": "Use when confirmation is needed before closing a modal with unsaved changes",
-      "pros": ["Prevents data loss", "Clear user choice", "Maintains context"],
-      "cons": ["Can be confusing", "Increases z-index complexity"]
+      "pros": [
+        "Prevents data loss",
+        "Clear user choice",
+        "Maintains context"
+      ],
+      "cons": [
+        "Can be confusing",
+        "Increases z-index complexity"
+      ]
     }
   ],
   "useCases": [

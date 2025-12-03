@@ -44,27 +44,15 @@
       "possibleValues": [
         {
           "value": "default",
-          "description": "Neutral gray tag (default)"
+          "description": "TODO: Add description for 'default'"
         },
         {
-          "value": "primary",
-          "description": "Primary brand color (blue)"
-        },
-        {
-          "value": "success",
-          "description": "Success/positive status (green)"
+          "value": "alert",
+          "description": "TODO: Add description for 'alert'"
         },
         {
           "value": "warning",
-          "description": "Warning/caution (orange)"
-        },
-        {
-          "value": "danger",
-          "description": "Error/critical (red)"
-        },
-        {
-          "value": "info",
-          "description": "Informational (cyan)"
+          "description": "TODO: Add description for 'warning'"
         }
       ]
     },

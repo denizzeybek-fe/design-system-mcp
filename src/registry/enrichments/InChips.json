@@ -11,11 +11,22 @@
     "type": {
       "valueFormat": {
         "structure": "string (enum)",
-        "validValues": ["default", "danger", "warning", "neutral", "smart", "information", "orange", "magenta"],
+        "validValues": [
+          "default",
+          "danger",
+          "warning",
+          "neutral",
+          "smart",
+          "information",
+          "orange",
+          "magenta"
+        ],
         "notes": "Semantic color type for the chip. Determines background/border color",
         "typescript": "'default' | 'danger' | 'warning' | 'neutral' | 'smart' | 'information' | 'orange' | 'magenta'"
       },
-      "relatedProps": ["styles"],
+      "relatedProps": [
+        "styles"
+      ],
       "commonMistakes": [
         {
           "mistake": "Using invalid type value like 'primary' or 'success'",
@@ -29,22 +40,71 @@
           "fix": "Check InChips documentation for V1 vs V2 type mappings",
           "severity": "medium"
         }
+      ],
+      "possibleValues": [
+        {
+          "value": "default",
+          "description": "TODO: Add description for 'default'"
+        },
+        {
+          "value": "danger",
+          "description": "TODO: Add description for 'danger'"
+        },
+        {
+          "value": "warning",
+          "description": "TODO: Add description for 'warning'"
+        },
+        {
+          "value": "neutral",
+          "description": "TODO: Add description for 'neutral'"
+        },
+        {
+          "value": "smart",
+          "description": "TODO: Add description for 'smart'"
+        },
+        {
+          "value": "information",
+          "description": "TODO: Add description for 'information'"
+        },
+        {
+          "value": "orange",
+          "description": "TODO: Add description for 'orange'"
+        },
+        {
+          "value": "magenta",
+          "description": "TODO: Add description for 'magenta'"
+        }
       ]
     },
     "styles": {
       "valueFormat": {
         "structure": "string (enum)",
-        "validValues": ["stroke", "solid"],
+        "validValues": [
+          "stroke",
+          "solid"
+        ],
         "notes": "Visual style variant. 'stroke' shows border only, 'solid' has filled background",
         "typescript": "'stroke' | 'solid'"
       },
-      "relatedProps": ["type"],
+      "relatedProps": [
+        "type"
+      ],
       "commonMistakes": [
         {
           "mistake": "Using 'outline' instead of 'stroke'",
           "impact": "Falls back to default 'stroke' style",
           "fix": "Use styles=\"stroke\" for outlined chips",
           "severity": "low"
+        }
+      ],
+      "possibleValues": [
+        {
+          "value": "stroke",
+          "description": "TODO: Add description for 'stroke'"
+        },
+        {
+          "value": "solid",
+          "description": "TODO: Add description for 'solid'"
         }
       ]
     },
@@ -54,7 +114,9 @@
         "notes": "REQUIRED: Display text for the chip. Visible label shown to users",
         "typescript": "string"
       },
-      "relatedProps": ["maxWidth"],
+      "relatedProps": [
+        "maxWidth"
+      ],
       "commonMistakes": [
         {
           "mistake": "Not providing text prop",
@@ -76,7 +138,10 @@
         "notes": "REQUIRED: Unique identifier for the chip. Used in click events for tracking which chip was interacted with",
         "typescript": "string | number"
       },
-      "relatedEvents": ["click", "tagClick"],
+      "relatedEvents": [
+        "click",
+        "tagClick"
+      ],
       "commonMistakes": [
         {
           "mistake": "Not providing value prop",
@@ -98,7 +163,9 @@
         "notes": "Maximum width in pixels. Text truncates with ellipsis when exceeded. Hover shows full text via title attribute",
         "typescript": "number"
       },
-      "relatedProps": ["text"],
+      "relatedProps": [
+        "text"
+      ],
       "commonMistakes": [
         {
           "mistake": "Passing string '150px' instead of number 150",
@@ -114,7 +181,9 @@
         "notes": "Makes the chip label clickable. When true, clicking label emits tagClick event (separate from close button click)",
         "typescript": "boolean"
       },
-      "relatedEvents": ["tagClick"],
+      "relatedEvents": [
+        "tagClick"
+      ],
       "commonMistakes": [
         {
           "mistake": "Setting actionableLabel=true but not handling @tagClick",
@@ -136,7 +205,10 @@
         "notes": "Enables hover and active states. When false, chip has no hover effects",
         "typescript": "boolean"
       },
-      "relatedProps": ["actionableLabel", "closeButton"],
+      "relatedProps": [
+        "actionableLabel",
+        "closeButton"
+      ],
       "commonMistakes": [
         {
           "mistake": "Setting interactive=false with actionableLabel=true",
@@ -152,7 +224,9 @@
         "notes": "Shows chip as selected/active with highlighted styling",
         "typescript": "boolean"
       },
-      "relatedProps": ["interactive"],
+      "relatedProps": [
+        "interactive"
+      ],
       "commonMistakes": [
         {
           "mistake": "Using selectedStatus without state management",

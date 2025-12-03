@@ -82,7 +82,17 @@
         "notes": "Determines behavior of '+ Add Tab' button. 'options': shows dropdown with addTabDropdownOptions. 'custom': emits addNewTab event for custom handling (e.g., open modal).",
         "typescript": "'options' | 'custom'",
         "example": "'options' // Show dropdown\n'custom' // Emit event for custom modal"
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "event",
+          "description": "TODO: Add description for 'event'"
+        },
+        {
+          "value": "emit",
+          "description": "TODO: Add description for 'emit'"
+        }
+      ]
     },
     "renameOption": {
       "valueFormat": {

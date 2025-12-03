@@ -18,7 +18,10 @@
         ],
         "typescript": "Array<{ field: string; label: string; sortable?: boolean; width?: number; renderer?: string; formatter?: Function; }>"
       },
-      "relatedProps": ["data", "formatMapping"],
+      "relatedProps": [
+        "data",
+        "formatMapping"
+      ],
       "commonMistakes": [
         {
           "mistake": "Not providing 'field' property in column definition",
@@ -50,7 +53,11 @@
         ],
         "typescript": "(url: string, options?: RequestInit) => Promise<Response>"
       },
-      "relatedProps": ["fetchUrl", "apiMode", "httpOptions"],
+      "relatedProps": [
+        "fetchUrl",
+        "apiMode",
+        "httpOptions"
+      ],
       "commonMistakes": [
         {
           "mistake": "Not returning a Promise from httpFetch",
@@ -84,7 +91,10 @@
         "notes": "Table data array for client-side mode (when apiMode=false). Each object represents a row",
         "typescript": "Array<Record<string, any>>"
       },
-      "relatedProps": ["apiMode", "fetchUrl"],
+      "relatedProps": [
+        "apiMode",
+        "fetchUrl"
+      ],
       "commonMistakes": [
         {
           "mistake": "Providing both :data and fetch-url",
@@ -104,7 +114,12 @@
         ],
         "typescript": "string"
       },
-      "relatedProps": ["apiMode", "httpFetch", "httpOptions", "tableSearchParams"],
+      "relatedProps": [
+        "apiMode",
+        "httpFetch",
+        "httpOptions",
+        "tableSearchParams"
+      ],
       "commonMistakes": [
         {
           "mistake": "Using fetchUrl without setting apiMode=true",
@@ -126,7 +141,10 @@
         "notes": "Enable server-side data fetching. When true, uses fetchUrl instead of local data",
         "typescript": "boolean"
       },
-      "relatedProps": ["fetchUrl", "data"]
+      "relatedProps": [
+        "fetchUrl",
+        "data"
+      ]
     },
     "tableSearchParams": {
       "valueFormat": {
@@ -138,7 +156,10 @@
         ],
         "typescript": "Record<string, string | number | boolean>"
       },
-      "relatedProps": ["fetchUrl", "apiMode"]
+      "relatedProps": [
+        "fetchUrl",
+        "apiMode"
+      ]
     },
     "actions": {
       "valueFormat": {
@@ -157,7 +178,9 @@
         "notes": "Number of rows per page. Default: 10",
         "typescript": "number"
       },
-      "relatedProps": ["paginationStatus"]
+      "relatedProps": [
+        "paginationStatus"
+      ]
     },
     "sortOrder": {
       "valueFormat": {
@@ -181,7 +204,10 @@
         ],
         "typescript": "string"
       },
-      "relatedProps": ["apiMode", "fetchUrl"],
+      "relatedProps": [
+        "apiMode",
+        "fetchUrl"
+      ],
       "commonMistakes": [
         {
           "mistake": "Wrong pagination path for API response structure",
@@ -201,7 +227,10 @@
         ],
         "typescript": "{ headers?: Record<string, string>; credentials?: 'include' | 'same-origin' | 'omit'; }"
       },
-      "relatedProps": ["fetchUrl", "httpFetch"],
+      "relatedProps": [
+        "fetchUrl",
+        "httpFetch"
+      ],
       "commonMistakes": [
         {
           "mistake": "Not providing Authorization header for authenticated APIs",
@@ -264,11 +293,27 @@
     "loadingType": {
       "valueFormat": {
         "structure": "string (enum)",
-        "validValues": ["spinner", "skeleton", "overlay"],
+        "validValues": [
+          "spinner",
+          "skeleton",
+          "overlay"
+        ],
         "notes": "Type of loading indicator shown during data fetch",
         "typescript": "'spinner' | 'skeleton' | 'overlay'"
       },
-      "relatedProps": ["loadingStatus"]
+      "relatedProps": [
+        "loadingStatus"
+      ],
+      "possibleValues": [
+        {
+          "value": "skeleton",
+          "description": "TODO: Add description for 'skeleton'"
+        },
+        {
+          "value": "no-data",
+          "description": "TODO: Add description for 'no-data'"
+        }
+      ]
     }
   },
   "eventEnrichments": {
@@ -637,9 +682,21 @@
       "description": "Create table field definition with common settings",
       "code": "function createTableField(field: string, label: string, options = {}) {\n  return {\n    field,\n    label,\n    sortable: false,\n    width: 'auto',\n    ...options\n  };\n}",
       "parameters": [
-        { "name": "field", "type": "string", "description": "Data property name" },
-        { "name": "label", "type": "string", "description": "Column header text" },
-        { "name": "options", "type": "object", "description": "Additional field options (optional)" }
+        {
+          "name": "field",
+          "type": "string",
+          "description": "Data property name"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": "Column header text"
+        },
+        {
+          "name": "options",
+          "type": "object",
+          "description": "Additional field options (optional)"
+        }
       ],
       "returnType": "object",
       "example": "const nameField = createTableField('name', 'User Name', { sortable: true, width: '200px' });"
@@ -649,7 +706,11 @@
       "description": "Make multiple fields sortable at once",
       "code": "function createSortableFields(fields: Array<{ field: string; label: string }>) {\n  return fields.map(f => ({\n    field: f.field,\n    label: f.label,\n    sortable: true\n  }));\n}",
       "parameters": [
-        { "name": "fields", "type": "Array<{field, label}>", "description": "Array of field definitions" }
+        {
+          "name": "fields",
+          "type": "Array<{field, label}>",
+          "description": "Array of field definitions"
+        }
       ],
       "returnType": "Array<object>",
       "example": "const fields = createSortableFields([{ field: 'name', label: 'Name' }, { field: 'date', label: 'Date' }]);"
@@ -659,9 +720,21 @@
       "description": "Filter table data by search term across multiple fields",
       "code": "function filterTableData(data: any[], searchTerm: string, searchFields: string[]) {\n  if (!searchTerm) return data;\n  \n  const term = searchTerm.toLowerCase();\n  return data.filter(row => \n    searchFields.some(field => \n      String(row[field] || '').toLowerCase().includes(term)\n    )\n  );\n}",
       "parameters": [
-        { "name": "data", "type": "Array<any>", "description": "Table data array" },
-        { "name": "searchTerm", "type": "string", "description": "Search query" },
-        { "name": "searchFields", "type": "Array<string>", "description": "Fields to search in" }
+        {
+          "name": "data",
+          "type": "Array<any>",
+          "description": "Table data array"
+        },
+        {
+          "name": "searchTerm",
+          "type": "string",
+          "description": "Search query"
+        },
+        {
+          "name": "searchFields",
+          "type": "Array<string>",
+          "description": "Fields to search in"
+        }
       ],
       "returnType": "Array<any>",
       "example": "const filtered = filterTableData(users, 'john', ['name', 'email', 'department']);"
@@ -671,9 +744,21 @@
       "description": "Sort table data by field and direction",
       "code": "function sortTableData(data: any[], sortBy: string, sortOrder: 'asc' | 'desc' = 'asc') {\n  return [...data].sort((a, b) => {\n    const aVal = a[sortBy];\n    const bVal = b[sortBy];\n    \n    if (aVal === bVal) return 0;\n    \n    const comparison = aVal > bVal ? 1 : -1;\n    return sortOrder === 'asc' ? comparison : -comparison;\n  });\n}",
       "parameters": [
-        { "name": "data", "type": "Array<any>", "description": "Table data array" },
-        { "name": "sortBy", "type": "string", "description": "Field name to sort by" },
-        { "name": "sortOrder", "type": "string", "description": "Sort direction: 'asc' or 'desc'" }
+        {
+          "name": "data",
+          "type": "Array<any>",
+          "description": "Table data array"
+        },
+        {
+          "name": "sortBy",
+          "type": "string",
+          "description": "Field name to sort by"
+        },
+        {
+          "name": "sortOrder",
+          "type": "string",
+          "description": "Sort direction: 'asc' or 'desc'"
+        }
       ],
       "returnType": "Array<any>",
       "example": "const sorted = sortTableData(users, 'name', 'asc');"
@@ -683,9 +768,21 @@
       "description": "Get paginated slice of data array",
       "code": "function paginateData(data: any[], page: number, perPage: number) {\n  const start = (page - 1) * perPage;\n  const end = start + perPage;\n  \n  return {\n    data: data.slice(start, end),\n    total: data.length,\n    page,\n    perPage,\n    totalPages: Math.ceil(data.length / perPage)\n  };\n}",
       "parameters": [
-        { "name": "data", "type": "Array<any>", "description": "Full data array" },
-        { "name": "page", "type": "number", "description": "Current page number (1-based)" },
-        { "name": "perPage", "type": "number", "description": "Items per page" }
+        {
+          "name": "data",
+          "type": "Array<any>",
+          "description": "Full data array"
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "description": "Current page number (1-based)"
+        },
+        {
+          "name": "perPage",
+          "type": "number",
+          "description": "Items per page"
+        }
       ],
       "returnType": "{ data: Array<any>, total: number, page: number, perPage: number, totalPages: number }",
       "example": "const paginated = paginateData(users, 2, 25); // Page 2, 25 items per page"

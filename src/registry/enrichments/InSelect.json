@@ -109,6 +109,24 @@
       },
       "relatedProps": [
         "dynamicPosition"
+      ],
+      "possibleValues": [
+        {
+          "value": "bottom left",
+          "description": "TODO: Add description for 'bottom left'"
+        },
+        {
+          "value": "bottom right",
+          "description": "TODO: Add description for 'bottom right'"
+        },
+        {
+          "value": "top left",
+          "description": "TODO: Add description for 'top left'"
+        },
+        {
+          "value": "top right",
+          "description": "TODO: Add description for 'top right'"
+        }
       ]
     },
     "staticChildPosition": {
@@ -123,7 +141,25 @@
         "default": "bottom right",
         "notes": "Child dropdown position for grouped options",
         "typescript": "'bottom left' | 'bottom right' | 'top left' | 'top right'"
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "bottom left",
+          "description": "TODO: Add description for 'bottom left'"
+        },
+        {
+          "value": "bottom right",
+          "description": "TODO: Add description for 'bottom right'"
+        },
+        {
+          "value": "top left",
+          "description": "TODO: Add description for 'top left'"
+        },
+        {
+          "value": "top right",
+          "description": "TODO: Add description for 'top right'"
+        }
+      ]
     },
     "optionValidationType": {
       "valueFormat": {
@@ -330,24 +366,46 @@
       "description": "Select as part of form with validation",
       "code": "<script setup>\nimport { ref, computed } from 'vue';\nimport { InSelect } from '@useinsider/design-system-vue';\n\nconst formData = ref({\n  country: [],\n  status: []\n});\n\nconst countries = [\n  { text: 'Turkey', value: 'TR' },\n  { text: 'USA', value: 'US' },\n  { text: 'UK', value: 'GB' }\n];\n\nconst validateForm = () => {\n  return formData.value.country.length > 0 && \n         formData.value.status.length > 0;\n};\n</script>\n\n<template>\n  <form @submit.prevent=\"handleSubmit\">\n    <InSelect\n      id=\"country\"\n      label-text=\"Country *\"\n      :options=\"countries\"\n      :value=\"formData.country\"\n      :state=\"formData.country.length === 0 ? 'error' : 'default'\"\n      @change=\"formData.country = $event\"\n    />\n    \n    <button :disabled=\"!validateForm()\" type=\"submit\">\n      Submit\n    </button>\n  </form>\n</template>",
       "when": "Building forms with required select fields",
-      "pros": ["Clear validation", "User feedback", "Form state management"],
-      "cons": ["Requires validation logic", "More boilerplate"]
+      "pros": [
+        "Clear validation",
+        "User feedback",
+        "Form state management"
+      ],
+      "cons": [
+        "Requires validation logic",
+        "More boilerplate"
+      ]
     },
     {
       "name": "Dynamic Options Select",
       "description": "Load options from API",
       "code": "<script setup>\nimport { ref, onMounted } from 'vue';\nimport { InSelect } from '@useinsider/design-system-vue';\n\nconst options = ref([]);\nconst selected = ref([]);\nconst loading = ref(false);\n\nconst loadOptions = async () => {\n  loading.value = true;\n  try {\n    const response = await fetch('/api/options');\n    const data = await response.json();\n    options.value = data.map(item => ({\n      text: item.name,\n      value: item.id\n    }));\n  } catch (error) {\n    console.error('Failed to load options:', error);\n  } finally {\n    loading.value = false;\n  }\n};\n\nonMounted(() => {\n  loadOptions();\n});\n</script>\n\n<template>\n  <InSelect\n    label-text=\"Select Item\"\n    :options=\"options\"\n    :value=\"selected\"\n    :loading-status=\"loading\"\n    @change=\"selected = $event\"\n  />\n</template>",
       "when": "Options come from API/database",
-      "pros": ["Fresh data", "Dynamic content", "Scalable"],
-      "cons": ["Loading state needed", "Network dependency", "Error handling"]
+      "pros": [
+        "Fresh data",
+        "Dynamic content",
+        "Scalable"
+      ],
+      "cons": [
+        "Loading state needed",
+        "Network dependency",
+        "Error handling"
+      ]
     },
     {
       "name": "Dependent Selects",
       "description": "Cascading dropdown selections",
       "code": "<script setup>\nimport { ref, computed, watch } from 'vue';\nimport { InSelect } from '@useinsider/design-system-vue';\n\nconst selectedCountry = ref([]);\nconst selectedCity = ref([]);\n\nconst countries = [\n  { text: 'Turkey', value: 'TR' },\n  { text: 'USA', value: 'US' }\n];\n\nconst allCities = {\n  TR: [\n    { text: 'Istanbul', value: 'IST' },\n    { text: 'Ankara', value: 'ANK' }\n  ],\n  US: [\n    { text: 'New York', value: 'NYC' },\n    { text: 'Los Angeles', value: 'LAX' }\n  ]\n};\n\nconst cities = computed(() => {\n  if (selectedCountry.value.length === 0) return [];\n  const countryCode = selectedCountry.value[0].value;\n  return allCities[countryCode] || [];\n});\n\n// Reset city when country changes\nwatch(selectedCountry, () => {\n  selectedCity.value = [];\n});\n</script>\n\n<template>\n  <div>\n    <InSelect\n      id=\"country\"\n      label-text=\"Country\"\n      :options=\"countries\"\n      :value=\"selectedCountry\"\n      @change=\"selectedCountry = $event\"\n    />\n    \n    <InSelect\n      id=\"city\"\n      label-text=\"City\"\n      :options=\"cities\"\n      :value=\"selectedCity\"\n      :disabled=\"selectedCountry.length === 0\"\n      @change=\"selectedCity = $event\"\n    />\n  </div>\n</template>",
       "when": "Hierarchical or dependent selections",
-      "pros": ["Contextual options", "Data integrity", "Good UX"],
-      "cons": ["Complex state management", "Reset logic needed"]
+      "pros": [
+        "Contextual options",
+        "Data integrity",
+        "Good UX"
+      ],
+      "cons": [
+        "Complex state management",
+        "Reset logic needed"
+      ]
     }
   ],
   "useCases": [

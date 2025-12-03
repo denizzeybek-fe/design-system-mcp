@@ -194,6 +194,58 @@
       "relatedProps": [
         "stateMessage"
       ]
+    },
+    "staticPosition": {
+      "valueFormat": {
+        "structure": "'bottom left' | 'bottom right' | 'top left' | 'top right'",
+        "notes": "TODO: Add usage notes",
+        "typescript": "'bottom left' | 'bottom right' | 'top left' | 'top right'",
+        "example": "TODO: Add example for bottom left"
+      },
+      "possibleValues": [
+        {
+          "value": "bottom left",
+          "description": "TODO: Add description for 'bottom left'"
+        },
+        {
+          "value": "bottom right",
+          "description": "TODO: Add description for 'bottom right'"
+        },
+        {
+          "value": "top left",
+          "description": "TODO: Add description for 'top left'"
+        },
+        {
+          "value": "top right",
+          "description": "TODO: Add description for 'top right'"
+        }
+      ]
+    },
+    "staticChildPosition": {
+      "valueFormat": {
+        "structure": "'bottom left' | 'bottom right' | 'top left' | 'top right'",
+        "notes": "TODO: Add usage notes",
+        "typescript": "'bottom left' | 'bottom right' | 'top left' | 'top right'",
+        "example": "TODO: Add example for bottom left"
+      },
+      "possibleValues": [
+        {
+          "value": "bottom left",
+          "description": "TODO: Add description for 'bottom left'"
+        },
+        {
+          "value": "bottom right",
+          "description": "TODO: Add description for 'bottom right'"
+        },
+        {
+          "value": "top left",
+          "description": "TODO: Add description for 'top left'"
+        },
+        {
+          "value": "top right",
+          "description": "TODO: Add description for 'top right'"
+        }
+      ]
     }
   },
   "eventEnrichments": {
@@ -365,24 +417,45 @@
       "description": "Multi-select in form with validation",
       "code": "<script setup>\nimport { ref, computed } from 'vue';\nimport { InMultiSelect } from '@useinsider/design-system-vue';\n\nconst selectedCategories = ref([]);\nconst minRequired = 2;\n\nconst state = computed(() => {\n  if (selectedCategories.value.length === 0) return 'default';\n  if (selectedCategories.value.length < minRequired) return 'error';\n  return 'success';\n});\n\nconst stateMessage = computed(() => {\n  if (selectedCategories.value.length < minRequired) {\n    return `Please select at least ${minRequired} categories`;\n  }\n  return '';\n});\n\nconst categories = [\n  { text: 'Technology', value: 'tech' },\n  { text: 'Business', value: 'business' },\n  { text: 'Science', value: 'science' },\n  { text: 'Arts', value: 'arts' }\n];\n</script>\n\n<template>\n  <form>\n    <InMultiSelect\n      id=\"categories\"\n      label-text=\"Select Categories\"\n      :options=\"categories\"\n      :value=\"selectedCategories\"\n      :state=\"state\"\n      :state-message=\"stateMessage\"\n      @change=\"selectedCategories = $event\"\n    />\n  </form>\n</template>",
       "when": "Multi-select with minimum/maximum requirements",
-      "pros": ["Clear validation feedback", "User-friendly error messages", "Real-time validation"],
-      "cons": ["Requires state management", "Can be verbose for complex rules"]
+      "pros": [
+        "Clear validation feedback",
+        "User-friendly error messages",
+        "Real-time validation"
+      ],
+      "cons": [
+        "Requires state management",
+        "Can be verbose for complex rules"
+      ]
     },
     {
       "name": "Filter Multi-Select",
       "description": "Multi-select for filtering data tables",
       "code": "<script setup>\nimport { ref, computed } from 'vue';\nimport { InMultiSelect } from '@useinsider/design-system-vue';\n\nconst allData = ref([\n  { name: 'John', status: 'active', role: 'admin' },\n  { name: 'Jane', status: 'pending', role: 'user' },\n  // ... more data\n]);\n\nconst statusFilter = ref([]);\nconst roleFilter = ref([]);\n\nconst statusOptions = [\n  { text: 'Active', value: 'active' },\n  { text: 'Pending', value: 'pending' },\n  { text: 'Inactive', value: 'inactive' }\n];\n\nconst roleOptions = [\n  { text: 'Admin', value: 'admin' },\n  { text: 'User', value: 'user' },\n  { text: 'Guest', value: 'guest' }\n];\n\nconst filteredData = computed(() => {\n  let data = allData.value;\n  \n  if (statusFilter.value.length > 0) {\n    const statuses = statusFilter.value.map(s => s.value);\n    data = data.filter(item => statuses.includes(item.status));\n  }\n  \n  if (roleFilter.value.length > 0) {\n    const roles = roleFilter.value.map(r => r.value);\n    data = data.filter(item => roles.includes(item.role));\n  }\n  \n  return data;\n});\n</script>\n\n<template>\n  <div class=\"filters\">\n    <InMultiSelect\n      id=\"status-filter\"\n      label-text=\"Filter by Status\"\n      :options=\"statusOptions\"\n      :value=\"statusFilter\"\n      select-all-option-status\n      @change=\"statusFilter = $event\"\n    />\n    \n    <InMultiSelect\n      id=\"role-filter\"\n      label-text=\"Filter by Role\"\n      :options=\"roleOptions\"\n      :value=\"roleFilter\"\n      select-all-option-status\n      @change=\"roleFilter = $event\"\n    />\n  </div>\n  \n  <DataTable :data=\"filteredData\" />\n</template>",
       "when": "Building multi-criteria filters for data",
-      "pros": ["Multiple filter dimensions", "Clear selected filters", "Easy to clear all"],
-      "cons": ["Can be complex with many filters", "Performance with large datasets"]
+      "pros": [
+        "Multiple filter dimensions",
+        "Clear selected filters",
+        "Easy to clear all"
+      ],
+      "cons": [
+        "Can be complex with many filters",
+        "Performance with large datasets"
+      ]
     },
     {
       "name": "Tag Management",
       "description": "Create and manage tags with multi-select",
       "code": "<script setup>\nimport { ref } from 'vue';\nimport { InMultiSelect } from '@useinsider/design-system-vue';\n\nconst allTags = ref([\n  { text: 'Important', value: 'important' },\n  { text: 'Urgent', value: 'urgent' },\n  { text: 'Review', value: 'review' }\n]);\n\nconst itemTags = ref([]);\n\nconst createTag = (tagName: string) => {\n  const newTag = {\n    text: tagName,\n    value: tagName.toLowerCase().replace(/\\s+/g, '-')\n  };\n  \n  // Add to available tags\n  allTags.value.push(newTag);\n  \n  // Auto-select the new tag\n  itemTags.value.push(newTag);\n};\n</script>\n\n<template>\n  <InMultiSelect\n    id=\"tag-manager\"\n    label-text=\"Tags\"\n    :options=\"allTags\"\n    :value=\"itemTags\"\n    create-option-status\n    option-validation-type=\"text\"\n    create-button-label=\"Create Tag\"\n    search-status\n    @change=\"itemTags = $event\"\n    @addOption=\"createTag\"\n  />\n</template>",
       "when": "User-generated tags or categories",
-      "pros": ["Flexible tag creation", "Reusable tags", "Search existing tags"],
-      "cons": ["Risk of duplicate/similar tags", "Needs validation"]
+      "pros": [
+        "Flexible tag creation",
+        "Reusable tags",
+        "Search existing tags"
+      ],
+      "cons": [
+        "Risk of duplicate/similar tags",
+        "Needs validation"
+      ]
     }
   ],
   "useCases": [

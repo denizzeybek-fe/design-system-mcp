@@ -197,9 +197,47 @@ Your enrichment file should follow this structure (based on InRibbons.json gold 
 
 **Reference:** See `src/registry/enrichments/InRibbons.json` for gold standard example.
 
+## MANDATORY Requirements
+
+**CRITICAL:** Before starting ANY enrichment work, read and follow **ALL** requirements from:
+
+```
+/Users/deniz.zeybek/Documents/insider-projects/design-system-mcp/ENRICHMENT_TODO.md
+```
+
+This file contains:
+- ✅ **Complete schema structure** (14 required fields)
+- ✅ **Storybook argTypes workflow** (MUST check for possibleValues)
+- ✅ **Automated script usage** (`npm run extract:argtypes`)
+- ✅ **Build pipeline requirements**
+- ✅ **Quality checklist**
+- ✅ **Examples and anti-patterns**
+
+**YOU MUST:**
+1. Read ENRICHMENT_TODO.md FIRST before creating any enrichment
+2. Follow ALL 14 required fields (component, _metadata, propEnrichments, eventEnrichments, codeSnippets, styling, examples, implementationPatterns, useCases, bestPractices, commonMistakes, performanceNotes, accessibilityNotes, helperFunctions)
+3. Check storybook argTypes for ALL props (or run `npm run extract:argtypes`)
+4. Run the build pipeline after creating enrichment
+5. Stop and wait for approval before proceeding
+
+**Failure to follow ENRICHMENT_TODO.md will result in incomplete/incorrect enrichments.**
+
 ## Workflow
 
 When asked to create an enrichment for a component:
+
+### Step 0: Read ENRICHMENT_TODO.md (MANDATORY)
+```bash
+# This is REQUIRED before any enrichment work
+cat ENRICHMENT_TODO.md
+```
+
+Verify you understand:
+- [ ] All 14 required fields
+- [ ] Storybook argTypes checking workflow
+- [ ] Automated possibleValues script
+- [ ] Build pipeline steps
+- [ ] Quality standards
 
 ### Step 1: Get Component Metadata
 ```javascript
@@ -352,14 +390,33 @@ src/registry/enrichments/{ComponentName}.json
 - Use exact component name (e.g., `InTooltipV2.json`)
 - Include version suffix (V2)
 
-### Step 9: Merge and Build
+### Step 9: Sync ArgTypes (MANDATORY)
 
-After creating the enrichment:
+**CRITICAL:** After creating the enrichment file, run the automated script:
+
 ```bash
-# Merge enrichment into combined.json
-npm run extract:merge
+# This script automatically adds possibleValues from storybook argTypes
+npm run extract:argtypes
+```
 
-# Build
+This will:
+- ✅ Find storybook argTypes for your component
+- ✅ Extract enum options for all props
+- ✅ Add/update possibleValues in your enrichment
+- ✅ Create basic enrichment for any missing props with argTypes
+
+**DO NOT SKIP THIS STEP** - Manual possibleValues entry is error-prone!
+
+### Step 10: Merge and Build
+
+After syncing argTypes:
+```bash
+# Option 1: Run full pipeline (includes argtypes)
+npm run extract:all
+
+# Option 2: Run individually
+npm run extract:merge
+npm run generate:markdown
 npm run build
 
 # Test (optional)
@@ -510,14 +567,32 @@ After creating the enrichment, provide:
 
 Before finalizing enrichment:
 
+**MUST READ:**
+- [ ] Read ENRICHMENT_TODO.md completely
+- [ ] Understand all 14 required fields
+
+**File Structure:**
+- [ ] All 14 required fields present (component, _metadata, propEnrichments, eventEnrichments, codeSnippets, styling, examples, implementationPatterns, useCases, bestPractices, commonMistakes, performanceNotes, accessibilityNotes, helperFunctions)
+- [ ] Valid JSON (no syntax errors)
+- [ ] File saved to correct location: `src/registry/enrichments/{ComponentName}.json`
+
+**Content Quality:**
 - [ ] At least 2-3 critical props enriched
 - [ ] valueFormat has concrete examples (not placeholders)
 - [ ] commonMistakes have severity levels
 - [ ] Examples use real component name and props
 - [ ] TypeScript types provided where applicable
 - [ ] Related props linked
-- [ ] File saved to correct location
-- [ ] Valid JSON (no syntax errors)
+
+**ArgTypes & possibleValues:**
+- [ ] Ran `npm run extract:argtypes` after creating file
+- [ ] Verified possibleValues were added automatically
+- [ ] All enum props have possibleValues
+
+**Build Pipeline:**
+- [ ] Ran `npm run extract:all` (or individual steps)
+- [ ] No build errors
+- [ ] Verified enriched: true in combined.json
 
 ## Anti-Patterns to Avoid
 
@@ -564,6 +639,14 @@ Before finalizing enrichment:
 
 When user requests enrichment creation:
 
+**MANDATORY FIRST STEP:**
+0. **Read ENRICHMENT_TODO.md** - This is NON-NEGOTIABLE!
+   - Contains all 14 required fields
+   - Contains storybook argTypes workflow
+   - Contains automated script usage
+   - Contains build pipeline steps
+
+**Then proceed:**
 1. **Get component metadata** from MCP
 2. **Read existing enrichments** (InButtonV2, InDatePickerV2, InSelect) to learn patterns
 3. **Identify 2-5 critical props** that need enrichment
@@ -571,8 +654,11 @@ When user requests enrichment creation:
 5. **Document common mistakes** with severity levels
 6. **Create 2-4 practical examples**
 7. **Add helper functions** if complex transformations needed
-8. **Save to src/registry/enrichments/{ComponentName}.json**
-9. **Provide summary and next steps**
+8. **Complete ALL 14 required fields** (component, _metadata, propEnrichments, eventEnrichments, codeSnippets, styling, examples, implementationPatterns, useCases, bestPractices, commonMistakes, performanceNotes, accessibilityNotes, helperFunctions)
+9. **Save to src/registry/enrichments/{ComponentName}.json**
+10. **Run `npm run extract:argtypes`** - Adds possibleValues automatically
+11. **Run `npm run extract:all`** - Complete build pipeline
+12. **Provide summary and next steps**
 
 Always prioritize:
 - **Clarity** - Developers should immediately understand

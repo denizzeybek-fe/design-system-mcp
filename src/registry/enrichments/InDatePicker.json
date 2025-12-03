@@ -177,7 +177,21 @@
         "v2Prop": "calendarPopoverAlign",
         "transformation": "Direct rename, same values",
         "notes": "Simple rename for consistency"
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "left",
+          "description": "TODO: Add description for 'left'"
+        },
+        {
+          "value": "center",
+          "description": "TODO: Add description for 'center'"
+        },
+        {
+          "value": "right",
+          "description": "TODO: Add description for 'right'"
+        }
+      ]
     },
     "additionalRanges": {
       "valueFormat": {
@@ -222,6 +236,24 @@
           "impact": "endDate is ignored, may cause confusion",
           "fix": "When single mode, only set startDate in value object",
           "severity": "low"
+        }
+      ]
+    },
+    "theme": {
+      "valueFormat": {
+        "structure": "'white' | 'grey'",
+        "notes": "TODO: Add usage notes",
+        "typescript": "'white' | 'grey'",
+        "example": "TODO: Add example for white"
+      },
+      "possibleValues": [
+        {
+          "value": "white",
+          "description": "TODO: Add description for 'white'"
+        },
+        {
+          "value": "grey",
+          "description": "TODO: Add description for 'grey'"
         }
       ]
     }
@@ -355,24 +387,45 @@
       "description": "Date range picker for analytics dashboard",
       "code": "<script setup>\nimport { ref, watch } from 'vue';\nimport { InDatePicker } from '@useinsider/design-system-vue';\n\nconst dateRange = ref('');\nconst analyticsData = ref(null);\nconst loading = ref(false);\n\nconst customRanges = {\n  'Today': [new Date(), new Date()],\n  'Yesterday': [\n    new Date(Date.now() - 24 * 60 * 60 * 1000),\n    new Date(Date.now() - 24 * 60 * 60 * 1000)\n  ],\n  'Last 7 Days': [\n    new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),\n    new Date()\n  ],\n  'Last 30 Days': [\n    new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),\n    new Date()\n  ],\n  'This Month': [\n    new Date(new Date().getFullYear(), new Date().getMonth(), 1),\n    new Date()\n  ]\n};\n\nconst fetchAnalytics = async (range) => {\n  if (!range) return;\n  \n  loading.value = true;\n  try {\n    const [start, end] = range.split(' - ');\n    const response = await fetch(`/api/analytics?start=${start}&end=${end}`);\n    analyticsData.value = await response.json();\n  } catch (error) {\n    console.error('Failed to fetch analytics:', error);\n  } finally {\n    loading.value = false;\n  }\n};\n\nwatch(dateRange, (newRange) => {\n  fetchAnalytics(newRange);\n});\n</script>\n\n<template>\n  <div class=\"analytics-filter\">\n    <InDatePicker\n      id=\"analytics-date\"\n      label=\"Date Range\"\n      range\n      v-model=\"dateRange\"\n      :custom-ranges=\"customRanges\"\n    />\n    \n    <div v-if=\"loading\">Loading analytics...</div>\n    <AnalyticsChart v-else :data=\"analyticsData\" />\n  </div>\n</template>",
       "when": "Building analytics dashboards with date filtering",
-      "pros": ["Quick range selection", "Common presets", "User-friendly"],
-      "cons": ["Requires date range handling", "Timezone considerations"]
+      "pros": [
+        "Quick range selection",
+        "Common presets",
+        "User-friendly"
+      ],
+      "cons": [
+        "Requires date range handling",
+        "Timezone considerations"
+      ]
     },
     {
       "name": "Booking System",
       "description": "Date picker with disabled dates for bookings",
       "code": "<script setup>\nimport { ref, computed } from 'vue';\nimport { InDatePicker } from '@useinsider/design-system-vue';\n\nconst selectedDate = ref('');\nconst bookedDates = ref([\n  '2025-11-28',\n  '2025-11-29',\n  '2025-12-01'\n]);\n\nconst disabledDates = computed(() => {\n  return bookedDates.value.map(dateStr => {\n    const date = new Date(dateStr);\n    return Math.floor(date.getTime() / 1000);\n  });\n});\n\n// Disable past dates\nconst minDate = Math.floor(new Date().setHours(0, 0, 0, 0) / 1000);\n</script>\n\n<template>\n  <InDatePicker\n    id=\"booking-date\"\n    label=\"Select Booking Date\"\n    v-model=\"selectedDate\"\n    :disabled-range=\"disabledDates\"\n    :min-date=\"minDate\"\n    format=\"dd.mm.yyyy\"\n  />\n</template>",
       "when": "Building booking or reservation systems",
-      "pros": ["Prevents invalid selections", "Clear availability", "User guidance"],
-      "cons": ["Complex disabled date logic", "Performance with many dates"]
+      "pros": [
+        "Prevents invalid selections",
+        "Clear availability",
+        "User guidance"
+      ],
+      "cons": [
+        "Complex disabled date logic",
+        "Performance with many dates"
+      ]
     },
     {
       "name": "Report Comparison",
       "description": "Compare two time periods for reports",
       "code": "<script setup>\nimport { ref, watch } from 'vue';\nimport { InDatePicker } from '@useinsider/design-system-vue';\n\nconst primaryRange = ref('');\nconst compareRange = ref('');\nconst reportData = ref(null);\n\nconst fetchComparisonReport = async () => {\n  if (!primaryRange.value || !compareRange.value) return;\n  \n  const [primaryStart, primaryEnd] = primaryRange.value.split(' - ');\n  const [compareStart, compareEnd] = compareRange.value.split(' - ');\n  \n  const response = await fetch('/api/report/compare', {\n    method: 'POST',\n    body: JSON.stringify({\n      primary: { start: primaryStart, end: primaryEnd },\n      compare: { start: compareStart, end: compareEnd }\n    })\n  });\n  \n  reportData.value = await response.json();\n};\n\nwatch([primaryRange, compareRange], () => {\n  fetchComparisonReport();\n});\n</script>\n\n<template>\n  <div class=\"report-comparison\">\n    <InDatePicker\n      id=\"report-dates\"\n      label=\"Report Period\"\n      range\n      compare\n      v-model=\"primaryRange\"\n      @compare-change=\"compareRange = $event\"\n    />\n    \n    <ComparisonChart \n      v-if=\"reportData\"\n      :primary=\"reportData.primary\"\n      :compare=\"reportData.compare\"\n    />\n  </div>\n</template>",
       "when": "Building comparison reports or A/B testing dashboards",
-      "pros": ["Side-by-side comparison", "Flexible date ranges", "Visual comparison"],
-      "cons": ["Complex state management", "Two API calls needed"]
+      "pros": [
+        "Side-by-side comparison",
+        "Flexible date ranges",
+        "Visual comparison"
+      ],
+      "cons": [
+        "Complex state management",
+        "Two API calls needed"
+      ]
     }
   ],
   "useCases": [

@@ -36,23 +36,23 @@
       "possibleValues": [
         {
           "value": "light",
-          "description": "Neutral/default toast (gray background)"
+          "description": "TODO: Add description for 'light'"
+        },
+        {
+          "value": "dark",
+          "description": "TODO: Add description for 'dark'"
         },
         {
           "value": "success",
-          "description": "Success confirmation (green, checkmark icon)"
-        },
-        {
-          "value": "error",
-          "description": "Error/failure notification (red, error icon)"
+          "description": "TODO: Add description for 'success'"
         },
         {
           "value": "warning",
-          "description": "Warning/caution message (orange, warning icon)"
+          "description": "TODO: Add description for 'warning'"
         },
         {
-          "value": "info",
-          "description": "Informational message (blue, info icon)"
+          "value": "alert",
+          "description": "TODO: Add description for 'alert'"
         }
       ]
     },

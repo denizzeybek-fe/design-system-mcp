@@ -1,0 +1,16 @@
+[
+  {
+    "component": "InTabs",
+    "storybookFile": "/Users/deniz.zeybek/Documents/insider-projects/insider-design-system/storybook/stories/5-library/v1/in-tabs.stories.js",
+    "updates": [
+      {
+        "propName": "tabTooltipPosition",
+        "options": [
+          "top",
+          "bottom"
+        ],
+        "status": "missing_prop"
+      }
+    ]
+  }
+]

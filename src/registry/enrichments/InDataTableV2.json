@@ -338,7 +338,17 @@
           "skeleton"
         ],
         "example": "loading-type=\"skeleton\" // Use skeleton loader"
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "skeleton",
+          "description": "TODO: Add description for 'skeleton'"
+        },
+        {
+          "value": "no-data",
+          "description": "TODO: Add description for 'no-data'"
+        }
+      ]
     },
     "loadingTitleText": {
       "description": "Title text during loading",
@@ -474,7 +484,11 @@
         "example": ":table-search-params=\"{ teamId: currentTeam.id, status: 'active' }\"",
         "notes": "Only used in serverSide row model. Merged with pagination/filter params in API requests"
       },
-      "relatedProps": ["rowModelType", "fetchUrl", "httpMethod"],
+      "relatedProps": [
+        "rowModelType",
+        "fetchUrl",
+        "httpMethod"
+      ],
       "commonMistakes": [
         {
           "mistake": "Using tableSearchParams in clientSide mode",
@@ -888,9 +902,21 @@
       "description": "Create AG Grid column definition with common defaults",
       "code": "function createColumnDef(field: string, headerName: string, options = {}) {\n  return {\n    field,\n    headerName,\n    sortable: true,\n    filter: true,\n    resizable: true,\n    ...options\n  };\n}",
       "parameters": [
-        { "name": "field", "type": "string", "description": "Data property name" },
-        { "name": "headerName", "type": "string", "description": "Column header text" },
-        { "name": "options", "type": "object", "description": "Additional AG Grid column options" }
+        {
+          "name": "field",
+          "type": "string",
+          "description": "Data property name"
+        },
+        {
+          "name": "headerName",
+          "type": "string",
+          "description": "Column header text"
+        },
+        {
+          "name": "options",
+          "type": "object",
+          "description": "Additional AG Grid column options"
+        }
       ],
       "returnType": "ColumnDef",
       "example": "const nameColumn = createColumnDef('name', 'Full Name', { width: 200, pinned: 'left' });"
@@ -900,7 +926,11 @@
       "description": "Value formatter for currency columns",
       "code": "function formatCurrency(params: any) {\n  if (params.value == null) return '';\n  return new Intl.NumberFormat('en-US', {\n    style: 'currency',\n    currency: 'USD'\n  }).format(params.value);\n}",
       "parameters": [
-        { "name": "params", "type": "ValueFormatterParams", "description": "AG Grid value formatter params" }
+        {
+          "name": "params",
+          "type": "ValueFormatterParams",
+          "description": "AG Grid value formatter params"
+        }
       ],
       "returnType": "string",
       "example": "{ field: 'price', headerName: 'Price', valueFormatter: formatCurrency }"
@@ -910,8 +940,16 @@
       "description": "Value formatter for date columns",
       "code": "function formatDate(params: any, format = 'MMM DD, YYYY') {\n  if (!params.value) return '';\n  const date = new Date(params.value);\n  return date.toLocaleDateString('en-US', {\n    year: 'numeric',\n    month: 'short',\n    day: 'numeric'\n  });\n}",
       "parameters": [
-        { "name": "params", "type": "ValueFormatterParams", "description": "AG Grid value formatter params" },
-        { "name": "format", "type": "string", "description": "Date format string (optional)" }
+        {
+          "name": "params",
+          "type": "ValueFormatterParams",
+          "description": "AG Grid value formatter params"
+        },
+        {
+          "name": "format",
+          "type": "string",
+          "description": "Date format string (optional)"
+        }
       ],
       "returnType": "string",
       "example": "{ field: 'createdAt', headerName: 'Created', valueFormatter: formatDate }"
@@ -921,8 +959,16 @@
       "description": "Extract IDs from selected rows",
       "code": "function getSelectedRowIds(selectedRows: any[], idField = 'id') {\n  return selectedRows.map(row => row[idField]);\n}",
       "parameters": [
-        { "name": "selectedRows", "type": "Array<any>", "description": "Selected row data from selection event" },
-        { "name": "idField", "type": "string", "description": "Name of ID field (default: 'id')" }
+        {
+          "name": "selectedRows",
+          "type": "Array<any>",
+          "description": "Selected row data from selection event"
+        },
+        {
+          "name": "idField",
+          "type": "string",
+          "description": "Name of ID field (default: 'id')"
+        }
       ],
       "returnType": "Array<string | number>",
       "example": "const ids = getSelectedRowIds(event.selectedRows); // [1, 2, 3]"
@@ -932,11 +978,31 @@
       "description": "Build request params for server-side data fetching",
       "code": "function createServerSideParams(page: number, perPage: number, sortBy?: string, sortOrder?: string, filters = {}) {\n  return {\n    page,\n    perPage,\n    sortBy: sortBy || 'createdAt',\n    sortOrder: sortOrder || 'desc',\n    ...filters\n  };\n}",
       "parameters": [
-        { "name": "page", "type": "number", "description": "Current page number" },
-        { "name": "perPage", "type": "number", "description": "Items per page" },
-        { "name": "sortBy", "type": "string", "description": "Sort field name (optional)" },
-        { "name": "sortOrder", "type": "string", "description": "Sort direction: 'asc' or 'desc' (optional)" },
-        { "name": "filters", "type": "object", "description": "Additional filter parameters (optional)" }
+        {
+          "name": "page",
+          "type": "number",
+          "description": "Current page number"
+        },
+        {
+          "name": "perPage",
+          "type": "number",
+          "description": "Items per page"
+        },
+        {
+          "name": "sortBy",
+          "type": "string",
+          "description": "Sort field name (optional)"
+        },
+        {
+          "name": "sortOrder",
+          "type": "string",
+          "description": "Sort direction: 'asc' or 'desc' (optional)"
+        },
+        {
+          "name": "filters",
+          "type": "object",
+          "description": "Additional filter parameters (optional)"
+        }
       ],
       "returnType": "object",
       "example": "const params = createServerSideParams(1, 25, 'name', 'asc', { status: 'active' });"
@@ -946,9 +1012,21 @@
       "description": "Update multiple rows in table data array",
       "code": "function bulkUpdateRowData(data: any[], updates: Array<{ id: any, changes: object }>, idField = 'id') {\n  const updateMap = new Map(updates.map(u => [u.id, u.changes]));\n  \n  return data.map(row => {\n    const changes = updateMap.get(row[idField]);\n    return changes ? { ...row, ...changes } : row;\n  });\n}",
       "parameters": [
-        { "name": "data", "type": "Array<any>", "description": "Current table data" },
-        { "name": "updates", "type": "Array<{id, changes}>", "description": "Array of row updates with ID and changes" },
-        { "name": "idField", "type": "string", "description": "Name of ID field (default: 'id')" }
+        {
+          "name": "data",
+          "type": "Array<any>",
+          "description": "Current table data"
+        },
+        {
+          "name": "updates",
+          "type": "Array<{id, changes}>",
+          "description": "Array of row updates with ID and changes"
+        },
+        {
+          "name": "idField",
+          "type": "string",
+          "description": "Name of ID field (default: 'id')"
+        }
       ],
       "returnType": "Array<any>",
       "example": "const updated = bulkUpdateRowData(users, [{ id: 1, changes: { status: 'active' } }]);"
@@ -958,9 +1036,21 @@
       "description": "Export table data to CSV file",
       "code": "function exportToCSV(data: any[], filename = 'export.csv', columns?: string[]) {\n  const keys = columns || Object.keys(data[0] || {});\n  const csv = [\n    keys.join(','),\n    ...data.map(row => keys.map(key => JSON.stringify(row[key] || '')).join(','))\n  ].join('\\n');\n  \n  const blob = new Blob([csv], { type: 'text/csv' });\n  const url = URL.createObjectURL(blob);\n  const link = document.createElement('a');\n  link.href = url;\n  link.download = filename;\n  link.click();\n  URL.revokeObjectURL(url);\n}",
       "parameters": [
-        { "name": "data", "type": "Array<any>", "description": "Data to export" },
-        { "name": "filename", "type": "string", "description": "CSV filename (optional, default: 'export.csv')" },
-        { "name": "columns", "type": "Array<string>", "description": "Column keys to include (optional, defaults to all)" }
+        {
+          "name": "data",
+          "type": "Array<any>",
+          "description": "Data to export"
+        },
+        {
+          "name": "filename",
+          "type": "string",
+          "description": "CSV filename (optional, default: 'export.csv')"
+        },
+        {
+          "name": "columns",
+          "type": "Array<string>",
+          "description": "Column keys to include (optional, defaults to all)"
+        }
       ],
       "returnType": "void",
       "example": "exportToCSV(selectedRows, 'users.csv', ['name', 'email', 'status']);"

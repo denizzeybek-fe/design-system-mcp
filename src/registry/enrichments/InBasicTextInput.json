@@ -23,9 +23,22 @@
         "structure": "string enum",
         "notes": "Determines input behavior and validation. 'text' (default) for general text, 'number' for numeric values with min/max validation. When 'number', shows spinner controls in some browsers and validates numeric format. Use with allowDecimal and allowComma for number formatting.",
         "typescript": "'text' | 'number'",
-        "possibleValues": ["text", "number"],
+        "possibleValues": [
+          "text",
+          "number"
+        ],
         "example": "type=\"number\" // Numeric input with validation"
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "text",
+          "description": "TODO: Add description for 'text'"
+        },
+        {
+          "value": "number",
+          "description": "TODO: Add description for 'number'"
+        }
+      ]
     },
     "theme": {
       "description": "Visual theme variant",
@@ -34,7 +47,17 @@
         "notes": "Controls the visual appearance and color scheme of the input. Default is 'grey'. Theme affects border color, background, and hover states. Use consistent theme across related form elements for visual coherence.",
         "typescript": "string",
         "example": "theme=\"grey\""
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "grey",
+          "description": "TODO: Add description for 'grey'"
+        },
+        {
+          "value": "white",
+          "description": "TODO: Add description for 'white'"
+        }
+      ]
     },
     "states": {
       "description": "Validation/feedback state",
@@ -42,7 +65,12 @@
         "structure": "string enum",
         "notes": "Visual feedback for validation status. 'default' (neutral), 'success' (green, valid), 'warning' (yellow, caution), 'error' (red, invalid). Changes border color and shows stateMessage. Use with stateMessage to explain the state. Critical for form validation UX.",
         "typescript": "'default' | 'success' | 'warning' | 'error'",
-        "possibleValues": ["default", "success", "warning", "error"],
+        "possibleValues": [
+          "default",
+          "success",
+          "warning",
+          "error"
+        ],
         "example": ":states=\"hasError ? 'error' : 'default'\"\nstate-message=\"Email is required\""
       },
       "commonMistakes": [
@@ -51,6 +79,20 @@
           "impact": "User sees error styling but no explanation why",
           "fix": "Always provide state-message when states is 'error', 'warning', or 'success'",
           "severity": "high"
+        }
+      ],
+      "possibleValues": [
+        {
+          "value": "default",
+          "description": "TODO: Add description for 'default'"
+        },
+        {
+          "value": "error",
+          "description": "TODO: Add description for 'error'"
+        },
+        {
+          "value": "warning",
+          "description": "TODO: Add description for 'warning'"
         }
       ]
     },
@@ -282,7 +324,17 @@
         "notes": "HTML autocomplete attribute for browser autofill. 'off' (default) disables autocomplete. Use specific values for better UX: 'name', 'email', 'username', 'current-password', 'new-password', 'tel', 'address-line1', 'postal-code', 'cc-number'. Improves form filling speed.",
         "typescript": "string",
         "example": "auto-complete=\"email\" // Email autofill\nauto-complete=\"current-password\" // Password manager\nauto-complete=\"off\" // Disable"
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "on",
+          "description": "TODO: Add description for 'on'"
+        },
+        {
+          "value": "off",
+          "description": "TODO: Add description for 'off'"
+        }
+      ]
     },
     "autoFocus": {
       "description": "Auto-focus input on mount",
@@ -552,24 +604,43 @@
       "description": "Real-time validation with debounced API checks",
       "code": "<script setup>\nimport { ref, watch } from 'vue';\nimport { debounce } from 'lodash-es';\n\nconst username = ref('');\nconst usernameState = ref('default');\nconst usernameMessage = ref('');\n\nconst checkUsername = debounce(async (value) => {\n  if (!value) {\n    usernameState.value = 'default';\n    return;\n  }\n  \n  try {\n    const available = await api.checkUsername(value);\n    if (available) {\n      usernameState.value = 'success';\n      usernameMessage.value = 'Username is available';\n    } else {\n      usernameState.value = 'error';\n      usernameMessage.value = 'Username is already taken';\n    }\n  } catch (error) {\n    usernameState.value = 'error';\n    usernameMessage.value = 'Failed to validate username';\n  }\n}, 500);\n\nwatch(username, checkUsername);\n</script>\n\n<template>\n  <InBasicTextInput\n    v-model=\"username\"\n    :states=\"usernameState\"\n    :state-message=\"usernameMessage\"\n  />\n</template>",
       "when": "Use for inputs that require async validation (username availability, email verification)",
-      "pros": ["Real-time feedback", "Reduces form submission errors", "Better UX"],
-      "cons": ["Requires debouncing to avoid excessive API calls", "May slow on poor connections"]
+      "pros": [
+        "Real-time feedback",
+        "Reduces form submission errors",
+        "Better UX"
+      ],
+      "cons": [
+        "Requires debouncing to avoid excessive API calls",
+        "May slow on poor connections"
+      ]
     },
     {
       "name": "Character-Limited Input",
       "description": "Text input with character counter for length constraints",
       "code": "<script setup>\nimport { ref, computed } from 'vue';\n\nconst bio = ref('');\nconst maxLength = 280;\n\nconst bioState = computed(() => {\n  if (bio.value.length > maxLength) return 'error';\n  if (bio.value.length > maxLength * 0.9) return 'warning';\n  return 'default';\n});\n\nconst bioMessage = computed(() => {\n  if (bio.value.length > maxLength) {\n    return `Bio exceeds maximum length by ${bio.value.length - maxLength} characters`;\n  }\n  return '';\n});\n</script>\n\n<template>\n  <InBasicTextInput\n    v-model=\"bio\"\n    label-text=\"Bio\"\n    :max-character-length=\"maxLength\"\n    :character-counter-status=\"true\"\n    :states=\"bioState\"\n    :state-message=\"bioMessage\"\n    placeholder=\"Tell us about yourself...\"\n  />\n</template>",
       "when": "Use for tweets, SMS messages, bios, or any length-constrained text",
-      "pros": ["Clear visual feedback", "Prevents submission errors", "Helps users stay within limits"],
-      "cons": ["May feel restrictive for some use cases"]
+      "pros": [
+        "Clear visual feedback",
+        "Prevents submission errors",
+        "Helps users stay within limits"
+      ],
+      "cons": [
+        "May feel restrictive for some use cases"
+      ]
     },
     {
       "name": "Multi-Unit Input",
       "description": "Numeric input with switchable unit suffix",
       "code": "<script setup>\nimport { ref } from 'vue';\n\nconst distance = ref('');\nconst unit = ref('km');\n\nconst unitOptions = [\n  { label: 'Kilometers', value: 'km' },\n  { label: 'Miles', value: 'mi' },\n  { label: 'Meters', value: 'm' }\n];\n\nconst handleSuffixClick = (selectedUnit) => {\n  unit.value = selectedUnit;\n};\n</script>\n\n<template>\n  <InBasicTextInput\n    v-model=\"distance\"\n    type=\"number\"\n    label-text=\"Distance\"\n    :suffix-status=\"true\"\n    :suffix-text=\"unit\"\n    :actionable-suffix-status=\"true\"\n    :suffix-dropdown-options=\"unitOptions\"\n    @suffixClick=\"handleSuffixClick\"\n  />\n</template>",
       "when": "Use for measurements, currencies, or any value with multiple unit options",
-      "pros": ["Flexible unit conversion", "Clean UI without extra dropdowns", "Better UX than separate selectors"],
-      "cons": ["Requires handling unit conversion logic"]
+      "pros": [
+        "Flexible unit conversion",
+        "Clean UI without extra dropdowns",
+        "Better UX than separate selectors"
+      ],
+      "cons": [
+        "Requires handling unit conversion logic"
+      ]
     }
   ],
   "useCases": [

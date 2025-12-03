@@ -1,0 +1,368 @@
+{
+  "migrationId": "InModals-to-InDrawer",
+  "v1Component": "InModals",
+  "v2Component": "InDrawer",
+  "condition": "type='dynamic' OR type='onboard' OR withPage=true",
+  "estimatedEffort": "medium",
+  "breakingChanges": 10,
+  "complexity": "medium",
+  "description": "Migration from InModals (V1) type='dynamic' or 'onboard' to InDrawer. Use for modals with custom slot content, forms, or onboarding flows. InDrawer provides better UX with side panel layout and more space for complex content.",
+
+  "propMigrations": {
+    "status": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "status",
+      "transformCode": "// v-model:status remains the same\nv-model:status=\"isOpen\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": false,
+      "notes": "v-model:status works identically in V2"
+    },
+    "type": {
+      "v1Type": "'dynamic' | 'onboard'",
+      "v2Type": "'default' | 'warning' | 'danger'",
+      "v2Prop": "state",
+      "transformCode": "// InModals type removed, use state based on modalStatus:\n// modalStatus='default' → state='default'\n// modalStatus='warning' → state='warning'\n// modalStatus='alert' → state='danger'\nstate=\"default\"",
+      "autoMigratable": false,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "type prop removed, use state based on modalStatus value"
+    },
+    "title": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "titleText",
+      "transformCode": "// Rename to titleText\ntitleText=\"Edit Campaign\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Simple rename from 'title' to 'titleText'"
+    },
+    "informationModalDescription": {
+      "v1Type": "string",
+      "v2Type": "string",
+      "v2Prop": "descriptionText",
+      "transformCode": "// Rename to descriptionText\ndescriptionText=\"Update campaign settings\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Renamed to 'descriptionText'"
+    },
+    "size": {
+      "v1Type": "'small' | 'medium' | 'large' | 'extra-large' | 'full'",
+      "v2Type": "'small' | 'medium' | 'large'",
+      "v2Prop": "size",
+      "transformCode": "// Map size values\n// 'small' → 'small' (~400px)\n// 'medium' → 'medium' (~600px)\n// 'large', 'extra-large', 'full' → 'large' (~800px)\nsize=\"large\"",
+      "autoMigratable": false,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "InDrawer has only 3 sizes, large is max width"
+    },
+    "acceptButtonText": {
+      "v1Type": "string",
+      "v2Type": "object (footerButtonGroupOptions.primaryButton.text)",
+      "v2Prop": "footerButtonGroupOptions",
+      "transformCode": "// Move to footerButtonGroupOptions with onClick\n:footerButtonGroupOptions=\"{\n  primaryButton: {\n    text: 'Save',\n    onClick: handleSave\n  }\n}\"",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "Drawer uses 'text' instead of 'labelText', requires onClick handler in config"
+    },
+    "cancelButtonText": {
+      "v1Type": "string",
+      "v2Type": "object (footerButtonGroupOptions.secondaryButton.text or cancelButton.text)",
+      "v2Prop": "footerButtonGroupOptions",
+      "transformCode": "// Move to footerButtonGroupOptions\n:footerButtonGroupOptions=\"{\n  secondaryButton: {\n    text: 'Cancel',\n    onClick: () => isOpen = false\n  }\n}\"",
+      "autoMigratable": false,
+      "complexity": "medium",
+      "breakingChange": true,
+      "notes": "Can use secondaryButton or cancelButton, requires onClick"
+    },
+    "acceptButtonDisable": {
+      "v1Type": "boolean",
+      "v2Type": "boolean (footerButtonGroupOptions.primaryButton.disabled)",
+      "v2Prop": "footerButtonGroupOptions",
+      "transformCode": "// Move to footerButtonGroupOptions\n:footerButtonGroupOptions=\"{\n  primaryButton: { disabled: !isValid }\n}\"",
+      "autoMigratable": false,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Moved to footerButtonGroupOptions.primaryButton.disabled"
+    },
+    "isModalAcceptButtonLoading": {
+      "v1Type": "boolean",
+      "v2Type": "boolean (footerButtonGroupOptions.primaryButton.loading)",
+      "v2Prop": "footerButtonGroupOptions",
+      "transformCode": "// Move to footerButtonGroupOptions\n:footerButtonGroupOptions=\"{\n  primaryButton: { loading: isSaving }\n}\"",
+      "autoMigratable": false,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Moved to footerButtonGroupOptions.primaryButton.loading"
+    },
+    "closeButtons": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "closeButtonStatus",
+      "transformCode": "// Rename to closeButtonStatus\n:closeButtonStatus=\"false\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Renamed to closeButtonStatus"
+    },
+    "closeOnOverlayClick": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "closeOnOutsideClick",
+      "transformCode": "// Rename to closeOnOutsideClick\n:closeOnOutsideClick=\"false\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Renamed to closeOnOutsideClick"
+    },
+    "visibleButtons": {
+      "v1Type": "boolean",
+      "v2Type": "boolean",
+      "v2Prop": "footerStatus",
+      "transformCode": "// Rename to footerStatus\n:footerStatus=\"true\"",
+      "autoMigratable": true,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Renamed to footerStatus"
+    },
+    "slot (default)": {
+      "v1Type": "slot content",
+      "v2Type": "slot (contentSlot)",
+      "v2Prop": "#contentSlot",
+      "transformCode": "// Wrap content in #contentSlot template\n<template #contentSlot>\n  <form>...</form>\n</template>",
+      "autoMigratable": false,
+      "complexity": "low",
+      "breakingChange": true,
+      "notes": "Content must be wrapped in #contentSlot template"
+    },
+    "withPage": {
+      "v1Type": "boolean",
+      "v2Type": "Custom implementation (not built-in)",
+      "v2Prop": "N/A",
+      "transformCode": "// Use createWizardSteps helper\nconst wizard = createWizardSteps([\n  { title: 'Step 1' },\n  { title: 'Step 2' }\n]);\n\n:titleText=\"wizard.currentStep.value.title\"\n:footerButtonGroupOptions=\"wizard.footerButtons.value\"",
+      "autoMigratable": false,
+      "complexity": "high",
+      "breakingChange": true,
+      "notes": "Multi-step requires custom implementation with helper function"
+    }
+  },
+
+  "eventMigrations": {
+    "@acceptButton": {
+      "v1Event": "@acceptButton",
+      "v2Event": "onClick in footerButtonGroupOptions.primaryButton",
+      "v1Payload": "void",
+      "v2Payload": "void",
+      "payloadChange": "Event handling moved to button config",
+      "breakingChange": true,
+      "complexity": "medium",
+      "notes": "Use onClick handler in primaryButton config instead of @acceptButton event"
+    },
+    "@closeModal": {
+      "v1Event": "@closeModal",
+      "v2Event": "@onCloseEvent",
+      "v1Payload": "void",
+      "v2Payload": "void",
+      "payloadChange": "No change",
+      "breakingChange": true,
+      "complexity": "low",
+      "notes": "Event renamed to @onCloseEvent"
+    },
+    "@back": {
+      "v1Event": "@back",
+      "v2Event": "onClick in footerButtonGroupOptions.secondaryButton",
+      "v1Payload": "void",
+      "v2Payload": "void",
+      "payloadChange": "Event handling moved to button config",
+      "breakingChange": true,
+      "complexity": "medium",
+      "notes": "Use onClick in secondaryButton for back navigation"
+    }
+  },
+
+  "newFeaturesInV2": [
+    {
+      "feature": "Side Panel Layout",
+      "props": ["size"],
+      "description": "Drawer slides from right side instead of center overlay",
+      "usage": "Better for forms - allows viewing context while editing"
+    },
+    {
+      "feature": "Overlay Control",
+      "props": ["overlayStatus"],
+      "description": "Show/hide backdrop overlay",
+      "usage": ":overlayStatus=\"false\" for non-modal drawers"
+    },
+    {
+      "feature": "Full Width Content",
+      "props": ["fullWidthContentStatus"],
+      "description": "Remove content padding for tables/images",
+      "usage": ":fullWidthContentStatus=\"true\""
+    },
+    {
+      "feature": "Header Slots",
+      "props": ["#headerRightSlot"],
+      "description": "Custom content in header (e.g., Edit button)",
+      "usage": "<template #headerRightSlot><button>Edit</button></template>"
+    }
+  ],
+
+  "migrationSteps": [
+    {
+      "step": 1,
+      "title": "Update import",
+      "before": "import { InModals } from '@useinsider/design-system-vue';",
+      "after": "import { InDrawer } from '@useinsider/design-system-vue';",
+      "automated": true
+    },
+    {
+      "step": 2,
+      "title": "Update component name",
+      "before": "<InModals ...",
+      "after": "<InDrawer ...",
+      "automated": true
+    },
+    {
+      "step": 3,
+      "title": "Map type to state",
+      "before": "type=\"form\"",
+      "after": "state=\"default\"",
+      "automated": false,
+      "notes": "form→default, warning→warning, error→danger"
+    },
+    {
+      "step": 4,
+      "title": "Rename title to titleText",
+      "before": "title=\"Edit Campaign\"",
+      "after": "titleText=\"Edit Campaign\"",
+      "automated": true
+    },
+    {
+      "step": 5,
+      "title": "Rename informationModalDescription to descriptionText",
+      "before": "informationModalDescription=\"Update settings\"",
+      "after": "descriptionText=\"Update settings\"",
+      "automated": true
+    },
+    {
+      "step": 6,
+      "title": "Update size values",
+      "before": "size=\"extra-large\"",
+      "after": "size=\"large\"",
+      "automated": false,
+      "notes": "extra-large/full → large (max drawer width)"
+    },
+    {
+      "step": 7,
+      "title": "Wrap content in #contentSlot",
+      "before": "<InModals>\n  <form>...</form>\n</InModals>",
+      "after": "<InDrawer>\n  <template #contentSlot>\n    <form>...</form>\n  </template>\n</InDrawer>",
+      "automated": false,
+      "notes": "All drawer content must be in #contentSlot"
+    },
+    {
+      "step": 8,
+      "title": "Move button config to footerButtonGroupOptions with onClick",
+      "before": "acceptButtonText=\"Save\"\ncancelButtonText=\"Cancel\"\n:acceptButtonDisable=\"!isValid\"\n:isModalAcceptButtonLoading=\"isSaving\"\n@acceptButton=\"handleSave\"",
+      "after": ":footerButtonGroupOptions=\"{\n  primaryButton: {\n    text: 'Save',\n    onClick: handleSave,\n    disabled: !isValid,\n    loading: isSaving\n  },\n  secondaryButton: {\n    text: 'Cancel',\n    onClick: () => showDrawer = false\n  }\n}\"",
+      "automated": false,
+      "notes": "Button handlers move from events to onClick in config"
+    },
+    {
+      "step": 9,
+      "title": "Update prop names",
+      "before": ":closeButtons=\"false\"\n:closeOnOverlayClick=\"false\"\n:visibleButtons=\"true\"",
+      "after": ":closeButtonStatus=\"false\"\n:closeOnOutsideClick=\"false\"\n:footerStatus=\"true\"",
+      "automated": true
+    },
+    {
+      "step": 10,
+      "title": "Update event handler",
+      "before": "@closeModal=\"handleClose\"",
+      "after": "@onCloseEvent=\"handleClose\"",
+      "automated": true
+    }
+  ],
+
+  "fullExampleBefore": "<!-- V1 InModals - Edit Form -->\n<template>\n  <InModals\n    v-model:status=\"showEditDrawer\"\n    type=\"form\"\n    size=\"large\"\n    title=\"Edit Campaign\"\n    informationModalDescription=\"Update campaign settings\"\n    acceptButtonText=\"Save Changes\"\n    cancelButtonText=\"Cancel\"\n    :acceptButtonDisable=\"!isFormValid\"\n    :isModalAcceptButtonLoading=\"isSaving\"\n    :closeOnOverlayClick=\"false\"\n    @acceptButton=\"handleSave\"\n    @closeModal=\"handleClose\"\n  >\n    <form class=\"p-4\">\n      <div class=\"field\">\n        <label>Campaign Name</label>\n        <input v-model=\"form.name\" type=\"text\" />\n      </div>\n      <div class=\"field\">\n        <label>Description</label>\n        <textarea v-model=\"form.description\" />\n      </div>\n    </form>\n  </InModals>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, computed } from 'vue';\nimport { InModals } from '@useinsider/design-system-vue';\n\nconst showEditDrawer = ref(false);\nconst isSaving = ref(false);\nconst form = ref({ name: '', description: '' });\n\nconst isFormValid = computed(() => {\n  return form.value.name.length > 0;\n});\n\nconst handleSave = async () => {\n  isSaving.value = true;\n  try {\n    await api.updateCampaign(form.value);\n    showEditDrawer.value = false;\n  } finally {\n    isSaving.value = false;\n  }\n};\n\nconst handleClose = () => {\n  form.value = { name: '', description: '' };\n};\n</script>",
+
+  "fullExampleAfter": "<!-- V2 InDrawer - Edit Form -->\n<template>\n  <InDrawer\n    v-model:status=\"showEditDrawer\"\n    size=\"large\"\n    titleText=\"Edit Campaign\"\n    descriptionText=\"Update campaign settings\"\n    state=\"default\"\n    :footerButtonGroupOptions=\"{\n      primaryButton: {\n        text: 'Save Changes',\n        onClick: handleSave,\n        disabled: !isFormValid,\n        loading: isSaving\n      },\n      secondaryButton: {\n        text: 'Cancel',\n        onClick: () => showEditDrawer = false\n      }\n    }\"\n    :closeOnOutsideClick=\"false\"\n    @onCloseEvent=\"handleClose\"\n  >\n    <template #contentSlot>\n      <form class=\"p-4\">\n        <div class=\"field\">\n          <label>Campaign Name</label>\n          <input v-model=\"form.name\" type=\"text\" />\n        </div>\n        <div class=\"field\">\n          <label>Description</label>\n          <textarea v-model=\"form.description\" />\n        </div>\n      </form>\n    </template>\n  </InDrawer>\n</template>\n\n<script setup lang=\"ts\">\nimport { ref, computed } from 'vue';\nimport { InDrawer } from '@useinsider/design-system-vue';\n\nconst showEditDrawer = ref(false);\nconst isSaving = ref(false);\nconst form = ref({ name: '', description: '' });\n\nconst isFormValid = computed(() => {\n  return form.value.name.length > 0;\n});\n\nconst handleSave = async () => {\n  isSaving.value = true;\n  try {\n    await api.updateCampaign(form.value);\n    showEditDrawer.value = false;\n  } finally {\n    isSaving.value = false;\n  }\n};\n\nconst handleClose = () => {\n  form.value = { name: '', description: '' };\n};\n</script>",
+
+  "commonPitfalls": [
+    {
+      "pitfall": "Forgetting to wrap content in #contentSlot",
+      "impact": "Drawer content won't display",
+      "solution": "Wrap all drawer content in <template #contentSlot>...</template>"
+    },
+    {
+      "pitfall": "Using @acceptButton event instead of onClick in button config",
+      "impact": "Button click won't trigger handler",
+      "solution": "Move handler to footerButtonGroupOptions.primaryButton.onClick"
+    },
+    {
+      "pitfall": "Using labelText instead of text in button config",
+      "impact": "Button text won't show (InDrawer uses 'text', InModalV2 uses 'labelText')",
+      "solution": "Use 'text' property in InDrawer button config"
+    },
+    {
+      "pitfall": "Not adjusting size values (extra-large, full)",
+      "impact": "Invalid prop value",
+      "solution": "Map extra-large/full → large (InDrawer max width is ~800px)"
+    },
+    {
+      "pitfall": "Expecting centered modal behavior",
+      "impact": "UX confusion - drawer slides from side",
+      "solution": "Understand drawer is side panel, not centered overlay"
+    }
+  ],
+
+  "testingChecklist": [
+    "✓ Drawer slides in from right side",
+    "✓ Content displays inside #contentSlot",
+    "✓ Title and description show in header",
+    "✓ Primary button shows correct text",
+    "✓ Secondary/Cancel button shows correct text",
+    "✓ Primary button onClick handler fires",
+    "✓ Secondary button onClick handler fires",
+    "✓ Primary button disabled state works",
+    "✓ Primary button loading state shows spinner",
+    "✓ Close X button shows/hides correctly",
+    "✓ Outside click closes drawer (if closeOnOutsideClick=true)",
+    "✓ @onCloseEvent fires when drawer closes",
+    "✓ Form content scrolls if exceeds viewport",
+    "✓ Drawer overlays page with backdrop",
+    "✓ Keyboard navigation (Tab, Escape) works"
+  ],
+
+  "whenToUseThisMigration": {
+    "use": [
+      "type='dynamic' - Modals with custom slot content (forms, tables, etc.)",
+      "type='onboard' - Onboarding flows and wizards",
+      "withPage=true - Multi-step wizards",
+      "Forms with input fields (use dynamic type)",
+      "Edit forms (Edit Campaign, Edit User, etc.)",
+      "Filter panels with multiple controls",
+      "Detail/preview views",
+      "Content creation workflows",
+      "Multi-column layouts",
+      "Content that benefits from side-by-side viewing"
+    ],
+    "doNotUse": [
+      "type='information' - Use InModals-to-InModalV2 instead",
+      "Static text-only modals - Use InModalV2",
+      "Simple alerts/notifications - Use InModalV2",
+      "Modals using only informationModalDescription prop - Use InModalV2"
+    ]
+  },
+
+  "multiStepWizardMigration": {
+    "description": "For multi-step wizards (withPage=true), use InDrawer with createWizardSteps helper",
+    "helperFunction": "createWizardSteps",
+    "example": "const steps = [\n  { title: 'Basic Info', description: 'Enter campaign details' },\n  { title: 'Audience', description: 'Select target audience' },\n  { title: 'Review', description: 'Review and confirm' }\n];\n\nconst wizard = createWizardSteps(steps);\n\n// Use in template:\n<InDrawer\n  :titleText=\"wizard.currentStep.value.title\"\n  :descriptionText=\"wizard.currentStep.value.description\"\n  :footerButtonGroupOptions=\"wizard.footerButtons.value\"\n>\n  <template #contentSlot>\n    <component :is=\"wizard.currentStep.value.component\" />\n  </template>\n</InDrawer>",
+    "notes": "See InDrawer enrichment helperFunctions for createWizardSteps implementation"
+  }
+}

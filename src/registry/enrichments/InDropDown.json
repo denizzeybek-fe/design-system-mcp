@@ -73,7 +73,17 @@
           "bottom"
         ],
         "example": "overridden-list-position=\"top\""
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "top",
+          "description": "TODO: Add description for 'top'"
+        },
+        {
+          "value": "bottom",
+          "description": "TODO: Add description for 'bottom'"
+        }
+      ]
     },
     "type": {
       "description": "Dropdown type/variant",
@@ -86,7 +96,17 @@
           "nested"
         ],
         "example": "type=\"nested\""
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "default",
+          "description": "TODO: Add description for 'default'"
+        },
+        {
+          "value": "category",
+          "description": "TODO: Add description for 'category'"
+        }
+      ]
     },
     "buttonType": {
       "description": "Button style variant",
@@ -101,7 +121,25 @@
           "ghost"
         ],
         "example": "button-type=\"secondary\""
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "primary",
+          "description": "TODO: Add description for 'primary'"
+        },
+        {
+          "value": "secondary",
+          "description": "TODO: Add description for 'secondary'"
+        },
+        {
+          "value": "text",
+          "description": "TODO: Add description for 'text'"
+        },
+        {
+          "value": "dropdown",
+          "description": "TODO: Add description for 'dropdown'"
+        }
+      ]
     },
     "buttonSize": {
       "description": "Button size",
@@ -147,6 +185,28 @@
         "typescript": "boolean",
         "example": ":create-option-status=\"true\""
       }
+    },
+    "theme": {
+      "valueFormat": {
+        "structure": "'grey' | 'white' | 'black'",
+        "notes": "TODO: Add usage notes",
+        "typescript": "'grey' | 'white' | 'black'",
+        "example": "TODO: Add example for grey"
+      },
+      "possibleValues": [
+        {
+          "value": "grey",
+          "description": "TODO: Add description for 'grey'"
+        },
+        {
+          "value": "white",
+          "description": "TODO: Add description for 'white'"
+        },
+        {
+          "value": "black",
+          "description": "TODO: Add description for 'black'"
+        }
+      ]
     }
   },
   "eventEnrichments": {
@@ -279,24 +339,45 @@
       "description": "Fetch options from API with debounced search",
       "code": "<script setup>\nimport { ref, watch } from 'vue';\nimport { debounce } from 'lodash-es';\nimport { InDropDown } from '@useinsider/design-system-vue';\n\nconst selectedProduct = ref('');\nconst searchQuery = ref('');\nconst options = ref([]);\nconst loading = ref(false);\n\nconst fetchProducts = debounce(async (query) => {\n  loading.value = true;\n  try {\n    const response = await fetch(`/api/products?search=${query}`);\n    const data = await response.json();\n    options.value = data.products.map(p => ({\n      label: p.name,\n      value: p.id,\n      description: p.category\n    }));\n  } finally {\n    loading.value = false;\n  }\n}, 300);\n\nwatch(searchQuery, fetchProducts);\n</script>\n\n<template>\n  <InDropDown\n    v-model=\"selectedProduct\"\n    :options=\"options\"\n    :loading=\"loading\"\n    search-status\n    @search=\"searchQuery = $event\"\n  />\n</template>",
       "when": "Use when options need to be fetched from API with search functionality",
-      "pros": ["Reduces initial load", "Supports large datasets", "Real-time filtering"],
-      "cons": ["Requires API endpoint", "Network latency affects UX"]
+      "pros": [
+        "Reduces initial load",
+        "Supports large datasets",
+        "Real-time filtering"
+      ],
+      "cons": [
+        "Requires API endpoint",
+        "Network latency affects UX"
+      ]
     },
     {
       "name": "Grouped Options Pattern",
       "description": "Organize options into categories with nested structure",
       "code": "<script setup>\nimport { ref } from 'vue';\nimport { InDropDown } from '@useinsider/design-system-vue';\n\nconst selectedAction = ref('');\n\nconst actionOptions = [\n  {\n    label: 'User Actions',\n    value: 'user_group',\n    disabled: true,\n    children: [\n      { label: 'Create User', value: 'create_user' },\n      { label: 'Edit User', value: 'edit_user' },\n      { label: 'Delete User', value: 'delete_user' }\n    ]\n  },\n  {\n    label: 'System Actions',\n    value: 'system_group',\n    disabled: true,\n    children: [\n      { label: 'Export Data', value: 'export' },\n      { label: 'Import Data', value: 'import' },\n      { label: 'Clear Cache', value: 'clear_cache' }\n    ]\n  }\n];\n</script>\n\n<template>\n  <InDropDown\n    v-model=\"selectedAction\"\n    :options=\"actionOptions\"\n    label=\"Select Action\"\n  />\n</template>",
       "when": "Use when options need logical grouping or categorization",
-      "pros": ["Better organization", "Easier navigation", "Clear hierarchy"],
-      "cons": ["More complex data structure", "Requires nested option support"]
+      "pros": [
+        "Better organization",
+        "Easier navigation",
+        "Clear hierarchy"
+      ],
+      "cons": [
+        "More complex data structure",
+        "Requires nested option support"
+      ]
     },
     {
       "name": "Dependent Dropdowns",
       "description": "Chain multiple dropdowns where options depend on previous selection",
       "code": "<script setup>\nimport { ref, watch } from 'vue';\nimport { InDropDown } from '@useinsider/design-system-vue';\n\nconst selectedCountry = ref('');\nconst selectedCity = ref('');\nconst cityOptions = ref([]);\n\nconst countryOptions = [\n  { label: 'USA', value: 'US' },\n  { label: 'UK', value: 'UK' },\n  { label: 'Canada', value: 'CA' }\n];\n\nconst citiesByCountry = {\n  US: [\n    { label: 'New York', value: 'NY' },\n    { label: 'Los Angeles', value: 'LA' }\n  ],\n  UK: [\n    { label: 'London', value: 'LON' },\n    { label: 'Manchester', value: 'MAN' }\n  ],\n  CA: [\n    { label: 'Toronto', value: 'TOR' },\n    { label: 'Vancouver', value: 'VAN' }\n  ]\n};\n\nwatch(selectedCountry, (newCountry) => {\n  selectedCity.value = ''; // Reset city selection\n  cityOptions.value = citiesByCountry[newCountry] || [];\n});\n</script>\n\n<template>\n  <div>\n    <InDropDown\n      v-model=\"selectedCountry\"\n      :options=\"countryOptions\"\n      label=\"Country\"\n    />\n    \n    <InDropDown\n      v-model=\"selectedCity\"\n      :options=\"cityOptions\"\n      :disabled=\"!selectedCountry\"\n      label=\"City\"\n      placeholder=\"Select country first\"\n    />\n  </div>\n</template>",
       "when": "Use when dropdown options depend on values from other dropdowns",
-      "pros": ["Dynamic filtering", "Prevents invalid combinations", "Better UX"],
-      "cons": ["Complex state management", "Requires careful sync"]
+      "pros": [
+        "Dynamic filtering",
+        "Prevents invalid combinations",
+        "Better UX"
+      ],
+      "cons": [
+        "Complex state management",
+        "Requires careful sync"
+      ]
     }
   ],
   "useCases": [

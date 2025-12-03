@@ -163,6 +163,7 @@ npm run extract:all
 npm run extract:components  # Parse Vue components → data/components.json
 npm run extract:storybook   # Extract examples → data/storybook.json
 npm run extract:usage       # Analyze usage → data/usage.json
+npm run extract:argtypes    # Sync possibleValues from storybook argTypes
 npm run extract:merge       # Merge all → data/combined.json
 
 # Rebuild MCP server

@@ -53,12 +53,21 @@ Work component-by-component, completing ALL required fields before moving to nex
 1. **Component-by-component approach** - One at a time
 2. **Stop after each** - Wait for "devam" approval
 3. **Complete ALL 14 fields** - No skipping
-4. **Build pipeline after each**:
+4. **Sync argTypes** - Run after creating/updating enrichment:
+   ```bash
+   npm run extract:argtypes  # Auto-add possibleValues from storybook
+   ```
+5. **Build pipeline after each**:
    ```bash
    npm run extract:merge
    npm run generate:markdown
    npm run build
    ```
+
+**Or run everything at once:**
+```bash
+npm run extract:all  # Includes extract:argtypes automatically
+```
 
 ---
 
@@ -196,9 +205,15 @@ Utility functions with `name`, `description`, `code`, `parameters`, `returnType`
 3. **Quality Over Speed**: Detailed enrichments with real-world use cases
 4. **Build Pipeline**: After each component:
    ```bash
+   npm run extract:argtypes  # Auto-sync possibleValues from storybook argTypes
    npm run extract:merge     # Merge enrichment into combined.json
    npm run generate:markdown # Generate markdown (78% token savings)
    npm run build             # Rebuild MCP server
+   ```
+
+   **Or run everything at once:**
+   ```bash
+   npm run extract:all       # Runs argtypes + merge + markdown + build
    ```
 
 ### Enrichment Requirements
@@ -210,6 +225,91 @@ Each enrichment must include:
 - ✅ `commonMistakes` with impact/fix/severity format
 - ✅ `possibleValues` for enum types
 - ✅ V1→V2 migration notes where applicable
+- ✅ **CRITICAL: Check Storybook argTypes for enum values** (see below)
+
+### 🎯 CRITICAL RULE: Always Check Storybook argTypes
+
+**MUST DO for every enrichment:**
+
+Before writing enrichment for any prop, check the component's storybook file for `argTypes`:
+
+**Location:** `/Users/deniz.zeybek/Documents/insider-projects/insider-design-system/storybook/stories/5-library/{v1|v2}/{component-name}.stories.js`
+
+**Why:** Many string props are actually enums, but the component source code doesn't include validators. The **only** source of truth for enum values is `{Export}.argTypes.{propName}.options` in the storybook file.
+
+**Example from InModals:**
+```javascript
+// ❌ WRONG - Component source shows type: String
+type: {
+  type: String,
+  default: 'information'
+}
+
+// ✅ CORRECT - Storybook shows actual enum values
+Default.argTypes = {
+    type: {
+        options: ['information', 'dynamic', 'onboard'],  // Real values!
+        control: { type: 'select' }
+    },
+    modalStatus: {
+        options: ['default', 'warning', 'alert'],  // Real values!
+        control: { type: 'select' }
+    }
+};
+```
+
+**Workflow for each enrichment:**
+1. Read component `.vue` file for prop definitions
+2. **MUST:** Read `storybook/stories/5-library/{v1|v2}/{component-name}.stories.js`
+3. Find `{Export}.argTypes` object (usually `Default.argTypes`, `WithTabs.argTypes`, etc.)
+4. For each prop with `options: [...]`, use those as enum values in enrichment
+5. Add `possibleValues` array with descriptions for each enum value
+
+**Search pattern:**
+```bash
+# Find storybook file
+find /path/to/insider-design-system/storybook/stories/5-library \
+  -name "*{ComponentName}*.stories.js"
+
+# Extract argTypes
+grep -A 20 "argTypes.*{" {file}.stories.js
+```
+
+**🤖 AUTOMATED SCRIPT AVAILABLE:**
+
+Instead of manually checking storybook files, you can run:
+
+```bash
+npm run extract:argtypes
+```
+
+This script (`scripts/sync-argtypes-to-enrichments.ts`) will:
+1. ✅ Read ALL component props from combined.json
+2. ✅ Extract argTypes from storybook files
+3. ✅ For each prop with options:
+   - Create enrichment if missing (with basic structure)
+   - Add possibleValues if missing
+   - Update possibleValues if mismatched
+4. ✅ Generate report of what was updated
+
+**When to run:**
+- 🔄 After creating a new enrichment file
+- 🔄 Before committing enrichment changes
+- 🔄 As part of `npm run extract:all` pipeline (runs automatically)
+
+**Example output:**
+```
+✅ InCustomDropDown - Found 7 argTypes
+   ➕ status: Created enrichment with possibleValues [default, secondary, success, warning, alert, disabled]
+   ✓ type: Already has correct possibleValues
+   💾 Updated InCustomDropDown.json (+1 new, ~0 updated)
+```
+
+**Impact if skipped:**
+- ❌ Wrong enum values in enrichment (like we had with InModals)
+- ❌ Users won't know valid prop values
+- ❌ TypeScript types will be incorrect
+- ❌ Examples will show invalid values
 
 ### Priority Guidelines
 

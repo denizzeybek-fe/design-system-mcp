@@ -40,7 +40,17 @@
         "notes": "Visual theme for the component. Affects background colors and contrast.",
         "typescript": "'light' | 'dark'",
         "example": "// Light theme (default)\ntheme=\"light\"\n\n// Dark theme for dark mode UIs\ntheme=\"dark\""
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "light",
+          "description": "TODO: Add description for 'light'"
+        },
+        {
+          "value": "dark",
+          "description": "TODO: Add description for 'dark'"
+        }
+      ]
     },
     "variant": {
       "valueFormat": {
@@ -48,7 +58,29 @@
         "notes": "Color variant for visual styling and semantic meaning.",
         "typescript": "'neutral' | 'primary' | 'success' | 'warning' | 'danger'",
         "example": "// Default neutral\nvariant=\"neutral\"\n\n// Primary for important selections\nvariant=\"primary\"\n\n// Success for confirmed selections\nvariant=\"success\"\n\n// Warning for deprecated fields\nvariant=\"warning\"\n\n// Danger for critical/removed fields\nvariant=\"danger\""
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "information",
+          "description": "TODO: Add description for 'information'"
+        },
+        {
+          "value": "warning",
+          "description": "TODO: Add description for 'warning'"
+        },
+        {
+          "value": "alert",
+          "description": "TODO: Add description for 'alert'"
+        },
+        {
+          "value": "neutral",
+          "description": "TODO: Add description for 'neutral'"
+        },
+        {
+          "value": "smart",
+          "description": "TODO: Add description for 'smart'"
+        }
+      ]
     },
     "size": {
       "valueFormat": {
@@ -56,7 +88,21 @@
         "notes": "Size variant affecting spacing, typography, and overall dimensions.",
         "typescript": "'small' | 'medium' | 'large'",
         "example": "// Compact size for sidebars\nsize=\"small\"\n\n// Default medium\nsize=\"medium\"\n\n// Large for main content areas (default)\nsize=\"large\""
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "small",
+          "description": "TODO: Add description for 'small'"
+        },
+        {
+          "value": "medium",
+          "description": "TODO: Add description for 'medium'"
+        },
+        {
+          "value": "large",
+          "description": "TODO: Add description for 'large'"
+        }
+      ]
     },
     "hasGroupLevelPartners": {
       "valueFormat": {

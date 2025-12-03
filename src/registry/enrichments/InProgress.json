@@ -124,7 +124,17 @@
         "notes": "How to display the invalid state. 'button': shows retry button with icon (emits click event). 'text': shows text message only.",
         "typescript": "'button' | 'text'",
         "example": "'button' // Show retry button\n'text' // Show error message only"
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "button",
+          "description": "TODO: Add description for 'button'"
+        },
+        {
+          "value": "text",
+          "description": "TODO: Add description for 'text'"
+        }
+      ]
     },
     "invalidIcon": {
       "valueFormat": {
@@ -156,7 +166,17 @@
         "notes": "Position of description text relative to progress bar. Default is 'left'.",
         "typescript": "'left' | 'right' | 'top' | 'bottom'",
         "example": "'left' // Description on left (default)\n'top' // Description above progress bar\n'bottom' // Description below progress bar"
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "left",
+          "description": "TODO: Add description for 'left'"
+        },
+        {
+          "value": "right",
+          "description": "TODO: Add description for 'right'"
+        }
+      ]
     },
     "completed": {
       "valueFormat": {
@@ -165,6 +185,36 @@
         "typescript": "boolean",
         "example": "true // Mark as completed"
       }
+    },
+    "type": {
+      "valueFormat": {
+        "structure": "'default' | 'warning' | 'column' | 'error' | 'success'",
+        "notes": "TODO: Add usage notes",
+        "typescript": "'default' | 'warning' | 'column' | 'error' | 'success'",
+        "example": "TODO: Add example for default"
+      },
+      "possibleValues": [
+        {
+          "value": "default",
+          "description": "TODO: Add description for 'default'"
+        },
+        {
+          "value": "warning",
+          "description": "TODO: Add description for 'warning'"
+        },
+        {
+          "value": "column",
+          "description": "TODO: Add description for 'column'"
+        },
+        {
+          "value": "error",
+          "description": "TODO: Add description for 'error'"
+        },
+        {
+          "value": "success",
+          "description": "TODO: Add description for 'success'"
+        }
+      ]
     }
   },
   "eventEnrichments": {

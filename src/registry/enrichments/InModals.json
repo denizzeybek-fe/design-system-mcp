@@ -22,7 +22,21 @@
         "notes": "Defines the modal variant/purpose. Different types show different icons, colors, and layouts.",
         "typescript": "'information' | 'confirmation' | 'warning' | 'error' | 'success' | 'form'",
         "example": "// Information modal (default)\ntype=\"information\"\n\n// Confirmation dialog\ntype=\"confirmation\"\ntitle=\"Delete Item?\"\ninformationModalDescription=\"Are you sure you want to delete this item?\"\n\n// Warning modal\ntype=\"warning\"\ntitle=\"Unsaved Changes\"\n\n// Error modal\ntype=\"error\"\ntitle=\"Operation Failed\"\n\n// Success modal\ntype=\"success\"\ntitle=\"Saved Successfully\"\n\n// Form modal with custom content\ntype=\"form\"\ntitle=\"Edit Profile\""
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "information",
+          "description": "TODO: Add description for 'information'"
+        },
+        {
+          "value": "dynamic",
+          "description": "TODO: Add description for 'dynamic'"
+        },
+        {
+          "value": "onboard",
+          "description": "TODO: Add description for 'onboard'"
+        }
+      ]
     },
     "size": {
       "valueFormat": {
@@ -30,7 +44,21 @@
         "notes": "Controls the width of the modal dialog.",
         "typescript": "'small' | 'medium' | 'large' | 'extra-large' | 'full'",
         "example": "// Small modal for simple confirmations\nsize=\"small\"\n\n// Medium modal (default)\nsize=\"medium\"\n\n// Large modal for forms\nsize=\"large\"\n\n// Extra large for complex content\nsize=\"extra-large\"\n\n// Full screen modal\nsize=\"full\""
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "small",
+          "description": "TODO: Add description for 'small'"
+        },
+        {
+          "value": "medium",
+          "description": "TODO: Add description for 'medium'"
+        },
+        {
+          "value": "large",
+          "description": "TODO: Add description for 'large'"
+        }
+      ]
     },
     "modalStatus": {
       "valueFormat": {
@@ -38,7 +66,21 @@
         "notes": "Visual status/state of the modal affecting colors and styling. Different from type which affects layout.",
         "typescript": "'default' | 'success' | 'warning' | 'danger' | 'info'",
         "example": "// Default styling\nmodalStatus=\"default\"\n\n// Success state (green accents)\nmodalStatus=\"success\"\ntype=\"success\"\n\n// Warning state (yellow/orange)\nmodalStatus=\"warning\"\ntype=\"warning\"\n\n// Danger state (red)\nmodalStatus=\"danger\"\ntype=\"error\"\n\n// Info state (blue)\nmodalStatus=\"info\"\ntype=\"information\""
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "default",
+          "description": "TODO: Add description for 'default'"
+        },
+        {
+          "value": "warning",
+          "description": "TODO: Add description for 'warning'"
+        },
+        {
+          "value": "alert",
+          "description": "TODO: Add description for 'alert'"
+        }
+      ]
     },
     "informationModalDescription": {
       "valueFormat": {
@@ -62,7 +104,17 @@
         "notes": "Visual style for the accept button. Should match the modal's purpose.",
         "typescript": "'BUTTON_TYPE_PRIMARY' | 'BUTTON_TYPE_SECONDARY' | 'BUTTON_TYPE_DANGER' | 'BUTTON_TYPE_SUCCESS'",
         "example": "// Primary button (default)\nacceptButtonType=\"BUTTON_TYPE_PRIMARY\"\n\n// Danger for destructive actions\nacceptButtonType=\"BUTTON_TYPE_DANGER\"\nacceptButtonText=\"Delete\"\ntype=\"warning\"\n\n// Success for positive actions\nacceptButtonType=\"BUTTON_TYPE_SUCCESS\"\nacceptButtonText=\"Save\"\n\n// Secondary for less emphasis\nacceptButtonType=\"BUTTON_TYPE_SECONDARY\"\nacceptButtonText=\"OK\""
-      }
+      },
+      "possibleValues": [
+        {
+          "value": "primary",
+          "description": "TODO: Add description for 'primary'"
+        },
+        {
+          "value": "secondary",
+          "description": "TODO: Add description for 'secondary'"
+        }
+      ]
     },
     "acceptButtonDisable": {
       "valueFormat": {

@@ -19,7 +19,10 @@
         ],
         "typescript": "string"
       },
-      "relatedProps": ["borderRadius", "borderTriangle"],
+      "relatedProps": [
+        "borderRadius",
+        "borderTriangle"
+      ],
       "commonMistakes": [
         {
           "mistake": "Using CSS values instead of utility classes",
@@ -46,7 +49,9 @@
         ],
         "typescript": "string"
       },
-      "relatedProps": ["border"],
+      "relatedProps": [
+        "border"
+      ],
       "commonMistakes": [
         {
           "mistake": "Using CSS values like '8px' or '1rem'",
@@ -62,7 +67,10 @@
         "notes": "Shows a decorative triangle pointer on the container border. Must set borderTrianglePosition when true",
         "typescript": "boolean"
       },
-      "relatedProps": ["borderTrianglePosition", "borderTriangleAlign"],
+      "relatedProps": [
+        "borderTrianglePosition",
+        "borderTriangleAlign"
+      ],
       "commonMistakes": [
         {
           "mistake": "Setting borderTriangle=true without borderTrianglePosition",
@@ -75,20 +83,67 @@
     "borderTrianglePosition": {
       "valueFormat": {
         "structure": "string (enum)",
-        "validValues": ["top", "right", "bottom", "left"],
+        "validValues": [
+          "top",
+          "right",
+          "bottom",
+          "left"
+        ],
         "notes": "Position of the border triangle decoration. Only works when borderTriangle is true",
         "typescript": "'top' | 'right' | 'bottom' | 'left'"
       },
-      "relatedProps": ["borderTriangle", "borderTriangleAlign"]
+      "relatedProps": [
+        "borderTriangle",
+        "borderTriangleAlign"
+      ],
+      "possibleValues": [
+        {
+          "value": "top",
+          "description": "TODO: Add description for 'top'"
+        },
+        {
+          "value": "bottom",
+          "description": "TODO: Add description for 'bottom'"
+        },
+        {
+          "value": "right",
+          "description": "TODO: Add description for 'right'"
+        },
+        {
+          "value": "left",
+          "description": "TODO: Add description for 'left'"
+        }
+      ]
     },
     "borderTriangleAlign": {
       "valueFormat": {
         "structure": "string (enum)",
-        "validValues": ["start", "center", "end"],
+        "validValues": [
+          "start",
+          "center",
+          "end"
+        ],
         "notes": "Alignment of triangle along its edge (e.g., left/center/right for top position)",
         "typescript": "'start' | 'center' | 'end'"
       },
-      "relatedProps": ["borderTriangle", "borderTrianglePosition"]
+      "relatedProps": [
+        "borderTriangle",
+        "borderTrianglePosition"
+      ],
+      "possibleValues": [
+        {
+          "value": "start",
+          "description": "TODO: Add description for 'start'"
+        },
+        {
+          "value": "center",
+          "description": "TODO: Add description for 'center'"
+        },
+        {
+          "value": "end",
+          "description": "TODO: Add description for 'end'"
+        }
+      ]
     },
     "headerStatus": {
       "valueFormat": {
@@ -96,7 +151,9 @@
         "notes": "Enables the header section with slots for title, description, and action buttons",
         "typescript": "boolean"
       },
-      "relatedProps": ["footerStatus"],
+      "relatedProps": [
+        "footerStatus"
+      ],
       "commonMistakes": [
         {
           "mistake": "Setting headerStatus=true but not using header slots",
@@ -112,7 +169,9 @@
         "notes": "Enables the footer section with slots for footer content and actions",
         "typescript": "boolean"
       },
-      "relatedProps": ["headerStatus"]
+      "relatedProps": [
+        "headerStatus"
+      ]
     },
     "fullWidthContentStatus": {
       "valueFormat": {
@@ -146,6 +205,16 @@
           "fix": "V2 uses container-type prop, not type",
           "severity": "high"
         }
+      ],
+      "possibleValues": [
+        {
+          "value": "default",
+          "description": "TODO: Add description for 'default'"
+        },
+        {
+          "value": "compact",
+          "description": "TODO: Add description for 'compact'"
+        }
       ]
     },
     "colorIndicatorStatus": {
@@ -154,7 +223,9 @@
         "notes": "Shows a colored vertical bar on the left edge of the container. Requires colorIndicatorColor to be set",
         "typescript": "boolean"
       },
-      "relatedProps": ["colorIndicatorColor"],
+      "relatedProps": [
+        "colorIndicatorColor"
+      ],
       "commonMistakes": [
         {
           "mistake": "Setting colorIndicatorStatus=true without colorIndicatorColor",
@@ -175,7 +246,9 @@
         ],
         "typescript": "string"
       },
-      "relatedProps": ["colorIndicatorStatus"],
+      "relatedProps": [
+        "colorIndicatorStatus"
+      ],
       "commonMistakes": [
         {
           "mistake": "Using design system color names instead of CSS values",
@@ -497,9 +570,21 @@
       "description": "Create container configuration with common settings",
       "code": "function createContainerConfig(hasHeader = false, hasFooter = false, options = {}) {\n  return {\n    headerStatus: hasHeader,\n    footerStatus: hasFooter,\n    fullWidthContentStatus: false,\n    ...options\n  };\n}",
       "parameters": [
-        { "name": "hasHeader", "type": "boolean", "description": "Show header section (default: false)" },
-        { "name": "hasFooter", "type": "boolean", "description": "Show footer section (default: false)" },
-        { "name": "options", "type": "object", "description": "Additional container options (optional)" }
+        {
+          "name": "hasHeader",
+          "type": "boolean",
+          "description": "Show header section (default: false)"
+        },
+        {
+          "name": "hasFooter",
+          "type": "boolean",
+          "description": "Show footer section (default: false)"
+        },
+        {
+          "name": "options",
+          "type": "object",
+          "description": "Additional container options (optional)"
+        }
       ],
       "returnType": "object",
       "example": "const config = createContainerConfig(true, true, { fullWidthContentStatus: true });"
@@ -509,7 +594,11 @@
       "description": "Create card-style container configuration",
       "code": "function createCardLayout(title?: string) {\n  return {\n    headerStatus: !!title,\n    footerStatus: false,\n    fullWidthContentStatus: false,\n    title\n  };\n}",
       "parameters": [
-        { "name": "title", "type": "string", "description": "Optional card title for header (optional)" }
+        {
+          "name": "title",
+          "type": "string",
+          "description": "Optional card title for header (optional)"
+        }
       ],
       "returnType": "object",
       "example": "const cardConfig = createCardLayout('User Profile');"
@@ -519,7 +608,11 @@
       "description": "Create container configuration optimized for forms",
       "code": "function createFormContainer(withFooterActions = true) {\n  return {\n    headerStatus: true,\n    footerStatus: withFooterActions,\n    fullWidthContentStatus: false\n  };\n}",
       "parameters": [
-        { "name": "withFooterActions", "type": "boolean", "description": "Include footer for action buttons (default: true)" }
+        {
+          "name": "withFooterActions",
+          "type": "boolean",
+          "description": "Include footer for action buttons (default: true)"
+        }
       ],
       "returnType": "object",
       "example": "const formConfig = createFormContainer(true); // Header + footer with actions"

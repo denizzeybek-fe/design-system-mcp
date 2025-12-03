@@ -24,6 +24,16 @@
           "severity": "critical",
           "example": "// Wrong:\n<InSkeleton :status=\"true\" /> // always true\n\n// Correct:\n<InSkeleton :status=\"isLoading\" />\n// Set isLoading = false after data loads"
         }
+      ],
+      "possibleValues": [
+        {
+          "value": "true",
+          "description": "TODO: Add description for 'true'"
+        },
+        {
+          "value": "false",
+          "description": "TODO: Add description for 'false'"
+        }
       ]
     },
     "sizing": {

@@ -104,7 +104,9 @@
         "notes": "Shows dash/minus icon instead of checkmark. Used for \"select all\" pattern when some (but not all) items are selected.",
         "typescript": "boolean"
       },
-      "relatedProps": ["checked"],
+      "relatedProps": [
+        "checked"
+      ],
       "commonMistakes": [
         {
           "mistake": "Setting both indeterminate=true and checked=true",
@@ -123,17 +125,37 @@
     "state": {
       "valueFormat": {
         "structure": "string (enum)",
-        "validValues": ["default", "danger", "warning"],
+        "validValues": [
+          "default",
+          "danger",
+          "warning"
+        ],
         "notes": "Validation state that affects border and message styling",
         "typescript": "'default' | 'danger' | 'warning'"
       },
-      "relatedProps": ["stateMessage"],
+      "relatedProps": [
+        "stateMessage"
+      ],
       "commonMistakes": [
         {
           "mistake": "Using 'error' instead of 'danger'",
           "impact": "Falls back to default state",
           "fix": "Use state=\"danger\" for error states",
           "severity": "medium"
+        }
+      ],
+      "possibleValues": [
+        {
+          "value": "default",
+          "description": "TODO: Add description for 'default'"
+        },
+        {
+          "value": "danger",
+          "description": "TODO: Add description for 'danger'"
+        },
+        {
+          "value": "warning",
+          "description": "TODO: Add description for 'warning'"
         }
       ]
     }
