@@ -1,7 +1,7 @@
 {
   "_metadata": {
     "version": "1.0.0",
-    "generatedAt": "2025-12-02T11:12:41.199Z",
+    "generatedAt": "2025-12-03T14:45:09.860Z",
     "sources": [
       "components",
       "storybook",
@@ -499,7 +499,17 @@
               "number"
             ],
             "example": "type=\"number\" // Numeric input with validation"
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "text",
+              "description": "TODO: Add description for 'text'"
+            },
+            {
+              "value": "number",
+              "description": "TODO: Add description for 'number'"
+            }
+          ]
         },
         "theme": {
           "description": "Visual theme variant",
@@ -508,7 +518,17 @@
             "notes": "Controls the visual appearance and color scheme of the input. Default is 'grey'. Theme affects border color, background, and hover states. Use consistent theme across related form elements for visual coherence.",
             "typescript": "string",
             "example": "theme=\"grey\""
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "grey",
+              "description": "TODO: Add description for 'grey'"
+            },
+            {
+              "value": "white",
+              "description": "TODO: Add description for 'white'"
+            }
+          ]
         },
         "states": {
           "description": "Validation/feedback state",
@@ -530,6 +550,20 @@
               "impact": "User sees error styling but no explanation why",
               "fix": "Always provide state-message when states is 'error', 'warning', or 'success'",
               "severity": "high"
+            }
+          ],
+          "possibleValues": [
+            {
+              "value": "default",
+              "description": "TODO: Add description for 'default'"
+            },
+            {
+              "value": "error",
+              "description": "TODO: Add description for 'error'"
+            },
+            {
+              "value": "warning",
+              "description": "TODO: Add description for 'warning'"
             }
           ]
         },
@@ -761,7 +795,17 @@
             "notes": "HTML autocomplete attribute for browser autofill. 'off' (default) disables autocomplete. Use specific values for better UX: 'name', 'email', 'username', 'current-password', 'new-password', 'tel', 'address-line1', 'postal-code', 'cc-number'. Improves form filling speed.",
             "typescript": "string",
             "example": "auto-complete=\"email\" // Email autofill\nauto-complete=\"current-password\" // Password manager\nauto-complete=\"off\" // Disable"
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "on",
+              "description": "TODO: Add description for 'on'"
+            },
+            {
+              "value": "off",
+              "description": "TODO: Add description for 'off'"
+            }
+          ]
         },
         "autoFocus": {
           "description": "Auto-focus input on mount",
@@ -3455,6 +3499,20 @@
               "fix": "Use state=\"danger\" for error states",
               "severity": "medium"
             }
+          ],
+          "possibleValues": [
+            {
+              "value": "default",
+              "description": "TODO: Add description for 'default'"
+            },
+            {
+              "value": "danger",
+              "description": "TODO: Add description for 'danger'"
+            },
+            {
+              "value": "warning",
+              "description": "TODO: Add description for 'warning'"
+            }
           ]
         }
       },
@@ -3932,6 +3990,40 @@
               "fix": "Check InChips documentation for V1 vs V2 type mappings",
               "severity": "medium"
             }
+          ],
+          "possibleValues": [
+            {
+              "value": "default",
+              "description": "TODO: Add description for 'default'"
+            },
+            {
+              "value": "danger",
+              "description": "TODO: Add description for 'danger'"
+            },
+            {
+              "value": "warning",
+              "description": "TODO: Add description for 'warning'"
+            },
+            {
+              "value": "neutral",
+              "description": "TODO: Add description for 'neutral'"
+            },
+            {
+              "value": "smart",
+              "description": "TODO: Add description for 'smart'"
+            },
+            {
+              "value": "information",
+              "description": "TODO: Add description for 'information'"
+            },
+            {
+              "value": "orange",
+              "description": "TODO: Add description for 'orange'"
+            },
+            {
+              "value": "magenta",
+              "description": "TODO: Add description for 'magenta'"
+            }
           ]
         },
         "styles": {
@@ -3953,6 +4045,16 @@
               "impact": "Falls back to default 'stroke' style",
               "fix": "Use styles=\"stroke\" for outlined chips",
               "severity": "low"
+            }
+          ],
+          "possibleValues": [
+            {
+              "value": "stroke",
+              "description": "TODO: Add description for 'stroke'"
+            },
+            {
+              "value": "solid",
+              "description": "TODO: Add description for 'solid'"
             }
           ]
         },
@@ -5424,6 +5526,24 @@
           "relatedProps": [
             "borderTriangle",
             "borderTriangleAlign"
+          ],
+          "possibleValues": [
+            {
+              "value": "top",
+              "description": "TODO: Add description for 'top'"
+            },
+            {
+              "value": "bottom",
+              "description": "TODO: Add description for 'bottom'"
+            },
+            {
+              "value": "right",
+              "description": "TODO: Add description for 'right'"
+            },
+            {
+              "value": "left",
+              "description": "TODO: Add description for 'left'"
+            }
           ]
         },
         "borderTriangleAlign": {
@@ -5440,6 +5560,20 @@
           "relatedProps": [
             "borderTriangle",
             "borderTrianglePosition"
+          ],
+          "possibleValues": [
+            {
+              "value": "start",
+              "description": "TODO: Add description for 'start'"
+            },
+            {
+              "value": "center",
+              "description": "TODO: Add description for 'center'"
+            },
+            {
+              "value": "end",
+              "description": "TODO: Add description for 'end'"
+            }
           ]
         },
         "headerStatus": {
@@ -5501,6 +5635,16 @@
               "impact": "Prop not recognized, containerType defaults to 'default'",
               "fix": "V2 uses container-type prop, not type",
               "severity": "high"
+            }
+          ],
+          "possibleValues": [
+            {
+              "value": "default",
+              "description": "TODO: Add description for 'default'"
+            },
+            {
+              "value": "compact",
+              "description": "TODO: Add description for 'compact'"
             }
           ]
         },
@@ -6153,7 +6297,33 @@
             "notes": "Defines the behavior of dropdown options. 'link' makes options act as links (with href), 'button' makes them act as buttons triggering onClick.",
             "typescript": "'link' | 'button'",
             "example": "// Link type - navigates on click\ntype=\"link\"\n:options=\"[\n  { label: 'Dashboard', value: '/dashboard', href: '/dashboard' },\n  { label: 'Settings', value: '/settings', href: '/settings' }\n]\"\n\n// Button type - triggers action\ntype=\"button\"\n:options=\"[\n  { label: 'Export', value: 'export', onClick: exportData },\n  { label: 'Delete', value: 'delete', onClick: deleteItem }\n]\""
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "link",
+              "description": "TODO: Add description for 'link'"
+            },
+            {
+              "value": "text",
+              "description": "TODO: Add description for 'text'"
+            },
+            {
+              "value": "checkbox",
+              "description": "TODO: Add description for 'checkbox'"
+            },
+            {
+              "value": "category",
+              "description": "TODO: Add description for 'category'"
+            },
+            {
+              "value": "icon",
+              "description": "TODO: Add description for 'icon'"
+            },
+            {
+              "value": "categoryWithIcon",
+              "description": "TODO: Add description for 'categoryWithIcon'"
+            }
+          ]
         },
         "target": {
           "valueFormat": {
@@ -6161,7 +6331,25 @@
             "notes": "HTML anchor target attribute for link-type options. Controls where links open.",
             "typescript": "'_self' | '_blank' | '_parent' | '_top'",
             "example": "// Open in same tab (default)\ntarget=\"_self\"\n\n// Open in new tab\ntarget=\"_blank\"\n\n// For navigation options\ntype=\"link\"\ntarget=\"_blank\"\n:options=\"[\n  { label: 'Documentation', value: 'docs', href: 'https://docs.example.com' },\n  { label: 'Support', value: 'support', href: 'https://support.example.com' }\n]\""
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "_self",
+              "description": "TODO: Add description for '_self'"
+            },
+            {
+              "value": "_blank",
+              "description": "TODO: Add description for '_blank'"
+            },
+            {
+              "value": "_parent",
+              "description": "TODO: Add description for '_parent'"
+            },
+            {
+              "value": "_top",
+              "description": "TODO: Add description for '_top'"
+            }
+          ]
         },
         "openPosition": {
           "valueFormat": {
@@ -6169,7 +6357,17 @@
             "notes": "Horizontal alignment of the dropdown menu relative to the trigger button.",
             "typescript": "'left' | 'right' | 'center'",
             "example": "// Align dropdown to left edge of button\nopenPosition=\"left\"\n\n// Align dropdown to right edge\nopenPosition=\"right\"\n\n// Center dropdown under button\nopenPosition=\"center\""
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "left",
+              "description": "TODO: Add description for 'left'"
+            },
+            {
+              "value": "right",
+              "description": "TODO: Add description for 'right'"
+            }
+          ]
         },
         "dropdownMenuPosition": {
           "valueFormat": {
@@ -6177,7 +6375,21 @@
             "notes": "Vertical positioning strategy for the dropdown menu. AUTO detects available space and positions accordingly.",
             "typescript": "'DROPDOWN_MENU_POSITION_AUTO' | 'DROPDOWN_MENU_POSITION_TOP' | 'DROPDOWN_MENU_POSITION_BOTTOM'",
             "example": "// Auto-detect best position (default)\ndropdownMenuPosition=\"DROPDOWN_MENU_POSITION_AUTO\"\n\n// Always show above button\ndropdownMenuPosition=\"DROPDOWN_MENU_POSITION_TOP\"\n\n// Always show below button\ndropdownMenuPosition=\"DROPDOWN_MENU_POSITION_BOTTOM\""
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "auto",
+              "description": "TODO: Add description for 'auto'"
+            },
+            {
+              "value": "top",
+              "description": "TODO: Add description for 'top'"
+            },
+            {
+              "value": "bottom",
+              "description": "TODO: Add description for 'bottom'"
+            }
+          ]
         },
         "buttonType": {
           "valueFormat": {
@@ -6185,7 +6397,17 @@
             "notes": "Visual style variant for the dropdown trigger button.",
             "typescript": "'primary' | 'secondary' | 'tertiary' | 'danger' | 'success' | 'warning'",
             "example": "// Primary button style\nbuttonType=\"primary\"\n\n// Secondary style (default)\nbuttonType=\"secondary\"\n\n// Danger for destructive actions\nbuttonType=\"danger\"\ntext=\"Delete Options\"\n\n// Success for positive actions\nbuttonType=\"success\"\ntext=\"Export Success\""
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "secondary",
+              "description": "TODO: Add description for 'secondary'"
+            },
+            {
+              "value": "text",
+              "description": "TODO: Add description for 'text'"
+            }
+          ]
         },
         "icon": {
           "valueFormat": {
@@ -6201,7 +6423,17 @@
             "notes": "Position of the icon relative to button text.",
             "typescript": "'left' | 'right'",
             "example": "// Icon on right side (default)\niconPosition=\"right\"\nicon=\"filled-dropdown-down\"\n\n// Icon on left side\niconPosition=\"left\"\nicon=\"filter\"\ntext=\"Filter Options\""
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "left",
+              "description": "TODO: Add description for 'left'"
+            },
+            {
+              "value": "right",
+              "description": "TODO: Add description for 'right'"
+            }
+          ]
         },
         "extraOption": {
           "valueFormat": {
@@ -6274,6 +6506,40 @@
             "typescript": "{\n  width?: string | number;\n  height?: string | number;\n}",
             "example": ":skeletonSizing=\"{ width: '200px', height: '40px' }\"\n:skeletonStatus=\"loading\""
           }
+        },
+        "status": {
+          "valueFormat": {
+            "structure": "'default' | 'secondary' | 'success' | 'warning' | 'alert' | 'disabled'",
+            "notes": "TODO: Add usage notes",
+            "typescript": "'default' | 'secondary' | 'success' | 'warning' | 'alert' | 'disabled'",
+            "example": "TODO: Add example for default"
+          },
+          "possibleValues": [
+            {
+              "value": "default",
+              "description": "TODO: Add description for 'default'"
+            },
+            {
+              "value": "secondary",
+              "description": "TODO: Add description for 'secondary'"
+            },
+            {
+              "value": "success",
+              "description": "TODO: Add description for 'success'"
+            },
+            {
+              "value": "warning",
+              "description": "TODO: Add description for 'warning'"
+            },
+            {
+              "value": "alert",
+              "description": "TODO: Add description for 'alert'"
+            },
+            {
+              "value": "disabled",
+              "description": "TODO: Add description for 'disabled'"
+            }
+          ]
         }
       },
       "eventEnrichments": {
@@ -7227,6 +7493,16 @@
           },
           "relatedProps": [
             "loadingStatus"
+          ],
+          "possibleValues": [
+            {
+              "value": "skeleton",
+              "description": "TODO: Add description for 'skeleton'"
+            },
+            {
+              "value": "no-data",
+              "description": "TODO: Add description for 'no-data'"
+            }
           ]
         }
       },
@@ -8495,7 +8771,17 @@
               "skeleton"
             ],
             "example": "loading-type=\"skeleton\" // Use skeleton loader"
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "skeleton",
+              "description": "TODO: Add description for 'skeleton'"
+            },
+            {
+              "value": "no-data",
+              "description": "TODO: Add description for 'no-data'"
+            }
+          ]
         },
         "loadingTitleText": {
           "description": "Title text during loading",
@@ -9494,7 +9780,21 @@
             "v2Prop": "calendarPopoverAlign",
             "transformation": "Direct rename, same values",
             "notes": "Simple rename for consistency"
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "left",
+              "description": "TODO: Add description for 'left'"
+            },
+            {
+              "value": "center",
+              "description": "TODO: Add description for 'center'"
+            },
+            {
+              "value": "right",
+              "description": "TODO: Add description for 'right'"
+            }
+          ]
         },
         "additionalRanges": {
           "valueFormat": {
@@ -9539,6 +9839,24 @@
               "impact": "endDate is ignored, may cause confusion",
               "fix": "When single mode, only set startDate in value object",
               "severity": "low"
+            }
+          ]
+        },
+        "theme": {
+          "valueFormat": {
+            "structure": "'white' | 'grey'",
+            "notes": "TODO: Add usage notes",
+            "typescript": "'white' | 'grey'",
+            "example": "TODO: Add example for white"
+          },
+          "possibleValues": [
+            {
+              "value": "white",
+              "description": "TODO: Add description for 'white'"
+            },
+            {
+              "value": "grey",
+              "description": "TODO: Add description for 'grey'"
             }
           ]
         }
@@ -10391,6 +10709,24 @@
             "locale"
           ],
           "commonMistakes": []
+        },
+        "theme": {
+          "valueFormat": {
+            "structure": "'white' | 'grey'",
+            "notes": "TODO: Add usage notes",
+            "typescript": "'white' | 'grey'",
+            "example": "TODO: Add example for white"
+          },
+          "possibleValues": [
+            {
+              "value": "white",
+              "description": "TODO: Add description for 'white'"
+            },
+            {
+              "value": "grey",
+              "description": "TODO: Add description for 'grey'"
+            }
+          ]
         }
       },
       "eventEnrichments": {
@@ -11577,7 +11913,17 @@
               "bottom"
             ],
             "example": "overridden-list-position=\"top\""
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "top",
+              "description": "TODO: Add description for 'top'"
+            },
+            {
+              "value": "bottom",
+              "description": "TODO: Add description for 'bottom'"
+            }
+          ]
         },
         "type": {
           "description": "Dropdown type/variant",
@@ -11590,7 +11936,17 @@
               "nested"
             ],
             "example": "type=\"nested\""
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "default",
+              "description": "TODO: Add description for 'default'"
+            },
+            {
+              "value": "category",
+              "description": "TODO: Add description for 'category'"
+            }
+          ]
         },
         "buttonType": {
           "description": "Button style variant",
@@ -11605,7 +11961,25 @@
               "ghost"
             ],
             "example": "button-type=\"secondary\""
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "primary",
+              "description": "TODO: Add description for 'primary'"
+            },
+            {
+              "value": "secondary",
+              "description": "TODO: Add description for 'secondary'"
+            },
+            {
+              "value": "text",
+              "description": "TODO: Add description for 'text'"
+            },
+            {
+              "value": "dropdown",
+              "description": "TODO: Add description for 'dropdown'"
+            }
+          ]
         },
         "buttonSize": {
           "description": "Button size",
@@ -11651,6 +12025,28 @@
             "typescript": "boolean",
             "example": ":create-option-status=\"true\""
           }
+        },
+        "theme": {
+          "valueFormat": {
+            "structure": "'grey' | 'white' | 'black'",
+            "notes": "TODO: Add usage notes",
+            "typescript": "'grey' | 'white' | 'black'",
+            "example": "TODO: Add example for grey"
+          },
+          "possibleValues": [
+            {
+              "value": "grey",
+              "description": "TODO: Add description for 'grey'"
+            },
+            {
+              "value": "white",
+              "description": "TODO: Add description for 'white'"
+            },
+            {
+              "value": "black",
+              "description": "TODO: Add description for 'black'"
+            }
+          ]
         }
       },
       "eventEnrichments": {
@@ -13015,7 +13411,17 @@
             "notes": "Visual theme for the component. Affects background colors and contrast.",
             "typescript": "'light' | 'dark'",
             "example": "// Light theme (default)\ntheme=\"light\"\n\n// Dark theme for dark mode UIs\ntheme=\"dark\""
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "light",
+              "description": "TODO: Add description for 'light'"
+            },
+            {
+              "value": "dark",
+              "description": "TODO: Add description for 'dark'"
+            }
+          ]
         },
         "variant": {
           "valueFormat": {
@@ -13023,7 +13429,29 @@
             "notes": "Color variant for visual styling and semantic meaning.",
             "typescript": "'neutral' | 'primary' | 'success' | 'warning' | 'danger'",
             "example": "// Default neutral\nvariant=\"neutral\"\n\n// Primary for important selections\nvariant=\"primary\"\n\n// Success for confirmed selections\nvariant=\"success\"\n\n// Warning for deprecated fields\nvariant=\"warning\"\n\n// Danger for critical/removed fields\nvariant=\"danger\""
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "information",
+              "description": "TODO: Add description for 'information'"
+            },
+            {
+              "value": "warning",
+              "description": "TODO: Add description for 'warning'"
+            },
+            {
+              "value": "alert",
+              "description": "TODO: Add description for 'alert'"
+            },
+            {
+              "value": "neutral",
+              "description": "TODO: Add description for 'neutral'"
+            },
+            {
+              "value": "smart",
+              "description": "TODO: Add description for 'smart'"
+            }
+          ]
         },
         "size": {
           "valueFormat": {
@@ -13031,7 +13459,21 @@
             "notes": "Size variant affecting spacing, typography, and overall dimensions.",
             "typescript": "'small' | 'medium' | 'large'",
             "example": "// Compact size for sidebars\nsize=\"small\"\n\n// Default medium\nsize=\"medium\"\n\n// Large for main content areas (default)\nsize=\"large\""
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "small",
+              "description": "TODO: Add description for 'small'"
+            },
+            {
+              "value": "medium",
+              "description": "TODO: Add description for 'medium'"
+            },
+            {
+              "value": "large",
+              "description": "TODO: Add description for 'large'"
+            }
+          ]
         },
         "hasGroupLevelPartners": {
           "valueFormat": {
@@ -14027,16 +14469,30 @@
           "description": "Modal width preset",
           "valueFormat": {
             "structure": "string enum",
-            "notes": "Determines modal width. 'X-small' (~300px, minimal), 'small' (~400px, forms), 'medium' (~600px, default), 'large' (~800px, detailed content). Responsive on mobile - all sizes become full-width.",
-            "typescript": "'X-small' | 'small' | 'medium' | 'large'",
+            "notes": "Determines modal width. 'small' (~400px, forms), 'medium' (~600px, default), 'large' (~800px, detailed content), 'x-large' (~1000px, complex forms). Responsive on mobile - all sizes become full-width.",
+            "typescript": "'small' | 'medium' | 'large' | 'x-large'",
             "possibleValues": [
-              "X-small",
               "small",
               "medium",
-              "large"
+              "large",
+              "x-large"
             ],
             "example": "size=\"large\""
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "small",
+              "description": "TODO: Add description for 'small'"
+            },
+            {
+              "value": "medium",
+              "description": "TODO: Add description for 'medium'"
+            },
+            {
+              "value": "large",
+              "description": "TODO: Add description for 'large'"
+            }
+          ]
         },
         "titleText": {
           "description": "Modal header title",
@@ -14552,22 +15008,22 @@
         "type": {
           "valueFormat": {
             "structure": "String",
-            "notes": "Defines the modal content type. 'information' shows static text via informationModalDescription prop. 'dynamic' allows custom content via default slot. 'onboard' is for onboarding flows using the onboard slot.",
-            "typescript": "'information' | 'dynamic' | 'onboard'",
-            "example": "// Information modal (default) - static text only\ntype=\"information\"\ninformationModalDescription=\"User has been deleted successfully\"\n\n// Dynamic modal - custom content via slot\ntype=\"dynamic\"\n<InModals type=\"dynamic\">\n  <form>\n    <input v-model=\"email\" />\n    <textarea v-model=\"message\" />\n  </form>\n</InModals>\n\n// Onboard modal - onboarding flows\ntype=\"onboard\"\n<InModals type=\"onboard\">\n  <template #onboard>\n    <!-- Onboarding content -->\n  </template>\n</InModals>"
+            "notes": "Defines the modal variant/purpose. Different types show different icons, colors, and layouts.",
+            "typescript": "'information' | 'confirmation' | 'warning' | 'error' | 'success' | 'form'",
+            "example": "// Information modal (default)\ntype=\"information\"\n\n// Confirmation dialog\ntype=\"confirmation\"\ntitle=\"Delete Item?\"\ninformationModalDescription=\"Are you sure you want to delete this item?\"\n\n// Warning modal\ntype=\"warning\"\ntitle=\"Unsaved Changes\"\n\n// Error modal\ntype=\"error\"\ntitle=\"Operation Failed\"\n\n// Success modal\ntype=\"success\"\ntitle=\"Saved Successfully\"\n\n// Form modal with custom content\ntype=\"form\"\ntitle=\"Edit Profile\""
           },
           "possibleValues": [
             {
               "value": "information",
-              "description": "Static information modal - displays text via informationModalDescription prop (default)"
+              "description": "TODO: Add description for 'information'"
             },
             {
               "value": "dynamic",
-              "description": "Dynamic content modal - allows custom HTML/components via default slot"
+              "description": "TODO: Add description for 'dynamic'"
             },
             {
               "value": "onboard",
-              "description": "Onboarding modal - special layout for onboarding flows using onboard slot"
+              "description": "TODO: Add description for 'onboard'"
             }
           ]
         },
@@ -14577,27 +15033,41 @@
             "notes": "Controls the width of the modal dialog.",
             "typescript": "'small' | 'medium' | 'large' | 'extra-large' | 'full'",
             "example": "// Small modal for simple confirmations\nsize=\"small\"\n\n// Medium modal (default)\nsize=\"medium\"\n\n// Large modal for forms\nsize=\"large\"\n\n// Extra large for complex content\nsize=\"extra-large\"\n\n// Full screen modal\nsize=\"full\""
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "small",
+              "description": "TODO: Add description for 'small'"
+            },
+            {
+              "value": "medium",
+              "description": "TODO: Add description for 'medium'"
+            },
+            {
+              "value": "large",
+              "description": "TODO: Add description for 'large'"
+            }
+          ]
         },
         "modalStatus": {
           "valueFormat": {
             "structure": "String",
-            "notes": "Visual status/state of the modal affecting button colors and styling. Controls accept button appearance.",
-            "typescript": "'default' | 'warning' | 'alert'",
-            "example": "// Default styling (primary button)\nmodalStatus=\"default\"\n\n// Warning state (yellow/orange button)\nmodalStatus=\"warning\"\n\n// Alert/Danger state (red button)\nmodalStatus=\"alert\""
+            "notes": "Visual status/state of the modal affecting colors and styling. Different from type which affects layout.",
+            "typescript": "'default' | 'success' | 'warning' | 'danger' | 'info'",
+            "example": "// Default styling\nmodalStatus=\"default\"\n\n// Success state (green accents)\nmodalStatus=\"success\"\ntype=\"success\"\n\n// Warning state (yellow/orange)\nmodalStatus=\"warning\"\ntype=\"warning\"\n\n// Danger state (red)\nmodalStatus=\"danger\"\ntype=\"error\"\n\n// Info state (blue)\nmodalStatus=\"info\"\ntype=\"information\""
           },
           "possibleValues": [
             {
               "value": "default",
-              "description": "Default state - primary blue button"
+              "description": "TODO: Add description for 'default'"
             },
             {
               "value": "warning",
-              "description": "Warning state - yellow/orange button for caution"
+              "description": "TODO: Add description for 'warning'"
             },
             {
               "value": "alert",
-              "description": "Alert/danger state - red button for destructive actions"
+              "description": "TODO: Add description for 'alert'"
             }
           ]
         },
@@ -14623,7 +15093,17 @@
             "notes": "Visual style for the accept button. Should match the modal's purpose.",
             "typescript": "'BUTTON_TYPE_PRIMARY' | 'BUTTON_TYPE_SECONDARY' | 'BUTTON_TYPE_DANGER' | 'BUTTON_TYPE_SUCCESS'",
             "example": "// Primary button (default)\nacceptButtonType=\"BUTTON_TYPE_PRIMARY\"\n\n// Danger for destructive actions\nacceptButtonType=\"BUTTON_TYPE_DANGER\"\nacceptButtonText=\"Delete\"\ntype=\"warning\"\n\n// Success for positive actions\nacceptButtonType=\"BUTTON_TYPE_SUCCESS\"\nacceptButtonText=\"Save\"\n\n// Secondary for less emphasis\nacceptButtonType=\"BUTTON_TYPE_SECONDARY\"\nacceptButtonText=\"OK\""
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "primary",
+              "description": "TODO: Add description for 'primary'"
+            },
+            {
+              "value": "secondary",
+              "description": "TODO: Add description for 'secondary'"
+            }
+          ]
         },
         "acceptButtonDisable": {
           "valueFormat": {
@@ -15333,7 +15813,17 @@
               "tags"
             ],
             "example": "type=\"tags\""
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "text",
+              "description": "TODO: Add description for 'text'"
+            },
+            {
+              "value": "checkbox",
+              "description": "TODO: Add description for 'checkbox'"
+            }
+          ]
         },
         "theme": {
           "description": "Color theme of the dropdown",
@@ -15347,7 +15837,35 @@
               "dark"
             ],
             "example": "theme=\"dark\""
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "white",
+              "description": "TODO: Add description for 'white'"
+            },
+            {
+              "value": "grey",
+              "description": "TODO: Add description for 'grey'"
+            }
+          ]
+        },
+        "searchableContent": {
+          "valueFormat": {
+            "structure": "'all' | 'number'",
+            "notes": "TODO: Add usage notes",
+            "typescript": "'all' | 'number'",
+            "example": "TODO: Add example for all"
+          },
+          "possibleValues": [
+            {
+              "value": "all",
+              "description": "TODO: Add description for 'all'"
+            },
+            {
+              "value": "number",
+              "description": "TODO: Add description for 'number'"
+            }
+          ]
         }
       },
       "eventEnrichments": {
@@ -16213,6 +16731,58 @@
           },
           "relatedProps": [
             "stateMessage"
+          ]
+        },
+        "staticPosition": {
+          "valueFormat": {
+            "structure": "'bottom left' | 'bottom right' | 'top left' | 'top right'",
+            "notes": "TODO: Add usage notes",
+            "typescript": "'bottom left' | 'bottom right' | 'top left' | 'top right'",
+            "example": "TODO: Add example for bottom left"
+          },
+          "possibleValues": [
+            {
+              "value": "bottom left",
+              "description": "TODO: Add description for 'bottom left'"
+            },
+            {
+              "value": "bottom right",
+              "description": "TODO: Add description for 'bottom right'"
+            },
+            {
+              "value": "top left",
+              "description": "TODO: Add description for 'top left'"
+            },
+            {
+              "value": "top right",
+              "description": "TODO: Add description for 'top right'"
+            }
+          ]
+        },
+        "staticChildPosition": {
+          "valueFormat": {
+            "structure": "'bottom left' | 'bottom right' | 'top left' | 'top right'",
+            "notes": "TODO: Add usage notes",
+            "typescript": "'bottom left' | 'bottom right' | 'top left' | 'top right'",
+            "example": "TODO: Add example for bottom left"
+          },
+          "possibleValues": [
+            {
+              "value": "bottom left",
+              "description": "TODO: Add description for 'bottom left'"
+            },
+            {
+              "value": "bottom right",
+              "description": "TODO: Add description for 'bottom right'"
+            },
+            {
+              "value": "top left",
+              "description": "TODO: Add description for 'top left'"
+            },
+            {
+              "value": "top right",
+              "description": "TODO: Add description for 'top right'"
+            }
           ]
         }
       },
@@ -17219,6 +17789,28 @@
           "relatedProps": [
             "titleText",
             "descriptionText"
+          ],
+          "possibleValues": [
+            {
+              "value": "default",
+              "description": "TODO: Add description for 'default'"
+            },
+            {
+              "value": "warning",
+              "description": "TODO: Add description for 'warning'"
+            },
+            {
+              "value": "alert",
+              "description": "TODO: Add description for 'alert'"
+            },
+            {
+              "value": "success",
+              "description": "TODO: Add description for 'success'"
+            },
+            {
+              "value": "smart",
+              "description": "TODO: Add description for 'smart'"
+            }
           ]
         },
         "size": {
@@ -17231,7 +17823,17 @@
             ],
             "notes": "Controls overall component size and spacing",
             "typescript": "'small' | 'medium' | 'large'"
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "small",
+              "description": "TODO: Add description for 'small'"
+            },
+            {
+              "value": "medium",
+              "description": "TODO: Add description for 'medium'"
+            }
+          ]
         }
       },
       "eventEnrichments": {},
@@ -17868,7 +18470,17 @@
             "notes": "How to display the invalid state. 'button': shows retry button with icon (emits click event). 'text': shows text message only.",
             "typescript": "'button' | 'text'",
             "example": "'button' // Show retry button\n'text' // Show error message only"
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "button",
+              "description": "TODO: Add description for 'button'"
+            },
+            {
+              "value": "text",
+              "description": "TODO: Add description for 'text'"
+            }
+          ]
         },
         "invalidIcon": {
           "valueFormat": {
@@ -17900,7 +18512,17 @@
             "notes": "Position of description text relative to progress bar. Default is 'left'.",
             "typescript": "'left' | 'right' | 'top' | 'bottom'",
             "example": "'left' // Description on left (default)\n'top' // Description above progress bar\n'bottom' // Description below progress bar"
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "left",
+              "description": "TODO: Add description for 'left'"
+            },
+            {
+              "value": "right",
+              "description": "TODO: Add description for 'right'"
+            }
+          ]
         },
         "completed": {
           "valueFormat": {
@@ -17909,6 +18531,36 @@
             "typescript": "boolean",
             "example": "true // Mark as completed"
           }
+        },
+        "type": {
+          "valueFormat": {
+            "structure": "'default' | 'warning' | 'column' | 'error' | 'success'",
+            "notes": "TODO: Add usage notes",
+            "typescript": "'default' | 'warning' | 'column' | 'error' | 'success'",
+            "example": "TODO: Add example for default"
+          },
+          "possibleValues": [
+            {
+              "value": "default",
+              "description": "TODO: Add description for 'default'"
+            },
+            {
+              "value": "warning",
+              "description": "TODO: Add description for 'warning'"
+            },
+            {
+              "value": "column",
+              "description": "TODO: Add description for 'column'"
+            },
+            {
+              "value": "error",
+              "description": "TODO: Add description for 'error'"
+            },
+            {
+              "value": "success",
+              "description": "TODO: Add description for 'success'"
+            }
+          ]
         }
       },
       "eventEnrichments": {
@@ -18453,6 +19105,24 @@
               "impact": "Falls back to default type",
               "fix": "Use type=\"default\" for info/blue ribbons",
               "severity": "medium"
+            }
+          ],
+          "possibleValues": [
+            {
+              "value": "default",
+              "description": "TODO: Add description for 'default'"
+            },
+            {
+              "value": "success",
+              "description": "TODO: Add description for 'success'"
+            },
+            {
+              "value": "warning",
+              "description": "TODO: Add description for 'warning'"
+            },
+            {
+              "value": "error",
+              "description": "TODO: Add description for 'error'"
             }
           ]
         },
@@ -19486,7 +20156,21 @@
               "error"
             ],
             "example": "states=\"warning\" // When approaching SMS limit"
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "default",
+              "description": "TODO: Add description for 'default'"
+            },
+            {
+              "value": "error",
+              "description": "TODO: Add description for 'error'"
+            },
+            {
+              "value": "warning",
+              "description": "TODO: Add description for 'warning'"
+            }
+          ]
         },
         "stateMessage": {
           "description": "Message for validation state",
@@ -20620,6 +21304,24 @@
           },
           "relatedProps": [
             "dynamicPosition"
+          ],
+          "possibleValues": [
+            {
+              "value": "bottom left",
+              "description": "TODO: Add description for 'bottom left'"
+            },
+            {
+              "value": "bottom right",
+              "description": "TODO: Add description for 'bottom right'"
+            },
+            {
+              "value": "top left",
+              "description": "TODO: Add description for 'top left'"
+            },
+            {
+              "value": "top right",
+              "description": "TODO: Add description for 'top right'"
+            }
           ]
         },
         "staticChildPosition": {
@@ -20634,7 +21336,25 @@
             "default": "bottom right",
             "notes": "Child dropdown position for grouped options",
             "typescript": "'bottom left' | 'bottom right' | 'top left' | 'top right'"
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "bottom left",
+              "description": "TODO: Add description for 'bottom left'"
+            },
+            {
+              "value": "bottom right",
+              "description": "TODO: Add description for 'bottom right'"
+            },
+            {
+              "value": "top left",
+              "description": "TODO: Add description for 'top left'"
+            },
+            {
+              "value": "top right",
+              "description": "TODO: Add description for 'top right'"
+            }
+          ]
         },
         "optionValidationType": {
           "valueFormat": {
@@ -21741,6 +22461,16 @@
               "fix": "Set status=false after data successfully loads",
               "severity": "critical",
               "example": "// Wrong:\n<InSkeleton :status=\"true\" /> // always true\n\n// Correct:\n<InSkeleton :status=\"isLoading\" />\n// Set isLoading = false after data loads"
+            }
+          ],
+          "possibleValues": [
+            {
+              "value": "true",
+              "description": "TODO: Add description for 'true'"
+            },
+            {
+              "value": "false",
+              "description": "TODO: Add description for 'false'"
             }
           ]
         },
@@ -23255,7 +23985,17 @@
             "notes": "Determines behavior of '+ Add Tab' button. 'options': shows dropdown with addTabDropdownOptions. 'custom': emits addNewTab event for custom handling (e.g., open modal).",
             "typescript": "'options' | 'custom'",
             "example": "'options' // Show dropdown\n'custom' // Emit event for custom modal"
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "event",
+              "description": "TODO: Add description for 'event'"
+            },
+            {
+              "value": "emit",
+              "description": "TODO: Add description for 'emit'"
+            }
+          ]
         },
         "renameOption": {
           "valueFormat": {
@@ -23847,27 +24587,15 @@
           "possibleValues": [
             {
               "value": "default",
-              "description": "Neutral gray tag (default)"
+              "description": "TODO: Add description for 'default'"
             },
             {
-              "value": "primary",
-              "description": "Primary brand color (blue)"
-            },
-            {
-              "value": "success",
-              "description": "Success/positive status (green)"
+              "value": "alert",
+              "description": "TODO: Add description for 'alert'"
             },
             {
               "value": "warning",
-              "description": "Warning/caution (orange)"
-            },
-            {
-              "value": "danger",
-              "description": "Error/critical (red)"
-            },
-            {
-              "value": "info",
-              "description": "Informational (cyan)"
+              "description": "TODO: Add description for 'warning'"
             }
           ]
         },
@@ -24571,7 +25299,17 @@
             "notes": "Visual theme/color scheme for the input. Affects border, background, and hover states.",
             "typescript": "'grey' | 'white' | 'blue' | 'transparent'",
             "example": "// Default grey theme\ntheme=\"grey\"\n\n// White background for dark layouts\ntheme=\"white\"\n\n// Blue accent theme\ntheme=\"blue\"\n\n// Transparent for custom styling\ntheme=\"transparent\""
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "grey",
+              "description": "TODO: Add description for 'grey'"
+            },
+            {
+              "value": "white",
+              "description": "TODO: Add description for 'white'"
+            }
+          ]
         },
         "withIcon": {
           "valueFormat": {
@@ -24595,7 +25333,17 @@
             "notes": "Position of the icon within the input field.",
             "typescript": "'left' | 'right'",
             "example": "// Search icon on left (common pattern)\niconPosition=\"left\"\niconName=\"search\"\n\n// Action icons on right\niconPosition=\"right\"\niconName=\"clear\"\n@iconClick=\"clearInput\""
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "left",
+              "description": "TODO: Add description for 'left'"
+            },
+            {
+              "value": "right",
+              "description": "TODO: Add description for 'right'"
+            }
+          ]
         },
         "withSuffix": {
           "valueFormat": {
@@ -24659,7 +25407,17 @@
             "notes": "HTML autocomplete attribute. Controls browser autofill behavior. Use 'off' to disable, or specific values for enhanced autofill (email, name, tel, etc.).",
             "typescript": "'off' | 'on' | 'name' | 'email' | 'username' | 'current-password' | 'new-password' | 'tel' | 'street-address' | 'postal-code' | 'cc-number' | etc.",
             "example": "// Disable autocomplete\nautoComplete=\"off\"\n\n// Enable email autofill\nautoComplete=\"email\"\ntype=\"email\"\n\n// Password fields\nautoComplete=\"current-password\" // Login\nautoComplete=\"new-password\" // Registration\n\n// Name fields\nautoComplete=\"given-name\" // First name\nautoComplete=\"family-name\" // Last name\n\n// Address\nautoComplete=\"street-address\"\nautoComplete=\"postal-code\"\n\n// Credit card\nautoComplete=\"cc-number\"\nautoComplete=\"cc-exp\""
-          }
+          },
+          "possibleValues": [
+            {
+              "value": "on",
+              "description": "TODO: Add description for 'on'"
+            },
+            {
+              "value": "off",
+              "description": "TODO: Add description for 'off'"
+            }
+          ]
         },
         "accept": {
           "valueFormat": {
@@ -25224,23 +25982,23 @@
           "possibleValues": [
             {
               "value": "light",
-              "description": "Neutral/default toast (gray background)"
+              "description": "TODO: Add description for 'light'"
+            },
+            {
+              "value": "dark",
+              "description": "TODO: Add description for 'dark'"
             },
             {
               "value": "success",
-              "description": "Success confirmation (green, checkmark icon)"
-            },
-            {
-              "value": "error",
-              "description": "Error/failure notification (red, error icon)"
+              "description": "TODO: Add description for 'success'"
             },
             {
               "value": "warning",
-              "description": "Warning/caution message (orange, warning icon)"
+              "description": "TODO: Add description for 'warning'"
             },
             {
-              "value": "info",
-              "description": "Informational message (blue, info icon)"
+              "value": "alert",
+              "description": "TODO: Add description for 'alert'"
             }
           ]
         },
